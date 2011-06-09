@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="1"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="GET /*">nodeController</prop>
+
+                <!-- Some other example mappings
+                  <prop key="PUT /user/*">updateUserController</prop>
+                  <prop key="DELETE /user/*">removeUserController</prop>
+                  <prop key="POST /user">createUserController</prop>
+                -->
+            </props>
+        </property>
+    </bean>
+
+    <bean name="nodeController" class="uberdust.controllers.NodeController">
+        <property name="commandClass" value="uberdust.commands.NodeCommand"/>
+        <property name="uriPattern" value="/{nodeId}"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="node"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="node/index"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>
