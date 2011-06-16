@@ -54,7 +54,7 @@ public class SocketConnectorClient {
         try {
             // Load JBBC driver "com.mysql.jdbc.Driver".
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(connectionURL, "testbedruntime", "isensectitelosb");
+            connection = DriverManager.getConnection(connectionURL, "testbedruntime", "");
             statement = connection.createStatement();
         } catch (Exception ex) {
             System.out.println(ex.toString());
