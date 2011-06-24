@@ -212,7 +212,7 @@ public class SocketConnectorClient {
                     if (temp != -200) {
                         statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Temperature'," + temp + "," + milis + ")");
                     }
-                    if (lux != -1) {
+                    if ((lux != -1)&&(lux<10000)) {
                         statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Light'," + lux + "," + milis + ")");
                     }
                     if (bidis > -1) {
@@ -260,7 +260,7 @@ public class SocketConnectorClient {
 
                         // Load JBBC driver "com.mysql.jdbc.Driver".                
                         Class.forName("com.mysql.jdbc.Driver").newInstance();
-                        connection = DriverManager.getConnection(connectionURL, "testbedruntime", "isensectitelosb");
+                        connection = DriverManager.getConnection(connectionURL, "testbedruntime", "");
                         statement = connection.createStatement();
 
                         final long milis = nowtime.getTime();
