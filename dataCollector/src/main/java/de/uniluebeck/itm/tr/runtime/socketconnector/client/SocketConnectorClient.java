@@ -9,9 +9,12 @@ import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import de.uniluebeck.itm.tr.util.Logging;
+import de.uniluebeck.itm.tr.util.MySQLConnection;
+import de.uniluebeck.itm.tr.util.PropertiesUtils;
 import de.uniluebeck.itm.tr.util.StringUtils;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Level;
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -19,12 +22,16 @@ import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
+import org.jboss.netty.util.internal.StringUtil;
+import org.jgrapht.ext.IntegerEdgeNameProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
+import java.util.Properties;
+import java.io.FileInputStream;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
@@ -38,23 +45,45 @@ public class SocketConnectorClient {
     private static String connectionURL;
     private static Connection connection;
     private static Statement statement;
+    private static String db_username;
+    private static String db_password;
+    private static Properties properties;
+
 
     public SocketConnectorClient(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
+
     public static void main(String[] args) throws IOException {
 
+        properties = new Properties();
+        try {
+            properties.load(new FileInputStream("dataCollector.properties"));
+        } catch (IOException e) {
+            log.info("No properties file found! dataCollector.properties not found!");
+            return;
+        }
 
 
-        connectionURL = "jdbc:mysql://150.140.5.11:3306/dataCollector";
+
+        //connectionURL = "jdbc:mysql://150.140.5.11:3306/dataCollector";
+        connectionURL = properties.getProperty("mysql.url");
+        //log.info(connectionURL);
+        db_username = properties.getProperty("mysql.username");
+        //log.info(db_username);
+        db_password = properties.getProperty("mysql.password");
+        //log.info(db_password);
+        String ipAddress = properties.getProperty("runtime.ipAddress");
+        int port = Integer.parseInt(properties.getProperty("runtime.port"));
+
         connection = null;
         statement = null;
         try {
             // Load JBBC driver "com.mysql.jdbc.Driver".
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(connectionURL, "testbedruntime", "");
+            connection = DriverManager.getConnection(connectionURL, db_username, db_password);
             statement = connection.createStatement();
         } catch (Exception ex) {
             System.out.println(ex.toString());
@@ -78,8 +107,8 @@ public class SocketConnectorClient {
 
         options.addOption("h", "help", false, "Help output");
 
-        String ipAddress = "hercules.cti.gr";
-        int port = 1234;
+
+
 
         try {
 
@@ -260,7 +289,7 @@ public class SocketConnectorClient {
 
                         // Load JBBC driver "com.mysql.jdbc.Driver".                
                         Class.forName("com.mysql.jdbc.Driver").newInstance();
-                        connection = DriverManager.getConnection(connectionURL, "testbedruntime", "");
+                        connection = DriverManager.getConnection(connectionURL, db_username, db_password);
                         statement = connection.createStatement();
 
                         final long milis = nowtime.getTime();
