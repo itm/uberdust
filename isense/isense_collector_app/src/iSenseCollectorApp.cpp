@@ -171,8 +171,9 @@ private:
         if (
                 (os().id() == 0x6699) ||
                 (os().id() == 0x0498) ||
-		(os().id() == 0x1b7f) ||
-		(os().id() == 0x99ad)
+                (os().id() == 0x1b7f) ||
+                (os().id() == 0x9979) ||
+                (os().id() == 0x99ad)
                 ) {
             return true;
         } else {
@@ -195,7 +196,7 @@ private:
     WiselibOs::Clock clock_;
     WiselibOs::Timer timer_;
 
-	int channel;
+    int channel;
     nb_t nb_;
 
 
@@ -288,7 +289,7 @@ boot(void) {
     nb_.init(radio_, clock_, timer_, debug_, 2000, 15000, 200, 230);
 
     nb_.enable();
-channel=11;
+    os().radio().hardware_radio().set_channel(12);
     //nb_.register_debug_callback(0);
 
 }
@@ -324,9 +325,9 @@ wake_up(bool memory_held) {
 void
 iSenseCollectorApplication::
 execute(void* userdata) {
-//	os().debug("Channel %d",channel);
-//	os().radio().hardware_radio().set_channel(channel++);
-//	if (channel==27){channel=11;}
+    //	os().debug("Channel %d",channel);
+    	
+    //	if (channel==27){channel=11;}
     // led blink
     if (counter_) {
         cm_->led_on();
@@ -364,8 +365,31 @@ execute(void* userdata) {
 void
 iSenseCollectorApplication::
 receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RADIO_ADDR_TYPE dest_addr, uint16 signal_strength, uint16 signal_quality, uint8 seq_no, uint8 interface, Time rx_time) {
-    //os().debug("Got a message form %x , len %d %d  , type %x|", src_addr, len, (1 + sizeof (int16) + sizeof (uint32) + sizeof (int)), buf[0]);
+//    os().debug("Got a message form %x , len %d %d  , type %x|", src_addr, len, (1 + sizeof (int16) + sizeof (uint32) + sizeof (int)), buf[0]);
     if (!is_gateway()) return;
+
+    if ((src_addr == 0x2c41) && (buf[0] == 0x43) && (0x9979 == os().id())) {
+        uint8 mess[len];
+        memcpy(mess, buf, len);
+        mess[len - 1] = '\0';
+
+        //              os().debug("airquality::%x",src_addr);
+        if ((buf[1] == 0x4f) && (buf[2] == 0x32)) {
+            //telos->led_on(0);
+            os().debug("airquality::%x SVal1:%s ", src_addr, mess + 5);
+            //telos->led_off(0);
+        } else if (buf[1] == 0x4f) {
+            //telos->led_on(1);
+            os().debug("airquality::%x SVal2:%s ", src_addr, mess + 4);
+            //telos->led_off(1);
+        } else if (buf[1] == 0x48) {
+            //telos->led_on(2);
+            os().debug("airquality::%x SVal3:%s ", src_addr, mess + 5);
+            //telos->led_off(2);
+        }
+    }
+
+
 
     if ((len == (1 + sizeof (int16) + sizeof (uint32) + sizeof (int))) && (buf[0] == 101)) {
         int16 temp;
