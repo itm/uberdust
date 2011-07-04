@@ -22,13 +22,13 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <xsd:schema targetNamespace="http://itm.uniluebeck.de/tr/runtime/socketconnector/server/xml"
-			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-			xmlns="http://itm.uniluebeck.de/tr/runtime/socketconnector/server/xml">
-	<xsd:element name="socketconnector">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="port" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-			</xsd:sequence>
-		</xsd:complexType>
-	</xsd:element>
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://itm.uniluebeck.de/tr/runtime/socketconnector/server/xml">
+    <xsd:element name="socketconnector">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="port" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

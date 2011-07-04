@@ -154,12 +154,12 @@ public:
                       os().radio().send(0xffff, 1, mess, 0, 0);
              */
         }
-        os().debug("iSense::%x LQI %d BIDIS %d EM_T %d EM_L %d",
+/*        os().debug("iSense::%x LQI %d BIDIS %d EM_T %d EM_L %d",
                 os().id(),
                 255,
                 nb_.bidi_nb_size(),
                 temp,
-                lux);
+                lux);*/
         //os().debug("is %d , %d %d",nb_.is_neighbor_bidi(0x1bbf),nb_.is_neighbor_bidi(0x14e6),nb_.is_neighbor_bidi(0x995a));
 
     }

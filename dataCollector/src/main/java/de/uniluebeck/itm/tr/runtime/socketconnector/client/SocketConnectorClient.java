@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 import java.util.Date;
+
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
@@ -67,7 +68,6 @@ public class SocketConnectorClient {
         }
 
 
-
         //connectionURL = "jdbc:mysql://150.140.5.11:3306/dataCollector";
         connectionURL = properties.getProperty("mysql.url");
         //log.info(connectionURL);
@@ -103,11 +103,9 @@ public class SocketConnectorClient {
         options.addOption("v", "verbose", false, "Verbose logging output (equal to -l DEBUG)");
         options.addOption("l", "logging", true,
                 "Set logging level (one of [" + Level.TRACE + "," + Level.DEBUG + "," + Level.INFO + ","
-                + Level.WARN + "," + Level.ERROR + "])");
+                        + Level.WARN + "," + Level.ERROR + "])");
 
         options.addOption("h", "help", false, "Help output");
-
-
 
 
         try {
@@ -146,6 +144,7 @@ public class SocketConnectorClient {
         client.start();
 
     }
+
     private SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
@@ -206,7 +205,7 @@ public class SocketConnectorClient {
                     }
 
                     final int start_lux = strLine.indexOf("EM_L ") + 5;
-                    final int end_lux = strLine.indexOf("\"", start_lux) - 1;
+                    final int end_lux = strLine.indexOf("\"", start_lux) ;
                     int lux = -1;
                     try {
                         lux = Integer.parseInt(strLine.substring(start_lux, end_lux));
@@ -230,20 +229,18 @@ public class SocketConnectorClient {
                     }
 
 
-
                     // send_temp(node_id, temp, milis);
                     // send_lux(node_id, lux, milis);
                     // send_bidis(node_id, bidis, milis);
                     // send_lqi(node_id, lqi, milis);                
 
 
-
                     if (temp != -200) {
                         statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Temperature'," + temp + "," + milis + ")");
                     }
-                    if ((lux != -1)&&(lux<10000)) {
+                    if ((lux != -1) && (lux < 10000)) {
                         statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Light'," + lux + "," + milis + ")");
-                    }
+                    }else {System.out.println("not sending wrong data for lux node "+node_id + " data is " +strLine.substring(start_lux, end_lux) );}
                     if (bidis > -1) {
                         statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Neighbors'," + bidis + "," + milis + ")");
                     }
