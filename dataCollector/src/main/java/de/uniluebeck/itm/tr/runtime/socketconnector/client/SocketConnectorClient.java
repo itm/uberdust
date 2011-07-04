@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import java.util.Date;
 
+import com.sun.org.apache.bcel.internal.generic.GotoInstruction;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
@@ -25,6 +26,7 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 import org.jboss.netty.util.internal.StringUtil;
 import org.jgrapht.ext.IntegerEdgeNameProvider;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +51,8 @@ public class SocketConnectorClient {
     private static String db_username;
     private static String db_password;
     private static Properties properties;
+    private static String[] Sensors_names, Sensors_prefixes;
+    private static String[] device_types;
 
 
     public SocketConnectorClient(String host, int port) {
@@ -78,6 +82,28 @@ public class SocketConnectorClient {
         String ipAddress = properties.getProperty("runtime.ipAddress");
         int port = Integer.parseInt(properties.getProperty("runtime.port"));
 
+
+        // set up logging
+        Logging.setLoggingDefaults();
+        log = LoggerFactory.getLogger(SocketConnectorClient.class);
+
+
+        Sensors_names = properties.getProperty("sensors.names").split(",");
+        Sensors_prefixes = properties.getProperty("sensors.prefixes").split(",");
+
+        String Sens = "Sensors Acknoledging: ";
+        for (int i = 0; i < Sensors_names.length; i++) {
+            Sens += Sensors_names[i] + "[" + Sensors_prefixes[i] + "]" + ",";
+        }
+        log.info(Sens);
+
+        device_types = properties.getProperty("device.Types").split(",");
+        Sens = "Devices Monitored: ";
+        for (int i = 0; i < device_types.length; i++) {
+            Sens += device_types[i] + ",";
+        }
+        log.info(Sens);
+
         connection = null;
         statement = null;
         try {
@@ -89,9 +115,6 @@ public class SocketConnectorClient {
             System.out.println(ex.toString());
         }
 
-        // set up logging
-        Logging.setLoggingDefaults();
-        log = LoggerFactory.getLogger(SocketConnectorClient.class);
 
         // create the command line parser
         CommandLineParser parser = new PosixParser();
@@ -165,147 +188,196 @@ public class SocketConnectorClient {
             }
         }
 
+
+        private String extractNodeId(String linea) {
+            final String line = linea.substring(7);
+            final int start = line.indexOf("0x");
+            if (start > 0) {
+                final int end = line.indexOf(" ", start);
+                if (end > 0) {
+                    //System.out.println(line);
+                    //System.out.println(line.substring(start, end));
+                    return line.substring(start, end);
+                }
+            }
+            return "";
+        }
+
+
         private void parse(String toString) {
 
             final Date nowtime = new Date();
-            final String strLine = toString;
+            final String strLine = toString.substring(toString.indexOf("binaryData:") + "binaryData:".length());
 
+            //log.info(strLine);
+            final String node_id = extractNodeId(strLine);
             try {
-                if (strLine.contains("EM_T")) {
-                    final long milis = nowtime.getTime();
-
-                    final int start_bidis = strLine.indexOf("BIDIS ") + 6;
-                    final int end_bidis = strLine.indexOf(" ", start_bidis);
-                    int bidis = -1;
-                    try {
-                        bidis = Integer.parseInt(strLine.substring(start_bidis, end_bidis));
-                    } catch (Exception e) {
-                    }
-
-                    final int start_lqi = strLine.indexOf("LQI ") + 4;
-                    final int end_lqi = strLine.indexOf(" ", start_lqi);
-                    int lqi = -1;
-                    try {
-                        lqi = Integer.parseInt(strLine.substring(start_lqi, end_lqi));
-                    } catch (Exception e) {
-                    }
-
-                    String node_id = "";
-                    if (strLine.contains("iSense::")) {
-                        node_id = strLine.substring(strLine.indexOf("iSense::") + 8, strLine.indexOf(" ", strLine.indexOf("iSense::")));
-                    } else if (strLine.contains("telosB::")) {
-                        node_id = strLine.substring(strLine.indexOf("telosB::") + 8, strLine.indexOf(" ", strLine.indexOf("telosB::")));
-                    }
-                    final int start_temp = strLine.indexOf("EM_T ") + 5;
-                    final int end_temp = strLine.indexOf(" ", start_temp);
-                    int temp = -200;
-                    try {
-                        temp = Integer.parseInt(strLine.substring(start_temp, end_temp));
-                    } catch (Exception e) {
-                    }
-
-                    final int start_lux = strLine.indexOf("EM_L ") + 5;
-                    final int end_lux = strLine.indexOf("\"", start_lux) ;
-                    int lux = -1;
-                    try {
-                        lux = Integer.parseInt(strLine.substring(start_lux, end_lux));
-                    } catch (Exception e) {
-                    }
-
-                    final int start_humid = strLine.indexOf("EM_H ") + 5;
-                    final int end_humid = strLine.indexOf(" ", start_humid);
-                    int humid = -1;
-                    try {
-                        humid = Integer.parseInt(strLine.substring(start_humid, end_humid));
-                    } catch (Exception e) {
-                    }
-
-                    final int start_inflight = strLine.indexOf("EM_I ") + 5;
-                    final int end_inflight = strLine.indexOf(" ", start_inflight);
-                    int inflight = -1;
-                    try {
-                        inflight = Integer.parseInt(strLine.substring(start_inflight, end_inflight));
-                    } catch (Exception e) {
-                    }
+                final long milis = nowtime.getTime();
 
 
-                    // send_temp(node_id, temp, milis);
-                    // send_lux(node_id, lux, milis);
-                    // send_bidis(node_id, bidis, milis);
-                    // send_lqi(node_id, lqi, milis);                
-
-
-                    if (temp != -200) {
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Temperature'," + temp + "," + milis + ")");
-                    }
-                    if ((lux != -1) && (lux < 10000)) {
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Light'," + lux + "," + milis + ")");
-                    }else {System.out.println("not sending wrong data for lux node "+node_id + " data is " +strLine.substring(start_lux, end_lux) );}
-                    if (bidis > -1) {
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Neighbors'," + bidis + "," + milis + ")");
-                    }
-                    if (lqi > -1) {
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Lqi'," + lqi + "," + milis + ")");
-                    }
-                    if (humid > -1) {
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Humidity'," + humid + "," + milis + ")");
-                    }
-                    if (inflight > -1) {
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Infrared'," + inflight + "," + milis + ")");
-                    }
-                    statement.executeBatch();
-                    statement.clearBatch();
-
-                    System.out.println(node_id + " saved values to database");
-
-                } else if (strLine.contains("airquality::")) {
-
-                    String type = "";
-                    if (strLine.contains("SVal1:")) {
-                        type = "CO2";
-                    } else if (strLine.contains("SVal2:")) {
-                        type = "CO";
-                    } else if (strLine.contains("SVal3:")) {
-                        type = "CH4";
-                    }
-                    if (!type.equals("")) {
-                        final int start_value = strLine.indexOf("SVal") + 6;
-                        final int end_value = strLine.indexOf(" ", start_value);
-                        final int value = Integer.parseInt(strLine.substring(start_value, end_value));
-
-
-                        String node_id = "";
-                        if (strLine.contains("airquality::")) {
-                            node_id = strLine.substring(strLine.indexOf("airquality::") + 12, strLine.indexOf(" ", strLine.indexOf("airquality::")));
+                if (node_id != "") {
+                    for (int i = 0; i < Sensors_prefixes.length; i++) {
+                        final int start = strLine.indexOf(Sensors_prefixes[i]) + Sensors_prefixes[i].length() + 1;
+                        if (start > Sensors_prefixes[i].length()) {
+                            int end = strLine.indexOf(" ", start);
+                            if (end == -1) {
+                                end = strLine.length() - 2;
+                            }
+                            int value = -1;
+                            try {
+                                value = Integer.parseInt(strLine.substring(start, end));
+                                log.info("Got a value " + value + " for " + Sensors_names[i]);
+                                if ((value > -1) && (value < 10000)) {
+                                    statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','" + Sensors_names[i] + "'," + value + "," + milis + ")");
+                                    //System.out.println("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','"+Sensors_names[i]+"'," + value + "," + milis + ")");
+                                }
+                            } catch (Exception e) {
+                                log.error("Cannot parse value for " + Sensors_prefixes[i] + "'" + strLine.substring(start, end) + "'");
+                            }
                         }
-
-
-                        connectionURL = "jdbc:mysql://150.140.5.11:3306/dataCollector";
-                        connection = null;
-                        statement = null;
-
-                        // Load JBBC driver "com.mysql.jdbc.Driver".                
-                        Class.forName("com.mysql.jdbc.Driver").newInstance();
-                        connection = DriverManager.getConnection(connectionURL, db_username, db_password);
-                        statement = connection.createStatement();
-
-                        final long milis = nowtime.getTime();
-
-                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','" + type + "'," + value + "," + milis + ")");
-
-                        statement.executeBatch();
-                        statement.clearBatch();
-
-                        System.out.println(node_id + " saved values to database");
-
-                        //statement.close();
-                        //connection.close();
-
-
                     }
                 }
+
+                statement.executeBatch();
+                statement.clearBatch();
+                log.info("Saved values for "+node_id);
+
+//
+//
+//                    final int start_bidis = strLine.indexOf("BIDIS ") + 6;
+//                    final int end_bidis = strLine.indexOf(" ", start_bidis);
+//                    int bidis = -1;
+//                    try {
+//                        bidis = Integer.parseInt(strLine.substring(start_bidis, end_bidis));
+//                    } catch (Exception e) {
+//                    }
+//
+//                    final int start_lqi = strLine.indexOf("LQI ") + 4;
+//                    final int end_lqi = strLine.indexOf(" ", start_lqi);
+//                    int lqi = -1;
+//                    try {
+//                        lqi = Integer.parseInt(strLine.substring(start_lqi, end_lqi));
+//                    } catch (Exception e) {
+//                    }
+//
+//                    String node_id = "";
+//                    if (strLine.contains("iSense::")) {
+//                        node_id = strLine.substring(strLine.indexOf("iSense::") + 8, strLine.indexOf(" ", strLine.indexOf("iSense::")));
+//                    } else if (strLine.contains("telosB::")) {
+//                        node_id = strLine.substring(strLine.indexOf("telosB::") + 8, strLine.indexOf(" ", strLine.indexOf("telosB::")));
+//                    }
+//                    final int start_temp = strLine.indexOf("EM_T ") + 5;
+//                    final int end_temp = strLine.indexOf(" ", start_temp);
+//                    int temp = -200;
+//                    try {
+//                        temp = Integer.parseInt(strLine.substring(start_temp, end_temp));
+//                    } catch (Exception e) {
+//                    }
+//
+//                    final int start_lux = strLine.indexOf("EM_L ") + 5;
+//                    final int end_lux = strLine.indexOf("\"", start_lux);
+//                    int lux = -1;
+//                    try {
+//                        lux = Integer.parseInt(strLine.substring(start_lux, end_lux));
+//                    } catch (Exception e) {
+//                    }
+//
+//                    final int start_humid = strLine.indexOf("EM_H ") + 5;
+//                    final int end_humid = strLine.indexOf(" ", start_humid);
+//                    int humid = -1;
+//                    try {
+//                        humid = Integer.parseInt(strLine.substring(start_humid, end_humid));
+//                    } catch (Exception e) {
+//                    }
+//
+//                    final int start_inflight = strLine.indexOf("EM_I ") + 5;
+//                    final int end_inflight = strLine.indexOf(" ", start_inflight);
+//                    int inflight = -1;
+//                    try {
+//                        inflight = Integer.parseInt(strLine.substring(start_inflight, end_inflight));
+//                    } catch (Exception e) {
+//                    }
+
+
+                // send_temp(node_id, temp, milis);
+                // send_lux(node_id, lux, milis);
+                // send_bidis(node_id, bidis, milis);
+                // send_lqi(node_id, lqi, milis);
+
+//
+//                    if (temp != -200) {
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Temperature'," + temp + "," + milis + ")");
+//                    }
+//                    if ((lux != -1) && (lux < 10000)) {
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Light'," + lux + "," + milis + ")");
+//                    } else {
+//                        System.out.println("not sending wrong data for lux node " + node_id + " data is " + strLine.substring(start_lux, end_lux));
+//                    }
+//                    if (bidis > -1) {
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Neighbors'," + bidis + "," + milis + ")");
+//                    }
+//                    if (lqi > -1) {
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Lqi'," + lqi + "," + milis + ")");
+//                    }
+//                    if (humid > -1) {
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Humidity'," + humid + "," + milis + ")");
+//                    }
+//                    if (inflight > -1) {
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Infrared'," + inflight + "," + milis + ")");
+//                    }
+//                    statement.executeBatch();
+//                    statement.clearBatch();
+//
+//                    System.out.println(node_id + " saved values to database");
+
+//                } else if (strLine.contains("airquality::")) {
+//
+//                    String type = "";
+//                    if (strLine.contains("SVal1:")) {
+//                        type = "CO2";
+//                    } else if (strLine.contains("SVal2:")) {
+//                        type = "CO";
+//                    } else if (strLine.contains("SVal3:")) {
+//                        type = "CH4";
+//                    }
+//                    if (!type.equals("")) {
+//                        final int start_value = strLine.indexOf("SVal") + 6;
+//                        final int end_value = strLine.indexOf(" ", start_value);
+//                        final int value = Integer.parseInt(strLine.substring(start_value, end_value));
+//
+//
+//                        String node_id = "";
+//                        if (strLine.contains("airquality::")) {
+//                            node_id = strLine.substring(strLine.indexOf("airquality::") + 12, strLine.indexOf(" ", strLine.indexOf("airquality::")));
+//                        }
+//
+//
+//                        connectionURL = "jdbc:mysql://150.140.5.11:3306/dataCollector";
+//                        connection = null;
+//                        statement = null;
+//
+//                        // Load JBBC driver "com.mysql.jdbc.Driver".
+//                        Class.forName("com.mysql.jdbc.Driver").newInstance();
+//                        connection = DriverManager.getConnection(connectionURL, db_username, db_password);
+//                        statement = connection.createStatement();
+//
+//                        final long milis = nowtime.getTime();
+//
+//                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','" + type + "'," + value + "," + milis + ")");
+//
+//                        statement.executeBatch();
+//                        statement.clearBatch();
+//
+//                        System.out.println(node_id + " saved values to database");
+//
+//                        //statement.close();
+//                        //connection.close();
+//
+//
+//                    }
+//                }
             } catch (Exception e) {
-                System.out.println(e.toString());
+                log.error("Node " + node_id + " - " + e.toString());
             }
 
         }
