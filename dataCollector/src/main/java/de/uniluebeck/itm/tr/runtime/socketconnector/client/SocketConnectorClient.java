@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import java.util.Date;
 
+import com.google.common.util.concurrent.UninterruptibleFuture;
 import com.sun.org.apache.bcel.internal.generic.GotoInstruction;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
@@ -25,6 +26,7 @@ import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 import org.jboss.netty.util.internal.StringUtil;
+import org.jboss.netty.util.internal.SystemPropertyUtil;
 import org.jgrapht.ext.IntegerEdgeNameProvider;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.slf4j.Logger;
@@ -106,14 +108,6 @@ public class SocketConnectorClient {
 
         connection = null;
         statement = null;
-        try {
-            // Load JBBC driver "com.mysql.jdbc.Driver".
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(connectionURL, db_username, db_password);
-            statement = connection.createStatement();
-        } catch (Exception ex) {
-            System.out.println(ex.toString());
-        }
 
 
         // create the command line parser
@@ -203,17 +197,42 @@ public class SocketConnectorClient {
             return "";
         }
 
+        private String extractSenderId(String linea) {
+            if (linea.contains("Source")) {
+                final String line = linea.substring(7);
+                final int start = line.indexOf("Source0x") + 6;
+                if (start > 0) {
+                    final int end = line.indexOf(" ", start);
+                    if (end > 0) {
+                        //System.out.println(line);
+                        //System.out.println(line.substring(start, end));
+                        return line.substring(start, end);
+                    }
+                }
+            }
+            return "";
+        }
+
 
         private void parse(String toString) {
 
-            final Date nowtime = new Date();
+            try {
+                // Load JBBC driver "com.mysql.jdbc.Driver".
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                connection = DriverManager.getConnection(connectionURL, db_username, db_password);
+                statement = connection.createStatement();
+            } catch (Exception ex) {
+                System.out.println(ex.toString());
+            }
+
+            final long milis = (new Date()).getTime();
             final String strLine = toString.substring(toString.indexOf("binaryData:") + "binaryData:".length());
 
             //log.info(strLine);
             final String node_id = extractNodeId(strLine);
+            final String sender_id = extractSenderId(strLine);
+            log.info(node_id + "    ----    " + sender_id);
             try {
-                final long milis = nowtime.getTime();
-
 
                 if (node_id != "") {
                     for (int i = 0; i < Sensors_prefixes.length; i++) {
@@ -238,9 +257,34 @@ public class SocketConnectorClient {
                     }
                 }
 
+                if (!sender_id.equals("")) {
+                    final int start = strLine.indexOf("LQI") + "LQI".length() + 1;
+                    if (start > "LQI".length()) {
+                        int end = strLine.indexOf(" ", start);
+                        if (end == -1) {
+                            end = strLine.length() - 2;
+                        }
+                        int value = -1;
+                        try {
+                            value = Integer.parseInt(strLine.substring(start, end));
+                            if ((value > -1) && (value < 10000)) {
+                                log.info("Got a link " + node_id + "<->" + sender_id + " lqi " + value);
+                                statement.addBatch("INSERT INTO link (id,nodeidA,nodeidB,quality,time) VALUES (NULL,'" + node_id.substring(2) + "','" + sender_id.substring(2) + "'," + value + "," + milis + ")");
+                                //System.out.println("INSERT INTO link (id,nodeidA,nodeidB,quality,time) VALUES (NULL,'" + node_id.substring(2) + "','" + sender_id.substring(2) + "'," + value + "," + milis + ")");
+                            }
+                        } catch (Exception e) {
+                            log.error("Cannot parse lqi link value for " + node_id + "'" + strLine.substring(start, end) + "'");
+                        }
+                    }
+
+                }
+
                 statement.executeBatch();
                 statement.clearBatch();
-                log.info("Saved values for "+node_id);
+                log.info("Saved values for " + node_id);
+
+                statement.close();
+                connection.close();
 
 //
 //
@@ -325,7 +369,7 @@ public class SocketConnectorClient {
 //                    if (inflight > -1) {
 //                        statement.addBatch("INSERT INTO measurement (id,nodeid,measurementType,value,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','Infrared'," + inflight + "," + milis + ")");
 //                    }
-//                    statement.executeBatch();
+//                    statement.executeBatch();                  "INSERT INTO link (id,nodeidA,nodeidB,quality,time) VALUES " + "(NULL,'" + node_id.substring(2) + "','" + sender_id.substring(2) + "'," + value + "," + milis + ")"
 //                    statement.clearBatch();
 //
 //                    System.out.println(node_id + " saved values to database");
