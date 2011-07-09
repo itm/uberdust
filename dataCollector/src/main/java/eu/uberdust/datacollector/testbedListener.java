@@ -1,4 +1,4 @@
-package de.uniluebeck.itm.tr.runtime.socketconnector.client;
+package eu.uberdust.datacollector;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,18 +6,13 @@ import java.sql.Statement;
 
 import java.util.Date;
 
-import com.google.common.util.concurrent.UninterruptibleFuture;
-import com.sun.org.apache.bcel.internal.generic.GotoInstruction;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
-import de.uniluebeck.itm.tr.util.Logging;
-import de.uniluebeck.itm.tr.util.MySQLConnection;
-import de.uniluebeck.itm.tr.util.PropertiesUtils;
-import de.uniluebeck.itm.tr.util.StringUtils;
 import org.apache.commons.cli.*;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
-import org.bouncycastle.crypto.RuntimeCryptoException;
+
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -25,12 +20,9 @@ import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
-import org.jboss.netty.util.internal.StringUtil;
-import org.jboss.netty.util.internal.SystemPropertyUtil;
-import org.jgrapht.ext.IntegerEdgeNameProvider;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+ // Import log4j classes.
+ import org.apache.log4j.Logger;
+ import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -40,9 +32,9 @@ import java.io.FileInputStream;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
-public class SocketConnectorClient {
+public class testbedListener {
 
-    private static Logger log;
+    private static Logger log = Logger.getLogger(testbedListener.class);
     private String host;
     private int port;
     private Channel channel;
@@ -57,13 +49,19 @@ public class SocketConnectorClient {
     private static String[] device_types;
 
 
-    public SocketConnectorClient(String host, int port) {
+    public testbedListener(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
 
     public static void main(String[] args) throws IOException {
+        // set up logging
+        //Logging.setLoggingDefaults();
+        //log = LoggerFactory.getLogger(testbedListener.class);
+        BasicConfigurator.configure();
+
+
 
         properties = new Properties();
         try {
@@ -76,7 +74,7 @@ public class SocketConnectorClient {
 
         //connectionURL = "jdbc:mysql://150.140.5.11:3306/dataCollector";
         connectionURL = properties.getProperty("mysql.url");
-        //log.info(connectionURL);
+        log.info("Database endpoint "+connectionURL);
         db_username = properties.getProperty("mysql.username");
         //log.info(db_username);
         db_password = properties.getProperty("mysql.password");
@@ -85,9 +83,7 @@ public class SocketConnectorClient {
         int port = Integer.parseInt(properties.getProperty("runtime.port"));
 
 
-        // set up logging
-        Logging.setLoggingDefaults();
-        log = LoggerFactory.getLogger(SocketConnectorClient.class);
+
 
 
         Sensors_names = properties.getProperty("sensors.names").split(",");
@@ -157,7 +153,7 @@ public class SocketConnectorClient {
             usage(options);
         }
 
-        SocketConnectorClient client = new SocketConnectorClient(ipAddress, port);
+        testbedListener client = new testbedListener(ipAddress, port);
         client.start();
 
     }
@@ -178,7 +174,7 @@ public class SocketConnectorClient {
                 //System.out.println(wsnAppMessage.toString());
 
             } else {
-                log.info("Received message: {}", StringUtils.jaxbMarshal(message));
+                //log.info("Received message: {}", StringUtils.jaxbMarshal(message));
             }
         }
 
@@ -477,7 +473,7 @@ public class SocketConnectorClient {
 
     private static void usage(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(120, SocketConnectorClient.class.getCanonicalName(), null, options, null);
+        formatter.printHelp(120, testbedListener.class.getCanonicalName(), null, options, null);
         System.exit(
                 1);
     }

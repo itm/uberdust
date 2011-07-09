@@ -34,9 +34,9 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>tr.overlay-socketconnector</artifactId>
+    <artifactId>testbedListener</artifactId>
     <packaging>jar</packaging>
-    <name>TR :: Overlay Socket Connector</name>
+    <name>Testbed Listener</name>
 
     <dependencies>
 
@@ -87,7 +87,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>de.uniluebeck.itm.tr.runtime.socketconnector.client.SocketConnectorClient
+                            <mainClass>eu.uberdust.datacollector.testbedListener
                             </mainClass>
                         </configuration>
                         <goals>
