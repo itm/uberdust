@@ -1,0 +1,9 @@
+#!/bin/bash
+BASEDIR=`dirname $0`
+
+java -Dtestbed.duration=15 -Dtestbed.offset=0 -Dtestbed.nodeurns=$(cat nodes_otap) -jar $BASEDIR/../lib/tr.scripting-client-current.jar -p ../cti.properties -f $BASEDIR/../scripts/reserve.java > ../resKeyt
+tail -1 ../resKeyt | sed 's/\\//g' > ../resKey
+cut -d, -f2- ../resKey > ../flasher_key
+#rm ../resKeyt
+cat ../resKey
+cat ../flasher_key

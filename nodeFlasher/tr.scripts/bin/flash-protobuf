@@ -1,0 +1,12 @@
+#!/bin/bash
+BASEDIR=`dirname $0`
+
+if [ "$#" -lt 2 ]
+then
+	echo "Usage $0 PROPERTIES_FILE IMAGE [NODEURNS]"
+	echo "Example: $0 live.properties iseraerial-isense.bin urn:wisebed:uzl1:0xcc3d,urn:wisebed:uzl1:0xcc3e"
+	exit 1
+fi
+
+resKey=$(cat ../resKey)
+java -Dtestbed.secretreservationkeys=$resKey -Dtestbed.image=$2 -Dtestbed.nodeurns=$3 -jar $BASEDIR/../lib/tr.scripting-client-current.jar -p $1 -f $BASEDIR/../scripts/flash-protobuf.java -v

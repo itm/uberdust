@@ -1,0 +1,474 @@
+13:37:22,752 DEBUG - Option for -f: ./../scripts/flash-protobuf.java
+13:37:22,794 DEBUG - Adding logger to beanshell, use 'log' variable, api is like log4j's
+13:37:22,795 DEBUG - Adding helper to beanshell, use 'helper' variable
+13:37:22,796 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.wsn.WSNServiceHelper;
+13:37:22,798 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.rs.RSServiceHelper;
+13:37:22,798 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.snaa.helpers.SNAAServiceHelper;
+13:37:22,798 DEBUG - Adding the following default import: import de.uniluebeck.itm.wisebed.cmdlineclient.*;
+13:37:22,799 DEBUG - Adding the following default import: import de.uniluebeck.itm.wisebed.cmdlineclient.jobs.*
+13:37:22,799 DEBUG - Adding the following default import: import eu.wisebed.api.controller.*;
+13:37:22,799 DEBUG - Adding the following default import: import eu.wisebed.api.common.*;
+13:37:22,800 DEBUG - Adding the following default import: import eu.wisebed.api.sm.*;
+13:37:22,800 DEBUG - Adding the following default import: import eu.wisebed.api.wsn.*;
+13:37:22,800 DEBUG - Adding the following default import: import de.uniluebeck.itm.tr.util.*;
+13:37:22,801 DEBUG - Adding the following default import: import java.util.concurrent.TimeUnit;
+13:37:22,801 DEBUG - Adding the following default import: import de.itm.uniluebeck.tr.wiseml.WiseMLHelper;
+13:37:22,801 DEBUG - Adding the following default import: import eu.wisebed.api.rs.*;
+13:37:23,531 INFO  - Got a WSN instance URL, endpoint is: http://hercules.cti.gr:8888/iwsn/04C60D641D71DE3B0A7C03CD0575B50E
+13:37:23,713 DEBUG - Connecting to hercules.cti.gr:8885
+13:37:23,817 DEBUG - [id: 0x01dfd90f] OPEN
+13:37:23,830 DEBUG - [id: 0x01dfd90f, /150.140.5.11:51413 => hercules.cti.gr/150.140.5.24:8885] BOUND: /150.140.5.11:51413
+13:37:23,830 DEBUG - [id: 0x01dfd90f, /150.140.5.11:51413 => hercules.cti.gr/150.140.5.24:8885] CONNECTED: hercules.cti.gr/150.140.5.24:8885
+13:37:23,830 DEBUG - Connection established.
+13:37:23,831 DEBUG - Connected.
+13:37:23,831 DEBUG - Sending secret reservation keys.
+13:37:24,035 INFO  - Selected the following node URNs: [urn:wisebed:ctitestbed:0x1bee, urn:wisebed:ctitestbed:0x4f22, urn:wisebed:ctitestbed:0xfa4b, urn:wisebed:ctitestbed:0x1fdc, urn:wisebed:ctitestbed:0xd965, urn:wisebed:ctitestbed:0x0efa, urn:wisebed:ctitestbed:0xf042, urn:wisebed:ctitestbed:0x0712, urn:wisebed:ctitestbed:0x9112, urn:wisebed:ctitestbed:0x852, urn:wisebed:ctitestbed:0x1ed4]
+13:37:24,036 INFO  - Flashing nodes...
+13:37:24,107 DEBUG - Submitted job with request Id 939337B2F82414C7FCFDE96A1929142E
+13:37:27,107 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 0.
+13:37:27,108 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 3.
+13:37:27,142 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 4.
+13:37:27,143 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 4.
+13:37:27,144 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 0.
+13:37:27,156 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 0.
+13:37:27,164 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 4.
+13:37:27,165 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 0.
+13:37:27,171 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 8.
+13:37:27,241 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 2.
+13:37:27,340 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 2.
+13:37:30,106 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 12.
+13:37:30,123 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 16.
+13:37:30,149 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 12.
+13:37:30,158 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 16.
+13:37:30,160 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 17.
+13:37:30,165 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 12.
+13:37:30,172 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 17.
+13:37:30,185 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 12.
+13:37:30,189 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 22.
+13:37:30,245 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 11.
+13:37:30,349 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 11.
+13:37:33,113 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 23.
+13:37:33,123 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 28.
+13:37:33,160 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 23.
+13:37:33,168 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 29.
+13:37:33,172 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 23.
+13:37:33,178 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 30.
+13:37:33,184 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 31.
+13:37:33,202 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 23.
+13:37:33,208 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 36.
+13:37:33,251 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 20.
+13:37:33,383 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 20.
+13:37:36,115 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 35.
+13:37:36,146 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 40.
+13:37:36,175 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 42.
+13:37:36,181 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 35.
+13:37:36,192 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 44.
+13:37:36,193 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 35.
+13:37:36,196 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 44.
+13:37:36,215 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 50.
+13:37:36,223 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 35.
+13:37:36,272 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 28.
+13:37:36,406 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 28.
+13:37:39,123 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 46.
+13:37:39,167 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 52.
+13:37:39,176 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 54.
+13:37:39,197 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 57.
+13:37:39,199 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 47.
+13:37:39,203 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 57.
+13:37:39,214 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 47.
+13:37:39,223 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 47.
+13:37:39,233 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 64.
+13:37:39,292 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 37.
+13:37:39,417 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 37.
+13:37:42,137 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 58.
+13:37:42,186 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 64.
+13:37:42,190 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 66.
+13:37:42,207 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 70.
+13:37:42,209 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 71.
+13:37:42,217 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 59.
+13:37:42,227 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 58.
+13:37:42,235 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 58.
+13:37:42,253 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 78.
+13:37:42,299 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 46.
+13:37:42,451 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 46.
+13:37:45,146 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 70.
+13:37:45,196 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 76.
+13:37:45,207 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 79.
+13:37:45,220 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 83.
+13:37:45,223 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 84.
+13:37:45,234 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 70.
+13:37:45,236 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 70.
+13:37:45,253 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 70.
+13:37:45,271 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 91.
+13:37:45,303 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 55.
+13:37:45,485 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 55.
+13:37:47,547 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:48,150 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 81.
+13:37:48,208 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 92.
+13:37:48,210 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 88.
+13:37:48,234 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 97.
+13:37:48,235 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 94.
+13:37:48,242 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 82.
+13:37:48,259 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 82.
+13:37:48,275 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 82.
+13:37:48,309 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 63.
+13:37:48,503 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 64.
+13:37:49,574 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:50,358 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:50,838 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:51,160 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 93.
+13:37:51,253 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 93.
+13:37:51,288 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 94.
+13:37:51,300 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 94.
+13:37:51,313 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 72.
+13:37:51,537 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 72.
+13:37:51,945 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:54,021 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:54,079 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:54,145 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:54,195 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:37:54,318 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 81.
+13:37:54,568 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 81.
+13:37:57,328 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 89.
+13:37:57,585 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 90.
+13:38:00,361 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 98.
+13:38:00,619 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 99.
+13:38:01,718 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:38:01,805 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 939337B2F82414C7FCFDE96A1929142E: 100 (done).
+13:38:01,805 DEBUG - 11 nodeIds done, 0 failed for flashPrograms [flashPrograms] request id: 939337B2F82414C7FCFDE96A1929142E
+13:38:01,809 INFO  - JobResult{jobType=flashPrograms, description='flashPrograms', results=
+	urn:wisebed:ctitestbed:0x0712 | true | 
+	urn:wisebed:ctitestbed:0xd965 | true | 
+	urn:wisebed:ctitestbed:0x0efa | true | 
+	urn:wisebed:ctitestbed:0x852 | true | 
+	urn:wisebed:ctitestbed:0xfa4b | true | 
+	urn:wisebed:ctitestbed:0x9112 | true | 
+	urn:wisebed:ctitestbed:0x1ed4 | true | 
+	urn:wisebed:ctitestbed:0xf042 | true | 
+	urn:wisebed:ctitestbed:0x1fdc | true | 
+	urn:wisebed:ctitestbed:0x1bee | true | 
+	urn:wisebed:ctitestbed:0x4f22 | true | 
+
+13:38:01,813 INFO  - Closing connection...
+13:38:01,815 DEBUG - Channel was closed.
+13:38:01,815 DEBUG - Connection closed.
+13:38:01,817 DEBUG - [id: 0x01dfd90f, /150.140.5.11:51413 :> hercules.cti.gr/150.140.5.24:8885] DISCONNECTED
+13:38:01,817 DEBUG - [id: 0x01dfd90f, /150.140.5.11:51413 :> hercules.cti.gr/150.140.5.24:8885] UNBOUND
+13:38:01,817 DEBUG - [id: 0x01dfd90f, /150.140.5.11:51413 :> hercules.cti.gr/150.140.5.24:8885] CLOSED
+13:38:01,820 INFO  - Shutting down...
+13:50:26,781 DEBUG - Option for -f: ./../scripts/flash-protobuf.java
+13:50:26,821 DEBUG - Adding logger to beanshell, use 'log' variable, api is like log4j's
+13:50:26,822 DEBUG - Adding helper to beanshell, use 'helper' variable
+13:50:26,823 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.wsn.WSNServiceHelper;
+13:50:26,825 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.rs.RSServiceHelper;
+13:50:26,825 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.snaa.helpers.SNAAServiceHelper;
+13:50:26,825 DEBUG - Adding the following default import: import de.uniluebeck.itm.wisebed.cmdlineclient.*;
+13:50:26,826 DEBUG - Adding the following default import: import de.uniluebeck.itm.wisebed.cmdlineclient.jobs.*
+13:50:26,826 DEBUG - Adding the following default import: import eu.wisebed.api.controller.*;
+13:50:26,826 DEBUG - Adding the following default import: import eu.wisebed.api.common.*;
+13:50:26,827 DEBUG - Adding the following default import: import eu.wisebed.api.sm.*;
+13:50:26,827 DEBUG - Adding the following default import: import eu.wisebed.api.wsn.*;
+13:50:26,827 DEBUG - Adding the following default import: import de.uniluebeck.itm.tr.util.*;
+13:50:26,828 DEBUG - Adding the following default import: import java.util.concurrent.TimeUnit;
+13:50:26,828 DEBUG - Adding the following default import: import de.itm.uniluebeck.tr.wiseml.WiseMLHelper;
+13:50:26,828 DEBUG - Adding the following default import: import eu.wisebed.api.rs.*;
+13:50:27,799 INFO  - Got a WSN instance URL, endpoint is: http://hercules.cti.gr:8888/iwsn/8A9B8F70F721D08E775280C33A1D19CF
+13:50:27,975 DEBUG - Connecting to hercules.cti.gr:8885
+13:50:28,076 DEBUG - [id: 0x019646fd] OPEN
+13:50:28,088 DEBUG - [id: 0x019646fd, /150.140.5.11:59719 => hercules.cti.gr/150.140.5.24:8885] BOUND: /150.140.5.11:59719
+13:50:28,089 DEBUG - [id: 0x019646fd, /150.140.5.11:59719 => hercules.cti.gr/150.140.5.24:8885] CONNECTED: hercules.cti.gr/150.140.5.24:8885
+13:50:28,089 DEBUG - Connection established.
+13:50:28,089 DEBUG - Connected.
+13:50:28,090 DEBUG - Sending secret reservation keys.
+13:50:28,292 INFO  - Selected the following node URNs: [urn:wisebed:ctitestbed:0x1bee, urn:wisebed:ctitestbed:0x4f22, urn:wisebed:ctitestbed:0xfa4b, urn:wisebed:ctitestbed:0x1fdc, urn:wisebed:ctitestbed:0xd965, urn:wisebed:ctitestbed:0x0efa, urn:wisebed:ctitestbed:0xf042, urn:wisebed:ctitestbed:0x0712, urn:wisebed:ctitestbed:0x9112, urn:wisebed:ctitestbed:0x852, urn:wisebed:ctitestbed:0x1ed4]
+13:50:28,292 INFO  - Flashing nodes...
+13:50:28,361 DEBUG - Submitted job with request Id 25B6173A673A6D08C639478D332D1BD0
+13:50:31,375 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 3.
+13:50:31,376 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 0.
+13:50:31,399 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 4.
+13:50:31,400 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 0.
+13:50:31,403 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 4.
+13:50:31,417 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 4.
+13:50:31,431 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 8.
+13:50:31,432 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 0.
+13:50:31,439 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 0.
+13:50:31,499 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 2.
+13:50:31,593 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 2.
+13:50:34,367 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 16.
+13:50:34,396 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 12.
+13:50:34,414 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 17.
+13:50:34,415 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 17.
+13:50:34,424 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 17.
+13:50:34,428 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 12.
+13:50:34,446 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 12.
+13:50:34,449 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 22.
+13:50:34,467 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 12.
+13:50:34,503 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 11.
+13:50:34,627 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 11.
+13:50:37,384 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 28.
+13:50:37,399 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 23.
+13:50:37,423 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 30.
+13:50:37,433 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 29.
+13:50:37,442 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 30.
+13:50:37,443 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 23.
+13:50:37,457 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 23.
+13:50:37,465 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 36.
+13:50:37,491 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 23.
+13:50:37,516 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 20.
+13:50:37,659 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 20.
+13:50:40,405 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 40.
+13:50:40,413 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 35.
+13:50:40,434 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 44.
+13:50:40,450 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 41.
+13:50:40,453 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 35.
+13:50:40,456 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 44.
+13:50:40,461 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 35.
+13:50:40,482 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 50.
+13:50:40,512 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 35.
+13:50:40,532 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 28.
+13:50:40,692 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 29.
+13:50:43,414 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 47.
+13:50:43,415 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 52.
+13:50:43,447 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 57.
+13:50:43,464 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 54.
+13:50:43,467 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 47.
+13:50:43,470 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 57.
+13:50:43,483 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 47.
+13:50:43,500 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 64.
+13:50:43,532 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 47.
+13:50:43,536 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 37.
+13:50:43,696 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 37.
+13:50:46,420 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 64.
+13:50:46,437 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 58.
+13:50:46,460 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 70.
+13:50:46,471 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 67.
+13:50:46,490 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 58.
+13:50:46,491 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 70.
+13:50:46,492 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 58.
+13:50:46,519 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 78.
+13:50:46,540 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 46.
+13:50:46,557 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 58.
+13:50:46,710 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 46.
+13:50:49,427 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 76.
+13:50:49,453 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 70.
+13:50:49,480 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 84.
+13:50:49,488 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 79.
+13:50:49,494 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 70.
+13:50:49,502 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 70.
+13:50:49,506 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 83.
+13:50:49,538 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 91.
+13:50:49,547 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 55.
+13:50:49,579 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 70.
+13:50:49,744 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 55.
+13:50:51,745 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:52,443 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 89.
+13:50:52,465 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 82.
+13:50:52,496 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 92.
+13:50:52,499 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 97.
+13:50:52,503 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 82.
+13:50:52,514 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 82.
+13:50:52,522 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 97.
+13:50:52,558 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 63.
+13:50:52,598 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 82.
+13:50:52,777 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 64.
+13:50:53,955 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:53,987 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:55,032 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:55,470 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 93.
+13:50:55,506 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 93.
+13:50:55,524 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 93.
+13:50:55,578 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 72.
+13:50:55,611 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 93.
+13:50:55,797 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 72.
+13:50:56,151 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:58,274 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:58,289 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:58,335 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:58,453 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:50:58,593 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 81.
+13:50:58,827 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 81.
+13:51:01,599 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 90.
+13:51:01,829 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 90.
+13:51:04,603 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 98.
+13:51:04,862 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 99.
+13:51:05,977 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:51:06,063 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 25B6173A673A6D08C639478D332D1BD0: 100 (done).
+13:51:06,064 DEBUG - 11 nodeIds done, 0 failed for flashPrograms [flashPrograms] request id: 25B6173A673A6D08C639478D332D1BD0
+13:51:06,067 INFO  - JobResult{jobType=flashPrograms, description='flashPrograms', results=
+	urn:wisebed:ctitestbed:0x0712 | true | 
+	urn:wisebed:ctitestbed:0xd965 | true | 
+	urn:wisebed:ctitestbed:0x0efa | true | 
+	urn:wisebed:ctitestbed:0x852 | true | 
+	urn:wisebed:ctitestbed:0xfa4b | true | 
+	urn:wisebed:ctitestbed:0x9112 | true | 
+	urn:wisebed:ctitestbed:0x1ed4 | true | 
+	urn:wisebed:ctitestbed:0xf042 | true | 
+	urn:wisebed:ctitestbed:0x1fdc | true | 
+	urn:wisebed:ctitestbed:0x1bee | true | 
+	urn:wisebed:ctitestbed:0x4f22 | true | 
+
+13:51:06,072 INFO  - Closing connection...
+13:51:06,073 DEBUG - Channel was closed.
+13:51:06,074 DEBUG - Connection closed.
+13:51:06,075 DEBUG - [id: 0x019646fd, /150.140.5.11:59719 :> hercules.cti.gr/150.140.5.24:8885] DISCONNECTED
+13:51:06,076 DEBUG - [id: 0x019646fd, /150.140.5.11:59719 :> hercules.cti.gr/150.140.5.24:8885] UNBOUND
+13:51:06,076 DEBUG - [id: 0x019646fd, /150.140.5.11:59719 :> hercules.cti.gr/150.140.5.24:8885] CLOSED
+13:51:06,079 INFO  - Shutting down...
+13:53:26,315 DEBUG - Option for -f: ./../scripts/flash-protobuf.java
+13:53:26,352 DEBUG - Adding logger to beanshell, use 'log' variable, api is like log4j's
+13:53:26,353 DEBUG - Adding helper to beanshell, use 'helper' variable
+13:53:26,353 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.wsn.WSNServiceHelper;
+13:53:26,355 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.rs.RSServiceHelper;
+13:53:26,355 DEBUG - Adding the following default import: import eu.wisebed.testbed.api.snaa.helpers.SNAAServiceHelper;
+13:53:26,356 DEBUG - Adding the following default import: import de.uniluebeck.itm.wisebed.cmdlineclient.*;
+13:53:26,356 DEBUG - Adding the following default import: import de.uniluebeck.itm.wisebed.cmdlineclient.jobs.*
+13:53:26,356 DEBUG - Adding the following default import: import eu.wisebed.api.controller.*;
+13:53:26,357 DEBUG - Adding the following default import: import eu.wisebed.api.common.*;
+13:53:26,357 DEBUG - Adding the following default import: import eu.wisebed.api.sm.*;
+13:53:26,357 DEBUG - Adding the following default import: import eu.wisebed.api.wsn.*;
+13:53:26,358 DEBUG - Adding the following default import: import de.uniluebeck.itm.tr.util.*;
+13:53:26,358 DEBUG - Adding the following default import: import java.util.concurrent.TimeUnit;
+13:53:26,358 DEBUG - Adding the following default import: import de.itm.uniluebeck.tr.wiseml.WiseMLHelper;
+13:53:26,358 DEBUG - Adding the following default import: import eu.wisebed.api.rs.*;
+13:53:27,383 INFO  - Got a WSN instance URL, endpoint is: http://hercules.cti.gr:8888/iwsn/2C82F88800516D4088E4AA2EDCB89E7B
+13:53:27,556 DEBUG - Connecting to hercules.cti.gr:8885
+13:53:27,660 DEBUG - [id: 0x010ebe18] OPEN
+13:53:27,672 DEBUG - [id: 0x010ebe18, /150.140.5.11:43211 => hercules.cti.gr/150.140.5.24:8885] BOUND: /150.140.5.11:43211
+13:53:27,672 DEBUG - [id: 0x010ebe18, /150.140.5.11:43211 => hercules.cti.gr/150.140.5.24:8885] CONNECTED: hercules.cti.gr/150.140.5.24:8885
+13:53:27,672 DEBUG - Connection established.
+13:53:27,673 DEBUG - Connected.
+13:53:27,673 DEBUG - Sending secret reservation keys.
+13:53:27,876 INFO  - Selected the following node URNs: [urn:wisebed:ctitestbed:0x1bee, urn:wisebed:ctitestbed:0x4f22, urn:wisebed:ctitestbed:0xfa4b, urn:wisebed:ctitestbed:0x1fdc, urn:wisebed:ctitestbed:0xd965, urn:wisebed:ctitestbed:0x0efa, urn:wisebed:ctitestbed:0xf042, urn:wisebed:ctitestbed:0x0712, urn:wisebed:ctitestbed:0x9112, urn:wisebed:ctitestbed:0x852, urn:wisebed:ctitestbed:0x1ed4]
+13:53:27,877 INFO  - Flashing nodes...
+13:53:27,953 DEBUG - Submitted job with request Id 29110CB7EB4A34DF4C6A74CC34494F38
+13:53:30,973 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 0.
+13:53:30,974 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 3.
+13:53:30,985 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 0.
+13:53:30,989 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 4.
+13:53:30,992 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 0.
+13:53:30,997 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 4.
+13:53:31,011 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 4.
+13:53:31,022 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 8.
+13:53:31,030 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 0.
+13:53:31,086 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 2.
+13:53:31,172 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 2.
+13:53:33,965 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 15.
+13:53:33,966 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 12.
+13:53:33,999 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 17.
+13:53:34,007 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 12.
+13:53:34,011 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 12.
+13:53:34,017 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 16.
+13:53:34,024 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 17.
+13:53:34,040 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 12.
+13:53:34,041 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 22.
+13:53:34,090 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 11.
+13:53:34,206 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 11.
+13:53:36,976 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 28.
+13:53:36,985 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 23.
+13:53:37,017 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 31.
+13:53:37,018 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 23.
+13:53:37,025 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 28.
+13:53:37,034 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 31.
+13:53:37,037 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 23.
+13:53:37,056 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 23.
+13:53:37,058 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 36.
+13:53:37,113 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 20.
+13:53:37,240 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 20.
+13:53:39,982 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 39.
+13:53:40,006 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 35.
+13:53:40,032 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 40.
+13:53:40,033 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 44.
+13:53:40,042 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 35.
+13:53:40,053 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 44.
+13:53:40,064 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 35.
+13:53:40,075 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 35.
+13:53:40,077 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 50.
+13:53:40,134 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 28.
+13:53:40,256 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 29.
+13:53:42,994 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 52.
+13:53:43,030 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 47.
+13:53:43,033 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 57.
+13:53:43,041 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 53.
+13:53:43,061 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 57.
+13:53:43,073 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 47.
+13:53:43,085 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 47.
+13:53:43,089 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 47.
+13:53:43,095 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 64.
+13:53:43,138 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 37.
+13:53:43,290 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 37.
+13:53:46,019 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 63.
+13:53:46,035 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 69.
+13:53:46,042 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 58.
+13:53:46,055 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 66.
+13:53:46,083 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 71.
+13:53:46,084 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 58.
+13:53:46,087 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 58.
+13:53:46,096 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 78.
+13:53:46,097 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 58.
+13:53:46,143 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 46.
+13:53:46,307 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 46.
+13:53:49,042 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 76.
+13:53:49,059 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 81.
+13:53:49,062 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 79.
+13:53:49,066 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 70.
+13:53:49,084 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 82.
+13:53:49,090 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 70.
+13:53:49,091 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 70.
+13:53:49,114 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 91.
+13:53:49,115 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 70.
+13:53:49,167 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 55.
+13:53:49,326 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 55.
+13:53:51,283 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1fdc for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:52,053 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 88.
+13:53:52,062 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 92.
+13:53:52,078 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 82.
+13:53:52,080 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 91.
+13:53:52,094 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 81.
+13:53:52,105 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 82.
+13:53:52,107 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 94.
+13:53:52,137 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 82.
+13:53:52,168 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 63.
+13:53:52,357 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 64.
+13:53:54,266 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1ed4 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:54,695 DEBUG - Status update from node urn:wisebed:ctitestbed:0xfa4b for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:54,813 DEBUG - Status update from node urn:wisebed:ctitestbed:0x9112 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:55,097 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 93.
+13:53:55,107 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 94.
+13:53:55,122 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 93.
+13:53:55,146 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 93.
+13:53:55,174 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 72.
+13:53:55,391 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 73.
+13:53:55,941 DEBUG - Status update from node urn:wisebed:ctitestbed:0x852 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:57,816 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0712 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:58,029 DEBUG - Status update from node urn:wisebed:ctitestbed:0xd965 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:58,033 DEBUG - Status update from node urn:wisebed:ctitestbed:0xf042 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:58,149 DEBUG - Status update from node urn:wisebed:ctitestbed:0x0efa for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:53:58,180 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 81.
+13:53:58,424 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 81.
+13:54:01,186 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 90.
+13:54:01,461 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 90.
+13:54:04,191 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 98.
+13:54:04,489 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 99.
+13:54:05,595 DEBUG - Status update from node urn:wisebed:ctitestbed:0x1bee for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:54:05,603 DEBUG - Status update from node urn:wisebed:ctitestbed:0x4f22 for flashPrograms job with request ID 29110CB7EB4A34DF4C6A74CC34494F38: 100 (done).
+13:54:05,604 DEBUG - 11 nodeIds done, 0 failed for flashPrograms [flashPrograms] request id: 29110CB7EB4A34DF4C6A74CC34494F38
+13:54:05,607 INFO  - JobResult{jobType=flashPrograms, description='flashPrograms', results=
+	urn:wisebed:ctitestbed:0x0712 | true | 
+	urn:wisebed:ctitestbed:0x0efa | true | 
+	urn:wisebed:ctitestbed:0xd965 | true | 
+	urn:wisebed:ctitestbed:0x852 | true | 
+	urn:wisebed:ctitestbed:0xfa4b | true | 
+	urn:wisebed:ctitestbed:0x9112 | true | 
+	urn:wisebed:ctitestbed:0x1ed4 | true | 
+	urn:wisebed:ctitestbed:0xf042 | true | 
+	urn:wisebed:ctitestbed:0x1fdc | true | 
+	urn:wisebed:ctitestbed:0x1bee | true | 
+	urn:wisebed:ctitestbed:0x4f22 | true | 
+
+13:54:05,611 INFO  - Closing connection...
+13:54:05,612 DEBUG - Channel was closed.
+13:54:05,613 DEBUG - Connection closed.
+13:54:05,614 DEBUG - [id: 0x010ebe18, /150.140.5.11:43211 :> hercules.cti.gr/150.140.5.24:8885] DISCONNECTED
+13:54:05,615 DEBUG - [id: 0x010ebe18, /150.140.5.11:43211 :> hercules.cti.gr/150.140.5.24:8885] UNBOUND
+13:54:05,615 DEBUG - [id: 0x010ebe18, /150.140.5.11:43211 :> hercules.cti.gr/150.140.5.24:8885] CLOSED
+13:54:05,618 INFO  - Shutting down...

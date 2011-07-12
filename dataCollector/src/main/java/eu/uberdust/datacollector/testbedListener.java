@@ -1,18 +1,12 @@
 package eu.uberdust.datacollector;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-
-import java.util.Date;
-
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
-
+import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -20,17 +14,20 @@ import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
- // Import log4j classes.
- import org.apache.log4j.Logger;
- import org.apache.log4j.BasicConfigurator;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.util.Date;
 import java.util.Properties;
-import java.io.FileInputStream;
+import java.util.concurrent.Executors;
 
 import static org.jboss.netty.channel.Channels.pipeline;
+
+// Import log4j classes.
 
 public class testbedListener {
 
