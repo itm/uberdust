@@ -97,14 +97,14 @@ import java.lang.Process;
 	long from = (new Date()).getTime();
 	cal.setTimeInMillis(from);
         XMLGregorianCalendar timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-	from = (new Date()).getTime() + 30*60*1000;
+	from = (new Date()).getTime() + 2*60*60*1000;
 	cal.setTimeInMillis(from);
         XMLGregorianCalendar timeTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
 	List futurereservationlist = reservationSystem.getReservations(timeFrom,timeTo);
 
 
     GregorianCalendar cal = new GregorianCalendar();
-	long from = (new Date()).getTime() - 30*60*1000;
+	long from = (new Date()).getTime() - 2*60*60*1000;
 	cal.setTimeInMillis(from);
         XMLGregorianCalendar timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
 	from = (new Date()).getTime();
