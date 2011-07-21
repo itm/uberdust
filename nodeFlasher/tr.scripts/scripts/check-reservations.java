@@ -104,7 +104,7 @@ import java.lang.Process;
 
 
     GregorianCalendar cal = new GregorianCalendar();
-	long from = (new Date()).getTime() - 2*60*60*1000;
+	long from = (new Date()).getTime() - 30*60*1000;
 	cal.setTimeInMillis(from);
         XMLGregorianCalendar timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
 	from = (new Date()).getTime();

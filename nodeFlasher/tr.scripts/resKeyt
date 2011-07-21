@@ -1,7 +1,7 @@
-13:45:23,983 INFO  - Authenticating...
-13:45:25,933 INFO  - Successfully authenticated!
-13:45:26,019 INFO  - Retrieved the node URNs of all iSense nodes: urn:wisebed:ctitestbed:0x0498, urn:wisebed:ctitestbed:0x99ad, urn:wisebed:ctitestbed:0x1b7f, urn:wisebed:ctitestbed:0x6699
-13:45:26,186 INFO  - Trying to reserve the following nodes: [urn:wisebed:ctitestbed:0x0498, urn:wisebed:ctitestbed:0x99ad, urn:wisebed:ctitestbed:0x1b7f, urn:wisebed:ctitestbed:0x6699]
-13:45:27,831 INFO  - Successfully reserved nodes: [urn:wisebed:ctitestbed:0x0498, urn:wisebed:ctitestbed:0x99ad, urn:wisebed:ctitestbed:0x1b7f, urn:wisebed:ctitestbed:0x6699]
-13:45:27,832 INFO  - Reservation Key(s): urn:wisebed:ctitestbed:,B66AA13200CEAB96C174B061CF932CEB
-urn:wisebed:ctitestbed:,B66AA13200CEAB96C174B061CF932CEB
+16:17:43,971 INFO  - Authenticating...
+16:17:45,906 INFO  - Successfully authenticated!
+16:17:46,021 INFO  - Retrieved the node URNs of all iSense nodes: urn:wisebed:ctitestbed:0x6699
+16:17:46,201 INFO  - Trying to reserve the following nodes: [urn:wisebed:ctitestbed:0x6699]
+16:17:48,449 INFO  - Successfully reserved nodes: [urn:wisebed:ctitestbed:0x6699]
+16:17:48,450 INFO  - Reservation Key(s): urn:wisebed:ctitestbed:,1B266ED71DB7DDD3DBDCD9B16ADD1538
+urn:wisebed:ctitestbed:,1B266ED71DB7DDD3DBDCD9B16ADD1538

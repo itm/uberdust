@@ -1,0 +1,98 @@
+10
+
+dir
+5733
+https://svn.itm.uni-luebeck.de/wisebed/wiselib/trunk/iapps
+https://svn.itm.uni-luebeck.de/wisebed
+
+
+
+2011-07-14T10:59:14.118745Z
+5729
+svnamaxilatis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+f8795833-4959-0410-8ae9-8bcb0cfab428
+
+WISEBEDFederatorDemoApp
+dir
+
+wiselib_metrics
+dir
+
+WISEBEDDancerDemoApp
+dir
+
+WISEBEDApplication
+dir
+
+presenter_App
+dir
+
+Makefile.properties
+file
+
+
+
+
+2011-06-06T12:20:08.842545Z
+f9e19c0910e660cf197ebc362ff0b5a6
+2009-06-05T11:16:13.232036Z
+846
+svntbaum
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+782
+
+wiselib_example
+dir
+
+jammer_App
+dir
+
+topology_test
+dir
+
+isense_collector_app
+dir
+
+extended_time_test
+dir
+
+consumption
+dir
+
+telosb_collector_app
+dir
+
