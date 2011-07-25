@@ -157,18 +157,13 @@ private:
 
     bool is_gateway() {
         switch (os().id()) {
-            case 0x6699: //2,3
-                break;
-            case 0x0498: //2,1
-                break;
-            case 0x1b7f: //3,3
-                break;
-            case 0x9979: //0,1
-                break;
-            case 0xca7: //0,2
-                break;
+            case 0x6699:
+            case 0x0498:
+            case 0x1b7f:
+            case 0x9979:
+            case 0xc7a:
             case 0x99ad: //3,1
-                break;
+                return true;
             default:
                 return false;
         }
@@ -279,7 +274,7 @@ boot(void) {
     }
     nb_.set_payload((uint8) 2, buf, 1);
 
-    os().radio().hardware_radio().set_channel(13);
+    os().radio().hardware_radio().set_channel(12);
 
 }
 
@@ -466,11 +461,25 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
     collectorMsg_t * mess;
 
     if ((buf[0] == 0x7f) || (buf[1] == 0x69) || (buf[2] == 112)) {
-        
-        mess = (collectorMsg_t *) (buf + 3);
-//        for (int i=0;i<len;i++)
-//        os().debug("%x",buf[i]);
-//        os().debug("received from %x %d [%d|%d",src_addr,len,mess->msg_id(),mess->collector_type_id());
+
+        uint8 msa[len - 3];
+        memcpy(msa, buf + 3, len);
+        msa[2] = buf[8];
+        msa[3] = buf[7];
+        msa[4] = buf[6];
+        msa[5] = buf[5];
+        //        swapped = ((num>>24)&0xff) | // move byte 3 to byte 0
+        //                    ((num<<8)&0xff0000) | // move byte 1 to byte 2
+        //                    ((num>>8)&0xff00) | // move byte 2 to byte 1
+        //                    ((num<<24)&0xff000000 // byte 0 to byte 3
+
+        mess = (collectorMsg_t *) (msa);
+        for (int i = 0; i < len - 3; i++)
+            os().debug("%x", msa[i]);
+
+
+
+        //        os().debug("received from %x %d [%d|%d",src_addr,len,mess->msg_id(),mess->collector_type_id());
     } else {
         mess = (collectorMsg_t *) buf;
     }
