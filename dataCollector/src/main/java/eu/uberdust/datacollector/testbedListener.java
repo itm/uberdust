@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
@@ -224,51 +225,18 @@ public class testbedListener {
                             final int target_end = strLine.indexOf(" ", target_start);
                             final String target_id = strLine.substring(target_start, target_end);
                             log.info("Fount a link down " + node_id + "<<------>>" + target_id);
-                            //get the link
-                            Link link = new Link();
-                            link.setSource("urn:wisebed:ctitestbed:" + node_id);
-                            link.setTarget("urn:wisebed:ctitestbed:" + target_id);
-                            //set the capability to status
-                            Capability status = new Capability();
-                            status.setName("status");
-                            link.setCapabilities(Arrays.asList(status));
-                            if (!LinkController.getInstance().list().contains(link)) {
-                                //add if not existing
-                                LinkController.getInstance().add(link);
-                            }
-                            //set up of down
-                            LinkReading link_reading = new LinkReading();
-                            link_reading.setLink(LinkController.getInstance().list().get(LinkController.getInstance().list().indexOf(link)));
-                            link_reading.setCapability(status);
-                            link_reading.setReading(0);
-                            link_reading.setTimestamp(new java.util.Date());
-                            //send to database
-                            LinkReadingController.getInstance().add(link_reading);
+                            //add the reading
+                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:"+node_id,
+                                    "urn:wisebed:ctitestbed:"+target_id,"status",0.0,new Date());
                         } else if (strLine.contains("LINK_UP")) {
                             //get the target id
                             final int target_start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
                             final int target_end = strLine.indexOf(" ", target_start);
                             final String target_id = strLine.substring(target_start, target_end);
                             log.info("Fount a link up " + node_id + "<<------>>" + target_id);
-                            //get the link
-                            Link link = new Link();
-                            link.setSource("urn:wisebed:ctitestbed:" + node_id);
-                            link.setTarget("urn:wisebed:ctitestbed:" + target_id);
-                            //set the capability to status
-                            Capability status = new Capability();
-                            status.setName("status");
-                            link.setCapabilities(Arrays.asList(status));
-                            if (!LinkController.getInstance().list().contains(link)) {
-                                //add if not existing
-                                LinkController.getInstance().add(link);
-                            }
-                            LinkReading link_reading = new LinkReading();
-                            link_reading.setLink(LinkController.getInstance().list().get(LinkController.getInstance().list().indexOf(link)));
-                            link_reading.setCapability(status);
-                            link_reading.setReading(1);
-                            link_reading.setTimestamp(new java.util.Date());
-                            //send to database
-                            LinkReadingController.getInstance().add(link_reading);
+                            //add the reading
+                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:"+node_id,
+                                    "urn:wisebed:ctitestbed:"+target_id,"status",1.0,new Date());
                         }
                     }
                 }
