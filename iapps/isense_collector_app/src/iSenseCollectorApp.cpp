@@ -461,7 +461,7 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
     collectorMsg_t * mess;
 
     if ((buf[0] == 0x7f) || (buf[1] == 0x69) || (buf[2] == 112)) {
-
+/*
         uint8 msa[len - 3];
         memcpy(msa, buf + 3, len);
         msa[2] = buf[8];
@@ -480,6 +480,7 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
 
 
         //        os().debug("received from %x %d [%d|%d",src_addr,len,mess->msg_id(),mess->collector_type_id());
+*/
     } else {
         mess = (collectorMsg_t *) buf;
     }
