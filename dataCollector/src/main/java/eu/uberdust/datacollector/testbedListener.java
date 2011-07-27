@@ -4,10 +4,11 @@ import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import eu.wisebed.wisedb.HibernateUtil;
-import eu.wisebed.wisedb.controller.CapabilityController;
-import eu.wisebed.wisedb.controller.NodeController;
-import eu.wisebed.wisedb.controller.NodeReadingController;
+import eu.wisebed.wisedb.controller.*;
+import eu.wisebed.wisedb.model.LinkReading;
 import eu.wisebed.wisedb.model.NodeReading;
+import eu.wisebed.wiseml.model.setup.Capability;
+import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
@@ -24,8 +25,7 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.sql.Connection;
-import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
@@ -53,9 +53,7 @@ public class testbedListener {
 
 
     public static void main(String[] args) throws IOException {
-        // set up logging
-        //Logging.setLoggingDefaults();
-        //log = LoggerFactory.getLogger(testbedListener.class);
+
         BasicConfigurator.configure();
 
 
@@ -71,21 +69,6 @@ public class testbedListener {
         // Initialize hibernate
         HibernateUtil.connectEntityManagers();
         log.info("hibernate connected");
-
-
-        // Construct a SetupImporter and Node Importer
-//        final SetupImporter sImp = new SetupImporter();
-//        log.info(properties.getProperty("testbed.session"));
-//        sImp.setEndpointUrl("http://hercules.cti.gr:8888/sessions");
-//
-//        // Connect to remote endpoint (url already passed in the importer)
-//        try{
-//            sImp.connect();
-//        }catch(Exception e){
-//            log.fatal(e);
-//        }
-//
-//        sImp.convert();
 
 
         String ipAddress = properties.getProperty("runtime.ipAddress");
@@ -164,22 +147,15 @@ public class testbedListener {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
-
             Messages.Msg message = (Messages.Msg) e.getMessage();
-
             if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
-
                 WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
-
                 //log.info("Received sensor node binary output: \"{}\"",  );
                 parse(wsnAppMessage.toString());
-
-            } else {
-                //log.info("Received message: {}", StringUtils.jaxbMarshal(message));
             }
         }
 
-
+        //USEd to get the node id from the string received
         private String extractNodeId(String linea) {
             final String line = linea.substring(7);
             final int start = line.indexOf("0x");
@@ -191,35 +167,22 @@ public class testbedListener {
             }
             return "";
         }
-//
-//        private String extractSenderId(String linea) {
-//            if (linea.contains("Source")) {
-//                final String line = linea.substring(7);
-//                final int start = line.indexOf("Source0x") + 6;
-//                if (start > 0) {
-//                    final int end = line.indexOf(" ", start);
-//                    if (end > 0) {
-//                        //System.out.println(line);
-//                        //System.out.println(line.substring(start, end));
-//                        return line.substring(start, end);
-//                    }
-//                }
-//            }
-//            return "";
-//        }
-
 
         private void parse(String toString) {
-
+            //Get only the text part
             final String strLine = toString.substring(toString.indexOf("binaryData:") + "binaryData:".length());
-
+            //get the node id
             final String node_id = extractNodeId(strLine);
             try {
-
+                //if there is a node id
                 if (node_id != "") {
+                    //check for capability readings
+                    boolean found_reading = false;
+                    //check for all given capabilitirs
                     for (int i = 0; i < Sensors_prefixes.length; i++) {
                         final int start = strLine.indexOf(Sensors_prefixes[i]) + Sensors_prefixes[i].length() + 1;
                         if (start > Sensors_prefixes[i].length()) {
+                            found_reading = true;
                             int end = strLine.indexOf(" ", start);
                             if (end == -1) {
                                 end = strLine.length() - 2;
@@ -228,17 +191,19 @@ public class testbedListener {
                             try {
                                 value = Integer.parseInt(strLine.substring(start, end));
                                 log.info(Sensors_names[i] + " value " + value + " node " + node_id);
+                                //check if inside accepted values
                                 if ((value > -1) && (value < 5000001)) {
-
-
+                                    //get the node from hibernate
                                     final Node newnode = NodeController.getInstance().getByID("urn:wisebed:ctitestbed:" + node_id);
                                     if (newnode != null) {
+                                        //create a new node reading
                                         NodeReading reading = new NodeReading();
+                                        //set reading values
                                         reading.setNode(newnode);
                                         reading.setCapability(CapabilityController.getInstance().getByID("urn:wisebed:node:capability:" + Sensors_names[i]));
                                         reading.setReading(value);
-
                                         reading.setTimestamp(new java.util.Date());
+                                        //send to database
                                         NodeReadingController.getInstance().add(reading);
                                     } else {
                                         log.debug("Node " + node_id + " could not be found");
@@ -249,11 +214,67 @@ public class testbedListener {
                             }
                         }
                     }
+
+                    //if not a node reading message
+                    if (!found_reading) {
+                        // check for link down message
+                        if (strLine.contains("LINK_DOWN")) {
+                            //get the target id
+                            final int target_start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
+                            final int target_end = strLine.indexOf(" ", target_start);
+                            final String target_id = strLine.substring(target_start, target_end);
+                            log.info("Fount a link down " + node_id + "<<------>>" + target_id);
+                            //get the link
+                            Link link = new Link();
+                            link.setSource("urn:wisebed:ctitestbed:" + node_id);
+                            link.setTarget("urn:wisebed:ctitestbed:" + target_id);
+                            //set the capability to status
+                            Capability status = new Capability();
+                            status.setName("status");
+                            link.setCapabilities(Arrays.asList(status));
+                            if (!LinkController.getInstance().list().contains(link)) {
+                                //add if not existing
+                                LinkController.getInstance().add(link);
+                            }
+                            //set up of down
+                            LinkReading link_reading = new LinkReading();
+                            link_reading.setLink(LinkController.getInstance().list().get(LinkController.getInstance().list().indexOf(link)));
+                            link_reading.setCapability(status);
+                            link_reading.setReading(0);
+                            link_reading.setTimestamp(new java.util.Date());
+                            //send to database
+                            LinkReadingController.getInstance().add(link_reading);
+                        } else if (strLine.contains("LINK_UP")) {
+                            //get the target id
+                            final int target_start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
+                            final int target_end = strLine.indexOf(" ", target_start);
+                            final String target_id = strLine.substring(target_start, target_end);
+                            log.info("Fount a link up " + node_id + "<<------>>" + target_id);
+                            //get the link
+                            Link link = new Link();
+                            link.setSource("urn:wisebed:ctitestbed:" + node_id);
+                            link.setTarget("urn:wisebed:ctitestbed:" + target_id);
+                            //set the capability to status
+                            Capability status = new Capability();
+                            status.setName("status");
+                            link.setCapabilities(Arrays.asList(status));
+                            if (!LinkController.getInstance().list().contains(link)) {
+                                //add if not existing
+                                LinkController.getInstance().add(link);
+                            }
+                            LinkReading link_reading = new LinkReading();
+                            link_reading.setLink(LinkController.getInstance().list().get(LinkController.getInstance().list().indexOf(link)));
+                            link_reading.setCapability(status);
+                            link_reading.setReading(1);
+                            link_reading.setTimestamp(new java.util.Date());
+                            //send to database
+                            LinkReadingController.getInstance().add(link_reading);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 log.error("Node " + node_id + " - " + e.toString());
             }
-
         }
     };
     private ChannelPipelineFactory channelPipelineFactory = new ChannelPipelineFactory() {
@@ -276,6 +297,7 @@ public class testbedListener {
         }
     };
 
+    //used to connect to testbedruntime
     private void start() {
 
         NioClientSocketChannelFactory factory =
@@ -308,7 +330,6 @@ public class testbedListener {
     private static void usage(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp(120, testbedListener.class.getCanonicalName(), null, options, null);
-        System.exit(
-                1);
+        System.exit(1);
     }
 }
