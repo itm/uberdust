@@ -8,7 +8,7 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="refresh" content="0;url=index.jsp">
+    <%--<meta http-equiv="refresh" content="0;url=index.jsp">--%>
     <title>ÜberDust</title>
 </head>
 <body>
