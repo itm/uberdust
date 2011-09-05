@@ -2,16 +2,89 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
-       xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-            http://www.springframework.org/schema/aop
-            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-            http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
-            http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
-            http://www.directwebremoting.org/schema/spring-dwr
-            http://directwebremoting.org/schema/spring-dwr-2.0.xsd">
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="position" class="eu.wisebed.wiseml.model.setup.Position"/>
+
+    <bean id="node" class="eu.wisebed.wiseml.model.setup.Node">
+        <property name="position" ref="position"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost/prman?useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="prman"/>
+        <property name="password" value="pr123456man"/>
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="30"/>
+        <property name="validationQuery" value="select 1"/>
+    </bean>
+
+<bean id="transactionManager"
+	          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	        <property name="sessionFactory" ref="sessionFactory"/>
+	    </bean>
+
+    <bean id="sessionFactory"
+	          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	        <property name="dataSource" ref="dataSource"/>
+	        <property name="mappingResources">
+	            <list>
+	                <value>classpath:/eu/wisebed/wiseml/model/setup/Node.hbm.xml</value>
+	            </list>
+	        </property>
+	        <property name="hibernateProperties">
+	            <props>
+	                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLMyISAMDialect</prop>
+	                <prop key="current_session_context_class">thread</prop>
+	                <prop key="hibernate.connection.useUnicode">true</prop>
+	                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+	                <prop key="cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+	                <prop key="log4j.logger.net.sf.hibernate">warn</prop>
+	                <prop key="show_sql">false</prop>
+	                <prop key="format_sql">false</prop>
+	                <prop key="hibernate.hbm2ddl.auto">update</prop>
+	                <!--<prop key="hibernate.jdbc.batch_size">0</prop>-->
+	            </props>
+	        </property>
+	    </bean>
+
+<bean id="hibernateInterceptor"
+	          class="org.springframework.orm.hibernate3.HibernateInterceptor">
+	        <property name="sessionFactory" ref="sessionFactory"/>
+	    </bean>
+
+<bean id="proxyTemplate"
+	          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+	          abstract="true">
+	        <property name="transactionManager" ref="transactionManager"/>
+	        <property name="transactionAttributes">
+	            <props>
+	                <prop key="*">PROPAGATION_REQUIRED</prop>
+	            </props>
+	        </property>
+	        <property name="preInterceptors">
+	            <list>
+	                <ref bean="hibernateInterceptor"/>
+	            </list>
+	        </property>
+	    </bean>
+
+  <bean id="abstractManager"
+	          class="eu.wisebed.wisedb.controller.AbstractController"
+	          abstract="true">
+	        <property name="sessionFactory" ref="sessionFactory"/>
+	    </bean>
+
+  <bean id="nodeManager" parent="proxyTemplate">
+	        <property name="target" ref="nodeManagerTarget"/>
+	    </bean>
+
+	    <bean id="nodeManagerTarget"
+	          class="eu.wisebed.wisedb.controller.NodeController"
+	          parent="abstractManager"
+	          factory-method="getInstance"/>
 
 </beans>

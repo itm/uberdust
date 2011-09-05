@@ -16,7 +16,8 @@
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
-                <prop key="GET /*">nodeController</prop>
+                <prop key="GET /node/*">nodeController</prop>
+                <prop key="GET /link/*">linkController</prop>
 
                 <!-- Some other example mappings
                   <prop key="PUT /user/*">updateUserController</prop>
@@ -27,9 +28,14 @@
         </property>
     </bean>
 
+    <bean name="nodeCommand" class="uberdust.commands.NodeCommand"/>
+
+    <bean name="linkCommand" class="uberdust.commands.LinkCommand"/>
+
     <bean name="nodeController" class="uberdust.controllers.NodeController">
-        <property name="commandClass" value="uberdust.commands.NodeCommand"/>
-        <property name="uriPattern" value="/{nodeId}"/>
+        <property name="commandName" value="nodeCommand" />
+        <property name="nodeManager" value="nodeManager" />
+        <property name="uriPattern" value="/node/{nodeId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="node"/>
@@ -41,5 +47,21 @@
             </bean>
         </property>
     </bean>
+
+    <bean name="linkController" class="uberdust.controllers.LinkController">
+        <property name="commandName" value="linkCommand" />
+        <property name="uriPattern" value="/link/{sourceId}/{targetId}" />
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="link"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="link/index" />
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
 
 </beans>

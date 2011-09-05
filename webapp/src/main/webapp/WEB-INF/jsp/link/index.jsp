@@ -12,5 +12,6 @@
 </head>
 <body>
 <h1>Welcome to ÜberDust</h1>
+Link with source ID <c:out value="${sourceId}"/> and targetId <c:out value="${targetId}"/>
 </body>
 </html>

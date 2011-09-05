@@ -1,10 +1,9 @@
 package uberdust.controllers;
 
-import eu.wisebed.wiseml.model.setup.Node;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
-import uberdust.commands.NodeCommand;
+import uberdust.commands.LinkCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * REST Controller for displaying node information.
+ * REST Controller for displaying link information.
  */
-public class NodeController extends AbstractRestController {
+public class LinkController extends AbstractRestController {
 
-    public NodeController() {
+    public LinkController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -27,25 +26,14 @@ public class NodeController extends AbstractRestController {
                                   HttpServletResponse response, Object commandObj, BindException errors)
             throws Exception {
 
-        NodeCommand command = (NodeCommand) commandObj;
+        LinkCommand command = (LinkCommand) commandObj;
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
+        refData.put("sourceId", command.getSourceId());
+        refData.put("targetId", command.getTargetId());
 
-        // Retrieve the node
-        if (command.getNodeId() != null) {
-            Node thisNode = nodeManager.getByID(command.getNodeId());
-            refData.put("thisNode", thisNode);
-        }
-
-        refData.put("nodeId", command.getNodeId());
-
-        return new ModelAndView("node/index", refData);
+        return new ModelAndView("link/index", refData);
     }
 
-    private eu.wisebed.wisedb.controller.NodeController nodeManager;
-
-    public void setNodeManager(eu.wisebed.wisedb.controller.NodeController nodeManager) {
-        this.nodeManager = nodeManager;
-    }
 }
