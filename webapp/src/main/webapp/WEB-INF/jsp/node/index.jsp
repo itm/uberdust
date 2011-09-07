@@ -4,7 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <jsp:useBean id="thisNode" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
-<jsp:useBean id="nodeId" scope="request" type="java.lang.String"/>
 <html>
 <head>
     <META NAME="Description" CONTENT="ÜberDust"/>
@@ -16,18 +15,22 @@
 <h1>Welcome to ÜberDust</h1>
 <table>
     <tr>
-        Node ID <c:out value="${nodeId}"/>
+        <td>Node ID</td>
+        <td><c:out value="${thisNode.id}"/></td>
     </tr>
     <tr>
-        <c:out value="${thisNode.description}"/>
+        <td>Node Description</td>
+        <td><c:out value="${thisNode.description}"/></td>
     </tr>
     <tr>
-        <h3>Capabilities</h3>
-        <ul>
-            <c:forEach items="${thisNode.capabilities}" var="thisCap">
-                <li><c:out value="${thisCap.name}"/></li>
-            </c:forEach>
-        </ul>
+        <td>Capabilities</td>
+        <td>
+            <ul>
+                <c:forEach items="${thisNode.capabilities}" var="thisCap">
+                    <li><c:out value="${thisCap.name}"/></li>
+                </c:forEach>
+            </ul>
+        </td>
     </tr>
 </table>
 </body>

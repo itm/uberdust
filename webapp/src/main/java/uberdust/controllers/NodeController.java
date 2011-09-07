@@ -44,8 +44,6 @@ public class NodeController extends AbstractRestController {
             refData.put("thisNode", thisNode);
         }
 
-        refData.put("nodeId", command.getNodeId());
-
         return new ModelAndView("node/index", refData);
     }
 }

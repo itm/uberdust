@@ -13,7 +13,13 @@
 
     <bean id="Capability" class="eu.wisebed.wiseml.model.setup.Capability"/>
     <bean id="Position" class="eu.wisebed.wiseml.model.setup.Position"/>
-    <bean id="Node" class="eu.wisebed.wiseml.model.setup.Node"/>
+    <bean id="Node" class="eu.wisebed.wiseml.model.setup.Node">
+        <property name="capabilities">
+            <list>
+                <ref bean="Capability"/>
+            </list>
+        </property>
+    </bean>
     <bean id="Link" class="eu.wisebed.wiseml.model.setup.Link"/>
     <bean id="NodeReading" class="eu.wisebed.wisedb.model.NodeReading"/>
     <bean id="LinkReading" class="eu.wisebed.wisedb.model.LinkReading"/>

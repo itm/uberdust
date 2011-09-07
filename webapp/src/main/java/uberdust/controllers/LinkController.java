@@ -43,10 +43,9 @@ public class LinkController extends AbstractRestController {
             Link thisLink = linkManager.getByID(
                     command.getSourceId(),command.getTargetId());
             refData.put("thisLink", thisLink);
+            refData.put("sourceId", command.getSourceId());
+            refData.put("targetId", command.getTargetId());
         }
-
-        refData.put("sourceId", command.getSourceId());
-        refData.put("targetId", command.getTargetId());
 
         return new ModelAndView("link/index", refData);
     }
