@@ -14,13 +14,21 @@
 </head>
 <body>
 <h1>Welcome to ÜberDust</h1>
-Node ID <c:out value="${nodeId}"/>!<BR>
-<c:out value="${thisNode.description}"/>
-<h3>Capabilities</h3>
-<ul>
-    <c:forEach items="${thisNode.capabilities}" var="thisCap">
-        <li><c:out value="${thisCap.name}"/></li>
-    </c:forEach>
-</ul>
+<table>
+    <tr>
+        Node ID <c:out value="${nodeId}"/>
+    </tr>
+    <tr>
+        <c:out value="${thisNode.description}"/>
+    </tr>
+    <tr>
+        <h3>Capabilities</h3>
+        <ul>
+            <c:forEach items="${thisNode.capabilities}" var="thisCap">
+                <li><c:out value="${thisCap.name}"/></li>
+            </c:forEach>
+        </ul>
+    </tr>
+</table>
 </body>
 </html>

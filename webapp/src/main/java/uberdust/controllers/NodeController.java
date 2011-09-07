@@ -16,11 +16,17 @@ import java.util.Map;
  */
 public class NodeController extends AbstractRestController {
 
+    private eu.wisebed.wisedb.controller.NodeController nodeManager;
+
     public NodeController() {
         super();
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
+    }
+
+    public void setNodeManager(eu.wisebed.wisedb.controller.NodeController nodeManager) {
+        this.nodeManager = nodeManager;
     }
 
     protected ModelAndView handle(HttpServletRequest request,
@@ -41,11 +47,5 @@ public class NodeController extends AbstractRestController {
         refData.put("nodeId", command.getNodeId());
 
         return new ModelAndView("node/index", refData);
-    }
-
-    private eu.wisebed.wisedb.controller.NodeController nodeManager;
-
-    public void setNodeManager(eu.wisebed.wisedb.controller.NodeController nodeManager) {
-        this.nodeManager = nodeManager;
     }
 }

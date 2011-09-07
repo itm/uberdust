@@ -10,6 +10,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:spring/spring-data.xml
+            classpath:spring/spring-model.xml
         </param-value>
     </context-param>
 
