@@ -258,7 +258,7 @@
                 <artifactId>tomcat-maven-plugin</artifactId>
                 <version>1.1</version>
                 <configuration>
-                    <server>tomcat</server>
+                    <server>tomcat6</server>
                     <warFile>${project.build.directory}/${project.build.finalName}.war</warFile>
                     <path>/${project.build.finalName}</path>
                     <url>${tomcat.manager.url}</url>
