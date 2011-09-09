@@ -14,11 +14,11 @@ import java.util.Map;
 /**
  * REST Controller for displaying node information.
  */
-public class NodeController extends AbstractRestController {
+public class NodeInfoController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.NodeController nodeManager;
 
-    public NodeController() {
+    public NodeInfoController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -33,17 +33,28 @@ public class NodeController extends AbstractRestController {
                                   HttpServletResponse response, Object commandObj, BindException errors)
             throws Exception {
 
+        // set command object
         NodeCommand command = (NodeCommand) commandObj;
+
+        // Node instance
+        Node thisNode = null;
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // Retrieve the node
         if (command.getNodeId() != null) {
-            Node thisNode = nodeManager.getByID(command.getNodeId());
-            refData.put("thisNode", thisNode);
+            thisNode = nodeManager.getByID(command.getNodeId());
         }
 
+        // if no link found return error view
+        if(thisNode == null){
+            refData.put("nodeId", command.getNodeId());
+            return new ModelAndView("node/error",refData);
+        }
+
+        // else put thisNode instance in refData and return index view
+        refData.put("thisNode", thisNode);
         return new ModelAndView("node/index", refData);
     }
 }

@@ -260,7 +260,7 @@
                 <configuration>
                     <server>tomcat6</server>
                     <warFile>${project.build.directory}/${project.build.finalName}.war</warFile>
-                    <path>/${project.build.finalName}</path>
+                    <path>/${artifactId}</path>
                     <url>${tomcat.manager.url}</url>
                 </configuration>
             </plugin>

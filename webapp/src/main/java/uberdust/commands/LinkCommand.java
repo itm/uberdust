@@ -1,7 +1,5 @@
 package uberdust.commands;
 
-import eu.wisebed.wisedb.controller.LinkController;
-
 /**
  * POJO object for holding parameters for link related commands.
  */

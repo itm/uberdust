@@ -6,15 +6,15 @@
        xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
        xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-       http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-       http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
-       http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
-       http://www.directwebremoting.org/schema/spring-dwr
-       http://directwebremoting.org/schema/spring-dwr-2.0.xsd">
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
+http://www.directwebremoting.org/schema/spring-dwr
+http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
 
-
+    <!-- Data Source setup -->
     <bean id="dataSource"
           class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="${jdbc.connection.driver_class}"/>
@@ -26,6 +26,7 @@
         <property name="validationQuery" value="select 1"/>
     </bean>
 
+    <!-- Session Factory setup with hbm mappings in place -->
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
@@ -40,6 +41,7 @@
                 <value>eu/wisebed/wisedb/model/Testbed.hbm.xml</value>
             </list>
         </property>
+        <!-- Also set of hibernate properties -->
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
@@ -56,17 +58,19 @@
         </property>
     </bean>
 
-
+    <!-- injecting a hibernate interceptor to session factory -->
     <bean id="hibernateInterceptor"
           class="org.springframework.orm.hibernate3.HibernateInterceptor">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <!--injecting a transaction manager to session factory -->
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <!-- A Transaction Proxy bean -->
     <bean id="proxyTemplate"
           class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
           abstract="true">
@@ -83,12 +87,14 @@
         </property>
     </bean>
 
+    <!-- Setup of the abstractManager (Persistence controller/manager) -->
     <bean id="abstractManager"
           class="eu.wisebed.wisedb.controller.AbstractController"
           abstract="true">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <!-- nodeManager using the above transaction management proxy -->
     <bean id="nodeManager" parent="proxyTemplate">
         <property name="target" ref="nodeManagerTarget"/>
     </bean>
@@ -97,10 +103,10 @@
           parent="abstractManager"
           factory-method="getInstance"/>
 
+    <!-- nodeManager using the above transaction management proxy -->
     <bean id="linkManager" parent="proxyTemplate">
         <property name="target" ref="linkManagerTarget"/>
     </bean>
-
     <bean id="linkManagerTarget"
           class="eu.wisebed.wisedb.controller.LinkController"
           parent="abstractManager"

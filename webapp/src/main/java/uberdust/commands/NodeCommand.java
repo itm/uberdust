@@ -1,7 +1,5 @@
 package uberdust.commands;
 
-import eu.wisebed.wisedb.controller.NodeController;
-
 /**
  * POJO object for holding parameters for node related commands.
  */

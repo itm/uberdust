@@ -14,11 +14,11 @@ import java.util.Map;
 /**
  * REST Controller for displaying link information.
  */
-public class LinkController extends AbstractRestController {
+public class LinkInfoController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.LinkController linkManager;
 
-    public LinkController() {
+    public LinkInfoController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -33,20 +33,30 @@ public class LinkController extends AbstractRestController {
                                   HttpServletResponse response, Object commandObj, BindException errors)
             throws Exception {
 
+        // set command object
         LinkCommand command = (LinkCommand) commandObj;
+
+        // a link instance
+        Link thisLink = null;
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
-        // Retrieve the node
+        // Retrieve the link
         if (command.getSourceId() != null && command.getTargetId() != null) {
-            Link thisLink = linkManager.getByID(
+            thisLink = linkManager.getByID(
                     command.getSourceId(),command.getTargetId());
-            refData.put("thisLink", thisLink);
-            refData.put("sourceId", command.getSourceId());
-            refData.put("targetId", command.getTargetId());
         }
 
+        // if no link found return error view
+        if(thisLink == null){
+            refData.put("sourceId", command.getSourceId());
+            refData.put("targetId", command.getTargetId());
+            return new ModelAndView("link/error",refData);
+        }
+
+        // return index view with refData
+        refData.put("thisLink", thisLink);
         return new ModelAndView("link/index", refData);
     }
 
