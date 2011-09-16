@@ -19,13 +19,33 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
+                <prop key="GET /home/*">testbedSetupInfoController</prop>
                 <prop key="GET /node/*">nodeInfoController</prop>
                 <prop key="GET /link/*/*">linkInfoController</prop>
             </props>
         </property>
     </bean>
 
-    <!-- Node Controller -->
+    <!-- Setup/Testbed Info Controller -->
+    <bean name="testbedSetupInfoController" class="uberdust.controllers.TestbedSetupInfoController">
+        <property name="commandClass" value="uberdust.commands.TestbedSetupCommand"/>
+        <property name="setupManager" ref="setupManager"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="testbedsetup"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="node/index"/>
+                        <entry key="text/html" value="node/error"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+
+    <!-- Node Info Controller -->
     <bean name="nodeInfoController" class="uberdust.controllers.NodeInfoController">
         <property name="commandClass" value="uberdust.commands.NodeCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
@@ -43,7 +63,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         </property>
     </bean>
 
-    <!-- LinkInfoController -->
+    <!-- Link Info Controller -->
     <bean name="linkInfoController" class="uberdust.controllers.LinkInfoController">
         <property name="commandClass" value="uberdust.commands.LinkCommand"/>
         <property name="linkManager" ref="linkManager"/>

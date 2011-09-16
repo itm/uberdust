@@ -29,6 +29,7 @@ public class LinkInfoController extends AbstractRestController {
         this.linkManager = linkManager;
     }
 
+    @Override
     protected ModelAndView handle(HttpServletRequest request,
                                   HttpServletResponse response, Object commandObj, BindException errors)
             throws Exception {

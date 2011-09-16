@@ -94,6 +94,24 @@ http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <!-- testbedManager using the above transaction management proxy -->
+    <bean id="testbedManager" parent="proxyTemplate">
+        <property name="target" ref="testbedManagerTarget"/>
+    </bean>
+    <bean id="testbedManagerTarget"
+          class="eu.wisebed.wisedb.controller.TestbedController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
+    <!-- setupManager using the above transaction management proxy -->
+    <bean id="setupManager" parent="proxyTemplate">
+        <property name="target" ref="setupManagerTarget"/>
+    </bean>
+    <bean id="setupManagerTarget"
+          class="eu.wisebed.wisedb.controller.SetupController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
     <!-- nodeManager using the above transaction management proxy -->
     <bean id="nodeManager" parent="proxyTemplate">
         <property name="target" ref="nodeManagerTarget"/>
@@ -103,7 +121,7 @@ http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
           parent="abstractManager"
           factory-method="getInstance"/>
 
-    <!-- nodeManager using the above transaction management proxy -->
+    <!-- linkManager using the above transaction management proxy -->
     <bean id="linkManager" parent="proxyTemplate">
         <property name="target" ref="linkManagerTarget"/>
     </bean>

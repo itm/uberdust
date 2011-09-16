@@ -29,6 +29,7 @@ public class NodeInfoController extends AbstractRestController {
         this.nodeManager = nodeManager;
     }
 
+    @Override
     protected ModelAndView handle(HttpServletRequest request,
                                   HttpServletResponse response, Object commandObj, BindException errors)
             throws Exception {
