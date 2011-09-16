@@ -17,10 +17,10 @@ http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
     <!-- Data Source setup -->
     <bean id="dataSource"
           class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="${jdbc.connection.driver_class}"/>
-        <property name="url" value="${jdbc.connection.url}"/>
-        <property name="username" value="${jdbc.connection.username}"/>
-        <property name="password" value="${jdbc.connection.password}"/>
+        <property name="driverClassName" value="${wisedb.jdbc.connection.driver_class}"/>
+        <property name="url" value="${wisedb.jdbc.connection.url}"/>
+        <property name="username" value="${wisedb.jdbc.connection.username}"/>
+        <property name="password" value="${wisedb.jdbc.connection.password}"/>
         <property name="initialSize" value="10"/>
         <property name="maxActive" value="30"/>
         <property name="validationQuery" value="select 1"/>
@@ -44,7 +44,7 @@ http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
         <!-- Also set of hibernate properties -->
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.dialect">${wisedb.hibernate.dialect}</prop>
                 <prop key="current_session_context_class">thread</prop>
                 <prop key="hibernate.connection.useUnicode">true</prop>
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
