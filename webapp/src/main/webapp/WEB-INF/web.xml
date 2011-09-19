@@ -22,10 +22,28 @@
         </listener-class>
     </listener>
 
-     Default page to serve
+    <!-- Default page to serve -->
     <welcome-file-list>
-        <welcome-file>uberdust</welcome-file>
+        <welcome-file>/index.jsp</welcome-file>
     </welcome-file-list>
+
+    <!-- Error & Exception Handling -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+        <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
 
     <!-- Dispatcher Servlet configuration -->
     <servlet>
@@ -56,6 +74,7 @@
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
 
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>

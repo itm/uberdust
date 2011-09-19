@@ -19,7 +19,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
-                <prop key="GET /home/*">testbedSetupInfoController</prop>
+                <prop key="GET /testbedsetup/*">testbedSetupInfoController</prop>
                 <prop key="GET /node/*">nodeInfoController</prop>
                 <prop key="GET /link/*/*">linkInfoController</prop>
             </props>

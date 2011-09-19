@@ -1,6 +1,7 @@
 package uberdust.controllers;
 
 import eu.wisebed.wiseml.model.setup.Node;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -8,6 +9,7 @@ import uberdust.commands.NodeCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,12 +52,17 @@ public class NodeInfoController extends AbstractRestController {
 
         // if no link found return error view
         if(thisNode == null){
-            refData.put("nodeId", command.getNodeId());
-            return new ModelAndView("node/error",refData);
+            throw new Exception(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
         }
 
         // else put thisNode instance in refData and return index view
         refData.put("thisNode", thisNode);
         return new ModelAndView("node/index", refData);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,formattedErrorForFrontEnd);
     }
 }

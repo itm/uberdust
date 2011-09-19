@@ -2,12 +2,14 @@ package uberdust.controllers;
 
 import eu.wisebed.wiseml.model.setup.Link;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.LinkCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,9 +53,8 @@ public class LinkInfoController extends AbstractRestController {
 
         // if no link found return error view
         if(thisLink == null){
-            refData.put("sourceId", command.getSourceId());
-            refData.put("targetId", command.getTargetId());
-            return new ModelAndView("link/error",refData);
+            throw new Exception(
+                    new Throwable("Cannot find link [" + command.getSourceId() +"," + command.getTargetId())+"]");
         }
 
         // return index view with refData
@@ -61,4 +62,9 @@ public class LinkInfoController extends AbstractRestController {
         return new ModelAndView("link/index", refData);
     }
 
+    @ExceptionHandler(Exception.class)
+    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,formattedErrorForFrontEnd);
+    }
 }
