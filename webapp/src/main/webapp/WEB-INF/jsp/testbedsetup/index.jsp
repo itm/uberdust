@@ -18,26 +18,6 @@
 
 <h1>Welcome to ÜberDust</h1>
 
-<%--<% String statusCode = (String) request.getParameter("statusCode"); %>--%>
-<%--<% String message = (String) request.getParameter("message"); %>--%>
-<%--<% if(statusCode != null && statusCode.isEmpty() == false) { %>--%>
-   <%--<table id="error" style="color:#ff6666">--%>
-       <%--<thead>--%>
-            <%--<th>Error Occured</th>--%>
-       <%--</thead>--%>
-       <%--<tbody>--%>
-       <%--<tr>--%>
-           <%--<td>Status</td>--%>
-           <%--<td><%=statusCode %></td>--%>
-       <%--</tr>--%>
-       <%--<tr>--%>
-           <%--<td>Reason</td>--%>
-           <%--<td><%=message %></td>--%>
-       <%--</tr>--%>
-       <%--</tbody>--%>
-   <%--</table>--%>
-<%--<% } %>--%>
-
 <table id="information">
     <tbody>
     <tr>
@@ -57,7 +37,17 @@
         <td>
             <ul>
                 <c:forEach items="${thisSetup.nodes}" var="thisNode">
-                    <li><c:out value="${thisNode.id}"/></li>
+                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${thisNode.id}"><c:out value="${thisNode.id}"/></a></li>
+                </c:forEach>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>Links</td>
+        <td>
+            <ul>
+                <c:forEach items="${thisSetup.link}" var="thisLink">
+                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${thisLink.source}/${thisLink.target}"><c:out value="${thisLink.source},${thisLink.target}"/></a></li>
                 </c:forEach>
             </ul>
         </td>

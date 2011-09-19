@@ -11,12 +11,6 @@
     <title>ÜberDust</title>
 </head>
 <body>
-    <%--<% String statusCode = (String) request.getAttribute("javax.servlet.error.status_code"); %>--%>
-    <%--<% String message = (String) request.getAttribute("javax.servlet.error.message"); %>--%>
-    <%--<jsp:forward page="/rest/testbedsetup">--%>
-        <%--<jsp:param name="statusCode" value="Kodikos!"/>--%>
-        <%--<jsp:param name="message" value="minima!"--%>
-    <%--</jsp:forward>--%>
    <table id="error" style="color:#ff6666">
        <thead>
             <th>Error Occured</th>

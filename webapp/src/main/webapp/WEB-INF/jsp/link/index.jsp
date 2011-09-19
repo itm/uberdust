@@ -36,7 +36,7 @@
         <td>
             <ul>
                 <c:forEach items="${thisLink.capabilities}" var="thisCap">
-                    <li><c:out value="${thisCap.name}"/></li>
+                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${thisLink.source}/${thisLink.target}/capability/${thisCap.name}"><c:out value="${thisCap.name}"/></a></li>
                 </c:forEach>
             </ul>
         </td>
