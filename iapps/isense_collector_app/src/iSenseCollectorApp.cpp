@@ -392,7 +392,7 @@ execute(void* userdata) {
 
     } else {
         // register as a task to wake up again in 1 minutes
-        os().add_task_in(Time(60, 0), this, (void*) TASK_READ_SENSORS);
+        os().add_task_in(Time(180, 0), this, (void*) TASK_READ_SENSORS);
 
         //if (channel==27){channel=11;}
 
