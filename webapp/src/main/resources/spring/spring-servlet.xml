@@ -3,8 +3,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+
+    <!-- Set view resolver -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/jsp/"/>
@@ -13,33 +15,69 @@
         <property name="contentType" value="text/html; charset=UTF-8"/>
     </bean>
 
+    <!-- Method/URL mapping to controller -->
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
-                <prop key="GET /*">nodeController</prop>
-
-                <!-- Some other example mappings
-                  <prop key="PUT /user/*">updateUserController</prop>
-                  <prop key="DELETE /user/*">removeUserController</prop>
-                  <prop key="POST /user">createUserController</prop>
-                -->
+                <prop key="GET /testbedsetup/*">testbedSetupInfoController</prop>
+                <prop key="GET /node/*">nodeInfoController</prop>
+                <prop key="GET /link/*/*">linkInfoController</prop>
             </props>
         </property>
     </bean>
 
-    <bean name="nodeController" class="uberdust.controllers.NodeController">
-        <property name="commandClass" value="uberdust.commands.NodeCommand"/>
-        <property name="uriPattern" value="/{nodeId}"/>
+    <!-- Setup/Testbed Info Controller -->
+    <bean name="testbedSetupInfoController" class="uberdust.controllers.TestbedSetupInfoController">
+        <property name="commandClass" value="uberdust.commands.TestbedSetupCommand"/>
+        <property name="setupManager" ref="setupManager"/>
+        <property name="testbedManager" ref="testbedManager"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="node"/>
+                <property name="defaultViewName" value="testbedsetup"/>
                 <property name="views">
                     <map>
                         <entry key="text/html" value="node/index"/>
+                        <entry key="text/html" value="node/error"/>
                     </map>
                 </property>
             </bean>
         </property>
     </bean>
 
+
+    <!-- Node Info Controller -->
+    <bean name="nodeInfoController" class="uberdust.controllers.NodeInfoController">
+        <property name="commandClass" value="uberdust.commands.NodeCommand"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern" value="/node/{nodeId}"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="node"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="node/index"/>
+                        <entry key="text/html" value="node/error"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Link Info Controller -->
+    <bean name="linkInfoController" class="uberdust.controllers.LinkInfoController">
+        <property name="commandClass" value="uberdust.commands.LinkCommand"/>
+        <property name="linkManager" ref="linkManager"/>
+        <property name="uriPattern" value="/link/{sourceId}/{targetId}"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="link"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="link/index"/>
+                        <entry key="text/html" value="link/error"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
 </beans>

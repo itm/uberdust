@@ -4,7 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<jsp:useBean id="thisNode" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
+<jsp:useBean id="thisLink" scope="request" class="eu.wisebed.wiseml.model.setup.Link"/>
 
 <html>
 <head>
@@ -25,18 +25,18 @@
     <tbody>
     <tr>
         <td>Source Node ID</td>
-        <td><c:out value="${thisNode.id}"/></td>
+        <td><c:out value="${thisLink.source}"/></td>
     </tr>
     <tr>
-        <td>Description</td>
-        <td><c:out value="${thisNode.description}"/></td>
+        <td>Target Id</td>
+        <td><c:out value="${thisLink.target}"/></td>
     </tr>
     <tr>
         <td>Capabilities</td>
         <td>
             <ul>
-                <c:forEach items="${thisNode.capabilities}" var="thisCap">
-                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${thisNode.id}/capability/${thisCap.name}"><c:out value="${thisCap.name}"/></a></li>
+                <c:forEach items="${thisLink.capabilities}" var="thisCap">
+                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${thisLink.source}/${thisLink.target}/capability/${thisCap.name}"><c:out value="${thisCap.name}"/></a></li>
                 </c:forEach>
             </ul>
         </td>

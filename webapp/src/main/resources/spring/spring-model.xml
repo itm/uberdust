@@ -5,10 +5,23 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-          http://www.springframework.org/schema/aop
-            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-            http://www.directwebremoting.org/schema/spring-dwr
-            http://directwebremoting.org/schema/spring-dwr-2.0.xsd">
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://www.directwebremoting.org/schema/spring-dwr
+http://directwebremoting.org/schema/spring-dwr-2.0.xsd">
+
+
+    <!-- Uberdust model definition -->
+    <bean id="Capability" class="eu.wisebed.wiseml.model.setup.Capability"/>
+    <bean id="Position" class="eu.wisebed.wiseml.model.setup.Position"/>
+    <bean id="Node" class="eu.wisebed.wiseml.model.setup.Node"/>
+    <bean id="Link" class="eu.wisebed.wiseml.model.setup.Link"/>
+    <bean id="NodeReading" class="eu.wisebed.wisedb.model.NodeReading"/>
+    <bean id="LinkReading" class="eu.wisebed.wisedb.model.LinkReading"/>
+    <bean id="Setup" class="eu.wisebed.wiseml.model.setup.Setup"/>
+    <bean id="Testbed" class="eu.wisebed.wisedb.model.Testbed"/>
+    <bean id="Origin" class="eu.wisebed.wiseml.model.setup.Origin"/>
+    <bean id="TimeInfo" class="eu.wisebed.wiseml.model.setup.TimeInfo"/>
 
 </beans>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uberdust</groupId>
-    <artifactId>webapp</artifactId>
+    <artifactId>uberdust</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
     <name>ÜberDust</name>
@@ -20,7 +20,7 @@
         <junit.version>4.8.1</junit.version>
         <hsqldb.version>2.0.0</hsqldb.version>
         <mysql.connector.version>5.1.10</mysql.connector.version>
-        <hibernate.version>3.2.0.ga</hibernate.version>
+        <hibernate.version>3.5.6-Final</hibernate.version>
         <slf4j.version>1.6.1</slf4j.version>
     </properties>
 
@@ -64,6 +64,22 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -157,22 +173,6 @@
             <systemPath>${project.basedir}/lib/spring-webmvc-rest-0.9.1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>${hibernate.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>ehcache</groupId>
-                    <artifactId>ehcache</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.2.2</version>
@@ -182,6 +182,11 @@
             <artifactId>servlet-api</artifactId>
             <version>${servlet-api.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.ehcache-spring-annotations</groupId>
@@ -203,16 +208,31 @@
             <artifactId>velocity</artifactId>
             <version>1.6.3</version>
         </dependency>
+        <dependency>
+    	     <groupId>cglib</groupId>
+	        <artifactId>cglib</artifactId>
+	        <version>2.2</version>
+        </dependency>
     </dependencies>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <warName>uberdust</warName>
+                    <warName>${project.build.finalName}</warName>
                     <webResources>
                         <resource>
                             <directory>${project.basedir}/lib</directory>
@@ -231,6 +251,17 @@
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <version>1.1</version>
+                <configuration>
+                    <server>tomcat6</server>
+                    <warFile>${project.build.directory}/${project.build.finalName}.war</warFile>
+                    <path>/${artifactId}</path>
+                    <url>${gold.tomcat.manager.url}</url>
                 </configuration>
             </plugin>
             <plugin>

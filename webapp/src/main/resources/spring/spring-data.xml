@@ -6,12 +6,128 @@
        xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
        xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-            http://www.springframework.org/schema/aop
-            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
-            http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
-            http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
-            http://www.directwebremoting.org/schema/spring-dwr
-            http://directwebremoting.org/schema/spring-dwr-2.0.xsd">
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
+http://www.directwebremoting.org/schema/spring-dwr
+http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
+
+    <!-- Data Source setup -->
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${wisedb.jdbc.connection.driver_class}"/>
+        <property name="url" value="${wisedb.jdbc.connection.url}"/>
+        <property name="username" value="${wisedb.jdbc.connection.username}"/>
+        <property name="password" value="${wisedb.jdbc.connection.password}"/>
+        <property name="initialSize" value="10"/>
+        <property name="maxActive" value="30"/>
+        <property name="validationQuery" value="select 1"/>
+    </bean>
+
+    <!-- Session Factory setup with hbm mappings in place -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mappingResources">
+            <list>
+                <value>eu/wisebed/wisedb/model/Node.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/Link.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/Capability.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/LinkReading.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/NodeReading.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/Setup.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/Testbed.hbm.xml</value>
+            </list>
+        </property>
+        <!-- Also set of hibernate properties -->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${wisedb.hibernate.dialect}</prop>
+                <prop key="current_session_context_class">thread</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+                <prop key="cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <prop key="log4j.logger.net.sf.hibernate">warn</prop>
+                <prop key="show_sql">false</prop>
+                <prop key="format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.jdbc.batch_size">0</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- injecting a hibernate interceptor to session factory -->
+    <bean id="hibernateInterceptor"
+          class="org.springframework.orm.hibernate3.HibernateInterceptor">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--injecting a transaction manager to session factory -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- A Transaction Proxy bean -->
+    <bean id="proxyTemplate"
+          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+          abstract="true">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+        <property name="preInterceptors">
+            <list>
+                <ref bean="hibernateInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Setup of the abstractManager (Persistence controller/manager) -->
+    <bean id="abstractManager"
+          class="eu.wisebed.wisedb.controller.AbstractController"
+          abstract="true">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- testbedManager using the above transaction management proxy -->
+    <bean id="testbedManager" parent="proxyTemplate">
+        <property name="target" ref="testbedManagerTarget"/>
+    </bean>
+    <bean id="testbedManagerTarget"
+          class="eu.wisebed.wisedb.controller.TestbedController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
+    <!-- setupManager using the above transaction management proxy -->
+    <bean id="setupManager" parent="proxyTemplate">
+        <property name="target" ref="setupManagerTarget"/>
+    </bean>
+    <bean id="setupManagerTarget"
+          class="eu.wisebed.wisedb.controller.SetupController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
+    <!-- nodeManager using the above transaction management proxy -->
+    <bean id="nodeManager" parent="proxyTemplate">
+        <property name="target" ref="nodeManagerTarget"/>
+    </bean>
+    <bean id="nodeManagerTarget"
+          class="eu.wisebed.wisedb.controller.NodeController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
+    <!-- linkManager using the above transaction management proxy -->
+    <bean id="linkManager" parent="proxyTemplate">
+        <property name="target" ref="linkManagerTarget"/>
+    </bean>
+    <bean id="linkManagerTarget"
+          class="eu.wisebed.wisedb.controller.LinkController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
 
 </beans>
