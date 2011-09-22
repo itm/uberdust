@@ -26,6 +26,7 @@
 #include <isense/modules/environment_module/light_sensor.h>
 #include <isense/modules/gateway_module/gateway_module.h>
 #include <isense/modules/solar_module/solar_module.h>
+#include <isense/modules/security_module/pir_sensor.h>
 
 #include <isense/uart.h>
 
@@ -67,7 +68,8 @@ public isense::Sender,
 public isense::Task,
 public isense::SleepHandler,
 public Uint32DataHandler,
-public Int8DataHandler {
+public Int8DataHandler,
+public SensorHandler {
 public:
     iSenseCollectorApplication(isense::Os& os);
 
@@ -103,6 +105,34 @@ public:
     void handle_int8_data(int8 value) {
     }
 
+    void debug_payload(const uint8_t * payload, size_t length, ISENSE_RADIO_ADDR_TYPE src) {
+        char buffer[1024];
+        int bytes_written = 0;
+        bytes_written += sprintf(buffer + bytes_written, "payload(from %x)[", src);
+        for (size_t i = 0; i < length; i++) {
+            bytes_written += sprintf(buffer + bytes_written, "%x|", payload[i]);
+        }
+        bytes_written += sprintf(buffer + bytes_written, "]");
+        buffer[bytes_written] = '\0';
+        os().debug("%s", buffer);
+    }
+
+    virtual void handle_sensor() {
+        if (!is_gateway()) {
+            if (pir_sensor_) {
+                collectorMsg_t mess1;
+                mess1.set_collector_type_id(collectorMsg_t::PIR);
+                uint8_t pir = 1;
+                mess1.set_pir_event(&pir);
+                os().radio().send(mygateway_, mess1.buffer_size(), (uint8*) & mess1, 0, 0);
+            }
+        } else {
+            os().debug("iSense::%x EM_E 1 ", os().id());
+        }
+
+
+    }
+
     void debug(int16& temp, uint32& lux) {
         if (!is_gateway()) {
 
@@ -130,7 +160,7 @@ public:
                 id2 = from;
                 collectorMsg_t mess;
                 mess.set_collector_type_id(collectorMsg_t::LINK_UP);
-                mess.set_link(&id1, &id2);
+                mess.set_link(id1, id2);
 
                 os().radio().send(mygateway_, mess.buffer_size(), (uint8*) & mess, 0, 0);
             } else {
@@ -144,7 +174,7 @@ public:
                 id2 = from;
                 collectorMsg_t mess;
                 mess.set_collector_type_id(collectorMsg_t::LINK_DOWN);
-                mess.set_link(&id1, &id2);
+                mess.set_link(id1, id2);
 
                 os().radio().send(mygateway_, mess.buffer_size(), (uint8*) & mess, 0, 0);
             } else {
@@ -171,16 +201,20 @@ private:
     }
 
     bool gateway_;
+    bool temp_sensor_, light_sensor_, pir_sensor_;
     uint16 gateway_id;
     isense::EnvironmentModule* em_;
     isense::GatewayModule* gw_;
+    isense::PirSensor* pir_;
     SolarModule* sm_;
+    CoreModule* cm_;
     uint16 duty_cycle_;
 
     WiselibOs::TxRadio radio_;
     WiselibOs::Debug debug_;
     WiselibOs::Clock clock_;
     WiselibOs::Timer timer_;
+
 
     int channel;
     nb_t nb_;
@@ -193,6 +227,9 @@ iSenseCollectorApplication::
 iSenseCollectorApplication(isense::Os& os)
 : isense::Application(os),
 gateway_(false),
+temp_sensor_(false),
+light_sensor_(false),
+pir_sensor_(false),
 sm_(NULL),
 duty_cycle_(3),
 radio_(os_),
@@ -213,7 +250,10 @@ iSenseCollectorApplication::
 void
 iSenseCollectorApplication::
 boot(void) {
+    cm_ = new isense::CoreModule(os());
     em_ = new isense::EnvironmentModule(os());
+    cm_->led_on();
+
 
     // create SolarModule instance
     sm_ = new SolarModule(os());
@@ -232,50 +272,56 @@ boot(void) {
     }
     // if allocation of EnvironmentModule was successful
     if (em_ != NULL) {
-        if (em_->light_sensor() != NULL) {
+        em_->enable(true);
+        if (em_->light_sensor()->enable()) {
+            light_sensor_ = true;
             em_->light_sensor()->set_data_handler(this);
             //os().add_task_in(Time(10, 0), this, (void*) TASK_SET_LIGHT_THRESHOLD);
         } else {
-            //            os().debug("iSense::%x Could not allocate light sensor", os().id());
+            os().debug("%x;CAS", os().id());
         }
-        if (em_->temp_sensor() != NULL) {
+        if (em_->temp_sensor()->enable()) {
+            temp_sensor_ = true;
             em_->temp_sensor()->set_data_handler(this);
-        } else {
-            //            os().debug("iSense::%x Could not allocate temp sensor", os().id());
         }
+    }
 
-        //        os().debug("iSense::%x::enabled em", os().id());
-        em_->enable(true);
+    pir_ = new isense::PirSensor(os());
+    pir_->set_sensor_handler(this);
+    pir_->set_pir_sensor_int_interval(30000);
+    if (pir_->enable()) {
+        os().debug("Pe");
+        pir_sensor_ = true;
+    } else {
+        os().debug("CAP");
     }
 
 
-    os().dispatcher().add_receiver(this);
+    if (is_gateway()) {
+        os().dispatcher().add_receiver(this);
+    }
     os().allow_sleep(false);
     // register task to be called in a minute for periodic sensor readings
     os().add_task_in(Time(10, 0), this, (void*) TASK_READ_SENSORS);
 
 
     gateway_id = 0xffff;
-
-
     nb_.init(radio_, clock_, timer_, debug_, 2000, 15000, 200, 230);
     nb_.enable();
-
-    //uint8 flags = nb_t::NEW_PAYLOAD_BIDI ;
 
     nb_. reg_event_callback<iSenseCollectorApplication, &iSenseCollectorApplication::ND_callback > ((uint8) 2, nb_t::NEW_PAYLOAD | nb_t::NEW_NB_BIDI | nb_t::LOST_NB_BIDI | nb_t::DROPPED_NB, this);
     nb_.register_payload_space((uint8) 2);
 
-    uint8 buf[1];
+    uint8 buf;
     if (is_gateway()) {
-        buf[0] = 1;
+        buf = 1;
     } else {
-        buf[0] = 0;
+        buf = 0;
     }
-    nb_.set_payload((uint8) 2, buf, 1);
+    nb_.set_payload((uint8) 2, &buf, 1);
 
     os().radio().hardware_radio().set_channel(12);
-
+    cm_->led_off();
 }
 
 //----------------------------------------------------------------------------
@@ -283,7 +329,6 @@ boot(void) {
 bool
 iSenseCollectorApplication::
 stand_by(void) {
-    //    os().debug("iSense::%x::sleep", os().id());
     return true;
 }
 
@@ -292,7 +337,6 @@ stand_by(void) {
 bool
 iSenseCollectorApplication::
 hibernate(void) {
-    //    os().debug("iSense::%x::hibernate", os().id());
     return false;
 }
 
@@ -301,7 +345,6 @@ hibernate(void) {
 void
 iSenseCollectorApplication::
 wake_up(bool memory_held) {
-    //    os().debug("iSense::%x::Wakeup", os().id());
 }
 
 //----------------------------------------------------------------------------
@@ -309,9 +352,8 @@ wake_up(bool memory_held) {
 void
 iSenseCollectorApplication::
 execute(void* userdata) {
+    cm_->led_on();
     //	os().debug("Channel %d",channel);
-
-
     if (os().id() == 0xddba) {
         if ((uint32) userdata == TASK_WAKE) {
             os().add_task_in(60000, this, (void*) TASK_WAKE);
@@ -325,57 +367,23 @@ execute(void* userdata) {
 
 
             if (bs.charge < 50000) {
-                // less than 50mAh -->
-                // battery nearly empty -->
-                // set ultra-low duty cycle
-                // ~100uA current used by the node
-                // live ~20 days
                 duty_cycle_ = 1; // 0.1%
             } else
                 if (bs.capacity < 1000000) //1 Ah or less
             {
-                // 10% --> 4,5mA current used by node
-                //live approx. 9 days out of 1Ah
-                // and then another 20 days at 0.1% duty cycle
-                // (see case above)
                 duty_cycle_ = 100;
             } else
                 if (bs.capacity < 3000000) //3Ah or less
             {
-                // set duty cycle to 30% -->
-                // 13,5mA current used by node -->
-                // live approx. 6 days out of 1Ah
-                // and then another 9 days at 10% duty cycle
-                // and then another 20 days at 0.1% duty cycle
-                // (see cases above)
                 duty_cycle_ = 300; // 30%
             } else
                 if (bs.capacity < 5000000) {
-                // set duty cycle to 50% -->
-                // 22,5mA current used by node -->
-                // live approx. 4 days out of 2Ah
-                // and then another 6 days at 30%
-                // and then another 9 days at 10% duty cycle
-                // and then another 20 days at 0.1% duty cycle
-                // (see cases above)
                 duty_cycle_ = 500; // 50%
             } else {
-                // set duty cycle to 88% -->
-                // (7 seconds per minute left sleeping to
-                // measure charge current)
-                // 39,6mA current used by node -->
-                // live approx. 1.5 days out of 1.4Ah
-                // and then another 4 days at 40%
-                // and then another 6 days at 30%
-                // and then another 9 days at 10% duty cycle
-                // and then another 20 days at 0.1% duty cycle
-                // (see cases above)
                 duty_cycle_ = 880; // 88%
             }
             // add task to allow sleeping again
             os().add_task_in(duty_cycle_ * 60, this, (void*) TASK_SLEEP);
-
-
         } else if ((uint32) userdata == TASK_SLEEP) {
             //            os().debug("off");
             // allow sleeping again
@@ -393,30 +401,38 @@ execute(void* userdata) {
     // Get the Temperature and Luminance from sensors and debug them
     if ((uint32) userdata == TASK_READ_SENSORS) {
 
-
         if (!is_gateway()) {
-            // read out sensor values, and debug
-            int16 temp = em_->temp_sensor()->temperature();
-            collectorMsg_t mess;
-            mess.set_collector_type_id(collectorMsg_t::TEMPERATURE);
-            mess.set_temperature(&temp);
-            //os().debug("Contains temp %d - %d", mess.temperature(), temp);
-            os().radio().send(mygateway_, mess.buffer_size(), (uint8*) & mess, 0, 0);
-
-            uint32 lux = em_->light_sensor()->luminance();
-            collectorMsg_t mess1;
-            mess1.set_collector_type_id(collectorMsg_t::LIGHT);
-            mess1.set_light(&lux);
-            //os().debug("Contains light %d - %d", mess1.light(), lux);
-            os().radio().send(mygateway_, mess1.buffer_size(), (uint8*) & mess1, 0, 0);
-            //        debug(temp, lux);
+            if (temp_sensor_) {
+                // read out sensor values, and debug
+                int16 temp = em_->temp_sensor()->temperature();
+                collectorMsg_t mess;
+                mess.set_collector_type_id(collectorMsg_t::TEMPERATURE);
+                mess.set_temperature(&temp);
+                //os().debug("Contains temp %d - %d", mess.temperature(), temp);
+                os().radio().send(mygateway_, mess.buffer_size(), (uint8*) & mess, 0, 0);
+            }
+            if (light_sensor_) {
+                uint32 lux = em_->light_sensor()->luminance();
+                collectorMsg_t mess1;
+                mess1.set_collector_type_id(collectorMsg_t::LIGHT);
+                mess1.set_light(&lux);
+                //os().debug("Contains light %d - %d", mess1.light(), lux);
+                os().radio().send(mygateway_, mess1.buffer_size(), (uint8*) & mess1, 0, 0);
+                //        debug(temp, lux);
+            }
         } else {
-            int16 temp = em_->temp_sensor()->temperature();
-            uint32 lux = em_->light_sensor()->luminance();
-            os().debug("iSense::%x EM_T %d ", os().id(), temp);
-            os().debug("iSense::%x EM_L %d ", os().id(), lux);
+            if (temp_sensor_) {
+                int16 temp = em_->temp_sensor()->temperature();
+                os().debug("iSense::%x EM_T %d ", os().id(), temp);
+            }
+            if (light_sensor_) {
+                uint32 lux = em_->light_sensor()->luminance();
+                os().debug("iSense::%x EM_L %d ", os().id(), lux);
+            }
         }
+
     }
+    cm_->led_off();
 
 }
 
@@ -425,15 +441,7 @@ execute(void* userdata) {
 void
 iSenseCollectorApplication::
 receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RADIO_ADDR_TYPE dest_addr, uint16 signal_strength, uint16 signal_quality, uint8 seq_no, uint8 interface, Time rx_time) {
-
-    //    if (src_addr == 0xddba) {
-    //        os().debug("Got a message form %x , len %d %d  , type %x|", src_addr, len, (1 + sizeof (int16) + sizeof (uint32) + sizeof (int)), buf[0]);
-    //    }
-
-
-    if (dest_addr != os().id()) {
-        //os().debug("listenig to mess fro %x by %x",dest_addr, src_addr);
-    }
+    cm_->led_on();
     if (!is_gateway()) return;
 
     if ((src_addr == 0x2c41) && (buf[0] == 0x43) && (0x9979 == os().id())) {
@@ -457,36 +465,18 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
         }
     }
 
-
     collectorMsg_t * mess;
 
     if ((buf[0] == 0x7f) || (buf[1] == 0x69) || (buf[2] == 112)) {
-/*
-        uint8 msa[len - 3];
-        memcpy(msa, buf + 3, len);
-        msa[2] = buf[8];
-        msa[3] = buf[7];
-        msa[4] = buf[6];
-        msa[5] = buf[5];
-        //        swapped = ((num>>24)&0xff) | // move byte 3 to byte 0
-        //                    ((num<<8)&0xff0000) | // move byte 1 to byte 2
-        //                    ((num>>8)&0xff00) | // move byte 2 to byte 1
-        //                    ((num<<24)&0xff000000 // byte 0 to byte 3
 
-        mess = (collectorMsg_t *) (msa);
-        for (int i = 0; i < len - 3; i++)
-            os().debug("%x", msa[i]);
+        mess = (collectorMsg_t *) (buf + 3);
 
-
-
-        //        os().debug("received from %x %d [%d|%d",src_addr,len,mess->msg_id(),mess->collector_type_id());
-*/
     } else {
         mess = (collectorMsg_t *) buf;
     }
 
-
     if (mess->msg_id() == collectorMsg_t::COLLECTOR_MSG_TYPE) {
+
         //os().debug("Received a collector message from %x with %d", src_addr, mess->collector_type_id());
         if (mess->collector_type_id() == collectorMsg_t::TEMPERATURE) {
             os().debug("iSense::%x EM_T %d ", src_addr, mess->temperature());
@@ -504,13 +494,24 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
         } else if (mess->collector_type_id() == collectorMsg_t::INFRARED) {
             os().debug("iSense::%x EM_I %d ", src_addr, mess->infrared());
         } else if (mess->collector_type_id() == collectorMsg_t::PIR) {
-            os().debug("iSense::%x EM_E 1 ", src_addr);
+            os().debug("iSense::%x EM_E %d ", src_addr, mess->pir_event());
+            debug_payload(buf, mess->buffer_size()+3, src_addr);
+
+        } else if (mess->collector_type_id() == collectorMsg_t::CO) {
+            os().debug("iSense::%x SVal1: %d ", src_addr, mess->light());
+        } else if (mess->collector_type_id() == collectorMsg_t::CH4) {
+            os().debug("iSense::%x SVal3: %d ", src_addr, mess->light());
         } else if (mess->collector_type_id() == collectorMsg_t::LINK_UP) {
             os().debug("iSense::%x LINK_UP %x ", mess->link_from(), mess->link_to());
+            //            os().debug("from %x", src_addr);
         } else if (mess->collector_type_id() == collectorMsg_t::LINK_DOWN) {
             os().debug("iSense::%x LINK_DOWN %x ", mess->link_from(), mess->link_to());
+            //            os().debug("from %x", src_addr);
+        } else {
+            debug_payload(buf, len, src_addr);
         }
     }
+    cm_->led_off();
 }
 
 //----------------------------------------------------------------------------
