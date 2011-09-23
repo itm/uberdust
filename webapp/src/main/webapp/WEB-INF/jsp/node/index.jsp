@@ -3,8 +3,9 @@
 <%@page session="false" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<jsp:useBean id="thisNode" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
+<jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -18,29 +19,33 @@
 <h1>Welcome to ÜberDust</h1>
 
 <table id="information">
-    <thead>
-    <th>Property</th>
-    <th>Value</th>
-    </thead>
     <tbody>
     <tr>
-        <td>Source Node ID</td>
-        <td><c:out value="${thisNode.id}"/></td>
+        <td>Nodes found</td>
+        <td><c:out value="${fn:length(nodes)}"/></td>
     </tr>
-    <tr>
-        <td>Description</td>
-        <td><c:out value="${thisNode.description}"/></td>
-    </tr>
-    <tr>
-        <td>Capabilities</td>
-        <td>
-            <ul>
-                <c:forEach items="${thisNode.capabilities}" var="thisCap">
-                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${thisNode.id}/capability/${thisCap.name}"><c:out value="${thisCap.name}"/></a></li>
-                </c:forEach>
-            </ul>
-        </td>
-    </tr>
+    <c:forEach items="${nodes}" var="thisNode">
+        <tr>
+            <td>Node ID</td>
+            <td><c:out value="${thisNode.id}"/></td>
+        </tr>
+        <tr>
+            <td>Node Description</td>
+            <td><c:out value="${thisNode.description}"/></td>
+        </tr>
+        <tr>
+            <td>Capabilities(<c:out value="${fn:length(thisNode.capabilities)}"/>)</td>
+            <td>
+                <ul>
+                    <c:forEach items="${thisNode.capabilities}" var="thisCap">
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${thisNode.id}/capability/${thisCap.name}"><c:out
+                                    value="${thisCap.name}"/></a></li>
+                    </c:forEach>
+                </ul>
+            </td>
+        </tr>
+    </c:forEach>
     </tbody>
 </table>
 </body>

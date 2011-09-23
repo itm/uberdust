@@ -3,8 +3,10 @@
 <%@page session="false" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<jsp:useBean id="thisLink" scope="request" class="eu.wisebed.wiseml.model.setup.Link"/>
+
+<jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -18,30 +20,39 @@
 <h1>Welcome to ÜberDust</h1>
 
 <table id="information">
-    <thead>
-    <th>Property</th>
-    <th>Value</th>
-    </thead>
     <tbody>
     <tr>
-        <td>Source Node ID</td>
-        <td><c:out value="${thisLink.source}"/></td>
+        <td>Links found</td>
+        <td><c:out value="${fn:length(links)}"/></td>
     </tr>
-    <tr>
-        <td>Target Id</td>
-        <td><c:out value="${thisLink.target}"/></td>
-    </tr>
-    <tr>
-        <td>Capabilities</td>
-        <td>
-            <ul>
-                <c:forEach items="${thisLink.capabilities}" var="thisCap">
-                    <li><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${thisLink.source}/${thisLink.target}/capability/${thisCap.name}"><c:out value="${thisCap.name}"/></a></li>
-                </c:forEach>
-            </ul>
-        </td>
-    </tr>
+    <c:forEach items="${links}" var="thisLink">
+        <tr>
+            <td>Source ID</td>
+            <td><c:out value="${thisLink.source}"/></td>
+        </tr>
+        <tr>
+            <td>Target ID</td>
+            <td><c:out value="${thisLink.target}"/></td>
+        </tr>
+        <tr>
+            <td>Link Description</td>
+        </tr>
+        <tr>
+            <td>Capabilities(<c:out value="${fn:length(thisLink.capabilities)}"/>)</td>
+            <td>
+                <ul>
+                    <c:forEach items="${thisLink.capabilities}" var="thisCap">
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${thisLink.source}/${thisLink.target}/capability/${thisCap.name}"><c:out
+                                    value="${thisCap.name}"/></a></li>
+                    </c:forEach>
+                </ul>
+            </td>
+        </tr>
+    </c:forEach>
     </tbody>
 </table>
 </body>
 </html>
+
+
