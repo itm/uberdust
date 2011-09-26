@@ -66,7 +66,7 @@ public class NodeController extends AbstractRestController {
 
         // else put thisNode instance in refData and return index view
         refData.put("nodes", nodes);
-        return new ModelAndView("node/index", refData);
+        return new ModelAndView("node/view.html", refData);
     }
 
     @ExceptionHandler(Exception.class)

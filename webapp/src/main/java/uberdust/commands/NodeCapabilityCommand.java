@@ -1,16 +1,11 @@
 package uberdust.commands;
 
-public class CapabilityCommand {
+public class NodeCapabilityCommand {
 
     /**
      * Node ID.
      */
     private String nodeId;
-
-    /**
-     * Link ID.
-     */
-    private String linkId;
 
     /**
      * Capability ID
@@ -20,7 +15,7 @@ public class CapabilityCommand {
     /**
      * Default constructor.
      */
-    public CapabilityCommand() {
+    public NodeCapabilityCommand() {
         this.capabilityId = null;
         this.nodeId = null;
     }
@@ -41,22 +36,6 @@ public class CapabilityCommand {
      */
     public void setNodeId(final String nodeId) {
          this.nodeId = nodeId;
-    }
-
-    /**
-     * Get the Id of link.
-     * @return
-     */
-    public String getLinkId() {
-        return linkId;
-    }
-
-    /**
-     * Set the Id of link.
-     * @param linkId
-     */
-    public void setLinkId(String linkId) {
-        this.linkId = linkId;
     }
 
     /**

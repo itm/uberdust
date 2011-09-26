@@ -72,7 +72,7 @@ public class LinkController extends AbstractRestController {
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("links", links);
-        return new ModelAndView("link/index", refData);
+        return new ModelAndView("link/view.html", refData);
     }
 
     @ExceptionHandler(Exception.class)

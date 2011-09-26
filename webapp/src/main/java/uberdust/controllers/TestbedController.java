@@ -72,7 +72,7 @@ public class TestbedController extends AbstractRestController {
 
         // else put thisNode instance in refData and return index view
         refData.put("testbeds", testbeds);
-        return new ModelAndView("testbed/index", refData);
+        return new ModelAndView("testbed/view.html", refData);
     }
 
     @ExceptionHandler(Exception.class)
