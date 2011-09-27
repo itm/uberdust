@@ -84,6 +84,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern" value="/node/{nodeId}/capability/{capabilityId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -102,6 +103,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern" value="/node/{nodeId}/capability/{capabilityId}/html"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -120,6 +122,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern" value="/node/{nodeId}/capability/{capabilityId}/tabdelimited"/>
     </bean>
 </beans>

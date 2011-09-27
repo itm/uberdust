@@ -50,7 +50,6 @@ public class LinkController extends AbstractRestController {
         Link linkInv = null;
         List<Link> links = new ArrayList<Link>();
 
-
         // Retrieve the link and it's inverse
         if (command.getSourceId() != null && command.getTargetId() != null) {
             link = linkManager.getByID(command.getSourceId(),command.getTargetId());
@@ -67,7 +66,6 @@ public class LinkController extends AbstractRestController {
         if(link != null) links.add(link);
         if(linkInv != null) links.add(linkInv);
 
-        // return index view with refData
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 

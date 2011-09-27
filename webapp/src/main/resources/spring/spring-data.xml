@@ -139,4 +139,13 @@ http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
           parent="abstractManager"
           factory-method="getInstance"/>
 
+    <!-- nodeReadingManager using the above transaction management proxy -->
+    <bean id="nodeReadingManager" parent="proxyTemplate">
+        <property name="target" ref="nodeReadingManagerTarget"/>
+    </bean>
+    <bean id="nodeReadingManagerTarget"
+          class="eu.wisebed.wisedb.controller.NodeReadingController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
 </beans>
