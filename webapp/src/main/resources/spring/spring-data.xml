@@ -130,4 +130,13 @@ http://directwebremoting.org/schema/spring-dwr/spring-dwr-2.0.xsd">
           parent="abstractManager"
           factory-method="getInstance"/>
 
+    <!-- capabilityManager using the above transaction managment proxy -->
+    <bean id="capabilityManager" parent="proxyTemplate">
+        <property name="target" ref="capabilityManagerTarget"/>
+    </bean>
+    <bean id="capabilityManagerTarget"
+          class="eu.wisebed.wisedb.controller.CapabilityController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
 </beans>

@@ -1,34 +1,32 @@
 package uberdust.controllers;
 
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Setup;
+import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
-import uberdust.commands.TestbedSetupCommand;
+import uberdust.commands.TestbedCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class TestbedSetupInfoController extends AbstractRestController {
-
-    private eu.wisebed.wisedb.controller.SetupController setupManager;
+public class TestbedController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.TestbedController testbedManager;
+    private static final Logger LOGGER = Logger.getLogger(TestbedController.class);
 
-    public TestbedSetupInfoController() {
+
+    public TestbedController() {
         super();
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
-    }
-
-    public void setSetupManager(final eu.wisebed.wisedb.controller.SetupController setupManager) {
-        this.setupManager = setupManager;
     }
 
     public void setTestbedManager(final eu.wisebed.wisedb.controller.TestbedController testbedManager) {
@@ -40,28 +38,41 @@ public class TestbedSetupInfoController extends AbstractRestController {
                                   Object commandObj, BindException e) throws Exception {
 
         // set command object
-        TestbedSetupCommand command = (TestbedSetupCommand) commandObj;
+        TestbedCommand command = (TestbedCommand) commandObj;
+        LOGGER.info("commandObj.getTestbedId() " + command.getTestbedId());
 
-        // setting up testbed
-        // final int oneTestbed = testbedManager.list().size(); //expecting only one testbed so far ! ! ! TODO manager more Testbeds
-        final int oneTestbed = 1;
-        Testbed thisTestbed = testbedManager.getByID(oneTestbed);
-        command.setTestbedId(thisTestbed.getId());
-        command.setName(thisTestbed.getName());
+        // testbed list
+        List<Testbed> testbeds = new ArrayList<Testbed>();
 
-        // Setup instance
-        // final int oneSetup = setupManager.list().size(); //expecting only one setup so far ! ! !    TODO manage more setups
-        final int oneSetup = 1;
-        Setup thisSetup = setupManager.getByID(oneSetup);
-        command.setSetupId(thisSetup.getId());
+        if (command.getTestbedId() == null) {
+            // no testbed Id is given show them all
+            testbeds = testbedManager.list();
+        } else {
+            // a specific testbed is requested by testbed Id
+            int testbedId;
+            try{
+               testbedId = Integer.parseInt(command.getTestbedId());
+
+            }catch(NumberFormatException nfe){
+                throw new Exception(new Throwable("Testbed IDs have number format."));
+            }
+
+            // look up testbed
+            Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+            if(testbed == null){
+                // if no testbed is found throw exception
+                throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            }
+            // else add it to the returning list
+            testbeds.add(testbed);
+        }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
-        refData.put("thisTestbed", thisTestbed);
-        refData.put("thisSetup", thisSetup);
-        return new ModelAndView("testbedsetup/index", refData);
+        refData.put("testbeds", testbeds);
+        return new ModelAndView("testbed/view.html", refData);
     }
 
     @ExceptionHandler(Exception.class)

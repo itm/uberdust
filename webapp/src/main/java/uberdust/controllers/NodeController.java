@@ -1,8 +1,9 @@
 package uberdust.controllers;
 
 import eu.wisebed.wiseml.model.setup.Node;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.NodeCommand;
@@ -10,17 +11,20 @@ import uberdust.commands.NodeCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * REST Controller for displaying node information.
  */
-public class NodeInfoController extends AbstractRestController {
+public class NodeController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.NodeController nodeManager;
+    private static final Logger LOGGER = Logger.getLogger(NodeController.class);
 
-    public NodeInfoController() {
+    public NodeController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -38,26 +42,31 @@ public class NodeInfoController extends AbstractRestController {
 
         // set command object
         NodeCommand command = (NodeCommand) commandObj;
+        LOGGER.info("command.getNodeId() " + command.getNodeId());
 
-        // Node instance
-        Node thisNode = null;
+        // List of nodes
+        List<Node> nodes = new ArrayList<Node>();
+        if(command.getNodeId() == null){
+            // no node id is given. Select em all
+            nodes = nodeManager.list();
+        }else{
+            // a specific node is requested by node Id
+            // look up node
+            Node node = nodeManager.getByID(command.getNodeId());
+            if(node == null){
+                // if node not found throw exception
+                throw new Exception(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
+            }
+            // else add it to the returning list
+            nodes.add(node);
+        }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
-        // Retrieve the node
-        if (command.getNodeId() != null) {
-            thisNode = nodeManager.getByID(command.getNodeId());
-        }
-
-        // if no link found return error view
-        if(thisNode == null){
-            throw new Exception(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
-        }
-
         // else put thisNode instance in refData and return index view
-        refData.put("thisNode", thisNode);
-        return new ModelAndView("node/index", refData);
+        refData.put("nodes", nodes);
+        return new ModelAndView("node/view.html", refData);
     }
 
     @ExceptionHandler(Exception.class)
