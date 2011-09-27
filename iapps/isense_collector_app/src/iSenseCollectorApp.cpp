@@ -108,11 +108,11 @@ public:
     void debug_payload(const uint8_t * payload, size_t length, ISENSE_RADIO_ADDR_TYPE src) {
         char buffer[1024];
         int bytes_written = 0;
-        bytes_written += sprintf(buffer + bytes_written, "payload(from %x)[", src);
+        bytes_written += sprintf(buffer + bytes_written, "payload(from %x)(", src);
         for (size_t i = 0; i < length; i++) {
             bytes_written += sprintf(buffer + bytes_written, "%x|", payload[i]);
         }
-        bytes_written += sprintf(buffer + bytes_written, "]");
+        bytes_written += sprintf(buffer + bytes_written, ")");
         buffer[bytes_written] = '\0';
         os().debug("%s", buffer);
     }
@@ -495,7 +495,7 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
             os().debug("iSense::%x EM_I %d ", src_addr, mess->infrared());
         } else if (mess->collector_type_id() == collectorMsg_t::PIR) {
             os().debug("iSense::%x EM_E %d ", src_addr, mess->pir_event());
-            debug_payload(buf, mess->buffer_size()+3, src_addr);
+            debug_payload(buf, mess->buffer_size() + 3, src_addr);
 
         } else if (mess->collector_type_id() == collectorMsg_t::CO) {
             os().debug("iSense::%x SVal1: %d ", src_addr, mess->light());
