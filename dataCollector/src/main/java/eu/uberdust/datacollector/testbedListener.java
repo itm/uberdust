@@ -4,16 +4,16 @@ import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import eu.wisebed.wisedb.HibernateUtil;
-import eu.wisebed.wisedb.controller.*;
-import eu.wisebed.wisedb.model.LinkReading;
+import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.LinkReadingController;
+import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wiseml.model.setup.Capability;
-import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.commons.cli.*;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -25,7 +25,6 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -55,7 +54,10 @@ public class testbedListener {
 
     public static void main(String[] args) throws IOException {
 
-        BasicConfigurator.configure();
+        //BasicConfigurator.configure();
+        PropertyConfigurator.configure("classes/log4j.properties");
+
+        log.setLevel(Level.INFO);
 
 
         properties = new Properties();
@@ -193,7 +195,8 @@ public class testbedListener {
                                 value = Integer.parseInt(strLine.substring(start, end));
                                 log.info(Sensors_names[i] + " value " + value + " node " + node_id);
                                 //check if inside accepted values
-                                if ((value > -1) && (value < 5000001)) {
+                                if (value > -1) {
+                                    log.info("value exists");
                                     //get the node from hibernate
                                     final Node newnode = NodeController.getInstance().getByID("urn:wisebed:ctitestbed:" + node_id);
                                     if (newnode != null) {
@@ -226,8 +229,8 @@ public class testbedListener {
                             final String target_id = strLine.substring(target_start, target_end);
                             log.info("Fount a link down " + node_id + "<<------>>" + target_id);
                             //add the reading
-                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:"+node_id,
-                                    "urn:wisebed:ctitestbed:"+target_id,"status",0.0,new Date());
+                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:" + node_id,
+                                    "urn:wisebed:ctitestbed:" + target_id, "status", 0.0, new Date());
                         } else if (strLine.contains("LINK_UP")) {
                             //get the target id
                             final int target_start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
@@ -235,8 +238,8 @@ public class testbedListener {
                             final String target_id = strLine.substring(target_start, target_end);
                             log.info("Fount a link up " + node_id + "<<------>>" + target_id);
                             //add the reading
-                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:"+node_id,
-                                    "urn:wisebed:ctitestbed:"+target_id,"status",1.0,new Date());
+                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:" + node_id,
+                                    "urn:wisebed:ctitestbed:" + target_id, "status", 1.0, new Date());
                         }
                     }
                 }
