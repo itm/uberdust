@@ -297,9 +297,9 @@ boot(void) {
     }
 
 
-    if (is_gateway()) {
-        os().dispatcher().add_receiver(this);
-    }
+    //    if (is_gateway()) {
+    os().dispatcher().add_receiver(this);
+    //    }
     os().allow_sleep(false);
     // register task to be called in a minute for periodic sensor readings
     os().add_task_in(Time(10, 0), this, (void*) TASK_READ_SENSORS);
@@ -433,7 +433,6 @@ execute(void* userdata) {
 
     }
     cm_->led_off();
-
 }
 
 //----------------------------------------------------------------------------
@@ -442,7 +441,17 @@ void
 iSenseCollectorApplication::
 receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RADIO_ADDR_TYPE dest_addr, uint16 signal_strength, uint16 signal_quality, uint8 seq_no, uint8 interface, Time rx_time) {
     cm_->led_on();
-    if (!is_gateway()) return;
+
+    //USED for the XBEE inside offices
+    if (!is_gateway()) {
+        if ((os().id() != 0x296) && (os().id() != 0xca3) && (os().id() != 0x585) && (os().id() != 0x786a)) return;
+        if ((os().id() == 0x296) && (src_addr != 0x494)) return;
+        if ((os().id() == 0xca3) && (src_addr != 0x99c)) return;
+        if ((os().id() == 0x786a) && (src_addr != 0x6ac)) return;
+        if ((os().id() == 0x585) && (src_addr != 0x42f)) return;
+    }
+
+    if ((os().id() == 0x9979) && ((src_addr == 0x494) | (src_addr == 0x99c) || (src_addr == 0x6ac) || (src_addr == 0x42f))) return;
 
     if ((src_addr == 0x2c41) && (buf[0] == 0x43) && (0x9979 == os().id())) {
         uint8 mess[len];
@@ -469,7 +478,20 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
 
     if ((buf[0] == 0x7f) || (buf[1] == 0x69) || (buf[2] == 112)) {
 
-        mess = (collectorMsg_t *) (buf + 3);
+        uint8 msa[len - 3];
+        memcpy(msa, buf + 3, len);
+        msa[2] = buf[8];
+        msa[3] = buf[7];
+        msa[4] = buf[6];
+        msa[5] = buf[5];
+        //        swapped = ((num>>24)&0xff) | // move byte 3 to byte 0
+        //                    ((num<<8)&0xff0000) | // move byte 1 to byte 2
+        //                    ((num>>8)&0xff00) | // move byte 2 to byte 1
+        //                    ((num<<24)&0xff000000 // byte 0 to byte 3
+
+        mess = (collectorMsg_t *) (msa);
+
+        //        mess = (collectorMsg_t *) (buf + 3);
 
     } else {
         mess = (collectorMsg_t *) buf;
