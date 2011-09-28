@@ -19,12 +19,12 @@ import java.util.Map;
 /**
  * REST Controller for displaying link information.
  */
-public class LinkController extends AbstractRestController {
+public class ListLinksController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.LinkController linkManager;
-        private static final Logger LOGGER = Logger.getLogger(LinkController.class);
+        private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
 
-    public LinkController() {
+    public ListLinksController() {
         super();
 
         // Make sure to set which method this controller will support.

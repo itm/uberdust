@@ -17,7 +17,8 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
-                <prop key="GET /testbed/*">testbedController</prop>
+                <prop key="GET /testbed/">listTestbedsController</prop>
+                <prop key="GET /testbed/*">showTestbedController</prop>
                 <prop key="GET /node/*">nodeController</prop>
                 <prop key="GET /link/*/*">linkController</prop>
                 <prop key="GET /node/*/capability/*">nodeCapabilityController</prop>
@@ -27,8 +28,24 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         </property>
     </bean>
 
-    <!-- Testbed Info Controller -->
-    <bean name="testbedController" class="uberdust.controllers.TestbedController">
+    <!-- List Testbeds Controller -->
+    <bean name="listTestbedsController" class="uberdust.controllers.ListTestbedsController">
+        <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="testbed"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="testbed/list.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Show Testbed Controller -->
+    <bean name="showTestbedsController" class="uberdust.controllers.ShowTestbedController">
         <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}"/>
@@ -37,7 +54,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <property name="defaultViewName" value="testbed"/>
                 <property name="views">
                     <map>
-                        <entry key="text/html" value="testbed/view.html"/>
+                        <entry key="text/html" value="testbed/show.html"/>
                     </map>
                 </property>
             </bean>
@@ -46,7 +63,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 
     <!-- Node Info Controller -->
-    <bean name="nodeController" class="uberdust.controllers.NodeController">
+    <bean name="listNodesController" class="uberdust.controllers.ListNodesController">
         <property name="commandClass" value="uberdust.commands.NodeCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/node/{nodeId}"/>
@@ -63,7 +80,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     </bean>
 
     <!-- Link Info Controller -->
-    <bean name="linkController" class="uberdust.controllers.LinkController">
+    <bean name="listLinksController" class="uberdust.controllers.ListLinksController">
         <property name="commandClass" value="uberdust.commands.LinkCommand"/>
         <property name="linkManager" ref="linkManager"/>
         <property name="uriPattern" value="/link/{sourceId}/{targetId}"/>

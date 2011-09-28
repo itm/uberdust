@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<h1>Welcome to ÜberDust</h1>
+<p style="color :red">path to be set here !</p>
 
 <table id="information">
     <tbody>

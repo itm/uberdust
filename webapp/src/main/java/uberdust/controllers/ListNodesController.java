@@ -19,12 +19,12 @@ import java.util.Map;
 /**
  * REST Controller for displaying node information.
  */
-public class NodeController extends AbstractRestController {
+public class ListNodesController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.NodeController nodeManager;
-    private static final Logger LOGGER = Logger.getLogger(NodeController.class);
+    private static final Logger LOGGER = Logger.getLogger(ListNodesController.class);
 
-    public NodeController() {
+    public ListNodesController() {
         super();
 
         // Make sure to set which method this controller will support.
