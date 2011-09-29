@@ -1,6 +1,6 @@
 package uberdust.commands;
 
-public class NodeCapabilityCommand {
+public class NodeCapabilityCommand extends TestbedCommand{
 
     /**
      * Node ID.

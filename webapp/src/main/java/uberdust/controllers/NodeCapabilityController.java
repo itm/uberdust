@@ -52,6 +52,7 @@ public class NodeCapabilityController extends AbstractRestController{
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
         LOGGER.info("command.getNodeId() " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() " + command.getCapabilityId());
+        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
 
         // check for null or empty parameters
         if (command.getNodeId() == null || command.getNodeId().isEmpty() || command.getCapabilityId() == null ||
@@ -83,6 +84,7 @@ public class NodeCapabilityController extends AbstractRestController{
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
+        refData.put("testbedId",command.getTestbedId());
         refData.put("node", node);
         refData.put("capability", capability);
         refData.put("readings",nodeReadings);

@@ -18,32 +18,20 @@
 
 <p style="color :red">path to be set here !</p>
 
-<table id="information">
+<table>
     <tbody>
     <tr>
         <td>Nodes found</td>
         <td><c:out value="${fn:length(nodes)}"/></td>
     </tr>
-    <c:forEach items="${nodes}" var="thisNode">
+    <c:forEach items="${nodes}" var="node">
         <tr>
             <td>Node ID</td>
-            <td><c:out value="${thisNode.id}"/></td>
+            <td><c:out value="${node.id}"/></td>
         </tr>
         <tr>
             <td>Node Description</td>
-            <td><c:out value="${thisNode.description}"/></td>
-        </tr>
-        <tr>
-            <td>Capabilities(<c:out value="${fn:length(thisNode.capabilities)}"/>)</td>
-            <td>
-                <ul>
-                    <c:forEach items="${thisNode.capabilities}" var="thisCap">
-                        <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${thisNode.id}/capability/${thisCap.name}"><c:out
-                                    value="${thisCap.name}"/></a></li>
-                    </c:forEach>
-                </ul>
-            </td>
+            <td><c:out value="${node.description}"/></td>
         </tr>
     </c:forEach>
     </tbody>

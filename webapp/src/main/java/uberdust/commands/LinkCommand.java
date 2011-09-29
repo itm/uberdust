@@ -3,7 +3,7 @@ package uberdust.commands;
 /**
  * POJO object for holding parameters for link related commands.
  */
-public class LinkCommand {
+public class LinkCommand extends TestbedCommand{
 
     /**
      * The Source Node ID.

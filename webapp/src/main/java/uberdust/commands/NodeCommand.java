@@ -3,7 +3,7 @@ package uberdust.commands;
 /**
  * POJO object for holding parameters for node related commands.
  */
-public class NodeCommand {
+public class NodeCommand extends TestbedCommand{
 
     /**
      * The Node ID.

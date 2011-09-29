@@ -11,9 +11,7 @@ import uberdust.commands.TestbedCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ShowTestbedController extends AbstractRestController {
@@ -41,37 +39,28 @@ public class ShowTestbedController extends AbstractRestController {
         TestbedCommand command = (TestbedCommand) commandObj;
         LOGGER.info("commandObj.getTestbedId() " + command.getTestbedId());
 
-        // testbed list
-        List<Testbed> testbeds = new ArrayList<Testbed>();
 
-        if (command.getTestbedId() == null) {
-            // no testbed Id is given show them all
-            testbeds = testbedManager.list();
-        } else {
-            // a specific testbed is requested by testbed Id
-            int testbedId;
-            try{
-               testbedId = Integer.parseInt(command.getTestbedId());
+        // a specific testbed is requested by testbed Id
+        int testbedId;
+        try {
+            testbedId = Integer.parseInt(command.getTestbedId());
 
-            }catch(NumberFormatException nfe){
-                throw new Exception(new Throwable("Testbed IDs have number format."));
-            }
+        } catch (NumberFormatException nfe) {
+            throw new Exception(new Throwable("Testbed IDs have number format."));
+        }
 
-            // look up testbed
-            Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
-            if(testbed == null){
-                // if no testbed is found throw exception
-                throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
-            }
-            // else add it to the returning list
-            testbeds.add(testbed);
+        // look up testbed
+        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        if (testbed == null) {
+            // if no testbed is found throw exception
+            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
-        refData.put("testbeds", testbeds);
+        refData.put("testbed", testbed);
         return new ModelAndView("testbed/show.html", refData);
     }
 

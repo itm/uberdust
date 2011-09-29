@@ -1,5 +1,6 @@
 package uberdust.controllers;
 
+import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -16,22 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * REST Controller for displaying link information.
- */
-public class ListLinksController extends AbstractRestController {
+public class ShowLinkController extends AbstractRestController {
 
-    private eu.wisebed.wisedb.controller.LinkController linkManager;
-    private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
 
-    public ListLinksController() {
-        super();
+    private LinkController linkManager;
+    private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 
-        // Make sure to set which method this controller will support.
-        this.setSupportedMethods(new String[]{METHOD_GET});
-    }
-
-    public void setLinkManager(eu.wisebed.wisedb.controller.LinkController linkManager) {
+    public void setLinkManager(LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
@@ -40,18 +32,39 @@ public class ListLinksController extends AbstractRestController {
                                   HttpServletResponse response, Object commandObj, BindException errors)
             throws Exception {
 
-        // get command
+        // set command object
         LinkCommand command = (LinkCommand) commandObj;
+        LOGGER.info("command.getNodeId() " + command.getSourceId());
+        LOGGER.info("command.getTargetId() " + command.getTargetId());
         LOGGER.info("command.getTestbedId()" + command.getTestbedId());
 
-        // get all links
-        List<Link> links = linkManager.list();
+
+        // a link instance  and link list
+        Link link = null;
+        Link linkInv = null;
+        List<Link> links = new ArrayList<Link>();
+
+        // Retrieve the link and it's inverse
+        if (command.getSourceId() != null && command.getTargetId() != null) {
+            link = linkManager.getByID(command.getSourceId(), command.getTargetId());
+            linkInv = linkManager.getByID(command.getTargetId(), command.getSourceId());
+        }
+
+        // if no link or inverse link found return error view
+        if (link == null && linkInv == null) {
+            throw new Exception(new Throwable("Cannot find link [" + command.getSourceId() + "," + command.getTargetId() +
+                    "] or the inverse link [" + command.getTargetId() + "," + command.getSourceId() + "]"));
+        }
+
+        // if at least link or linkInv was found
+        if (link != null) links.add(link);
+        if (linkInv != null) links.add(linkInv);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("links", links);
-        return new ModelAndView("link/list.html", refData);
+        return new ModelAndView("link/show.html", refData);
     }
 
     @ExceptionHandler(Exception.class)

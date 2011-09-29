@@ -52,6 +52,8 @@ public class NodeCapabilityHTMLController extends AbstractRestController {
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
         LOGGER.info("command.getNodeId() " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() " + command.getCapabilityId());
+        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+
 
         // check for null or empty parameters
         if (command.getNodeId() == null || command.getNodeId().isEmpty() || command.getCapabilityId() == null ||

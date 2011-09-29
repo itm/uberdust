@@ -16,43 +16,17 @@
 </head>
 <body>
 
-<p style="color :red">path to be set here !</p>
-
-<table>
-    <tbody>
-    <tr>
-        <td>Testbed ID</td>
-        <td><c:out value="${testbed.id}"/></td>
-    </tr>
-    <tr>
-        <td>Testbed Description</td>
-        <td><c:out value="${testbed.description}"/></td>
-    </tr>
-    <tr>
-        <td>Testbed Name</td>
-        <td><c:out value="${testbed.name}"/></td>
-    </tr>
-    <tr>
-        <td>...</td>
-    </tr>
-    <tr>
-        <td>...</td>
-    </tr>
-    <tr>
-        <td>...</td>
-    </tr>
-    <tr>
-        <td>Available Setups</td>
-        <td><c:out value="${fn:length(testbed.setups)}"/></td>
-    </tr>
-    </tbody>
-</table>
-
 <c:forEach items="${testbed.setups}" var="setup">
     <p>Setup ID : <c:out value="${setup.id}"/></p>
 
     <p>Nodes</p>
     <table>
+        <thead>
+            <th>Node Id</th>
+            <th>Description</th>
+            <th>Last Recorded Date</th>
+            <th>Total Readings Count</th>
+        </thead>
         <tbody>
         <c:forEach items="${setup.nodes}" var="node">
             <tr>
@@ -60,6 +34,9 @@
                     <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
                             value="${node.id}"/></a>
                 </td>
+                <td><c:out value="${node.description}"/></td>
+                <td>...</td>
+                <td><c:out value="${fn:length(node.readings)}"/></td>
             </tr>
         </c:forEach>
         </tbody>
@@ -67,10 +44,15 @@
 
     <%--<p>Links</p>--%>
     <%--<table>--%>
+        <%--<thead>--%>
+            <%--<th>Link Source & Target Id</th>--%>
+            <%--<th>Last Recorded Date</th>--%>
+            <%--<th>Total Readings Count</th>--%>
+        <%--</thead>--%>
         <%--<c:forEach items="${setup.link}" var="link">--%>
             <%--<tr>--%>
                 <%--<td>--%>
-                    <%--<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out--%>
+                    <%--<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/{testbedId}/link/${link.source}/${link.target}"><c:out--%>
                             <%--value="${link.source},${link.target}"/></a>--%>
                 <%--</td>--%>
             <%--</tr>--%>

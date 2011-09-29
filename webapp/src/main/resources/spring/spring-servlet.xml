@@ -17,13 +17,23 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
+                <!-- Testbed Related controllers -->
                 <prop key="GET /testbed/">listTestbedsController</prop>
                 <prop key="GET /testbed/*">showTestbedController</prop>
-                <prop key="GET /node/*">nodeController</prop>
-                <prop key="GET /link/*/*">linkController</prop>
-                <prop key="GET /node/*/capability/*">nodeCapabilityController</prop>
-                <prop key="GET /node/*/capability/*/html">nodeCapabilityHTMLController</prop>
-                <prop key="GET /node/*/capability/*/tabdelimited">nodeCapabilityTabDelimitedController</prop>
+                <prop key="GET /testbed/*/status">showTestbedStatusController</prop>
+
+                <!-- Node Related controllers -->
+                <prop key="GET /testbed/*/node">listNodesController</prop>
+                <prop key="GET /testbed/*/node/*">showNodeController</prop>
+
+                <!-- Link Related Controllers -->
+                <prop key="GET /testbed/*/link/">listLinksController</prop>
+                <prop key="GET /testbed/*/link/*/*">showLinkController</prop>
+
+                <!-- Node/Capability Controllers for readings -->
+                <prop key="GET /testbed/*/node/*/capability/*">nodeCapabilityController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/tabdelimited">nodeCapabilityTabDelimitedController</prop>
             </props>
         </property>
     </bean>
@@ -32,9 +42,10 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean name="listTestbedsController" class="uberdust.controllers.ListTestbedsController">
         <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="testbed"/>
+                <property name="defaultViewName" value="testbed/list.html"/>
                 <property name="views">
                     <map>
                         <entry key="text/html" value="testbed/list.html"/>
@@ -45,13 +56,13 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     </bean>
 
     <!-- Show Testbed Controller -->
-    <bean name="showTestbedsController" class="uberdust.controllers.ShowTestbedController">
+    <bean name="showTestbedController" class="uberdust.controllers.ShowTestbedController">
         <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="testbed"/>
+                <property name="defaultViewName" value="testbed/show.html"/>
                 <property name="views">
                     <map>
                         <entry key="text/html" value="testbed/show.html"/>
@@ -61,40 +72,92 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         </property>
     </bean>
 
+    <!-- Show Testbed Status Controller -->
+    <bean name="showTestbedStatusController" class="uberdust.controllers.ShowTestbedStatusController">
+        <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/status"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="testbed/status.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="testbed/status.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
 
-    <!-- Node Info Controller -->
+    <!-- List available Nodes Controller -->
     <bean name="listNodesController" class="uberdust.controllers.ListNodesController">
         <property name="commandClass" value="uberdust.commands.NodeCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
-        <property name="uriPattern" value="/node/{nodeId}"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="node/view.html"/>
+                <property name="defaultViewName" value="node/list.html"/>
                 <property name="views">
                     <map>
-                        <entry key="text/html" value="node/view.html"/>
+                        <entry key="text/html" value="node/list.html"/>
                     </map>
                 </property>
             </bean>
         </property>
     </bean>
 
-    <!-- Link Info Controller -->
-    <bean name="listLinksController" class="uberdust.controllers.ListLinksController">
-        <property name="commandClass" value="uberdust.commands.LinkCommand"/>
-        <property name="linkManager" ref="linkManager"/>
-        <property name="uriPattern" value="/link/{sourceId}/{targetId}"/>
+    <!-- Show Node Controller -->
+    <bean name="showNodeController" class="uberdust.controllers.ShowNodeController">
+        <property name="commandClass" value="uberdust.commands.NodeCommand"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="link/view.html"/>
+                <property name="defaultViewName" value="node/show.html"/>
                 <property name="views">
                     <map>
-                        <entry key="text/html" value="link/view.html"/>
+                        <entry key="text/html" value="node/show.html"/>
                     </map>
                 </property>
             </bean>
         </property>
     </bean>
+
+    <!-- List available Link Controller -->
+    <bean name="listLinksController" class="uberdust.controllers.ListLinksController">
+        <property name="commandClass" value="uberdust.commands.LinkCommand"/>
+        <property name="linkManager" ref="linkManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/link/"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="link/list.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="link/list.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Show Link Controller -->
+    <bean name="showLinkController" class="uberdust.controllers.ShowLinkController">
+        <property name="commandClass" value="uberdust.commands.LinkCommand"/>
+        <property name="linkManager" ref="linkManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/link/{sourceId}/{targetId}"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="node/show.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="node/show.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+
 
         <!-- Node-Capability Controller -->
     <bean name="nodeCapabilityController" class="uberdust.controllers.NodeCapabilityController">
@@ -102,7 +165,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/node/{nodeId}/capability/{capabilityId}"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="capability/view.html"/>
@@ -121,7 +184,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/node/{nodeId}/capability/{capabilityId}/html"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/html"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="capability/readings.html"/>
@@ -140,6 +203,6 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/node/{nodeId}/capability/{capabilityId}/tabdelimited"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/tabdelimited"/>
     </bean>
 </beans>

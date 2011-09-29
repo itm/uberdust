@@ -5,7 +5,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-
 <jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
 
 <html>
@@ -19,35 +18,20 @@
 
 <p style="color :red">path to be set here !</p>
 
-<table id="information">
+<table>
     <tbody>
     <tr>
         <td>Links found</td>
         <td><c:out value="${fn:length(links)}"/></td>
     </tr>
-    <c:forEach items="${links}" var="thisLink">
+    <c:forEach items="${links}" var="link">
         <tr>
             <td>Source ID</td>
-            <td><c:out value="${thisLink.source}"/></td>
+            <td><c:out value="${link.source}"/></td>
         </tr>
         <tr>
             <td>Target ID</td>
-            <td><c:out value="${thisLink.target}"/></td>
-        </tr>
-        <tr>
-            <td>Link Description</td>
-        </tr>
-        <tr>
-            <td>Capabilities(<c:out value="${fn:length(thisLink.capabilities)}"/>)</td>
-            <td>
-                <ul>
-                    <c:forEach items="${thisLink.capabilities}" var="thisCap">
-                        <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${thisLink.source}/${thisLink.target}/capability/${thisCap.name}"><c:out
-                                    value="${thisCap.name}"/></a></li>
-                    </c:forEach>
-                </ul>
-            </td>
+            <td><c:out value="${link.target}"/></td>
         </tr>
     </c:forEach>
     </tbody>

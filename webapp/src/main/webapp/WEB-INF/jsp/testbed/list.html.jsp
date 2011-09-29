@@ -21,18 +21,14 @@
 <table>
 <tbody>
     <tr>
-        <td>Testbeds found</td>
+        <td>Available Testbeds</td>
         <td><c:out value="${fn:length(testbeds)}"/></td>
     </tr>
-    <c:forEach items="${testbeds}" var="thisTestbed">
+    <c:forEach items="${testbeds}" var="testbed">
         <tr>
-            <td>Testbed ID</td>
-            <td><c:out value="${thisTestbed.id}"/></td>
-            <td>Testbed Name</td>
-            <td><c:out value="${thisTestbed.name}"/></td>
-            <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/testbed/${thisTestbed.id}">setup information</a></td>
-            <td>...</td>
-            <td>...</td>
+            <td><c:out value="${testbed.id}"/></td>
+            <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out value="${testbed.name}"/></a></td>
+        </tr>
     </c:forEach>
     </tbody>
 </table>
