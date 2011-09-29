@@ -1,5 +1,8 @@
 package uberdust.controllers;
 
+import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
+import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.model.NodeReading;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
@@ -12,17 +15,16 @@ import uberdust.commands.NodeCapabilityCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Response;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
 public class NodeCapabilityTabDelimitedController extends AbstractRestController {
 
-    private eu.wisebed.wisedb.controller.NodeController nodeManager;
-    private eu.wisebed.wisedb.controller.CapabilityController capabilityManager;
+    private NodeController nodeManager;
+    private CapabilityController capabilityManager;
+    private NodeReadingController nodeReadingManager;
+
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityTabDelimitedController.class);
 
     public NodeCapabilityTabDelimitedController() {
@@ -32,12 +34,16 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setNodeManager(eu.wisebed.wisedb.controller.NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    public void setCapabilityManager(eu.wisebed.wisedb.controller.CapabilityController capabilityManager) {
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
+    }
+
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager){
+        this.nodeReadingManager = nodeReadingManager;
     }
 
     @Override
@@ -48,8 +54,6 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
         LOGGER.info("command.getNodeId() " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() " + command.getCapabilityId());
-
-        List<NodeReading> readingsOnCapability = new ArrayList<NodeReading>();
 
         // retrieve node
         if (command.getNodeId() == null || command.getNodeId().isEmpty() || command.getCapabilityId() == null ||
@@ -68,19 +72,13 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
             throw new Exception(new Throwable("Cannot find capability [" + command.getCapabilityId() + "]"));
         }
 
-        // retrieve node readings
-        Set<NodeReading> readings = node.getReadings();
-        if (readings == null) {
-            throw new Exception(new Throwable("Cannot find readings of node [" + command.getNodeId() + "]"));
-        }
-        for (NodeReading reading : readings) {
-            if (reading.getCapability().equals(capability)) readingsOnCapability.add(reading);
-        }
+        // retrieve readings based on node/capability
+        List<NodeReading> nodeReadings = nodeReadingManager.listReadings(node,capability);
 
         // write on the HTTP response
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());
-        for (NodeReading reading : readings) {
+        for (NodeReading reading : nodeReadings) {
             textOutput.write(reading.getTimestamp().getTime() + "\t" + reading.getReading() +"\n");
         }
         textOutput.flush();

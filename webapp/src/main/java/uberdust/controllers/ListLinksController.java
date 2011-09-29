@@ -19,12 +19,12 @@ import java.util.Map;
 /**
  * REST Controller for displaying link information.
  */
-public class LinkController extends AbstractRestController {
+public class ListLinksController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.LinkController linkManager;
-        private static final Logger LOGGER = Logger.getLogger(LinkController.class);
+        private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
 
-    public LinkController() {
+    public ListLinksController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -50,7 +50,6 @@ public class LinkController extends AbstractRestController {
         Link linkInv = null;
         List<Link> links = new ArrayList<Link>();
 
-
         // Retrieve the link and it's inverse
         if (command.getSourceId() != null && command.getTargetId() != null) {
             link = linkManager.getByID(command.getSourceId(),command.getTargetId());
@@ -67,7 +66,6 @@ public class LinkController extends AbstractRestController {
         if(link != null) links.add(link);
         if(linkInv != null) links.add(linkInv);
 
-        // return index view with refData
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 

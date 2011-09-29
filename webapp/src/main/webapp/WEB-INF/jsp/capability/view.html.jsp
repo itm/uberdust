@@ -1,12 +1,34 @@
-<%@page contentType="text/html;charset=UTF-8" %>
-<%@page pageEncoding="UTF-8" %>
-<%@page session="false" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import="eu.wisebed.wisedb.model.NodeReading" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
+<jsp:useBean id="readings" scope="request" class="java.util.ArrayList"/>
+
+<%
+   if(readings.isEmpty() == false) {
+       // TODO this is ugly use guava or commons and make it beautifull o.o
+       Date firstDate = ((NodeReading) readings.get(0)).getTimestamp();
+       Date lastDate = ((NodeReading) readings.get(readings.size()-1)).getTimestamp();
+       double minReading = ((NodeReading) readings.get(0)).getReading();
+       double maxReading = ((NodeReading) readings.get(0)).getReading();
+       for(NodeReading reading : (ArrayList<NodeReading>) readings){
+           if(reading.getReading() < minReading) minReading = reading.getReading();
+           if(reading.getReading() > maxReading) maxReading = reading.getReading();
+       }
+       pageContext.setAttribute("firstDate",firstDate);
+       pageContext.setAttribute("lastDate",lastDate);
+       pageContext.setAttribute("minReading",minReading);
+       pageContext.setAttribute("maxReading",maxReading);
+   }
+%>
 
 
 <html>
@@ -18,15 +40,19 @@
 </head>
 
 <body>
-<h1>Welcome to ÜberDust</h1>
-<table>
+
+<p style="color :red">path to be set here !</p>
+
+<c:choose>
+    <c:when test="${fn:length(readings) != 0}">
+        <table>
     <tbody>
     <tr>
         <td>
             Number of Records
         </td>
         <td>
-            !!!!!!!!!
+            <c:out value="${fn:length(readings)}"/>
         </td>
     </tr>
     <tr>
@@ -34,7 +60,7 @@
             First recording date
         </td>
         <td>
-            !!!!!!!!!
+            <c:out value="${firstDate}"/>
         </td>
     </tr>
     <tr>
@@ -42,15 +68,15 @@
             Last recording date
         </td>
         <td>
-            !!!!!!!!
+            <c:out value="${lastDate}"/>
         </td>
     </tr>
     <tr>
         <td>
-            Minimum recorded value
+            Min recorded value
         </td>
         <td>
-            !!!!!!!!
+            <c:out value="${minReading}"/>
         </td>
     </tr>
         <tr>
@@ -58,7 +84,7 @@
             Max recorded value
         </td>
         <td>
-            !!!!!!!!
+            <c:out value="${maxReading}"/>
         </td>
     </tr>
     <tr>
@@ -83,5 +109,10 @@
     </tr>
     </tbody>
 </table>
+    </c:when>
+    <c:otherwise>
+           No readings found for Node with id <c:out value="${node.id}" /> and Capability with name <c:out value="${capability.name}"/>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>

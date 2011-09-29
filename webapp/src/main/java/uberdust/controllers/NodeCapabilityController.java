@@ -1,22 +1,29 @@
 package uberdust.controllers;
 
+import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.model.NodeReading;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.NodeCapabilityCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 public class NodeCapabilityController extends AbstractRestController{
 
-    private eu.wisebed.wisedb.controller.NodeController nodeManager;
-    private eu.wisebed.wisedb.controller.CapabilityController capabilityManager;
+    private NodeController nodeManager;
+    private CapabilityController capabilityManager;
+    private NodeReadingController nodeReadingManager;
+
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityController.class);
 
     public NodeCapabilityController() {
@@ -26,14 +33,17 @@ public class NodeCapabilityController extends AbstractRestController{
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setNodeManager(eu.wisebed.wisedb.controller.NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    public void setCapabilityManager(eu.wisebed.wisedb.controller.CapabilityController capabilityManager) {
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
 
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -48,7 +58,7 @@ public class NodeCapabilityController extends AbstractRestController{
                 command.getCapabilityId().isEmpty()) {
             throw new Exception(new Throwable("Must provide node/link id and capability id"));
         }
-
+        // retrieve node
         Node node = nodeManager.getByID(command.getNodeId());
         if(node == null) {
             throw new Exception(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
@@ -60,10 +70,14 @@ public class NodeCapabilityController extends AbstractRestController{
             throw new Exception(new Throwable("Cannot find capability [" + command.getCapabilityId() + "]"));
         }
 
+        // check if node capabilities contains a capability
         if(!node.getCapabilities().contains(capability)){
             throw new Exception(new Throwable("Node [" + command.getNodeId() +"] does not have capability with name [" +
             command.getCapabilityId() + "]"));
         }
+
+        // retrieve readings based on node/capability
+        List<NodeReading> nodeReadings = nodeReadingManager.listReadings(node,capability);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -71,8 +85,15 @@ public class NodeCapabilityController extends AbstractRestController{
         // else put thisNode instance in refData and return index view
         refData.put("node", node);
         refData.put("capability", capability);
+        refData.put("readings",nodeReadings);
 
         // check type of view requested
         return new ModelAndView("capability/view.html",refData);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }
