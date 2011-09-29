@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="hibernate.dialect">${wisedb.hibernate.dialect}</property>
+        <property name="hibernate.connection.driver_class">${wisedb.jdbc.connection.driver_class}</property>
+        <property name="hibernate.connection.url">${wisedb.jdbc.connection.url}</property>
+        <property name="hibernate.connection.username">${wisedb.jdbc.connection.username}</property>
+        <property name="hibernate.connection.password">${wisedb.jdbc.connection.password}</property>
+        <property name="hibernate.connection.pool_size">10</property>
+        <property name="hibernate.connection.autoReconnect">true</property>
+
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+
+        <!-- Disable the second-level cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">true</property>
+        <property name="use_sql_comments">true</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Mapping files for read-only tables -->
+        <mapping resource="eu/wisebed/wisedb/model/Testbed.hbm.xml"/>
+        <mapping resource="eu/wisebed/wisedb/model/Setup.hbm.xml"/>
+        <mapping resource="eu/wisebed/wisedb/model/Node.hbm.xml"/>
+        <mapping resource="eu/wisebed/wisedb/model/Capability.hbm.xml"/>
+        <mapping resource="eu/wisebed/wisedb/model/Link.hbm.xml" />
+        <mapping resource="eu/wisebed/wisedb/model/NodeReading.hbm.xml" />
+        <mapping resource="eu/wisebed/wisedb/model/LinkReading.hbm.xml" />
+
+    </session-factory>
+</hibernate-configuration>
