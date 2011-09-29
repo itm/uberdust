@@ -86,6 +86,7 @@
 	<resources>
                 <resource>
                         <directory>src/main/resources</directory>
+	                <filtering>true</filtering>
                 </resource>
         </resources>
         <plugins>
@@ -108,4 +109,19 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <name>java.net</name>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+        <repository>
+            <id>repository.ru1</id>
+            <url>http://ru1.cti.gr/maven</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <layout>default</layout>
+        </repository>
+  </repositories>
 </project>

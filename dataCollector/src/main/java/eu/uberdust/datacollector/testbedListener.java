@@ -3,13 +3,6 @@ package eu.uberdust.datacollector;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
-import eu.wisebed.wisedb.HibernateUtil;
-import eu.wisebed.wisedb.controller.CapabilityController;
-import eu.wisebed.wisedb.controller.LinkReadingController;
-import eu.wisebed.wisedb.controller.NodeController;
-import eu.wisebed.wisedb.controller.NodeReadingController;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -25,7 +18,6 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
@@ -69,9 +61,7 @@ public class testbedListener {
         }
 
 
-        // Initialize hibernate
-        HibernateUtil.connectEntityManagers();
-        log.info("hibernate connected");
+//        log.info("hibernate connected");
 
 
         String ipAddress = properties.getProperty("runtime.ipAddress");
@@ -119,7 +109,6 @@ public class testbedListener {
 
             if (line.hasOption('l')) {
                 Level level = Level.toLevel(line.getOptionValue('l'));
-                System.out.println("Setting log level to " + level);
                 org.apache.log4j.Logger.getRootLogger().setLevel(level);
                 org.apache.log4j.Logger.getLogger("de.uniluebeck.itm").setLevel(level);
             }
@@ -144,6 +133,7 @@ public class testbedListener {
         testbedListener client = new testbedListener(ipAddress, port);
         client.start();
 
+
     }
 
     private SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
@@ -153,101 +143,23 @@ public class testbedListener {
             Messages.Msg message = (Messages.Msg) e.getMessage();
             if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
                 WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
-                //log.info("Received sensor node binary output: \"{}\"",  );
+//                log.info("Received sensor node binary output: \"{}\"",  );
                 parse(wsnAppMessage.toString());
+            } else {
+                log.info("got a message of type " + message.getMsgType());
             }
+
+
         }
 
-        //USEd to get the node id from the string received
-        private String extractNodeId(String linea) {
-            final String line = linea.substring(7);
-            final int start = line.indexOf("0x");
-            if (start > 0) {
-                final int end = line.indexOf(" ", start);
-                if (end > 0) {
-                    return line.substring(start, end);
-                }
-            }
-            return "";
-        }
 
         private void parse(String toString) {
-            //Get only the text part
-            final String strLine = toString.substring(toString.indexOf("binaryData:") + "binaryData:".length());
-            //get the node id
-            final String node_id = extractNodeId(strLine);
-            try {
-                //if there is a node id
-                if (node_id != "") {
-                    //check for capability readings
-                    boolean found_reading = false;
-                    //check for all given capabilitirs
-                    for (int i = 0; i < Sensors_prefixes.length; i++) {
-                        final int start = strLine.indexOf(Sensors_prefixes[i]) + Sensors_prefixes[i].length() + 1;
-                        if (start > Sensors_prefixes[i].length()) {
-                            found_reading = true;
-                            int end = strLine.indexOf(" ", start);
-                            if (end == -1) {
-                                end = strLine.length() - 2;
-                            }
-                            int value = -1;
-                            try {
-                                value = Integer.parseInt(strLine.substring(start, end));
-                                log.info(Sensors_names[i] + " value " + value + " node " + node_id);
-                                //check if inside accepted values
-                                if (value > -1) {
-                                    log.info("value exists");
-                                    //get the node from hibernate
-                                    final Node newnode = NodeController.getInstance().getByID("urn:wisebed:ctitestbed:" + node_id);
-                                    if (newnode != null) {
-                                        //create a new node reading
-                                        NodeReading reading = new NodeReading();
-                                        //set reading values
-                                        reading.setNode(newnode);
-                                        reading.setCapability(CapabilityController.getInstance().getByID("urn:wisebed:node:capability:" + Sensors_names[i]));
-                                        reading.setReading(value);
-                                        reading.setTimestamp(new java.util.Date());
-                                        //send to database
-                                        NodeReadingController.getInstance().add(reading);
-                                    } else {
-                                        log.debug("Node " + node_id + " could not be found");
-                                    }
-                                }
-                            } catch (Exception e) {
-                                log.error("Cannot parse value for " + Sensors_prefixes[i] + "'" + strLine.substring(start, end) + "'");
-                            }
-                        }
-                    }
+            MessageParser msgp = new MessageParser(toString, Sensors_names, Sensors_prefixes);
+            msgp.run();
 
-                    //if not a node reading message
-                    if (!found_reading) {
-                        // check for link down message
-                        if (strLine.contains("LINK_DOWN")) {
-                            //get the target id
-                            final int target_start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
-                            final int target_end = strLine.indexOf(" ", target_start);
-                            final String target_id = strLine.substring(target_start, target_end);
-                            log.info("Fount a link down " + node_id + "<<------>>" + target_id);
-                            //add the reading
-                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:" + node_id,
-                                    "urn:wisebed:ctitestbed:" + target_id, "status", 0.0, new Date());
-                        } else if (strLine.contains("LINK_UP")) {
-                            //get the target id
-                            final int target_start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
-                            final int target_end = strLine.indexOf(" ", target_start);
-                            final String target_id = strLine.substring(target_start, target_end);
-                            log.info("Fount a link up " + node_id + "<<------>>" + target_id);
-                            //add the reading
-                            LinkReadingController.getInstance().insertReading("urn:wisebed:ctitestbed:" + node_id,
-                                    "urn:wisebed:ctitestbed:" + target_id, "status", 1.0, new Date());
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Node " + node_id + " - " + e.toString());
-            }
         }
     };
+
     private ChannelPipelineFactory channelPipelineFactory = new ChannelPipelineFactory() {
 
         @Override
