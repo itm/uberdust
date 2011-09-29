@@ -36,12 +36,19 @@ namespace wiselib {
             LINK_UP = 0xa,
             BPRESSURE = 0xb,
             LINK_DOWN = 0xc,
+            CHAIR = 0xd,
             ROOMLIGHTS = 0xe
+
+
         };
 
         enum {
             SITTING = 1,
-            NOSITTING = 0
+            NOSITTING = 0,
+            ZONE_1 = 0x1,
+            ZONE_2 = 0x2,
+            ZONE_3 = 0x3,
+            ZONE_4 = 0x4
         };
 
         enum data_positions {
@@ -63,7 +70,7 @@ namespace wiselib {
         // get the message id
 
         inline message_id_t msg_id() {
-            return read<OsModel, block_data_t, uint8_t > (buffer + MSG_ID_POS);
+            return buffer[MSG_ID_POS];
 
         };
         // --------------------------------------------------------------------
@@ -77,7 +84,7 @@ namespace wiselib {
         // get the collector id
 
         inline message_id_t collector_type_id() {
-            return read<OsModel, block_data_t, uint8_t > (buffer + COLLECTOR_ID_POS);
+            return buffer[COLLECTOR_ID_POS];
         };
         // --------------------------------------------------------------------
 
@@ -91,32 +98,16 @@ namespace wiselib {
             return buffer + PAYLOAD_POS;
         };
 
-        inline int16 temperature() {
+        inline int16 get_int16() {
             return read<OsModel, block_data_t, int16 > (buffer + PAYLOAD_POS);
         };
 
-        inline uint16 bpressure() {
+        inline uint16 get_uint16() {
             return read<OsModel, block_data_t, uint16 > (buffer + PAYLOAD_POS);
         };
 
-        inline uint32 light() {
+        inline uint32 get_uint32() {
             return read<OsModel, block_data_t, uint32 > (buffer + PAYLOAD_POS);
-        };
-
-        inline uint32 infrared() {
-            return read<OsModel, block_data_t, uint32 > (buffer + PAYLOAD_POS);
-        };
-
-        inline uint16 humidity() {
-            return read<OsModel, block_data_t, uint16 > (buffer + PAYLOAD_POS);
-        };
-
-        inline uint32 charge() {
-            return read<OsModel, block_data_t, uint32 > (buffer + PAYLOAD_POS);
-        };
-
-        inline uint16 acceleration() {
-            return read<OsModel, block_data_t, uint16 > (buffer + PAYLOAD_POS);
         };
 
         inline node_id_t link_from() {
@@ -131,8 +122,20 @@ namespace wiselib {
             return PAYLOAD_POS + payload_size();
         };
 
-        inline uint8_t pir_event() {
-            return read<OsModel, block_data_t, uint8_t > (buffer + PAYLOAD_POS);
+        inline uint8_t get_uint8() {
+            return buffer[PAYLOAD_POS];
+        }
+
+        //actually the 1st byte but need the 4th to fix endianness
+
+        inline uint8_t get_zone() {
+            return buffer[PAYLOAD_POS + 3];
+        }
+
+        //actually the 2nd byte but need the 3rd to fix endianness
+
+        inline uint8_t get_status() {
+            return buffer[PAYLOAD_POS + 2];
         }
 
         uint8_t payload_size() {
