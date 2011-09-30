@@ -11,6 +11,7 @@
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
 <jsp:useBean id="readings" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="testbedId" scope="request" class="java.lang.String"/>
 
 <%
    if(readings.isEmpty() == false) {
@@ -41,7 +42,7 @@
 
 <body>
 
-<p style="color :red">path to be set here !</p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}"><c:out value="${testbedId}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}"><c:out value="${node.id}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}"><c:out value="${capability.name}"/></a></p>
 
 <c:choose>
     <c:when test="${fn:length(readings) != 0}">
@@ -94,11 +95,11 @@
         <td>
             <ul>
                 <li>
-                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${node.id}/capability/${capability.name}/html"/>HTML
+                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/html"/>HTML
                     format</a>
                 </li>
                 <li>
-                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${node.id}/capability/${capability.name}/tabdelimited"/>Tab
+                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/tabdelimited"/>Tab
                     Delimited format</a>
                 </li>
                 <li>

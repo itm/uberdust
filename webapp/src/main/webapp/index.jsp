@@ -12,6 +12,6 @@
 </head>
 <body>
     <h1>Welcome to ÜberDust</h1>
-    <jsp:forward page="/rest/testbed/"/>
+    <jsp:forward page="/rest/testbed"/>
 </body>
 </html>

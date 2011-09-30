@@ -6,6 +6,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="testbedId" scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -16,7 +17,7 @@
 </head>
 <body>
 
-<p style="color :red">path to be set here !</p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}"><c:out value="${testbedId}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/link">testbed links</a></p>
 
 <table>
     <tbody>

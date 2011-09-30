@@ -52,9 +52,9 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
 
         // set commandNode object
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+        LOGGER.info("command.getNodeId() : " + command.getNodeId());
+        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
+        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
 
         // retrieve node

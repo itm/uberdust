@@ -18,7 +18,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="mappings">
             <props>
                 <!-- Testbed Related controllers -->
-                <prop key="GET /testbed/">listTestbedsController</prop>
+                <prop key="GET /testbed">listTestbedsController</prop>
                 <prop key="GET /testbed/*">showTestbedController</prop>
                 <prop key="GET /testbed/*/status">showTestbedStatusController</prop>
 
@@ -27,7 +27,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <prop key="GET /testbed/*/node/*">showNodeController</prop>
 
                 <!-- Link Related Controllers -->
-                <prop key="GET /testbed/*/link/">listLinksController</prop>
+                <prop key="GET /testbed/*/link">listLinksController</prop>
                 <prop key="GET /testbed/*/link/*/*">showLinkController</prop>
 
                 <!-- Node/Capability Controllers for readings -->

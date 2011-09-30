@@ -42,7 +42,7 @@ public class ListLinksController extends AbstractRestController {
 
         // get command
         LinkCommand command = (LinkCommand) commandObj;
-        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // get all links
         List<Link> links = linkManager.list();
@@ -50,6 +50,7 @@ public class ListLinksController extends AbstractRestController {
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
+        refData.put("testbedId",command.getTestbedId());
         refData.put("links", links);
         return new ModelAndView("link/list.html", refData);
     }

@@ -31,8 +31,8 @@ public class ShowNodeController extends AbstractRestController {
 
         // set command object
         NodeCommand command = (NodeCommand) commandObj;
-        LOGGER.info("command.getNodeId() " + command.getNodeId());
-        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+        LOGGER.info("command.getNodeId() : " + command.getNodeId());
+        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
 
          // look up testbed
@@ -46,6 +46,7 @@ public class ShowNodeController extends AbstractRestController {
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
+        refData.put("testbedId",command.getTestbedId());
         refData.put("node", node);
         return new ModelAndView("node/show.html", refData);
     }

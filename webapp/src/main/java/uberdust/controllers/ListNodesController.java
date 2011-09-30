@@ -43,7 +43,7 @@ public class ListNodesController extends AbstractRestController {
 
         // get command object
         NodeCommand command = (NodeCommand) commandObj;
-        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // List of nodes
         List<Node> nodes = nodeManager.list();
@@ -52,6 +52,7 @@ public class ListNodesController extends AbstractRestController {
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
+        refData.put("testbedId", command.getTestbedId());
         refData.put("nodes", nodes);
         return new ModelAndView("node/list.html", refData);
     }

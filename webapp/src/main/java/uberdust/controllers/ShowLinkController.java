@@ -34,9 +34,9 @@ public class ShowLinkController extends AbstractRestController {
 
         // set command object
         LinkCommand command = (LinkCommand) commandObj;
-        LOGGER.info("command.getNodeId() " + command.getSourceId());
-        LOGGER.info("command.getTargetId() " + command.getTargetId());
-        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+        LOGGER.info("command.getNodeId() : " + command.getSourceId());
+        LOGGER.info("command.getTargetId() : " + command.getTargetId());
+        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
 
         // a link instance  and link list
@@ -63,6 +63,7 @@ public class ShowLinkController extends AbstractRestController {
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
+        refData.put("testbedId", command.getTestbedId());
         refData.put("links", links);
         return new ModelAndView("link/show.html", refData);
     }

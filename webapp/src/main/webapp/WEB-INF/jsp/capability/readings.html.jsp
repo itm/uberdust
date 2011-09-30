@@ -17,8 +17,6 @@
 
 <body>
 
-<p style="color :red">path to be set here !</p>
-
 <c:choose>
     <c:when test="${fn:length(readings) == 0}">
         <h2> No readings found </h2>

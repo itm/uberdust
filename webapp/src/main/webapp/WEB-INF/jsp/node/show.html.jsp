@@ -6,6 +6,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
+<jsp:useBean id="testbedId" scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -16,7 +17,7 @@
 </head>
 <body>
 
-<p style="color :red">path to be set here !</p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}"><c:out value="${testbedId}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}"><c:out value="${node.id}"/></a></p>
 
 <table>
     <tbody>
@@ -34,7 +35,7 @@
             <ul>
                 <c:forEach items="${node.capabilities}" var="thisCap">
                     <li>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/node/${node.id}/capability/${thisCap.name}"><c:out
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${thisCap.name}"><c:out
                                 value="${thisCap.name}"/></a></li>
                 </c:forEach>
             </ul>

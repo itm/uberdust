@@ -50,9 +50,9 @@ public class NodeCapabilityHTMLController extends AbstractRestController {
 
         // set commandNode object
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId()" + command.getTestbedId());
+        LOGGER.info("command.getNodeId() : " + command.getNodeId());
+        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
+        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
 
         // check for null or empty parameters
@@ -79,6 +79,7 @@ public class NodeCapabilityHTMLController extends AbstractRestController {
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
+        refData.put("testbedId", command.getTestbedId());
         refData.put("readings", nodeReadings);
 
         // check type of view requested

@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<p style="color :red">path to be set here !</p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out value="${testbed.id}"/></a></p>
 
 <table>
     <tbody>
