@@ -1,5 +1,8 @@
 package uberdust.controllers;
 
+import eu.wisebed.wisedb.controller.LinkController;
+import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -21,7 +24,8 @@ import java.util.Map;
  */
 public class ListLinksController extends AbstractRestController {
 
-    private eu.wisebed.wisedb.controller.LinkController linkManager;
+    private LinkController linkManager;
+    private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
 
     public ListLinksController() {
@@ -35,6 +39,10 @@ public class ListLinksController extends AbstractRestController {
         this.linkManager = linkManager;
     }
 
+    public void setTestbedManager(final TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
+    }
+
     @Override
     protected ModelAndView handle(HttpServletRequest request,
                                   HttpServletResponse response, Object commandObj, BindException errors)
@@ -44,7 +52,11 @@ public class ListLinksController extends AbstractRestController {
         LinkCommand command = (LinkCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
+        // fetch testbed
+        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+
         // get all links
+        //List<Link> links = linkManager.listTestbedNodes(testbed);
         List<Link> links = linkManager.list();
 
         // Prepare data to pass to jsp

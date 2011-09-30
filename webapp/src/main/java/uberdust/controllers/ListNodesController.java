@@ -1,6 +1,8 @@
 package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class ListNodesController extends AbstractRestController {
 
     private NodeController nodeManager;
+    private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ListNodesController.class);
 
     public ListNodesController() {
@@ -36,6 +39,10 @@ public class ListNodesController extends AbstractRestController {
         this.nodeManager = nodeManager;
     }
 
+    public void setTestbedManager(final TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
+    }
+
     @Override
     protected ModelAndView handle(HttpServletRequest request,
                                   HttpServletResponse response, Object commandObj, BindException errors)
@@ -45,8 +52,11 @@ public class ListNodesController extends AbstractRestController {
         NodeCommand command = (NodeCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
+        // fetch testbed
+        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+
         // List of nodes
-        List<Node> nodes = nodeManager.list();
+        List<Node> nodes = nodeManager.listTestbedNodes(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
