@@ -23,7 +23,7 @@ import java.util.*;
 public class ShowTestbedGeoRssController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
+    private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
 
 
     public ShowTestbedGeoRssController() {
@@ -61,19 +61,19 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
+        // set up feed and entries
         httpServletResponse.setContentType("application/xml; charset=UTF-8");
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
-
         feed.setTitle(testbed.getName()  + " GeoRSS");
-        feed.setLink("http://150.140.5.11:8080/uberdust/rest/testbed/"+testbed.getId()+"/georss");
+        feed.setLink(httpServletRequest.getRequestURL().toString());
         feed.setDescription(testbed.getDescription());
-
         List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
+        // make an entry and it
         SyndEntry entry = new SyndEntryImpl();
         entry.setTitle(testbed.getName()  + " GeoRSS");
-        entry.setLink("http://150.140.5.11:8080/uberdust/rest/testbed/"+testbed.getId()+"/georss");
+        entry.setLink(httpServletRequest.getRequestURL().toString());
         entry.setPublishedDate(new Date());
         SyndContent description = new SyndContentImpl();
         description.setType("text/plain");
@@ -81,18 +81,19 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         entry.setDescription(description);
         entries.add(entry);
 
+        // set the GeoRSS module and add it
         GeoRSSModule geoRSSModule = new SimpleModuleImpl();
         geoRSSModule.setPosition(new Position(testbed.getSetup().getOrigin().getX(),
                 testbed.getSetup().getOrigin().getY()));
         entry.getModules().add(geoRSSModule);
-
         feed.setEntries(entries);
 
+        // the feed output goes to response
         SyndFeedOutput output = new SyndFeedOutput();
         try {
             output.output(feed, httpServletResponse.getWriter());
         } catch (FeedException ex) {
-            throw new Exception(new Throwable("Error occured while making GeoRSS for testbed [" + testbedId + "]."));
+            throw new Exception(new Throwable("Error occur while making GeoRSS for testbed [" + testbedId + "]."));
         }
 
         return null;
