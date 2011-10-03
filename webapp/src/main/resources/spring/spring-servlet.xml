@@ -95,16 +95,6 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/georss"/>
-        <property name="viewNameSelector">
-            <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="testbed/geo.rss"/>
-                <property name="views">
-                    <map>
-                        <entry key="text/xml" value="testbed/geo.rss"/>
-                    </map>
-                </property>
-            </bean>
-        </property>
     </bean>
 
     <!-- List available Nodes Controller -->

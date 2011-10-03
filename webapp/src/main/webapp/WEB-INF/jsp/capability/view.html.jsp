@@ -42,7 +42,7 @@
 
 <body>
 
-<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}"><c:out value="${testbedId}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}"><c:out value="${node.id}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}"><c:out value="${capability.name}"/></a></p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}">node</a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}">capability</a></p>
 
 <c:choose>
     <c:when test="${fn:length(readings) != 0}">

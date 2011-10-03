@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out value="${testbed.id}"/></a></p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a></p>
 
 <table>
     <tbody>
@@ -41,41 +41,47 @@
     <tr>
         <td>...</td>
     </tr>
-    <tr>
-        <td>Available Setups</td>
-        <td><c:out value="${fn:length(testbed.setups)}"/></td>
-    </tr>
     </tbody>
 </table>
+<p>Nodes</p>
+<c:choose>
+    <c:when test="${testbed.setup.nodes == null || fn:length(testbed.setup.nodes) == 0}">
+        <p style="color : red">No nodes available</p>
+    </c:when>
+    <c:otherwise>
+        <table>
+            <tbody>
+            <c:forEach items="${testbed.setup.nodes}" var="node">
+                <tr>
+                    <td>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+                                value="${node.id}"/></a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:otherwise>
+</c:choose>
 
-<c:forEach items="${testbed.setups}" var="setup">
-    <p>Setup ID : <c:out value="${setup.id}"/></p>
 
-    <p>Nodes</p>
-    <table>
-        <tbody>
-        <c:forEach items="${setup.nodes}" var="node">
-            <tr>
-                <td>
-                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
-                            value="${node.id}"/></a>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
-
-    <%--<p>Links</p>--%>
-    <%--<table>--%>
-        <%--<c:forEach items="${setup.link}" var="link">--%>
-            <%--<tr>--%>
-                <%--<td>--%>
-                    <%--<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out--%>
-                            <%--value="${link.source},${link.target}"/></a>--%>
-                <%--</td>--%>
-            <%--</tr>--%>
-        <%--</c:forEach>--%>
-    <%--</table>--%>
-</c:forEach>
+<p>Links</p>
+<c:choose>
+    <c:when test="${testbed.setup.link == null || fn:length(testbed.setup.link) == 0 }">
+        <p style="color : red">No links available</p>
+    </c:when>
+    <c:otherwise>
+        <table>
+            <c:forEach items="${testbed.setup.link}" var="link">
+                <tr>
+                    <td>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out
+                                value="${link.source},${link.target}"/></a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>
