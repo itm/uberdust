@@ -21,6 +21,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <prop key="GET /testbed">listTestbedsController</prop>
                 <prop key="GET /testbed/*">showTestbedController</prop>
                 <prop key="GET /testbed/*/status">showTestbedStatusController</prop>
+                <prop key="GET /testbed/*/georss">showTestbedGeoRssController</prop>
 
                 <!-- Node Related controllers -->
                 <prop key="GET /testbed/*/node">listNodesController</prop>
@@ -83,6 +84,23 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <property name="views">
                     <map>
                         <entry key="text/html" value="testbed/status.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Show Testbed GeoRss Controller -->
+    <bean name="showTestbedGeoRssController" class="uberdust.controllers.ShowTestbedGeoRssController">
+        <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/georss"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="testbed/geo.rss"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/xml" value="testbed/geo.rss"/>
                     </map>
                 </property>
             </bean>
