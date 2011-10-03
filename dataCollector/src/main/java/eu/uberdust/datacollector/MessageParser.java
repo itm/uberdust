@@ -45,7 +45,7 @@ public class MessageParser implements Runnable {
     public void run() {
         //Get only the text part
         final String strLine = toString.substring(toString.indexOf("binaryData:") + "binaryData:".length());
-        log.info("Received " + strLine);
+//        log.debug("Received " + strLine);
 
         //get the node id
         final String node_id = extractNodeId(strLine);
@@ -53,7 +53,7 @@ public class MessageParser implements Runnable {
         try {
             //if there is a node id
             if (node_id != "") {
-                log.info("Node id is " + node_id);
+                log.debug("Node id is " + node_id);
                 //check for capability readings
                 boolean found_reading = false;
                 //check for all given capabilitirs
@@ -61,7 +61,7 @@ public class MessageParser implements Runnable {
                     if (strLine.indexOf(Sensors_prefixes[i]) > 0) {
                         found_reading = true;
                         final int start = strLine.indexOf(Sensors_prefixes[i]) + Sensors_prefixes[i].length() + 1;
-                        log.info("Start is " + start);
+
                         int end = strLine.indexOf(" ", start);
                         if (end == -1) {
                             end = strLine.length() - 2;
@@ -69,14 +69,14 @@ public class MessageParser implements Runnable {
                         int value = -1;
                         try {
                             value = Integer.parseInt(strLine.substring(start, end));
-                            log.info(Sensors_names[i] + " value " + value + " node " + node_id);
+                            log.debug(Sensors_names[i] + " value " + value + " node " + node_id);
                             //check if inside accepted values
                             if (value > -1) {
                                 // Initialize hibernate
                                 HibernateUtil.connectEntityManagers();
 
                                 Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
-                                log.info("value exists");
+                                log.debug("value exists");
                                 //get the node from hibernate
                                 final String nodeId = "urn:wisebed:ctitestbed:" + node_id;
                                 final String capabilityName = "urn:wisebed:node:capability:" + Sensors_names[i];
@@ -89,14 +89,14 @@ public class MessageParser implements Runnable {
                                     log.info("Added " + nodeId + "," + capabilityName + "," + readingValue);
 
                                 } catch (Exception e) {
-                                    log.info("Problem with " + nodeId);
+                                    log.error("Problem with " + nodeId + "," + capabilityName + "," + readingValue);
                                     tx.rollback();
                                 } finally {
                                     HibernateUtil.getInstance().closeSession();
                                 }
                                 break;
                             } else {
-                                log.info("error in value");
+                                log.error("error in value -1");
                             }
                         } catch (Exception e) {
                             log.error("Cannot parse value for " + Sensors_prefixes[i] + "'" + strLine.substring(start, end) + "'");
@@ -119,14 +119,16 @@ public class MessageParser implements Runnable {
                         final String targetId = strLine.substring(target_start, target_end);
 
 
-                        log.info("Fount a link down " + node_id + "<<--X--->>" + targetId);
+                        log.debug("Fount a link down " + node_id + "<<--X--->>" + targetId);
 
                         try {
                             // insert reading
                             LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", 0, new Date());
                             tx.commit();
+                            log.info("Added Link " + node_id + "<<--X-->>" + targetId);
                         } catch (Exception e) {
                             tx.rollback();
+                            log.error("Problem Link " + node_id + "<<--X-->>" + targetId);
                         } finally {
                             HibernateUtil.getInstance().closeSession();
                         }
@@ -142,14 +144,16 @@ public class MessageParser implements Runnable {
                         final String sourceId = "urn:wisebed:ctitestbed:" + node_id;
                         final String targetId = strLine.substring(target_start, target_end);
 
-                        log.info("Fount a link up " + node_id + "<<------>>" + targetId);
+                        log.debug("Fount a link up " + node_id + "<<------>>" + targetId);
 
                         try {
                             // insert reading
                             LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", 1, new Date());
                             tx.commit();
+                            log.info("Added Link " + node_id + "<<----->>" + targetId);
                         } catch (Exception e) {
                             tx.rollback();
+                            log.error("Problem Link " + node_id + "<<----->>" + targetId);
                         } finally {
                             HibernateUtil.getInstance().closeSession();
                         }

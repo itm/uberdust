@@ -154,9 +154,8 @@ public class testbedListener {
 
 
         private void parse(String toString) {
-            MessageParser msgp = new MessageParser(toString, Sensors_names, Sensors_prefixes);
-            msgp.run();
-
+            Thread d = new Thread(new MessageParser(toString, Sensors_names, Sensors_prefixes));
+            d.start();
         }
     };
 
