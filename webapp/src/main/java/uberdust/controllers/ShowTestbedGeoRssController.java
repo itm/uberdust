@@ -96,8 +96,9 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             SyndContent description = new SyndContentImpl();
             StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
-            descriptionBuffer.append("<p><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
-                        .append(testbed.getId()).append("/node/").append(node.getId()).append("/georss").append("</p>");
+                descriptionBuffer.append("<p><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
+                        .append(testbed.getId()).append("/node/").append(node.getId()).append("/georss").append("\">")
+                        .append("GeoRSS feed").append("</a></p>");
             descriptionBuffer.append("<ul>");
             for (Capability capability : node.getCapabilities()) {
                 descriptionBuffer.append("<li><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
