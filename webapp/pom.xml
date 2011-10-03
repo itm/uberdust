@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-            <groupId>uberdust</groupId>
-            <artifactId>uberdust</artifactId>
-            <version>1.0</version>
-        </parent>
+        <groupId>uberdust</groupId>
+        <artifactId>uberdust</artifactId>
+        <version>1.0</version>
+    </parent>
 
 
     <groupId>uberdust</groupId>
