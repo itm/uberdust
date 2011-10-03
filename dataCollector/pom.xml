@@ -34,7 +34,7 @@
     </parent>
 
     <groupId>uberdust</groupId>
-    <artifactId>dataCollector</artifactId>
+    <artifactId>TestbedListener</artifactId>
     <packaging>jar</packaging>
     <name>Testbed Listener</name>
     <version>1.0</version>
@@ -144,7 +144,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>eu.uberdust.datacollector.testbedListener
+                            <mainClass>eu.uberdust.TestbedListener
                             </mainClass>
                         </configuration>
                         <goals>
