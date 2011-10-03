@@ -41,6 +41,17 @@
             </ul>
         </td>
     </tr>
+    <tr>
+        <td>GeoRSS Feed</td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/georss">GeoRSS feed</a></td>
+        <td><a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/georss">View On Google Maps</a></td>
+    </tr>
+    <tr>
+        <td>KML Feed</td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/kml">KML feed</a></td>
+        <td><a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/kml">View On Google Maps</a></td>
+        <td><p style="color : red">not implemented yet</p></td>
+    </tr>
     </tbody>
 </table>
 </body>
