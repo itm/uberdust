@@ -116,19 +116,19 @@ public class MessageParser implements Runnable {
                         final int target_end = strLine.indexOf(" ", target_start);
 
                         final String sourceId = "urn:wisebed:ctitestbed:" + node_id;
-                        final String targetId = strLine.substring(target_start, target_end);
+                        final String targetId = "urn:wisebed:ctitestbed:" + strLine.substring(target_start, target_end);
 
 
-                        log.debug("Fount a link down " + node_id + "<<--X--->>" + targetId);
+                        log.debug("Fount a link down " + sourceId + "<<--X--->>" + targetId);
 
                         try {
                             // insert reading
                             LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", 0, new Date());
                             tx.commit();
-                            log.info("Added Link " + node_id + "<<--X-->>" + targetId);
+                            log.info("Added Link " + sourceId + "<<--X-->>" + targetId);
                         } catch (Exception e) {
                             tx.rollback();
-                            log.error("Problem Link " + node_id + "<<--X-->>" + targetId);
+                            log.error("Problem Link " + sourceId + "<<--X-->>" + targetId);
                         } finally {
                             HibernateUtil.getInstance().closeSession();
                         }
@@ -142,18 +142,18 @@ public class MessageParser implements Runnable {
                         final int target_end = strLine.indexOf(" ", target_start);
 
                         final String sourceId = "urn:wisebed:ctitestbed:" + node_id;
-                        final String targetId = strLine.substring(target_start, target_end);
+                        final String targetId = "urn:wisebed:ctitestbed:" + strLine.substring(target_start, target_end);
 
-                        log.debug("Fount a link up " + node_id + "<<------>>" + targetId);
+                        log.debug("Fount a link up " + sourceId + "<<------>>" + targetId);
 
                         try {
                             // insert reading
                             LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", 1, new Date());
                             tx.commit();
-                            log.info("Added Link " + node_id + "<<----->>" + targetId);
+                            log.info("Added Link " + sourceId + "<<----->>" + targetId);
                         } catch (Exception e) {
                             tx.rollback();
-                            log.error("Problem Link " + node_id + "<<----->>" + targetId);
+                            log.error("Problem Link " + sourceId + "<<----->>" + targetId);
                         } finally {
                             HibernateUtil.getInstance().closeSession();
                         }

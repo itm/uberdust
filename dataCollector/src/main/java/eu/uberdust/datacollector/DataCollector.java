@@ -3,7 +3,8 @@ package eu.uberdust.datacollector;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -15,7 +16,6 @@ import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Properties;
@@ -41,14 +41,14 @@ public class DataCollector {
 
     public DataCollector() {
         //BasicConfigurator.configure();
-        PropertyConfigurator.configure("classes/log4j.properties");
+        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
 
         log.setLevel(Level.INFO);
 
 
         properties = new Properties();
         try {
-            properties.load(new FileInputStream("classes/dataCollector.properties"));
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
         } catch (IOException e) {
             log.info("No properties file found! dataCollector.properties not found!");
             return;
