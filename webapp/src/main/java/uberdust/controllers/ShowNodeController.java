@@ -35,7 +35,7 @@ public class ShowNodeController extends AbstractRestController {
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
 
-         // look up testbed
+         // look up node
         Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
             // if no testbed is found throw exception

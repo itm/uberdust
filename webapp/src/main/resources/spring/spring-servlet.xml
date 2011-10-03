@@ -26,6 +26,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <!-- Node Related controllers -->
                 <prop key="GET /testbed/*/node">listNodesController</prop>
                 <prop key="GET /testbed/*/node/*">showNodeController</prop>
+                <prop key="GET /testbed/*/node/*/georss">showNodeGeoRssController</prop>
 
                 <!-- Link Related Controllers -->
                 <prop key="GET /testbed/*/link">listLinksController</prop>
@@ -130,6 +131,14 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <!-- Show Node GeoRss Controller -->
+    <bean name="showNodeGeoRssController" class="uberdust.controllers.ShowNodeGeoRssController">
+        <property name="commandClass" value="uberdust.commands.NodeCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/georss"/>
     </bean>
 
     <!-- List available Link Controller -->

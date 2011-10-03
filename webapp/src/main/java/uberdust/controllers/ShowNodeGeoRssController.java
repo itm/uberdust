@@ -6,6 +6,7 @@ import com.sun.syndication.feed.module.georss.geometries.Position;
 import com.sun.syndication.feed.synd.*;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
+import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
@@ -16,21 +17,25 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
+import uberdust.commands.NodeCommand;
 import uberdust.commands.TestbedCommand;
 import uberdust.util.Coordinate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-public class ShowTestbedGeoRssController extends AbstractRestController {
+public class ShowNodeGeoRssController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
+    private NodeController nodeManager;
+    private static final Logger LOGGER = Logger.getLogger(ShowNodeGeoRssController.class);
 
 
-    public ShowTestbedGeoRssController() {
+    public ShowNodeGeoRssController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -41,13 +46,18 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
+    public void setNodeManager(final NodeController nodeManager) {
+        this.nodeManager = nodeManager;
+    }
+
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                   Object commandObj, BindException e) throws Exception {
 
         // set command object
-        TestbedCommand command = (TestbedCommand) commandObj;
+        NodeCommand command = (NodeCommand) commandObj;
         LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
+        LOGGER.info("commandObj.getNodeId() : " + command.getNodeId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -65,11 +75,19 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
+        // look up node
+        String nodeId = command.getNodeId();
+        Node node = nodeManager.getByID(command.getNodeId());
+        if (node == null) {
+            // if no node is found throw exception
+            throw new Exception(new Throwable("Cannot find testbed [" + command.getNodeId() + "]."));
+        }
+
         // set up feed and entries
         httpServletResponse.setContentType("application/xml; charset=UTF-8");
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
-        feed.setTitle(testbed.getName() + " GeoRSS");
+        feed.setTitle(node.getId() + " GeoRSS feed");
         feed.setLink(httpServletRequest.getRequestURL().toString());
         feed.setDescription(testbed.getDescription());
         List<SyndEntry> entries = new ArrayList<SyndEntry>();
@@ -80,47 +98,41 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
         final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
 
+        // set entry's title,link and publishing date
+        SyndEntry entry = new SyndEntryImpl();
+        entry.setTitle(node.getId());
+        entry.setLink("http://150.140.5.11:8080" +     // TODO those constants should get out.They suck
+                "/uberdust/rest/testbed/" + testbed.getId() + "/node/" + node.getId());
+        entry.setPublishedDate(new Date());
 
-
-        // make an entry and it
-        for (Node node : testbed.getSetup().getNodes()) {
-            SyndEntry entry = new SyndEntryImpl();
-
-            // set entry's title,link and publishing date
-            entry.setTitle(node.getId());
-            entry.setLink("http://150.140.5.11:8080" +     // TODO those constants should get out.They suck
-                    "/uberdust/rest/testbed/" + testbed.getId() + "/node/" + node.getId());
-            entry.setPublishedDate(new Date());
-
-            // set entry's description (HTML list)
-            SyndContent description = new SyndContentImpl();
-            StringBuilder descriptionBuffer = new StringBuilder();
-            descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
-            descriptionBuffer.append("<ul>");
-            for (Capability capability : node.getCapabilities()) {
-                descriptionBuffer.append("<li><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
-                        .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
-                        .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
-            }
-            descriptionBuffer.append("</ul>");
-            description.setType("text/html");
-            description.setValue(descriptionBuffer.toString());
-            entry.setDescription(description);
-
-            // convert node position from xyz to long/lat
-            final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
-            final Coordinate nodeCoordinate = new Coordinate((double) position.getX(),(double) position.getY(),
-            (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
-            final Coordinate rotated = Coordinate.rotate(nodeCoordinate, originCoordinate.getPhi());
-            final Coordinate absolute = Coordinate.absolute(cartesian, rotated);
-            final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
-
-            // set the GeoRSS module and add it
-            GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-            geoRSSModule.setPosition(new Position(nodePosition.getX(), nodePosition.getY()));
-            entry.getModules().add(geoRSSModule);
-            entries.add(entry);
+        // set entry's description (HTML list)
+        SyndContent description = new SyndContentImpl();
+        StringBuilder descriptionBuffer = new StringBuilder();
+        descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
+        descriptionBuffer.append("<ul>");
+        for (Capability capability : node.getCapabilities()) {
+            descriptionBuffer.append("<li><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
+                    .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
+                    .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
         }
+        descriptionBuffer.append("</ul>");
+        description.setType("text/html");
+        description.setValue(descriptionBuffer.toString());
+        entry.setDescription(description);
+
+        // convert node position from xyz to long/lat
+        final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
+        final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),
+                (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
+        final Coordinate rotated = Coordinate.rotate(nodeCoordinate, originCoordinate.getPhi());
+        final Coordinate absolute = Coordinate.absolute(cartesian, rotated);
+        final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
+
+        // set the GeoRSS module and add it
+        GeoRSSModule geoRSSModule = new SimpleModuleImpl();
+        geoRSSModule.setPosition(new Position(nodePosition.getX(), nodePosition.getY()));
+        entry.getModules().add(geoRSSModule);
+        entries.add(entry);
 
         // add entries to feed
         feed.setEntries(entries);
@@ -130,7 +142,8 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         try {
             output.output(feed, httpServletResponse.getWriter());
         } catch (FeedException ex) {
-            throw new Exception(new Throwable("Error occur while making GeoRSS for testbed [" + testbedId + "]."));
+            throw new Exception(new Throwable("Error occur while making GeoRSS for testbed [" + testbedId + "] " +
+                    "and node [" + nodeId +"]."));
         }
 
         return null;
