@@ -16,7 +16,9 @@
 </head>
 <body>
 
-<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a></p>
+<p>
+    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>
+</p>
 
 <table>
     <tbody>
@@ -33,13 +35,44 @@
         <td><c:out value="${testbed.name}"/></td>
     </tr>
     <tr>
-        <td>...</td>
+        <td>Testbed URN prefix</td>
+        <td><c:out value="${testbed.urnPrefix}"/></td>
     </tr>
     <tr>
-        <td>...</td>
+        <td>Testbed URL</td>
+        <td><a href="<c:out value="${testbed.url}"/>"><c:out value="${testbed.url}"/></a></td>
     </tr>
     <tr>
-        <td>...</td>
+        <td>Testbed SNAA URL</td>
+        <td><a href="<c:out value="${testbed.snaaUrl}"/>"><c:out value="${testbed.snaaUrl}"/></a></td>
+    </tr>
+    <tr>
+        <td>Testbed RS URL</td>
+        <td><a href="<c:out value="${testbed.rsUrl}"/>"><c:out value="${testbed.rsUrl}"/></a></td>
+    </tr>
+    <tr>
+        <td>Testbed Session Management URL</td>
+        <td><a href="<c:out value="${testbed.sessionUrl}"/>"><c:out value="${testbed.sessionUrl}"/></a></td>
+    </tr>
+    <tr>
+        <td>Federated Testbed</td>
+        <td><c:out value="${testbed.federated}"/></td>
+    </tr>
+    <tr>
+        <td>Testbed Status Page</td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/status">Status page</a></td>
+    </tr>
+    <tr>
+        <td>Testbed GeoRSS feed</td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/georss">GeoRSS feed</a></td>
+    </tr>
+    <tr>
+        <td>Testbed KML feed</td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/kml">KML feed</a></td>
+    </tr>
+    <tr>
+        <td>Testbed WiseML</td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/wiseml">WiseML</a></td>
     </tr>
     </tbody>
 </table>

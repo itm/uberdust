@@ -18,4 +18,7 @@ public class Util {
       }
       return latestDate;
   }
+
+    // TODO Make a URL construction method
+
 }

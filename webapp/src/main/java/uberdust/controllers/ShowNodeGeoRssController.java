@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.NodeCommand;
-import uberdust.commands.TestbedCommand;
 import uberdust.util.Coordinate;
 
 import javax.servlet.http.HttpServletRequest;
