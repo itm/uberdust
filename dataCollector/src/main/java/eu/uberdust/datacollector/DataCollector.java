@@ -25,9 +25,10 @@ import static org.jboss.netty.channel.Channels.pipeline;
 
 // Import log4j classes.
 
-public class testbedListener {
+public class DataCollector {
 
-    private static Logger log = Logger.getLogger(testbedListener.class);
+
+    private static Logger log = Logger.getLogger(DataCollector.class);
     private String host;
     private int port;
     private Channel channel;
@@ -38,14 +39,7 @@ public class testbedListener {
     private static String capability_prefix = "urn:wisebed:node:capability:";
 
 
-    public testbedListener(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
-
-    public static void main(String[] args) throws IOException {
-
+    public DataCollector() {
         //BasicConfigurator.configure();
         PropertyConfigurator.configure("classes/log4j.properties");
 
@@ -64,9 +58,8 @@ public class testbedListener {
 //        log.info("hibernate connected");
 
 
-        String ipAddress = properties.getProperty("runtime.ipAddress");
-        int port = Integer.parseInt(properties.getProperty("runtime.port"));
-
+        host = properties.getProperty("runtime.ipAddress");
+        port = Integer.parseInt(properties.getProperty("runtime.port"));
 
         Sensors_names = properties.getProperty("sensors.names").split(",");
         Sensors_prefixes = properties.getProperty("sensors.prefixes").split(",");
@@ -83,54 +76,13 @@ public class testbedListener {
             Sens += device_types[i] + ",";
         }
         log.info(Sens);
-
-        // create the command line parser
-        CommandLineParser parser = new PosixParser();
-        Options options = new Options();
-
-        options.addOption("i", "ip", true, "The IP address of the host to connect to");
-        options.addOption("p", "port", true, "The port number of the host to connect to");
-
-        options.addOption("v", "verbose", false, "Verbose logging output (equal to -l DEBUG)");
-        options.addOption("l", "logging", true,
-                "Set logging level (one of [" + Level.TRACE + "," + Level.DEBUG + "," + Level.INFO + ","
-                        + Level.WARN + "," + Level.ERROR + "])");
-
-        options.addOption("h", "help", false, "Help output");
+    }
 
 
-        try {
+    public static void main(String[] args) throws IOException {
 
-            CommandLine line = parser.parse(options, args);
 
-            if (line.hasOption('v')) {
-                org.apache.log4j.Logger.getRootLogger().setLevel(Level.DEBUG);
-            }
-
-            if (line.hasOption('l')) {
-                Level level = Level.toLevel(line.getOptionValue('l'));
-                org.apache.log4j.Logger.getRootLogger().setLevel(level);
-                org.apache.log4j.Logger.getLogger("de.uniluebeck.itm").setLevel(level);
-            }
-
-            if (line.hasOption('h')) {
-                usage(options);
-            }
-
-            if (line.hasOption('p')) {
-                try {
-                    port = Integer.parseInt(line.getOptionValue('p'));
-                } catch (NumberFormatException e) {
-                    throw new Exception("Port number must be a valid integer between 0 and 65536");
-                }
-            }
-
-        } catch (Exception e) {
-            log.error("Invalid command line: " + e, e);
-            usage(options);
-        }
-
-        testbedListener client = new testbedListener(ipAddress, port);
+        DataCollector client = new DataCollector();
         client.start();
 
 
@@ -180,7 +132,7 @@ public class testbedListener {
     };
 
     //used to connect to testbedruntime
-    private void start() {
+    public void start() {
 
         NioClientSocketChannelFactory factory =
                 new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
@@ -211,7 +163,7 @@ public class testbedListener {
 
     private static void usage(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(120, testbedListener.class.getCanonicalName(), null, options, null);
+        formatter.printHelp(120, DataCollector.class.getCanonicalName(), null, options, null);
         System.exit(1);
     }
 }
