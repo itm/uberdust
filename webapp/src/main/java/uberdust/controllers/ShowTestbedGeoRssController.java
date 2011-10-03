@@ -10,12 +10,14 @@ import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
+import eu.wisebed.wiseml.model.setup.Origin;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.TestbedCommand;
+import uberdust.util.Coordinate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,6 +74,14 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         feed.setDescription(testbed.getDescription());
         List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
+        // convert testbed origin from long/lat position to xyz
+        final Origin origin = testbed.getSetup().getOrigin();
+        Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
+                (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
+        final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
+
+
+
         // make an entry and it
         for (Node node : testbed.getSetup().getNodes()) {
             SyndEntry entry = new SyndEntryImpl();
@@ -87,10 +97,10 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             StringBuffer descriptionBuffer = new StringBuffer();
             descriptionBuffer.append("<p>" + node.getDescription() + "</p>");
             descriptionBuffer.append("<ul>");
-            for(Capability capability : node.getCapabilities()) {
+            for (Capability capability : node.getCapabilities()) {
                 descriptionBuffer.append("<li><a href=\"http://150.140.5.11:8080" +
                         "/uberdust/rest/testbed/" + testbed.getId() +
-                        "/node/" + node.getId() + "/capability/" + capability.getName() +"\">"+ capability.getName()
+                        "/node/" + node.getId() + "/capability/" + capability.getName() + "\">" + capability.getName()
                         + "</a></li>"
                 );
             }
@@ -99,11 +109,17 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             description.setValue(descriptionBuffer.toString());
             entry.setDescription(description);
 
+            // convert node position from xyz to long/lat
+            final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
+            final Coordinate nodeCoordinate = new Coordinate((double) position.getX(),(double) position.getY(),
+            (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
+            final Coordinate rotated = Coordinate.rotate(nodeCoordinate, originCoordinate.getPhi());
+            final Coordinate absolute = Coordinate.absolute(cartesian, rotated);
+            final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
+
             // set the GeoRSS module and add it
             GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-            geoRSSModule.setPosition(new Position(
-                    testbed.getSetup().getOrigin().getX() - node.getPosition().getX(),
-                    testbed.getSetup().getOrigin().getY() - node.getPosition().getY()));
+            geoRSSModule.setPosition(new Position(nodePosition.getX().doubleValue(), nodePosition.getY().doubleValue()));
             entry.getModules().add(geoRSSModule);
             entries.add(entry);
         }
