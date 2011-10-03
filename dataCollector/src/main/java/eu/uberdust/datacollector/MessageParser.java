@@ -27,7 +27,7 @@ public class MessageParser implements Runnable {
 
     }
 
-    private static Logger log = Logger.getLogger(testbedListener.class);
+    private static Logger log = Logger.getLogger(DataCollector.class);
 
     //USEd to get the node id from the string received
     private String extractNodeId(String linea) {
