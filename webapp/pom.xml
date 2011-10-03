@@ -4,13 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+            <groupId>uberdust</groupId>
+            <artifactId>uberdust</artifactId>
+            <version>1.0</version>
+        </parent>
+
+
     <groupId>uberdust</groupId>
-    <artifactId>uberdust</artifactId>
+    <artifactId>webapp</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
-    <name>ÜberDust</name>
-    <description>Sensor data management tool</description>
-    <url>https://github.com/itm/uberdust</url>
 
     <properties>
         <!--Properties needed for the Project-->
@@ -44,25 +48,12 @@
         </repository>
 
         <repository>
-            <id>itm-maven-repository-releases</id>
-            <url>http://www.itm.uni-luebeck.de/projects/maven/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>itm-maven-repository-snapshots</id>
-            <url>http://www.itm.uni-luebeck.de/projects/maven/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
+            <id>repository.ru1</id>
+            <url>http://ru1.cti.gr/maven</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+            <layout>default</layout>
         </repository>
 
         <repository>
@@ -275,4 +266,14 @@
         </plugins>
     </build>
 
+
+    <distributionManagement>
+        <!-- use the following if you're not using a snapshot version. -->
+        <repository>
+            <id>repository.ru1</id>
+            <name>Ru1 Repo</name>
+            <url>scp://ru1.cti.gr/srv/maven</url>
+        </repository>
+
+    </distributionManagement>
 </project>
