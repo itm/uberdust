@@ -16,9 +16,7 @@
     <title>ÜberDust</title>
 </head>
 <body>
-
-<c:forEach items="${testbed.setups}" var="setup">
-    <p>Setup ID : <c:out value="${setup.id}"/></p>
+    <p>Setup ID : <c:out value="${testbed.setup.id}"/></p>
 
     <p>Nodes</p>
     <table>
@@ -29,7 +27,7 @@
         <th>Total Readings Count</th>
         </thead>
         <tbody>
-        <c:forEach items="${setup.nodes}" var="node">
+        <c:forEach items="${testbed.setup.nodes}" var="node">
             <c:if test="${node != null}">
                 <tr>
                     <td>
@@ -61,6 +59,5 @@
     <%--</tr>--%>
     <%--</c:forEach>--%>
     <%--</table>--%>
-</c:forEach>
 </body>
 </html>

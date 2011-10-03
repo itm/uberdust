@@ -26,7 +26,7 @@
     <c:forEach items="${links}" var="link">
         <tr>
             <td>
-                /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}"><c:out value="${testbedId}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/link/${link.source}/${link.target}"><c:out value="[${link.source},${link.target}]"/></a>
+                /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/link/${link.source}/${link.target}">link</a>
             </td>
         </tr>
         <tr>

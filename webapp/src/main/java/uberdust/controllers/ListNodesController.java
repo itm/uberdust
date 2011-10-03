@@ -55,16 +55,11 @@ public class ListNodesController extends AbstractRestController {
         // fetch testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
 
-        // List of nodes
-        //List<Node> nodes = nodeManager.listTestbedNodes(testbed);
-        List<Node> nodes = nodeManager.list();
-
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
-        refData.put("testbedId", command.getTestbedId());
-        refData.put("nodes", nodes);
+        refData.put("testbed", testbed);
         return new ModelAndView("node/list.html", refData);
     }
 

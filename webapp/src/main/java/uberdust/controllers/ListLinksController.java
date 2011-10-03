@@ -55,15 +55,10 @@ public class ListLinksController extends AbstractRestController {
         // fetch testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
 
-        // get all links
-        //List<Link> links = linkManager.listTestbedNodes(testbed);
-        List<Link> links = linkManager.list();
-
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
-        refData.put("testbedId",command.getTestbedId());
-        refData.put("links", links);
+        refData.put("testbed",testbed);
         return new ModelAndView("link/list.html", refData);
     }
 

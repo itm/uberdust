@@ -5,8 +5,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
-<jsp:useBean id="testbedId" scope="request" class="java.lang.String"/>
+<jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 
 <html>
 <head>
@@ -17,15 +16,15 @@
 </head>
 <body>
 
-<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}"><c:out value="${testbedId}"/></a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/link">testbed links</a></p>
+<p>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link">testbed links</a></p>
 
 <table>
     <tbody>
     <tr>
         <td>Links found</td>
-        <td><c:out value="${fn:length(links)}"/></td>
+        <td><c:out value="${fn:length(testbed.setup.link)}"/></td>
     </tr>
-    <c:forEach items="${links}" var="link">
+    <c:forEach items="${testbed.setup.link}" var="link">
         <tr>
             <td>Source ID</td>
             <td><c:out value="${link.source}"/></td>

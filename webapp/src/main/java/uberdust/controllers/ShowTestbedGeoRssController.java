@@ -1,5 +1,11 @@
 package uberdust.controllers;
 
+import com.sun.syndication.feed.module.georss.GeoRSSModule;
+import com.sun.syndication.feed.module.georss.SimpleModuleImpl;
+import com.sun.syndication.feed.module.georss.geometries.Position;
+import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedOutput;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
@@ -12,13 +18,12 @@ import uberdust.commands.TestbedCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ShowTestbedGeoRssController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
+    private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
 
 
     public ShowTestbedGeoRssController() {
@@ -56,12 +61,42 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
-        // Prepare data to pass to jsp
-        final Map<String, Object> refData = new HashMap<String, Object>();
+        // set up feed and entries
+        httpServletResponse.setContentType("application/xml; charset=UTF-8");
+        SyndFeed feed = new SyndFeedImpl();
+        feed.setFeedType("rss_2.0");
+        feed.setTitle(testbed.getName()  + " GeoRSS");
+        feed.setLink(httpServletRequest.getRequestURL().toString());
+        feed.setDescription(testbed.getDescription());
+        List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
-        // else put thisNode instance in refData and return index view
-        refData.put("testbed", testbed);
-        return new ModelAndView("testbed/geo.rss", refData);
+        // make an entry and it
+        SyndEntry entry = new SyndEntryImpl();
+        entry.setTitle(testbed.getName()  + " GeoRSS");
+        entry.setLink(httpServletRequest.getRequestURL().toString());
+        entry.setPublishedDate(new Date());
+        SyndContent description = new SyndContentImpl();
+        description.setType("text/plain");
+        description.setValue(testbed.getName() + " GeoRSS");
+        entry.setDescription(description);
+        entries.add(entry);
+
+        // set the GeoRSS module and add it
+        GeoRSSModule geoRSSModule = new SimpleModuleImpl();
+        geoRSSModule.setPosition(new Position(testbed.getSetup().getOrigin().getX(),
+                testbed.getSetup().getOrigin().getY()));
+        entry.getModules().add(geoRSSModule);
+        feed.setEntries(entries);
+
+        // the feed output goes to response
+        SyndFeedOutput output = new SyndFeedOutput();
+        try {
+            output.output(feed, httpServletResponse.getWriter());
+        } catch (FeedException ex) {
+            throw new Exception(new Throwable("Error occur while making GeoRSS for testbed [" + testbedId + "]."));
+        }
+
+        return null;
     }
 
     @ExceptionHandler(Exception.class)
