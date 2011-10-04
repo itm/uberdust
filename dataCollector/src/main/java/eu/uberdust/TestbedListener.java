@@ -1,5 +1,6 @@
 package eu.uberdust;
 
+import eu.uberdust.controller.TestbedController;
 import eu.uberdust.datacollector.DataCollector;
 
 /**
@@ -14,5 +15,6 @@ public class TestbedListener {
     public static void main(String[] args) {
         DataCollector dataCollector = new DataCollector();
         dataCollector.start();
+        TestbedController.getInstance();
     }
 }
