@@ -19,7 +19,7 @@
 <h1>Welcome to ÜberDust</h1>
 
 <table>
-<tbody>
+    <tbody>
     <tr>
         <td>Available Testbeds</td>
         <td><c:out value="${fn:length(testbeds)}"/></td>
@@ -27,7 +27,9 @@
     <c:forEach items="${testbeds}" var="testbed">
         <tr>
             <td><c:out value="${testbed.id}"/></td>
-            <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out value="${testbed.name}"/></a></td>
+            <td>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out
+                        value="${testbed.name}"/></a></td>
         </tr>
     </c:forEach>
     </tbody>
