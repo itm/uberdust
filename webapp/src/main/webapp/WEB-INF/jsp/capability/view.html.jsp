@@ -108,7 +108,11 @@
                         </li>
                         <li>
                             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/wiseml"/>WiseML</a>
-                            <p style="color : red">Not implemented</p>
+                            <span style="color : red">Not implemented</span>
+                        </li>
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/json"/>JSON</a>
+                            <span style="color : red">Not implemented</span>
                         </li>
                     </ul>
                 </td>
