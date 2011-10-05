@@ -100,11 +100,6 @@
             <artifactId>tr.scripting-client</artifactId>
             <version>0.7.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.protobuf.tools</groupId>
-            <artifactId>maven-protoc-plugin</artifactId>
-            <version>0.1.8</version>
-        </dependency>
     </dependencies>
     <build>
         <resources>
