@@ -1,5 +1,7 @@
 package eu.uberdust.controller.communication;
 
+import eu.uberdust.controller.Controller;
+import eu.uberdust.controller.TestbedController;
 import eu.uberdust.controller.protobuf.CommandProtocol;
 import org.apache.log4j.Logger;
 
@@ -50,6 +52,7 @@ public class MessageHandler extends Thread {
             CommandProtocol.Command
                     cmd = CommandProtocol.Command.parseFrom(thisSocket.getInputStream());
             LOGGER.info("New Command Received:\n" + cmd.toString());
+             TestbedController.getInstance().sendCommand(cmd.toBuilder());
         } catch (final IOException e) {
             LOGGER.error(e);
         }

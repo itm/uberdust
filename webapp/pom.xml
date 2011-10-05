@@ -93,6 +93,11 @@
             <artifactId>wiseml</artifactId>
             <version>1.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>uberdust</groupId>
+            <artifactId>TestbedListener</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!--Module Dependencies-->
         <dependency>

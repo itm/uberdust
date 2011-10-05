@@ -17,16 +17,24 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
+
+                <!-- Send Command Controller -->
+                <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
+
                 <!-- Testbed Related controllers -->
                 <prop key="GET /testbed">listTestbedsController</prop>
                 <prop key="GET /testbed/*">showTestbedController</prop>
                 <prop key="GET /testbed/*/status">showTestbedStatusController</prop>
                 <prop key="GET /testbed/*/georss">showTestbedGeoRssController</prop>
+                <!--<prop key="GET /testbed/*/kml">showTestbedKmlController</prop>-->
+                <!--<prop key="GET /testbed/*/wiseml">showTestbedWiseMlController</prop>-->
+
 
                 <!-- Node Related controllers -->
                 <prop key="GET /testbed/*/node">listNodesController</prop>
                 <prop key="GET /testbed/*/node/*">showNodeController</prop>
                 <prop key="GET /testbed/*/node/*/georss">showNodeGeoRssController</prop>
+                <!--<prop key="GET /testbed/*/node/*/kml">showNodeKmlController</prop>-->
 
                 <!-- Link Related Controllers -->
                 <prop key="GET /testbed/*/link">listLinksController</prop>
@@ -36,8 +44,17 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <prop key="GET /testbed/*/node/*/capability/*">nodeCapabilityController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/tabdelimited">nodeCapabilityTabDelimitedController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/json">nodeCapabilityJsonController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
+                <!--<prop key="GET /testbed/*/node/*/capability/*/wiseml">nodeCapabilityWiseMlController</prop>-->
             </props>
         </property>
+    </bean>
+
+    <!-- Send Commmand Controller -->
+    <bean name="sendCommandController" class="uberdust.controllers.SendCommandController">
+        <property name="commandClass" value="uberdust.commands.DestinationPayloadCommand"/>
+        <property name="uriPattern" value="/sendCommand/destination/{destination}/payload/{payload}"/>
     </bean>
 
     <!-- List Testbeds Controller -->
@@ -177,8 +194,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     </bean>
 
 
-
-        <!-- Node-Capability Controller -->
+    <!-- Node-Capability Controller -->
     <bean name="nodeCapabilityController" class="uberdust.controllers.NodeCapabilityController">
         <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
@@ -224,4 +240,33 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/tabdelimited"/>
     </bean>
+
+    <!-- Node-Capability Controller (JSON format)-->
+    <bean name="nodeCapabilityJsonController" class="uberdust.controllers.NodeCapabilityJSONController">
+        <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/json"/>
+    </bean>
+
+    <!-- -->
+    <bean name="nodeCapabilityChartController" class="uberdust.controllers.NodeCapabilityChartController">
+        <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/chart"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="capability/chart.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="capability/chart.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
 </beans>
