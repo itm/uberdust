@@ -3,8 +3,6 @@ package eu.uberdust.datacollector;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -18,6 +16,9 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
@@ -28,25 +29,22 @@ import static org.jboss.netty.channel.Channels.pipeline;
 public class DataCollector {
 
 
-    private static Logger log = Logger.getLogger(DataCollector.class);
+    private static final Logger log = Logger.getLogger(DataCollector.class);
     private String host;
     private int port;
     private Channel channel;
     private ClientBootstrap bootstrap;
-    private static Properties properties;
     private static String[] Sensors_names, Sensors_prefixes;
-    private static String[] device_types;
-    private static String capability_prefix = "urn:wisebed:node:capability:";
-
+    private static Map<String, String> sensors = new HashMap<String, String>();
+    private static int messageCounter;
+    private static Date lastTime;
 
     public DataCollector() {
-        //BasicConfigurator.configure();
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
 
         log.setLevel(Level.INFO);
 
-
-        properties = new Properties();
+        Properties properties = new Properties();
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
         } catch (IOException e) {
@@ -54,64 +52,56 @@ public class DataCollector {
             return;
         }
 
-
-//        log.info("hibernate connected");
-
-
         host = properties.getProperty("runtime.ipAddress");
         port = Integer.parseInt(properties.getProperty("runtime.port"));
 
         Sensors_names = properties.getProperty("sensors.names").split(",");
         Sensors_prefixes = properties.getProperty("sensors.prefixes").split(",");
 
-        String Sens = "Sensors Acknoledging: ";
+        String Sens = "Sensors Checked: ";
         for (int i = 0; i < Sensors_names.length; i++) {
             Sens += Sensors_names[i] + "[" + Sensors_prefixes[i] + "]" + ",";
+            sensors.put(Sensors_prefixes[i], Sensors_names[i]);
         }
         log.info(Sens);
 
-        device_types = properties.getProperty("device.Types").split(",");
+        String[] device_types = properties.getProperty("device.Types").split(",");
         Sens = "Devices Monitored: ";
-        for (int i = 0; i < device_types.length; i++) {
-            Sens += device_types[i] + ",";
+        for (String device_type : device_types) {
+            Sens += device_type + ",";
         }
         log.info(Sens);
+        messageCounter = 0;
+        lastTime = new Date();
     }
 
-
-    public static void main(String[] args) throws IOException {
-
-
-        DataCollector client = new DataCollector();
-        client.start();
-
-
-    }
-
-    private SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
+    private final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
             Messages.Msg message = (Messages.Msg) e.getMessage();
             if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
                 WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
-//                log.info("Received sensor node binary output: \"{}\"",  );
                 parse(wsnAppMessage.toString());
+                messageCounter++;
+                if (messageCounter == 1000) {
+                    final long milis = new Date().getTime() - lastTime.getTime();
+                    log.info(messageCounter + " messages in " + milis / 1000 + " sec");
+                    lastTime = new Date();
+                    messageCounter = 0;
+                }
+
             } else {
                 log.info("got a message of type " + message.getMsgType());
             }
-
-
         }
 
-
         private void parse(String toString) {
-            Thread d = new Thread(new MessageParser(toString, Sensors_names, Sensors_prefixes));
-            d.start();
+            (new Thread(new MessageParser(toString, sensors))).start();
         }
     };
 
-    private ChannelPipelineFactory channelPipelineFactory = new ChannelPipelineFactory() {
+    private final ChannelPipelineFactory channelPipelineFactory = new ChannelPipelineFactory() {
 
         @Override
         public ChannelPipeline getPipeline() throws Exception {
@@ -149,7 +139,6 @@ public class DataCollector {
         if (!connectFuture.isSuccess()) {
             log.error("client connect failed!", connectFuture.getCause());
         }
-
     }
 
     private void stop() {
@@ -159,11 +148,5 @@ public class DataCollector {
 
         bootstrap.releaseExternalResources();
         bootstrap = null;
-    }
-
-    private static void usage(Options options) {
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(120, DataCollector.class.getCanonicalName(), null, options, null);
-        System.exit(1);
     }
 }
