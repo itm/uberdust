@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.DestinationPayloadCommand;
-import uberdust.commands.NodeCapabilityCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.math.BigInteger;
 import java.net.Socket;
-import java.net.UnknownHostException;
+
 
 public class SendCommandController extends AbstractRestController {
 
@@ -31,44 +31,54 @@ public class SendCommandController extends AbstractRestController {
         LOGGER.info("command.getDestination() : " + command.getDestination());
         LOGGER.info("command.getPayload() : " + command.getPayload());
 
-        System.out.println("command.getDestination() : " + command.getDestination());
-        System.out.println("command.getPayload() : " + command.getPayload());
-
-        Socket kkSocket = null;
-        PrintWriter out = null;
-
-
         try {
-            kkSocket = new Socket("gold.cti.gr", 4444);
-            out = new PrintWriter(kkSocket.getOutputStream(), true);
 
-        } catch (UnknownHostException ex) {
+            // prepare socket for connection and writer
+            Socket kkSocket = new Socket("gold.cti.gr", 4444);
+            PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+
+            // parse destination and payload from url and split them
+            final String[] destination = command.getDestination().split(",");
+            final String[] payload = command.getPayload().split(",");
+            if (destination.length > 2 || payload.length > 3) {
+                throw new Exception("Invalid destination or payload arguments count");
+            }
+
+
+            // get bytes from destination and payload
+            final byte[] destinationBytes = new byte[destination.length];
+            final byte[] payloadBytes = new byte[payload.length];
+            for (int i = 0; i < destination.length; i++) {
+                int destIntValue = Integer.valueOf(destination[i], 16);
+                LOGGER.info(i + ".destIntValue" + destIntValue);
+                logger.info(i + ".destIntValue" + destIntValue);
+                destinationBytes[i] = (byte) destIntValue;
+            }
+            for (int i = 0; i < payload.length; i++) {
+                payloadBytes[i] = (byte) Integer.valueOf(payload[i], 16).intValue();
+            }
+
+            // build command and send it through the socket stream
+            CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
+                    .setDestination(ByteString.copyFrom(destinationBytes))
+                    .setPayload(ByteString.copyFrom(payloadBytes))
+                    .build();
+            cmd.writeTo(kkSocket.getOutputStream());
+
+            // close stream after command execution
+            out.close();
+            kkSocket.close();
+
+            httpServletResponse.setContentType("text/plain");
+            final Writer textOutput = (httpServletResponse.getWriter());
+            textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
+
+            return null;
+        } catch (Exception ex) {
             LOGGER.fatal(ex.getMessage());
-            System.out.println(ex.getMessage());
-        } catch (IOException ex) {
-            LOGGER.fatal(ex.getMessage());
-            System.out.println(ex.getMessage());
+            throw new Exception(ex.getMessage());
         }
 
-        byte[] destination = new byte[]{0x4, (byte) 0x94};
-        byte[] payload = new byte[]{1, 1, 1};
-        CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
-                .setDestination(ByteString.copyFrom(destination))
-                .setPayload(ByteString.copyFrom(payload))
-                .build();
-
-        System.out.println(cmd.toString());
-        cmd.writeTo(kkSocket.getOutputStream());
-
-        out.close();
-
-        kkSocket.close();
-
-        httpServletResponse.setContentType("text/plain");
-        final Writer textOutput = (httpServletResponse.getWriter());
-        textOutput.write("Destination : "+ new String(destination) +"\nPayload : "+ new String(payload));
-
-        return null;
     }
 
     @ExceptionHandler(Exception.class)
