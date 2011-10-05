@@ -1,11 +1,12 @@
 package eu.uberdust.controller;
 
 import com.google.common.collect.Lists;
-import de.itm.uniluebeck.tr.wiseml.WiseMLHelper;
+import com.google.protobuf.ByteString;
 import de.uniluebeck.itm.wisebed.cmdlineclient.BeanShellHelper;
 import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient;
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
-import eu.uberdust.controller.util.ControllerClientListener;
+import eu.uberdust.controller.communication.SocketServer;
+import eu.uberdust.controller.protobuf.CommandProtocol;
 import eu.wisebed.api.common.Message;
 import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
 import eu.wisebed.api.sm.SessionManagement;
@@ -14,17 +15,13 @@ import eu.wisebed.api.wsn.WSN;
 import eu.wisebed.testbed.api.wsn.WSNServiceHelper;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.omg.SendingContext.RunTime;
-
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -79,6 +76,8 @@ public class TestbedController {
         readProperties();
         connectToRuntime();
 
+        //Start the Socket Server
+        (new SocketServer()).start();
     }
 
     private void readProperties() {
@@ -124,22 +123,21 @@ public class TestbedController {
 
         final ProtobufControllerClient pcc = ProtobufControllerClient.create(pccHost, pccPort, BeanShellHelper.parseSecretReservationKeys(secretReservationKeys));
         pcc.connect();
-        pcc.addListener(new ControllerClientListener());
+        //pcc.addListener(new ControllerClientListener());
 
     }
 
-    public void sendCommand(final byte[] destination, final byte[] payload) {
+    public void sendCommand(CommandProtocol.Command.Builder protoCommand) {
 
         // Send a message to nodes via uart (to receive them enable RX_UART_MSGS in the fronts_config.h-file)
         final Message msg = new Message();
 
-        final byte[] newPayload = new byte[destination.length + payload.length + 1 + PAYLOAD_HEADERS.length];
+        final byte[] newPayload = new byte[protoCommand.getDestination().toByteArray().length + protoCommand.getPayload().toByteArray().length + 1 + PAYLOAD_HEADERS.length];
 
         newPayload[0] = PAYLOAD_PREFIX;
-        System.arraycopy(destination, 0, newPayload, 1, destination.length);
+        System.arraycopy(protoCommand.getDestination().toByteArray(), 0, newPayload, 1, protoCommand.getDestination().toByteArray().length);
         System.arraycopy(PAYLOAD_HEADERS, 0, newPayload, 3, PAYLOAD_HEADERS.length);
-        System.arraycopy(payload, 0, newPayload, 6, payload.length);
-
+        System.arraycopy(protoCommand.getPayload().toByteArray(), 0, newPayload, 6, protoCommand.getPayload().toByteArray().length);
         msg.setBinaryData(newPayload);
         msg.setSourceNodeId("urn:wisebed:ctitestbed:0x1");
 
@@ -152,9 +150,17 @@ public class TestbedController {
         wsn.send(nodeURNs, msg, 10, TimeUnit.SECONDS);
     }
 
-
     public static void main(String[] args) {
         TestbedController.getInstance();
+
+        CommandProtocol.Command.Builder cmd = CommandProtocol.Command.newBuilder();
+        byte[] destination = new byte[]{0x4, (byte) 0x94};
+        byte[] payload = new byte[]{1, 1, 1};
+
+        cmd.setDestination(ByteString.copyFrom(destination));
+        cmd.setPayload(ByteString.copyFrom(payload));
+        TestbedController.getInstance().sendCommand(cmd);
+
     }
 
 }
