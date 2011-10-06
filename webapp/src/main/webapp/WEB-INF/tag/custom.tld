@@ -6,8 +6,13 @@
     <tlib-version>1.0</tlib-version>
     <short-name>myfn</short-name>
     <function>
-        <name>lastNodeReadingRecordedDate</name>
+        <name>getLastNodeReadingRecordedDate</name>
         <function-class>uberdust.util.Util</function-class>
-        <function-signature>java.util.Date lastNodeReadingRecordedDate(java.util.Set)</function-signature>
+        <function-signature>java.util.Date getLastNodeReadingRecordedDate(java.util.Set)</function-signature>
     </function>
+    <!--<function>-->
+       <!--<name>getUberdustUrl</name>-->
+        <!--<function-class>uberdust.util.Util</function-class>-->
+        <!--<function-signature>java.lang.String getUberdustUrl(java.lang.String,java.lang.String,java.lang.String)</function-signature>-->
+    <!--</function>-->
 </taglib>

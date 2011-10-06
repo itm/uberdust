@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.math.BigInteger;
 import java.net.Socket;
 
 
@@ -38,20 +37,14 @@ public class SendCommandController extends AbstractRestController {
             PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
 
             // parse destination and payload from url and split them
-            final String[] destination = command.getDestination().split(",");
             final String[] payload = command.getPayload().split(",");
-            if (destination.length > 2 || payload.length > 3) {
-                throw new Exception("Invalid destination or payload arguments count");
+            if (payload.length > 3) {
+                throw new Exception("Invalid payload argument count");
             }
-
 
             // get bytes from destination and payload
             final byte[] payloadBytes = new byte[payload.length];
-            for (int i = 0; i < destination.length; i++) {
-                int destIntValue = Integer.valueOf(destination[i], 16);
-                LOGGER.info(i + ".destIntValue" + destIntValue);
-                logger.info(i + ".destIntValue" + destIntValue);
-            }
+
             for (int i = 0; i < payload.length; i++) {
                 payloadBytes[i] = (byte) Integer.valueOf(payload[i], 16).intValue();
             }
@@ -73,7 +66,7 @@ public class SendCommandController extends AbstractRestController {
 
             return null;
         } catch (Exception ex) {
-            LOGGER.fatal(ex.getMessage());
+            LOGGER.fatal(ex);
             throw new Exception(ex.getMessage());
         }
 

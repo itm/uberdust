@@ -4,21 +4,24 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@taglib uri="/WEB-INF/tag/custom.tld" prefix="myfn" %>
+<%--<%@taglib uri="/WEB-INF/tag/custom.tld" prefix="myfn" %>--%>
 
-<jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
+<jsp:useBean id="testbed" class="eu.wisebed.wisedb.model.Testbed"/>
+<jsp:useBean id="nodeLastReadingDateMap" class="java.util.HashMap"/>
+<jsp:useBean id="nodeTotalReadingsMap" class="java.util.HashMap"/>
+<jsp:useBean id="linkLastReadingDateMap" class="java.util.HashMap"/>
+<jsp:useBean id="linkTotalReadingsMap" class="java.util.HashMap"/>
 
 <html>
 <head>
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ÜberDust - Status testbed : <c:out value="${testbed.name}"/></title>
+    <title>ÜberDust - Testbed <c:out value="${testbed.name}"/> status page</title>
 </head>
 <body>
-<p>Setup ID : <c:out value="${testbed.setup.id}"/></p>
-
-<p>Nodes</p>
+<h1>Testbed <c:out value="${testbed.name}"/> status page</h1>
+<h2>Nodes</h2>
 <table>
     <thead>
     <th>Node Id</th>
@@ -35,13 +38,17 @@
                             value="${node.id}"/></a>
                 </td>
                 <td><c:out value="${node.description}"/></td>
-                <td><c:out value="${myfn:lastNodeReadingRecordedDate(node.readings)}"/></td>
-                <td><c:out value="${fn:length(node.readings)}"/></td>
+                <td>${nodeLastReadingDateMap[node.id]}</td>
+                <td>${nodeTotalReadingsMap[node.id]}</td>
+                <%--<td><c:out value="${nodeLastReadingDateMap[node.id]}"/></td>--%>
+                <%--<td><c:out value="${nodeTotalReadingsMap[node.id]}"/></td>--%>
             </tr>
         </c:if>
     </c:forEach>
     </tbody>
 </table>
+
+<h2>Links</h2>
 <c:choose>
     <c:when test="${fn:length(testbed.setup.link) == 0}">
         <p style="color:red"> No links available</p>
@@ -61,9 +68,8 @@
                             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source}/${link.target}"><c:out
                                     value="[${link.source},${link.target}]"/></a>
                         </td>
-                        <td><c:out value="${myfn:lastNodeReadingRecordedDate(link.readings)}"/></td>
-                        <td><c:out value="${fn:length(link.readings)}"/></td>
-                        </td>
+                        <td><c:out value="${(linkLastReadingDateMap[link.source])[link.target]}}"/></td>
+                        <td><c:out value="${(linkTotalReadingsMap[link.source])[link.target]}"/></td>
                     </tr>
                 </c:if>
             </c:forEach>
