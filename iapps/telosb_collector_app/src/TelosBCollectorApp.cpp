@@ -167,7 +167,10 @@ void
 	int16 light = telos->light();
 	int16 inflight = telos->infrared();
 	//iSense::%x LQI %d BIDIS %d EM_T %d EM_L %d",
-	os().debug("telosB::%x EM_T %d EM_H %d EM_I %d EM_L %d" ,os().id(), temp/10 ,humid, inflight, light );
+	os().debug("id::%x EM_T %d " ,os().id(), temp/10 );
+	os().debug("id::%x EM_H %d " ,os().id(), humid);
+	os().debug("id::%x EM_I %d " ,os().id(), inflight );
+	os().debug("id::%x EM_L %d " ,os().id(), light );
 	telos->led_off(1);
 
 	}
