@@ -6,11 +6,6 @@ public class ReadingJson {
 
     private long timestamp;
 
-
-    public ReadingJson() {
-
-    }
-
     public ReadingJson(final long timestamp, final double reading) {
         this.timestamp = timestamp;
         this.reading = reading;
@@ -20,7 +15,7 @@ public class ReadingJson {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -28,7 +23,7 @@ public class ReadingJson {
         return reading;
     }
 
-    public void setReading(double reading) {
+    public void setReading(final double reading) {
         this.reading = reading;
     }
 }

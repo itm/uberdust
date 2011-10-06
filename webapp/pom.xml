@@ -13,6 +13,7 @@
 
     <groupId>uberdust</groupId>
     <artifactId>webapp</artifactId>
+    <name>ÜberDust - Web/REST Interface Application</name>
     <version>1.0</version>
     <packaging>war</packaging>
 
@@ -25,7 +26,6 @@
         <hsqldb.version>2.0.0</hsqldb.version>
         <mysql.connector.version>5.1.10</mysql.connector.version>
         <hibernate.version>3.5.6-Final</hibernate.version>
-        <slf4j.version>1.6.1</slf4j.version>
     </properties>
 
     <repositories>
@@ -242,11 +242,19 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <warName>${project.build.finalName}</warName>
+                    <warName>${groupId}-${project.build.finalName}</warName>
                     <webResources>
                         <resource>
                             <directory>${project.basedir}/lib</directory>
                             <targetPath>WEB-INF/lib</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${project.basedir}/src/main/resources/js</directory>
+                            <targetPath>js</targetPath>
+                        </resource>
+                        <resource>
+                            <directory>${project.basedir}/src/main/resources/css</directory>
+                            <targetPath>css</targetPath>
                         </resource>
                     </webResources>
                 </configuration>
@@ -269,7 +277,7 @@
                 <version>1.1</version>
                 <configuration>
                     <server>tomcat6</server>
-                    <warFile>${project.build.directory}/${project.build.finalName}.war</warFile>
+                    <warFile>${project.build.directory}/${groupId}-${project.build.finalName}.war</warFile>
                     <path>/uberdust</path>
                     <url>${gold.tomcat.manager.url}</url>
                 </configuration>

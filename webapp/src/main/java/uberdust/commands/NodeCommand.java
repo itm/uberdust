@@ -8,14 +8,7 @@ public class NodeCommand extends TestbedCommand{
     /**
      * The Node ID.
      */
-    private String nodeId;
-
-    /**
-     * Default constructor.
-     */
-    public NodeCommand() {
-        this.nodeId = null;
-    }
+    private String nodeId = null;
 
     /**
      * Get the ID of the node.

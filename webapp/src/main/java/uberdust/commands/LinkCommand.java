@@ -8,20 +8,13 @@ public class LinkCommand extends TestbedCommand{
     /**
      * The Source Node ID.
      */
-    private String sourceId;
+    private String sourceId = null;
 
     /**
      * The Target Node ID.
      */
-    private String targetId;
+    private String targetId = null;
 
-    /**
-     * Default constructor.
-     */
-    public LinkCommand() {
-        this.sourceId = null;
-        this.targetId = null;
-    }
 
     /**
      * Get the ID of the source node.

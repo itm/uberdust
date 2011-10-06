@@ -12,7 +12,7 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ÜberDust</title>
+    <title>ÜberDust - List links</title>
 </head>
 <body>
 

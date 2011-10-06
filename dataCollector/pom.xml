@@ -14,7 +14,7 @@
     <groupId>uberdust</groupId>
     <artifactId>TestbedListener</artifactId>
     <packaging>jar</packaging>
-    <name>Testbed Listener</name>
+    <name>ÜberDust - Testbed Listener</name>
     <version>1.0</version>
 
     <repositories>

@@ -7,11 +7,9 @@
 <head>
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
-    <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ÜberDust</title>
 </head>
 <body>
-    <h1>Welcome to ÜberDust</h1>
     <jsp:forward page="/rest/testbed"/>
 </body>
 </html>

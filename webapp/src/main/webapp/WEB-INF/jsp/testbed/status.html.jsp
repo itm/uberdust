@@ -13,7 +13,7 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ÜberDust</title>
+    <title>ÜberDust - Status testbed : <c:out value="${testbed.name}"/></title>
 </head>
 <body>
 <p>Setup ID : <c:out value="${testbed.setup.id}"/></p>

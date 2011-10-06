@@ -1,5 +1,12 @@
-Uberdust WebApp
+ÜberDust - Web/REST Interface Application
 ======
+
+<dependency>
+    <groupId>uberdust</groupId>
+    <artifactId>webapp</artifactId>
+    <version>1.0</version>
+</dependency>
+
 The repository contains the following packages:
 
 

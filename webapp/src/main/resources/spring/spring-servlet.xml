@@ -255,7 +255,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         <property name="commandClass" value="uberdust.commands.NodeCapabilityCommand"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="nodeReadingManager" ref="nodeReadingManager"/>
+        <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/chart"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">

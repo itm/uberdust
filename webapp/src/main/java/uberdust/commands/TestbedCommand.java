@@ -8,11 +8,7 @@ public class TestbedCommand {
     /**
      * Identity of the network.
      */
-    private String testbedId;
-
-    public TestbedCommand(){
-        this.testbedId = null;
-    }
+    private String testbedId = null;
 
     /**
      * Returns testbed id.
