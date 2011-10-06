@@ -51,7 +51,7 @@ public class MessageHandler extends Thread {
             CommandProtocol.Command
                     cmd = CommandProtocol.Command.parseFrom(thisSocket.getInputStream());
             LOGGER.info("New Command Received:\n" + cmd.toString());
-             TestbedController.getInstance().sendCommand(cmd.toBuilder());
+            TestbedController.getInstance().sendCommand(cmd.toBuilder());
         } catch (final IOException e) {
             LOGGER.error(e);
         }

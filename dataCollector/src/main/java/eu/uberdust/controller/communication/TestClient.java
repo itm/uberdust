@@ -2,13 +2,12 @@ package eu.uberdust.controller.communication;
 
 import com.google.protobuf.ByteString;
 import eu.uberdust.controller.protobuf.CommandProtocol;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,13 +22,28 @@ public class TestClient {
 
         Socket kkSocket = null;
         PrintWriter out = null;
+        String destination = "urn:wisebed:ctitestbed:0x494";
+        final String macAddress = destination.substring(destination.indexOf("0x") + 2);
+        final byte[] macBytes = new byte[2];
+        if (macAddress.length() == 4) {
+            macBytes[0] = Integer.valueOf(macAddress.substring(0, 2), 16).byteValue();
+            macBytes[1] = Integer.valueOf(macAddress.substring(2, 4), 16).byteValue();
+        } else if (macAddress.length() == 3) {
+            macBytes[0] = Integer.valueOf(macAddress.substring(0, 1), 16).byteValue();
+            macBytes[1] = Integer.valueOf(macAddress.substring(1, 3), 16).byteValue();
+        }
+
+        System.out.println(Arrays.toString(macBytes));
+        System.out.println(ByteString.copyFromUtf8(macAddress).toStringUtf8());
+        System.out.println(macAddress);
+
 
         byte nn = 94;
         System.out.println(Integer.toHexString(nn));
         System.out.println(Integer.valueOf("94", 16).intValue());
 
 
-     /*   try {
+        try {
             kkSocket = new Socket("lime.cti.gr", 4444);
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
@@ -42,10 +56,10 @@ public class TestClient {
         }
 
 
-        byte[] destination = new byte[]{0x4, (byte) 0x94};
-        byte[] payload = new byte[]{1, 1, 1};
+
+        byte[] payload = new byte[]{1,  1, 0};
         CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
-                .setDestination(ByteString.copyFrom(destination))
+                .setDestination(destination)
                 .setPayload(ByteString.copyFrom(payload))
                 .build();
 
@@ -54,6 +68,6 @@ public class TestClient {
 
         out.close();
 
-        kkSocket.close();*/
+        kkSocket.close();
     }
 }

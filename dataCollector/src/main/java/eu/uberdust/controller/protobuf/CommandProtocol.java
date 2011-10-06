@@ -35,12 +35,12 @@ public final class CommandProtocol {
       return eu.uberdust.controller.protobuf.CommandProtocol.internal_static_controller_Command_fieldAccessorTable;
     }
     
-    // optional bytes destination = 1;
+    // optional string destination = 1;
     public static final int DESTINATION_FIELD_NUMBER = 1;
     private boolean hasDestination;
-    private com.google.protobuf.ByteString destination_ = com.google.protobuf.ByteString.EMPTY;
+    private java.lang.String destination_ = "";
     public boolean hasDestination() { return hasDestination; }
-    public com.google.protobuf.ByteString getDestination() { return destination_; }
+    public java.lang.String getDestination() { return destination_; }
     
     // optional bytes payload = 2;
     public static final int PAYLOAD_FIELD_NUMBER = 2;
@@ -59,7 +59,7 @@ public final class CommandProtocol {
                         throws java.io.IOException {
       getSerializedSize();
       if (hasDestination()) {
-        output.writeBytes(1, getDestination());
+        output.writeString(1, getDestination());
       }
       if (hasPayload()) {
         output.writeBytes(2, getPayload());
@@ -75,7 +75,7 @@ public final class CommandProtocol {
       size = 0;
       if (hasDestination()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getDestination());
+          .computeStringSize(1, getDestination());
       }
       if (hasPayload()) {
         size += com.google.protobuf.CodedOutputStream
@@ -271,7 +271,7 @@ public final class CommandProtocol {
               break;
             }
             case 10: {
-              setDestination(input.readBytes());
+              setDestination(input.readString());
               break;
             }
             case 18: {
@@ -283,14 +283,14 @@ public final class CommandProtocol {
       }
       
       
-      // optional bytes destination = 1;
+      // optional string destination = 1;
       public boolean hasDestination() {
         return result.hasDestination();
       }
-      public com.google.protobuf.ByteString getDestination() {
+      public java.lang.String getDestination() {
         return result.getDestination();
       }
-      public Builder setDestination(com.google.protobuf.ByteString value) {
+      public Builder setDestination(java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -352,7 +352,7 @@ public final class CommandProtocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\rcommand.proto\022\ncontroller\"/\n\007Command\022\023" +
-      "\n\013destination\030\001 \001(\014\022\017\n\007payload\030\002 \001(\014B2\n\037" +
+      "\n\013destination\030\001 \001(\t\022\017\n\007payload\030\002 \001(\014B2\n\037" +
       "eu.uberdust.controller.protobufB\017Command" +
       "Protocol"
     };

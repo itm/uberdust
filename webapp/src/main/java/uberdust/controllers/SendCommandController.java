@@ -46,13 +46,11 @@ public class SendCommandController extends AbstractRestController {
 
 
             // get bytes from destination and payload
-            final byte[] destinationBytes = new byte[destination.length];
             final byte[] payloadBytes = new byte[payload.length];
             for (int i = 0; i < destination.length; i++) {
                 int destIntValue = Integer.valueOf(destination[i], 16);
                 LOGGER.info(i + ".destIntValue" + destIntValue);
                 logger.info(i + ".destIntValue" + destIntValue);
-                destinationBytes[i] = (byte) destIntValue;
             }
             for (int i = 0; i < payload.length; i++) {
                 payloadBytes[i] = (byte) Integer.valueOf(payload[i], 16).intValue();
@@ -60,7 +58,7 @@ public class SendCommandController extends AbstractRestController {
 
             // build command and send it through the socket stream
             CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
-                    .setDestination(ByteString.copyFrom(destinationBytes))
+                    .setDestination(command.getDestination())
                     .setPayload(ByteString.copyFrom(payloadBytes))
                     .build();
             cmd.writeTo(kkSocket.getOutputStream());

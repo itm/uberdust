@@ -19,6 +19,7 @@ import org.apache.log4j.PropertyConfigurator;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -132,10 +133,19 @@ public class TestbedController {
         // Send a message to nodes via uart (to receive them enable RX_UART_MSGS in the fronts_config.h-file)
         final Message msg = new Message();
 
-        final byte[] newPayload = new byte[protoCommand.getDestination().toByteArray().length + protoCommand.getPayload().toByteArray().length + 1 + PAYLOAD_HEADERS.length];
+        final String macAddress = protoCommand.getDestination().substring(protoCommand.getDestination().indexOf("0x") + 2);
+        final byte[] macBytes = new byte[2];
+        if (macAddress.length() == 4) {
+            macBytes[0] = Integer.valueOf(macAddress.substring(0, 2), 16).byteValue();
+            macBytes[1] = Integer.valueOf(macAddress.substring(2, 4), 16).byteValue();
+        } else if (macAddress.length() == 3) {
+            macBytes[0] = Integer.valueOf(macAddress.substring(0, 1), 16).byteValue();
+            macBytes[1] = Integer.valueOf(macAddress.substring(1, 3), 16).byteValue();
+        }
 
+        final byte[] newPayload = new byte[macBytes.length + protoCommand.getPayload().toByteArray().length + 1 + PAYLOAD_HEADERS.length];
         newPayload[0] = PAYLOAD_PREFIX;
-        System.arraycopy(protoCommand.getDestination().toByteArray(), 0, newPayload, 1, protoCommand.getDestination().toByteArray().length);
+        System.arraycopy(macBytes, 0, newPayload, 1, macBytes.length);
         System.arraycopy(PAYLOAD_HEADERS, 0, newPayload, 3, PAYLOAD_HEADERS.length);
         System.arraycopy(protoCommand.getPayload().toByteArray(), 0, newPayload, 6, protoCommand.getPayload().toByteArray().length);
         msg.setBinaryData(newPayload);
@@ -152,15 +162,6 @@ public class TestbedController {
 
     public static void main(String[] args) {
         TestbedController.getInstance();
-
-        CommandProtocol.Command.Builder cmd = CommandProtocol.Command.newBuilder();
-        byte[] destination = new byte[]{0x4, (byte) 0x94};
-        byte[] payload = new byte[]{1, 1, 1};
-
-        cmd.setDestination(ByteString.copyFrom(destination));
-        cmd.setPayload(ByteString.copyFrom(payload));
-        TestbedController.getInstance().sendCommand(cmd);
-
     }
 
 }

@@ -4,7 +4,7 @@ option java_package = "eu.uberdust.controller.protobuf";
 option java_outer_classname = "CommandProtocol";
 
 message Command {
-  optional bytes destination = 1;
+  optional string destination = 1;
   optional bytes payload = 2;
 }
 
