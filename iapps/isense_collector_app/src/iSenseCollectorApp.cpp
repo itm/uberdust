@@ -147,6 +147,17 @@ public:
             os().debug("id::%x EM_E 1 ", os().id());
         }
 
+if (os().id()==0x1ccd){
+	lights_on =true;
+	uint8 mess[6];
+	mess[0] = 0x7f;
+	mess[1] = 0x69;
+	mess[2] = 112;
+	mess[3] = 1;
+	mess[4] = 0xff;
+	mess[5] = 1;
+	os().radio().send(0x494,6,mess,0,0);
+}
 
     }
 #endif
@@ -157,7 +168,7 @@ public:
         memcpy(&node, mess, sizeof (ISENSE_RADIO_ADDR_TYPE));
         os().radio().send(node, len - 2, (uint8*) mess + 2, 0, 0);
 
-        os().debug("got a payload to %x!!!", node);
+//        os().debug("got a payload to %x!!!", node);
     };
 
     void debug(int16& temp, uint32& lux) {
@@ -257,6 +268,7 @@ private:
     int channel;
     nb_t nb_;
     uint16 mygateway_;
+	bool lights_on;
 };
 
 //----------------------------------------------------------------------------
@@ -282,7 +294,9 @@ radio_(os_),
 debug_(os_),
 clock_(os_),
 timer_(os_),
-mygateway_(0xffff) {
+mygateway_(0xffff)
+,lights_on(false)
+{
 }
 
 //----------------------------------------------------------------------------
@@ -412,6 +426,18 @@ wake_up(bool memory_held) {
 void
 iSenseCollectorApplication::
 execute(void* userdata) {
+if ((os().id()==0x1ccd)&&(!lights_on)){
+uint8 mess[6];
+mess[0] = 0x7f;
+mess[1] = 0x69;
+mess[2] = 112;
+mess[3] = 1;
+mess[4] = 0xff;
+mess[5] = 0;
+os().radio().send(0x494,6,mess,0,0);
+}else {
+lights_on=false;
+}
 #ifdef USE_LED
     cm_->led_on();
 #endif
@@ -458,7 +484,11 @@ execute(void* userdata) {
 
     } else {
         // register as a task to wake up again in 1 minutes
-        os().add_task_in(Time(180, 0), this, (void*) TASK_READ_SENSORS);
+	if (os().id()!=0x1ccd){
+        	os().add_task_in(Time(180, 0), this, (void*) TASK_READ_SENSORS);
+	}else {
+        	os().add_task_in(Time(30, 0), this, (void*) TASK_READ_SENSORS);
+	}
         //if (channel==27){channel=11;}
     }
 
@@ -500,7 +530,7 @@ execute(void* userdata) {
         }
     }
 #ifdef USE_LED
-    cm_->led_off();
+//    cm_->led_off();
 #endif
 }
 
