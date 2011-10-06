@@ -1,6 +1,5 @@
 package eu.uberdust.controller.communication;
 
-import eu.uberdust.controller.Controller;
 import eu.uberdust.controller.TestbedController;
 import eu.uberdust.controller.protobuf.CommandProtocol;
 import org.apache.log4j.Logger;

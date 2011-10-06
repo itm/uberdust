@@ -2,6 +2,8 @@ package eu.uberdust.controller.communication;
 
 import com.google.protobuf.ByteString;
 import eu.uberdust.controller.protobuf.CommandProtocol;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,8 +24,12 @@ public class TestClient {
         Socket kkSocket = null;
         PrintWriter out = null;
 
+        byte nn = 94;
+        System.out.println(Integer.toHexString(nn));
+        System.out.println(Integer.valueOf("94", 16).intValue());
 
-        try {
+
+     /*   try {
             kkSocket = new Socket("lime.cti.gr", 4444);
             out = new PrintWriter(kkSocket.getOutputStream(), true);
 
@@ -48,6 +54,6 @@ public class TestClient {
 
         out.close();
 
-        kkSocket.close();
+        kkSocket.close();*/
     }
 }
