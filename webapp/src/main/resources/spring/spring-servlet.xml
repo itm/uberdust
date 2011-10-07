@@ -19,7 +19,6 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
             <props>
 
                 <!-- Send Command Controller -->
-                <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
 
                 <!-- Testbed Related controllers -->
                 <prop key="GET /testbed">listTestbedsController</prop>
@@ -28,6 +27,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
                 <prop key="GET /testbed/*/georss">showTestbedGeoRssController</prop>
                 <!--<prop key="GET /testbed/*/kml">showTestbedKmlController</prop>-->
                 <!--<prop key="GET /testbed/*/wiseml">showTestbedWiseMlController</prop>-->
+                <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
 
 
                 <!-- Node Related controllers -->
@@ -95,6 +95,8 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean name="showTestbedStatusController" class="uberdust.controllers.ShowTestbedStatusController">
         <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="linkManager" ref="linkManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/status"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">

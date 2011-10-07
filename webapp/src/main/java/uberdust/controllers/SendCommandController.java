@@ -1,6 +1,5 @@
 package uberdust.controllers;
 
-import com.google.protobuf.ByteString;
 import eu.uberdust.controller.protobuf.CommandProtocol;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
