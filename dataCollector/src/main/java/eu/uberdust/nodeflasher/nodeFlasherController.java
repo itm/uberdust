@@ -39,7 +39,7 @@ public class nodeFlasherController {
                     .withIdentity("nodeFlasherTrigger", "group1")
                     .startAt(new Date(System.currentTimeMillis() + 10000))
                     .withSchedule(simpleSchedule()
-                            .withIntervalInMinutes(nodeFlasherJob.INTERVAL)
+                            .withIntervalInMinutes(60)
                             .repeatForever()).build();
 
 
