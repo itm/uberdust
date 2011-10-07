@@ -5,6 +5,6 @@ option java_outer_classname = "CommandProtocol";
 
 message Command {
   optional string destination = 1;
-  optional bytes payload = 2;
+  optional string payload = 2;
 }
 

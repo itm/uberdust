@@ -23,6 +23,9 @@ public class TestClient {
         Socket kkSocket = null;
         PrintWriter out = null;
         String destination = "urn:wisebed:ctitestbed:0x494";
+        String payload = "1,FF,1";
+
+
         final String macAddress = destination.substring(destination.indexOf("0x") + 2);
         final byte[] macBytes = new byte[2];
         if (macAddress.length() == 4) {
@@ -56,11 +59,9 @@ public class TestClient {
         }
 
 
-
-        byte[] payload = new byte[]{1,  1, 0};
         CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
                 .setDestination(destination)
-                .setPayload(ByteString.copyFrom(payload))
+                .setPayload(payload)
                 .build();
 
         System.out.println(cmd.toString());

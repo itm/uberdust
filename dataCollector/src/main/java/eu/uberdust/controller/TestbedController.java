@@ -143,11 +143,17 @@ public class TestbedController {
             macBytes[1] = Integer.valueOf(macAddress.substring(1, 3), 16).byteValue();
         }
 
-        final byte[] newPayload = new byte[macBytes.length + protoCommand.getPayload().toByteArray().length + 1 + PAYLOAD_HEADERS.length];
+        final String[] strPayload = protoCommand.getPayload().split(",");
+        final byte[] payload = new byte[strPayload.length];
+        for (int i =0 ; i< payload.length;i++){
+              payload[i] = Integer.valueOf(strPayload[i],16).byteValue();
+        }
+
+        final byte[] newPayload = new byte[macBytes.length + payload.length + 1 + PAYLOAD_HEADERS.length];
         newPayload[0] = PAYLOAD_PREFIX;
         System.arraycopy(macBytes, 0, newPayload, 1, macBytes.length);
         System.arraycopy(PAYLOAD_HEADERS, 0, newPayload, 3, PAYLOAD_HEADERS.length);
-        System.arraycopy(protoCommand.getPayload().toByteArray(), 0, newPayload, 6, protoCommand.getPayload().toByteArray().length);
+        System.arraycopy(payload, 0, newPayload, 6, payload.length);
         msg.setBinaryData(newPayload);
         msg.setSourceNodeId("urn:wisebed:ctitestbed:0x1");
 

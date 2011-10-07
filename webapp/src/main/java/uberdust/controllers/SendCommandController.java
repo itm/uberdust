@@ -33,26 +33,13 @@ public class SendCommandController extends AbstractRestController {
         try {
 
             // prepare socket for connection and writer
-            Socket kkSocket = new Socket("gold.cti.gr", 4444);
-            PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
-
-            // parse destination and payload from url and split them
-            final String[] payload = command.getPayload().split(",");
-            if (payload.length > 3) {
-                throw new Exception("Invalid payload argument count");
-            }
-
-            // get bytes from destination and payload
-            final byte[] payloadBytes = new byte[payload.length];
-
-            for (int i = 0; i < payload.length; i++) {
-                payloadBytes[i] = (byte) Integer.valueOf(payload[i], 16).intValue();
-            }
+            final Socket kkSocket = new Socket("gold.cti.gr", 4444);
+            final PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
 
             // build command and send it through the socket stream
-            CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
+            final CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
                     .setDestination(command.getDestination())
-                    .setPayload(ByteString.copyFrom(payloadBytes))
+                    .setPayload(command.getPayload())
                     .build();
             cmd.writeTo(kkSocket.getOutputStream());
 

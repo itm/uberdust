@@ -42,12 +42,12 @@ public final class CommandProtocol {
     public boolean hasDestination() { return hasDestination; }
     public java.lang.String getDestination() { return destination_; }
     
-    // optional bytes payload = 2;
+    // optional string payload = 2;
     public static final int PAYLOAD_FIELD_NUMBER = 2;
     private boolean hasPayload;
-    private com.google.protobuf.ByteString payload_ = com.google.protobuf.ByteString.EMPTY;
+    private java.lang.String payload_ = "";
     public boolean hasPayload() { return hasPayload; }
-    public com.google.protobuf.ByteString getPayload() { return payload_; }
+    public java.lang.String getPayload() { return payload_; }
     
     private void initFields() {
     }
@@ -62,7 +62,7 @@ public final class CommandProtocol {
         output.writeString(1, getDestination());
       }
       if (hasPayload()) {
-        output.writeBytes(2, getPayload());
+        output.writeString(2, getPayload());
       }
       getUnknownFields().writeTo(output);
     }
@@ -79,7 +79,7 @@ public final class CommandProtocol {
       }
       if (hasPayload()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getPayload());
+          .computeStringSize(2, getPayload());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -275,7 +275,7 @@ public final class CommandProtocol {
               break;
             }
             case 18: {
-              setPayload(input.readBytes());
+              setPayload(input.readString());
               break;
             }
           }
@@ -304,14 +304,14 @@ public final class CommandProtocol {
         return this;
       }
       
-      // optional bytes payload = 2;
+      // optional string payload = 2;
       public boolean hasPayload() {
         return result.hasPayload();
       }
-      public com.google.protobuf.ByteString getPayload() {
+      public java.lang.String getPayload() {
         return result.getPayload();
       }
-      public Builder setPayload(com.google.protobuf.ByteString value) {
+      public Builder setPayload(java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -352,7 +352,7 @@ public final class CommandProtocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\rcommand.proto\022\ncontroller\"/\n\007Command\022\023" +
-      "\n\013destination\030\001 \001(\t\022\017\n\007payload\030\002 \001(\014B2\n\037" +
+      "\n\013destination\030\001 \001(\t\022\017\n\007payload\030\002 \001(\tB2\n\037" +
       "eu.uberdust.controller.protobufB\017Command" +
       "Protocol"
     };
