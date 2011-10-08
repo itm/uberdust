@@ -1,6 +1,9 @@
 package uberdust.controllers;
 
 import eu.uberdust.controller.protobuf.CommandProtocol;
+import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +22,18 @@ import java.net.Socket;
 public class SendCommandController extends AbstractRestController {
 
     private static final Logger LOGGER = Logger.getLogger(SendCommandController.class);
+    private NodeController nodeManager;
+
+    public SendCommandController() {
+        super();
+
+        // Make sure to set which method this controller will support.
+        this.setSupportedMethods(new String[]{METHOD_GET});
+    }
+
+    public void setNodeManager(NodeController nodeManager) {
+        this.nodeManager = nodeManager;
+    }
 
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -29,8 +44,13 @@ public class SendCommandController extends AbstractRestController {
         LOGGER.info("command.getDestination() : " + command.getDestination());
         LOGGER.info("command.getPayload() : " + command.getPayload());
 
-        try {
+        // look for destination node
+        Node destinationNode = nodeManager.getByID(command.getDestination());
+        if(destinationNode == null) {
+            throw new Exception("Destination Node [" + command.getDestination() + "] is not stored.");
+        }
 
+        try {
             // prepare socket for connection and writer
             final Socket kkSocket = new Socket("gold.cti.gr", 4444);
             final PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);

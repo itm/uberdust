@@ -19,7 +19,6 @@ public class ShowTestbedController extends AbstractRestController {
     private eu.wisebed.wisedb.controller.TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
 
-
     public ShowTestbedController() {
         super();
 

@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class ShowLinkController extends AbstractRestController {
 
-
     private LinkController linkManager;
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 

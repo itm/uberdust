@@ -1,6 +1,5 @@
 package uberdust.controllers;
 
-import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
@@ -13,9 +12,7 @@ import uberdust.commands.LinkCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,7 +20,6 @@ import java.util.Map;
  */
 public class ListLinksController extends AbstractRestController {
 
-    private LinkController linkManager;
     private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
 
@@ -32,10 +28,6 @@ public class ListLinksController extends AbstractRestController {
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
-    }
-
-    public void setLinkManager(eu.wisebed.wisedb.controller.LinkController linkManager) {
-        this.linkManager = linkManager;
     }
 
     public void setTestbedManager(final TestbedController testbedManager) {

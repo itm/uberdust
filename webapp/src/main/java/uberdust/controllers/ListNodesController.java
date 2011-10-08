@@ -1,9 +1,7 @@
 package uberdust.controllers;
 
-import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,9 +12,7 @@ import uberdust.commands.NodeCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +20,6 @@ import java.util.Map;
  */
 public class ListNodesController extends AbstractRestController {
 
-    private NodeController nodeManager;
     private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ListNodesController.class);
 
@@ -33,10 +28,6 @@ public class ListNodesController extends AbstractRestController {
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
-    }
-
-    public void setNodeManager(NodeController nodeManager) {
-        this.nodeManager = nodeManager;
     }
 
     public void setTestbedManager(final TestbedController testbedManager) {

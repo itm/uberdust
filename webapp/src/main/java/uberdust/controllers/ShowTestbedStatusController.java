@@ -25,9 +25,6 @@ import java.util.Map;
 public class ShowTestbedStatusController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private NodeController nodeManager;
-    private LinkController linkManager;
-
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedStatusController.class);
 
 
@@ -40,14 +37,6 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
-    }
-
-    public void setNodeManager(final NodeController nodeManager) {
-        this.nodeManager = nodeManager;
-    }
-
-    public void setLinkManager(final LinkController linkManager) {
-        this.linkManager = linkManager;
     }
 
     @Override

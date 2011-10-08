@@ -33,7 +33,6 @@ public class ShowNodeGeoRssController extends AbstractRestController {
     private NodeController nodeManager;
     private static final Logger LOGGER = Logger.getLogger(ShowNodeGeoRssController.class);
 
-
     public ShowNodeGeoRssController() {
         super();
 

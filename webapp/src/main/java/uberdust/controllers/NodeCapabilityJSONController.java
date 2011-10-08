@@ -1,7 +1,6 @@
 package uberdust.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
@@ -21,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 public class NodeCapabilityJSONController extends AbstractRestController {
 

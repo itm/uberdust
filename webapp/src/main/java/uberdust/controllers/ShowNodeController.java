@@ -1,7 +1,6 @@
 package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.NodeController;
-import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -21,6 +20,13 @@ public class ShowNodeController extends AbstractRestController {
     private NodeController nodeManager;
     private static final Logger LOGGER = Logger.getLogger(ShowNodeController.class);
 
+    public ShowNodeController() {
+        super();
+
+        // Make sure to set which method this controller will support.
+        this.setSupportedMethods(new String[]{METHOD_GET});
+    }
+
     public void setNodeManager(NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
@@ -35,7 +41,7 @@ public class ShowNodeController extends AbstractRestController {
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
 
-         // look up node
+        // look up node
         Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
             // if no testbed is found throw exception
@@ -46,7 +52,7 @@ public class ShowNodeController extends AbstractRestController {
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
-        refData.put("testbedId",command.getTestbedId());
+        refData.put("testbedId", command.getTestbedId());
         refData.put("node", node);
         return new ModelAndView("node/show.html", refData);
     }

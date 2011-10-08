@@ -100,13 +100,15 @@ public class MessageParser implements Runnable {
 
     private void CommitNodeReading(String node_id, String sensor, int value) {
         //get the node from hibernate
-        final String nodeId = "urn:wisebed:ctitestbed:" + node_id;
-        final String capabilityName = "urn:wisebed:node:capability:" + sensor;
+        final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
+        final String nodeId = testbedUrnPrefix + node_id;
+        final String capabilityName = testbedUrnPrefix + sensor;
 
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            NodeReadingController.getInstance().insertReading(nodeId, capabilityName, value, new java.util.Date());
+            NodeReadingController.getInstance().insertReading(nodeId, capabilityName, testbedUrnPrefix,
+                    value, new java.util.Date());
             tx.commit();
             log.info("Added " + nodeId + "," + capabilityName + "," + value);
 
@@ -119,16 +121,17 @@ public class MessageParser implements Runnable {
     }
 
     private void CommitLinkReading(String sId, String tId, int status) {
-
-        final String sourceId = "urn:wisebed:ctitestbed:" + sId;
-        final String targetId = "urn:wisebed:ctitestbed:" + tId;
+        final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
+        final String sourceId = testbedUrnPrefix + sId;
+        final String targetId = testbedUrnPrefix + tId;
 
         log.debug("Fount a link down " + sourceId + "<<--" + status + "-->>" + targetId);
 
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", status, new java.util.Date());
+            LinkReadingController.getInstance().insertReading(sourceId, targetId, "status",testbedUrnPrefix, status,0,
+                    new java.util.Date());
             tx.commit();
             log.info("Added Link " + sourceId + "<<--" + status + "-->>" + targetId);
         } catch (Exception e) {

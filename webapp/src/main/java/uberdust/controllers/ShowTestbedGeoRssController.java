@@ -29,7 +29,6 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
     private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
 
-
     public ShowTestbedGeoRssController() {
         super();
 
