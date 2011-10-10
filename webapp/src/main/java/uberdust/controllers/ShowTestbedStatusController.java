@@ -1,11 +1,7 @@
 package uberdust.controllers;
 
-import eu.wisebed.wisedb.controller.LinkController;
-import eu.wisebed.wisedb.controller.NodeController;
-import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.model.LinkReading;
-import eu.wisebed.wisedb.model.NodeReading;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.controller.*;
+import eu.wisebed.wisedb.model.*;
 import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
@@ -20,11 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShowTestbedStatusController extends AbstractRestController {
 
     private TestbedController testbedManager;
+    private NodeReadingController nodeReadingManager;
+    private LinkReadingController linkReadingManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedStatusController.class);
 
 
@@ -37,6 +36,14 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
+    public void setLinkReadingManager(LinkReadingController linkReadingManager) {
+        this.linkReadingManager = linkReadingManager;
     }
 
     @Override
@@ -63,70 +70,15 @@ public class ShowTestbedStatusController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
-        // get nodes latest reading and total readings
-        final Map<String, Date> nodeLastReadingDateMap = new HashMap<String, Date>();
-        final Map<String, String> nodeTotalReadingsMap = new HashMap<String, String>();
-        for (Node node : testbed.getSetup().getNodes()) {
-            final String nodeId = node.getId();
-            final int readingsCount = node.getReadings().size();
-            final String totalReadings = "" + readingsCount;
-            final Date lastReadingDate;
-            // TODO Broken Change it.
-            if (readingsCount > 0) {
-                /* NodeReadingController.getInstance().getLastUpdate(node.getId());*/
-                lastReadingDate =((NodeReading) node.getReadings().toArray()[readingsCount - 1]).getTimestamp();
-            } else {
-                lastReadingDate = null;
-            }
-
-
-            nodeLastReadingDateMap.put(nodeId, lastReadingDate);
-            nodeTotalReadingsMap.put(nodeId, totalReadings);
-            LOGGER.info(nodeId + " : " + lastReadingDate + " (" + totalReadings + ")");
-        }
-
-        // get links latest reading and total readings
-        final Map<String, HashMap<String, Date>> linkLastReadingDateMap = new HashMap<String, HashMap<String, Date>>();
-        final Map<String, HashMap<String, String>> linkTotalReadingsMap = new HashMap<String, HashMap<String, String>>();
-        for (Link link : testbed.getSetup().getLink()) {
-            final String source = link.getSource();
-            final String target = link.getTarget();
-            final int readingsCount = link.getReadings().size();
-            final String totalReadings = "" + readingsCount;
-            // TODO Broken Change it
-            final Date lastReadingDate;
-            if (readingsCount > 0) {
-                lastReadingDate = ((LinkReading)
-                        link.getReadings().toArray()[readingsCount - 1]).getTimestamp();
-            } else {
-                lastReadingDate = null;
-            }
-//            final Date lastReadingDate;
-//            if (readingsCount > 0) {
-//                lastReadingDate = linkManager.getLatestLinkReading(link).get(0);
-//            } else {
-//                lastReadingDate = null;
-//            }
-
-            // set map1 for lastReadingDate
-            HashMap<String, Date> map1 = new HashMap<String, Date>();
-            map1.put(target, lastReadingDate);
-            linkLastReadingDateMap.put(source, map1);
-
-            // set map2 for total readings
-            HashMap<String, String> map2 = new HashMap<String, String>();
-            map2.put(target, totalReadings);
-            linkTotalReadingsMap.put(source, map2);
-            LOGGER.info("[" + source + "," + target + "] : " + lastReadingDate + " (" + totalReadings + ")");
-        }
+        // get a list of node statistics from testbed
+        List<NodeReadingStat> nodestats = nodeReadingManager.getLatestNodeReadingUpdates(testbed);
+        List<LinkReadingStat> linkstats = null;   // TODO do links as well
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
         refData.put("testbed", testbed);
-        refData.put("nodeLastReadingDateMap", nodeLastReadingDateMap);
-        refData.put("nodeTotalReadingsMap", nodeTotalReadingsMap);
-        refData.put("linkLastReadingDateMap", linkLastReadingDateMap);
-        refData.put("linkTotalReadingsMap", linkTotalReadingsMap);
+        refData.put("nodestats", nodestats);
+        refData.put("linkstats", linkstats);
 
         return new ModelAndView("testbed/status.html", refData);
     }

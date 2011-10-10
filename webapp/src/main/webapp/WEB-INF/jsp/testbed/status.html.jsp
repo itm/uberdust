@@ -4,13 +4,10 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%--<%@taglib uri="/WEB-INF/tag/custom.tld" prefix="myfn" %>--%>
 
-<jsp:useBean id="testbed" class="eu.wisebed.wisedb.model.Testbed"/>
-<jsp:useBean id="nodeLastReadingDateMap" class="java.util.HashMap"/>
-<jsp:useBean id="nodeTotalReadingsMap" class="java.util.HashMap"/>
-<jsp:useBean id="linkLastReadingDateMap" class="java.util.HashMap"/>
-<jsp:useBean id="linkTotalReadingsMap" class="java.util.HashMap"/>
+<jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
+<jsp:useBean id="nodestats" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="linkStats" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -27,55 +24,57 @@
     <th>Node Id</th>
     <th>Description</th>
     <th>Last Recorded Date</th>
+    <th>Max Reading</th>
+    <th>Min Reading</th>
     <th>Total Readings Count</th>
     </thead>
     <tbody>
-    <c:forEach items="${testbed.setup.nodes}" var="node">
-        <c:if test="${node != null}">
+    <c:forEach items="${nodestats}" var="stat">
+        <c:if test="${nodestats != null}">
             <tr>
                 <td>
-                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
-                            value="${node.id}"/></a>
+                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${stat.node.id}"><c:out
+                            value="${stat.node.id}"/></a>
                 </td>
-                <td><c:out value="${node.description}"/></td>
-                <td>${nodeLastReadingDateMap[node.id]}</td>
-                <td>${nodeTotalReadingsMap[node.id]}</td>
-                <%--<td><c:out value="${nodeLastReadingDateMap[node.id]}"/></td>--%>
-                <%--<td><c:out value="${nodeTotalReadingsMap[node.id]}"/></td>--%>
+                <td><c:out value="${stat.node.description}"/></td>
+                <td>${stat.latestTimestamp}</td>
+                <td>${stat.maxReading}</td>
+                <td>${stat.minReading}</td>
+                <td>${stat.totalCount}</td>
             </tr>
         </c:if>
     </c:forEach>
     </tbody>
 </table>
 
-<h2>Links</h2>
-<c:choose>
-    <c:when test="${fn:length(testbed.setup.link) == 0}">
-        <p style="color:red"> No links available</p>
-    </c:when>
-    <c:otherwise>
-        <table>
-            <thead>
-            <th>Link Source,Target</th>
-            <th>Last Recorded Date</th>
-            <th>Total Readings Count</th>
-            </thead>
-            <tbody>
-            <c:forEach items="${testbed.setup.link}" var="link">
-                <c:if test="${link != null}">
-                    <tr>
-                        <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source}/${link.target}"><c:out
-                                    value="[${link.source},${link.target}]"/></a>
-                        </td>
-                        <td><c:out value="${(linkLastReadingDateMap[link.source])[link.target]}}"/></td>
-                        <td><c:out value="${(linkTotalReadingsMap[link.source])[link.target]}"/></td>
-                    </tr>
-                </c:if>
-            </c:forEach>
-            </tbody>
-        </table>
-    </c:otherwise>
-</c:choose>
+<%--<h2>Links</h2>--%>
+<%--<c:choose>--%>
+    <%--<c:when test="${fn:length(testbed.setup.link) == 0}">--%>
+        <%--<p style="color:red"> No links available</p>--%>
+    <%--</c:when>--%>
+    <%--<c:otherwise>--%>
+        <%--<table>--%>
+            <%--<thead>--%>
+            <%--<th>Link Source,Target</th>--%>
+            <%--<th>Last Recorded Date</th>--%>
+            <%--<th>Total Readings Count</th>--%>
+            <%--</thead>--%>
+            <%--<tbody>--%>
+            <%--<c:forEach items="${testbed.setup.link}" var="link">--%>
+                <%--<c:if test="${link != null}">--%>
+                    <%--<tr>--%>
+                        <%--<td>--%>
+                            <%--<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source}/${link.target}"><c:out--%>
+                                    <%--value="[${link.source},${link.target}]"/></a>--%>
+                        <%--</td>--%>
+                        <%--<td><c:out value="${(linkLastReadingDateMap[link.source])[link.target]}}"/></td>--%>
+                        <%--<td><c:out value="${(linkTotalReadingsMap[link.source])[link.target]}"/></td>--%>
+                    <%--</tr>--%>
+                <%--</c:if>--%>
+            <%--</c:forEach>--%>
+            <%--</tbody>--%>
+        <%--</table>--%>
+    <%--</c:otherwise>--%>
+<%--</c:choose>--%>
 </body>
 </html>

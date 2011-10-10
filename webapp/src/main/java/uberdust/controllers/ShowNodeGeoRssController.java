@@ -144,7 +144,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
                     "and node [" + nodeId +"]."));
         }
 
-        return null;
+        return null;// TODO make this controller
     }
 
     @ExceptionHandler(Exception.class)

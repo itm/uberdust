@@ -1,6 +1,7 @@
 package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.controller.NodeController;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -9,13 +10,14 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowTestbedKmlController extends AbstractRestController {
+public class NodeCapabilityWiseMlController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowTestbedWiseMlController.class);
+    private NodeController nodeManager;
+    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityWiseMlController.class);
 
+    public NodeCapabilityWiseMlController() {
 
-    public ShowTestbedKmlController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -24,6 +26,10 @@ public class ShowTestbedKmlController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setNodeManager(NodeController nodeManager) {
+        this.nodeManager = nodeManager;
     }
 
     @Override

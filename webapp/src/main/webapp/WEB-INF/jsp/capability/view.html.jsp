@@ -15,7 +15,6 @@
 
 <%
     if (readings.isEmpty() == false) {
-        // TODO this is ugly use guava or commons and make it beautifull o.o
         Date firstDate = ((NodeReading) readings.get(0)).getTimestamp();
         Date lastDate = ((NodeReading) readings.get(readings.size() - 1)).getTimestamp();
         double minReading = ((NodeReading) readings.get(0)).getReading();
