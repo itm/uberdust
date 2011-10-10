@@ -42,9 +42,11 @@
 <body>
 
 <p>
-    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a
+    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
+        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}">node</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}">capability</a>
+        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}">node's
+    capability</a>
 </p>
 
 <c:choose>
@@ -113,7 +115,12 @@
                             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/json"/>JSON</a>
                         </li>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/chart"/>Readings Chart</a>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/latestreading"/>Latest
+                            Reading</a>
+                        </li>
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/chart"/>Readings
+                            Chart</a>
                             <span style="color : red">Not implemented</span>
                         </li>
                     </ul>

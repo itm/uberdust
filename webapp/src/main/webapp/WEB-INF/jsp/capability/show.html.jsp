@@ -12,33 +12,13 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ÜberDust - Show Testbed Nodes : <c:out value="${testbed.name}"/></title>
+    <title>ÜberDust - List links</title>
 </head>
 <body>
-
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node">testbed nodes</a>
+        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}">capabilities</a>
 </p>
-
-<table>
-    <tbody>
-    <tr>
-        <td>Nodes found</td>
-        <td><c:out value="${fn:length(testbed.setup.nodes)}"/></td>
-    </tr>
-    <c:forEach items="${testbed.setup.nodes}" var="node">
-        <tr>
-            <td>Node ID</td>
-            <td><c:out value="${node.id}"/></td>
-        </tr>
-        <tr>
-            <td>Node Description</td>
-            <td><c:out value="${node.description}"/></td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.LinkController;
+import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -21,6 +22,7 @@ public class ShowLinkController extends AbstractRestController {
 
     private LinkController linkManager;
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
+    private TestbedController testbedManager;
 
     public void setLinkManager(LinkController linkManager) {
         this.linkManager = linkManager;
@@ -71,5 +73,9 @@ public class ShowLinkController extends AbstractRestController {
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
+    }
+
+    public void setTestbedManager(TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
     }
 }

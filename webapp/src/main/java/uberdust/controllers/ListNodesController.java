@@ -43,9 +43,21 @@ public class ListNodesController extends AbstractRestController {
         NodeCommand command = (NodeCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
-        // fetch testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        // a specific testbed is requested by testbed Id
+        int testbedId;
+        try {
+            testbedId = Integer.parseInt(command.getTestbedId());
 
+        } catch (NumberFormatException nfe) {
+            throw new Exception(new Throwable("Testbed IDs have number format."));
+        }
+
+        // look up testbed
+        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        if (testbed == null) {
+            // if no testbed is found throw exception
+            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+        }
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 

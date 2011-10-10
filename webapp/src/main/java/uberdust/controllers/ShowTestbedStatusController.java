@@ -2,8 +2,6 @@ package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.*;
 import eu.wisebed.wisedb.model.*;
-import eu.wisebed.wiseml.model.setup.Link;
-import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +12,6 @@ import uberdust.commands.TestbedCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +35,11 @@ public class ShowTestbedStatusController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
         this.nodeReadingManager = nodeReadingManager;
     }
 
-    public void setLinkReadingManager(LinkReadingController linkReadingManager) {
+    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
         this.linkReadingManager = linkReadingManager;
     }
 
@@ -71,14 +68,14 @@ public class ShowTestbedStatusController extends AbstractRestController {
         }
 
         // get a list of node statistics from testbed
-        List<NodeReadingStat> nodestats = nodeReadingManager.getLatestNodeReadingUpdates(testbed);
-        List<LinkReadingStat> linkstats = null;   // TODO do links as well
+        List<NodeReadingStat> nodeStats = nodeReadingManager.getLatestNodeReadingUpdates(testbed);
+        //List<LinkReadingStat> linkStats = linkReadingManager.getLatestLinkReadingUpdates(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
         refData.put("testbed", testbed);
-        refData.put("nodestats", nodestats);
-        refData.put("linkstats", linkstats);
+        refData.put("nodestats", nodeStats);
+        refData.put("linkstats", null);
 
         return new ModelAndView("testbed/status.html", refData);
     }

@@ -1,9 +1,10 @@
 package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.model.NodeReadingStat;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
@@ -17,37 +18,39 @@ import uberdust.commands.NodeCapabilityCommand;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Writer;
 
-public class NodeCapabilityWiseMlController extends AbstractRestController {
+public class NodeCapabilityLatestReadingController extends AbstractRestController {
 
     private TestbedController testbedManager;
     private NodeController nodeManager;
     private CapabilityController capabilityManager;
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityWiseMlController.class);
     private NodeReadingController nodeReadingManager;
 
-    public NodeCapabilityWiseMlController() {
+    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityLatestReadingController.class);
 
+
+    public NodeCapabilityLatestReadingController() {
         super();
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setTestbedManager(final TestbedController testbedManager) {
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
+    public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    public void setNodeManager(final NodeController nodeManager) {
+    public void setNodeManager(NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    public void setCapabilityManager(final CapabilityController capabilityManager) {
+    public void setCapabilityManager(CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
-    }
-
-    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
-        this.nodeReadingManager = nodeReadingManager;
     }
 
     @Override
@@ -74,9 +77,7 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new Exception(new Throwable("Testbed IDs have number format."));
         }
-
-        // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        Testbed testbed = testbedManager.getByID(testbedId);
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
@@ -94,7 +95,17 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find capability [" + command.getCapabilityId() + "]"));
         }
 
-        return null;// TODO make this controller
+        // retrieve node/capability statistics
+        NodeReadingStat stat = nodeReadingManager.getLatestNodeReadingUpdate(node, capability);
+
+        httpServletResponse.setContentType("text/plain");
+        final Writer textOutput = (httpServletResponse.getWriter());
+        textOutput.write(stat.getLatestTimestamp().getTime() + "\t" + stat.getLatestReading() + "\n");
+        textOutput.flush();
+        textOutput.close();
+
+
+        return null;
     }
 
     @ExceptionHandler(Exception.class)

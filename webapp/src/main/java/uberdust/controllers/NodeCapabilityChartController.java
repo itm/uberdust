@@ -2,6 +2,7 @@ package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
@@ -22,8 +23,8 @@ public class NodeCapabilityChartController extends AbstractRestController {
     private NodeController nodeManager;
     private CapabilityController capabilityManager;
     private TestbedController testbedManager;
-
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityJSONController.class);
+    private NodeReadingController nodeReadingManager;
 
     public NodeCapabilityChartController() {
         super();
@@ -44,6 +45,10 @@ public class NodeCapabilityChartController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
+    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                   Object commandObj, BindException e) throws Exception {
@@ -54,13 +59,13 @@ public class NodeCapabilityChartController extends AbstractRestController {
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
-        // retrieve node
+        // check input
         if (command.getNodeId() == null || command.getNodeId().isEmpty() || command.getCapabilityId() == null ||
                 command.getCapabilityId().isEmpty()) {
             throw new Exception(new Throwable("Must provide node/link id and capability id"));
         }
 
-        // retrieve testbed
+        // a specific testbed is requested by testbed Id
         int testbedId;
         try {
             testbedId = Integer.parseInt(command.getTestbedId());
@@ -68,7 +73,13 @@ public class NodeCapabilityChartController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new Exception(new Throwable("Testbed IDs have number format."));
         }
-        Testbed testbed = testbedManager.getByID(testbedId);
+
+        // look up testbed
+        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        if (testbed == null) {
+            // if no testbed is found throw exception
+            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+        }
 
         // retrieve node
         Node node = nodeManager.getByID(command.getNodeId());
@@ -91,6 +102,6 @@ public class NodeCapabilityChartController extends AbstractRestController {
         refData.put("capability", capability);
 
         // check type of view requested
-        return new ModelAndView("capability/chart.html", refData);
+        return new ModelAndView("nodecapability/chart.html", refData);
     }
 }
