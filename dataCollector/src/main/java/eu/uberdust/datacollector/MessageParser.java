@@ -5,6 +5,7 @@ import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,8 +102,9 @@ public class MessageParser implements Runnable {
     private void CommitNodeReading(String node_id, String sensor, int value) {
         //get the node from hibernate
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
+        final String testbedCapabilityPrefix = "urn:wisebed:node:capability:";
         final String nodeId = testbedUrnPrefix + node_id;
-        final String capabilityName = testbedUrnPrefix + sensor;
+        final String capabilityName = testbedCapabilityPrefix + sensor;
 
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
@@ -122,15 +124,16 @@ public class MessageParser implements Runnable {
 
     private void CommitLinkReading(String sId, String tId, int status) {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
+        final String testbedCapabilityPrefix = "urn:wisebed:link:capability:";
         final String sourceId = testbedUrnPrefix + sId;
-        final String targetId = testbedUrnPrefix + tId;
+        final String targetId = testbedCapabilityPrefix + tId;
 
         log.debug("Fount a link down " + sourceId + "<<--" + status + "-->>" + targetId);
 
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            LinkReadingController.getInstance().insertReading(sourceId, targetId, "status",testbedUrnPrefix, status,0,
+            LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", testbedUrnPrefix, status, 0,
                     new java.util.Date());
             tx.commit();
             log.info("Added Link " + sourceId + "<<--" + status + "-->>" + targetId);
