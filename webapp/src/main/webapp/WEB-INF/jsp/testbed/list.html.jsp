@@ -16,22 +16,37 @@
 <body>
 
 <h1>Welcome to ÜberDust</h1>
-
-<table>
-    <tbody>
-    <tr>
-        <td>Available Testbeds</td>
-        <td><c:out value="${fn:length(testbeds)}"/></td>
-    </tr>
-    <c:forEach items="${testbeds}" var="testbed">
-        <tr>
-            <td><c:out value="${testbed.id}"/></td>
-            <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out
-                        value="${testbed.name}"/></a></td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
+<c:choose>
+    <c:when test="${testbeds !=null && fn:length(testbeds)!=0}">
+        <table>
+            <tbody>
+            <tr>
+                <td>Available Testbeds</td>
+                <td><c:out value="${fn:length(testbeds)}"/></td>
+            </tr>
+            </tbody>
+        </table>
+        <table>
+            <tbody>
+            <c:forEach items="${testbeds}" var="testbed">
+                <tr>
+                    <td><c:out value="${testbed.id}"/></td>
+                    <td>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out
+                                value="${testbed.name}"/></a>
+                    </td>
+                    <td>Nodes Count</td>
+                    <td><c:out value="${fn:length(testbed.setup.nodes)}"/></td>
+                    <td>Links Count</td>
+                    <td><c:out value="${fn:length(testbed.setup.link)}"/></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:when>
+    <c:otherwise>
+         <p style="color : red"> No testbeds available</p>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>

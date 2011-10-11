@@ -1,14 +1,14 @@
 package uberdust.controllers;
 
-import eu.wisebed.ns.wiseml._1.Capability;
+import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wiseml.model.setup.Capability;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 import uberdust.commands.CapabilityCommand;
-import uberdust.commands.LinkCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +20,7 @@ public class ListCapabilitiesController extends AbstractRestController {
 
     private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
     private TestbedController testbedManager;
+    private CapabilityController capabilityManager;
 
     public ListCapabilitiesController() {
         super();
@@ -30,6 +31,10 @@ public class ListCapabilitiesController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setCapabilityManager(CapabilityController capabilityManager) {
+        this.capabilityManager = capabilityManager;
     }
 
     @Override
@@ -55,13 +60,11 @@ public class ListCapabilitiesController extends AbstractRestController {
             // if no testbed is found throw exception
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
-
-        // TODO Fetch Testbed's capabilities
-        List<Capability> capabilities = null;
+        // get testbed's capabilities
+        List<Capability> capabilities = capabilityManager.list(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
-
         refData.put("testbed", testbed);
         refData.put("capabilities",capabilities);
         return new ModelAndView("capability/list.html", refData);

@@ -1,7 +1,10 @@
 package uberdust.controllers;
 
+import eu.wisebed.wisedb.controller.LinkController;
+import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +26,7 @@ public class ListLinksController extends AbstractRestController {
 
     private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
+    private LinkController linkManager;
 
     public ListLinksController() {
         super();
@@ -32,6 +37,10 @@ public class ListLinksController extends AbstractRestController {
 
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setLinkManager(LinkController linkManager) {
+        this.linkManager = linkManager;
     }
 
     @Override
@@ -58,10 +67,13 @@ public class ListLinksController extends AbstractRestController {
             // if no testbed is found throw exception
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
+        List<Link> links = linkManager.list(testbed);
+
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("testbed",testbed);
+        refData.put("links",links);
         return new ModelAndView("link/list.html", refData);
     }
 

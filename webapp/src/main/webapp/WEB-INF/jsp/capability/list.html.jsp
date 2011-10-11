@@ -25,27 +25,20 @@
 <c:choose>
     <c:when test="${capabilities != null || fn:length(capabilities) != 0}">
         <table>
-            <tbody>
             <tr>
                 <td>Capabilities found</td>
                 <td><c:out value="${fn:length(capabilities)}"/></td>
             </tr>
-
+        </table>
+        <table>
             <c:forEach items="${capabilities}" var="capability">
                 <tr>
-                    <td>Capability name</td>
-                    <td><c:out value="${capability.name}"/></td>
-                </tr>
-                <tr>
-                    <td>Capability unit</td>
-                    <td><c:out value="${capability.unit}"/></td>
-                </tr>
-                <tr>
-                    <td>Capability datatype</td>
-                    <td><c:out value="${capability.datatype}"/></td>
+                    <td>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                                value="${capability.name}"/></a>
+                    </td>
                 </tr>
             </c:forEach>
-            </tbody>
         </table>
     </c:when>
     <c:otherwise>

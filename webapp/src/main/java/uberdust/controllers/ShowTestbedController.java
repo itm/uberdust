@@ -1,6 +1,12 @@
 package uberdust.controllers;
 
+import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.LinkController;
+import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wiseml.model.setup.Capability;
+import eu.wisebed.wiseml.model.setup.Link;
+import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,12 +18,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShowTestbedController extends AbstractRestController {
 
     private eu.wisebed.wisedb.controller.TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
+    private CapabilityController capabilityManager;
+    private LinkController linkManager;
+    private NodeController nodeManager;
 
     public ShowTestbedController() {
         super();
@@ -28,6 +38,18 @@ public class ShowTestbedController extends AbstractRestController {
 
     public void setTestbedManager(final eu.wisebed.wisedb.controller.TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setCapabilityManager(CapabilityController capabilityManager) {
+        this.capabilityManager = capabilityManager;
+    }
+
+    public void setLinkManager(LinkController linkManager) {
+        this.linkManager = linkManager;
+    }
+
+    public void setNodeManager(NodeController nodeManager) {
+        this.nodeManager = nodeManager;
     }
 
     @Override
@@ -55,11 +77,23 @@ public class ShowTestbedController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
+        // get testbed nodes
+        List<Node> nodes = nodeManager.list(testbed);
+
+        // get testbed links
+        List<Link> links = linkManager.list(testbed);
+
+        // get testbed capabilities
+        List<Capability> capabilities = capabilityManager.list(testbed);
+
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
         refData.put("testbed", testbed);
+        refData.put("nodes",nodes);
+        refData.put("links",links);
+        refData.put("capabilities",capabilities);
         return new ModelAndView("testbed/show.html", refData);
     }
 

@@ -2,6 +2,7 @@ package uberdust.controllers;
 
 import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -28,6 +29,10 @@ public class ShowLinkController extends AbstractRestController {
         this.linkManager = linkManager;
     }
 
+    public void setTestbedManager(TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
+    }
+
     @Override
     protected ModelAndView handle(HttpServletRequest request,
                                   HttpServletResponse response, Object commandObj, BindException errors)
@@ -39,6 +44,19 @@ public class ShowLinkController extends AbstractRestController {
         LOGGER.info("command.getTargetId() : " + command.getTargetId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
+        // a specific testbed is requested by testbed Id
+        int testbedId;
+        try {
+            testbedId = Integer.parseInt(command.getTestbedId());
+
+        } catch (NumberFormatException nfe) {
+            throw new Exception(new Throwable("Testbed IDs have number format."));
+        }
+        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        if (testbed == null) {
+            // if no testbed is found throw exception
+            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+        }
 
         // a link instance  and link list
         Link link = null;
@@ -64,7 +82,7 @@ public class ShowLinkController extends AbstractRestController {
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
-        refData.put("testbedId", command.getTestbedId());
+        refData.put("testbed", testbed);
         refData.put("links", links);
         return new ModelAndView("link/show.html", refData);
     }
@@ -73,9 +91,5 @@ public class ShowLinkController extends AbstractRestController {
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
-    }
-
-    public void setTestbedManager(TestbedController testbedManager) {
-        this.testbedManager = testbedManager;
     }
 }

@@ -6,6 +6,9 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
+<jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="capabilities" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -93,45 +96,71 @@
     </tr>
     </tbody>
 </table>
-<p>Nodes</p>
-<c:choose>
-    <c:when test="${testbed.setup.nodes == null || fn:length(testbed.setup.nodes) == 0}">
-        <p style="color : red">No nodes available</p>
-    </c:when>
-    <c:otherwise>
-        <table>
-            <tbody>
-            <c:forEach items="${testbed.setup.nodes}" var="node">
-                <tr>
-                    <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
-                                value="${node.id}"/></a>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </c:otherwise>
-</c:choose>
-
-
-<p>Links</p>
-<c:choose>
-    <c:when test="${testbed.setup.link == null || fn:length(testbed.setup.link) == 0 }">
-        <p style="color : red">No links available</p>
-    </c:when>
-    <c:otherwise>
-        <table>
-            <c:forEach items="${testbed.setup.link}" var="link">
-                <tr>
-                    <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out
-                                value="${link.source},${link.target}"/></a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-    </c:otherwise>
-</c:choose>
+<table>
+    <tr>
+        <td>
+            <p>Nodes</p>
+            <c:choose>
+                <c:when test="${nodes == null || fn:length(nodes) == 0}">
+                    <p style="color : red">No nodes found for testbed <c:out value="${testbed.name}"/>}</p>
+                </c:when>
+                <c:otherwise>
+                    <table>
+                        <tbody>
+                        <c:forEach items="${nodes}" var="node">
+                            <tr>
+                                <td>
+                                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+                                            value="${node.id}"/></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>
+            <p>Links</p>
+            <c:choose>
+                <c:when test="${links == null || fn:length(links) == 0 }">
+                    <p style="color : red">No links found for <c:out value="${testbed.name}"/></p>
+                </c:when>
+                <c:otherwise>
+                    <table>
+                        <c:forEach items="${links}" var="link">
+                            <tr>
+                                <td>
+                                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out
+                                            value="${link.source},${link.target}"/></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>
+            <p>Capabilities</p>
+            <c:choose>
+                <c:when test="${capabilities == null || fn:length(capabilities) == 0 }">
+                    <p style="color : red">No capabilities found for <c:out value="${testbed.name}"/></p>
+                </c:when>
+                <c:otherwise>
+                    <table>
+                        <c:forEach items="${capabilities}" var="capability">
+                            <tr>
+                                <td>
+                                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                                            value="${capability.name}"/></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:otherwise>
+            </c:choose>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

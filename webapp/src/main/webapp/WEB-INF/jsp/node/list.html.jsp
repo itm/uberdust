@@ -6,6 +6,8 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
+<jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
+
 
 <html>
 <head>
@@ -19,26 +21,39 @@
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node">testbed nodes</a>
+        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node">testbed
+    nodes</a>
 </p>
 
-<table>
-    <tbody>
-    <tr>
-        <td>Nodes found</td>
-        <td><c:out value="${fn:length(testbed.setup.nodes)}"/></td>
-    </tr>
-    <c:forEach items="${testbed.setup.nodes}" var="node">
-        <tr>
-            <td>Node ID</td>
-            <td><c:out value="${node.id}"/></td>
-        </tr>
-        <tr>
-            <td>Node Description</td>
-            <td><c:out value="${node.description}"/></td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
+
+<c:choose>
+    <c:when test="${nodes != null || fn:length(nodes) != 0}">
+        <table>
+            <tbody>
+            <tr>
+                <td>Nodes found</td>
+                <td><c:out value="${fn:length(nodes)}"/></td>
+            </tr>
+            </tbody>
+        </table>
+        <table>
+            <tbody>
+            <c:forEach items="${nodes}" var="node">
+                <tr>
+                    <td>Node ID</td>
+                    <td>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+                                value="${node.id}"/></a>
+                    </td>
+                </tr>
+            </c:forEach>
+
+            </tbody>
+        </table>
+    </c:when>
+    <c:otherwise>
+        <p style="color : red">No nodes found for testbed <c:out value="${testbed.name}"/></p>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>

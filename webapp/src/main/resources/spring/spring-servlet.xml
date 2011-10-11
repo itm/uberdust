@@ -91,6 +91,9 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean name="showTestbedController" class="uberdust.controllers.ShowTestbedController">
         <property name="commandClass" value="uberdust.commands.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="linkManager" ref="linkManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -148,6 +151,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean name="listNodesController" class="uberdust.controllers.ListNodesController">
         <property name="commandClass" value="uberdust.commands.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -164,6 +168,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <!-- Show Node Controller -->
     <bean name="showNodeController" class="uberdust.controllers.ShowNodeController">
         <property name="commandClass" value="uberdust.commands.NodeCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}"/>
         <property name="viewNameSelector">
@@ -198,6 +203,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean name="listLinksController" class="uberdust.controllers.ListLinksController">
         <property name="commandClass" value="uberdust.commands.LinkCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
+        <property name="linkManager" ref="linkManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/link/"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -246,7 +252,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
         </property>
     </bean>
 
-    <!-- Show Link Controller -->
+    <!-- Show Capability Controller -->
     <bean name="showCapbilityController" class="uberdust.controllers.ShowCapabilityController">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
