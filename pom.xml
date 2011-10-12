@@ -5,11 +5,15 @@
     <groupId>uberdust</groupId>
     <artifactId>uberdust</artifactId>
     <version>1.0</version>
+
+    <packaging>pom</packaging>
     <modules>
+        <module>applications</module>
         <module>dataCollector</module>
         <module>webapp</module>
     </modules>
-    <packaging>pom</packaging>
+
+
 
     <name>ÜberDust</name>
     <description>Sensor data management tool</description>
