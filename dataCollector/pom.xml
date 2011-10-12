@@ -124,10 +124,11 @@
                         <phase>deploy</phase>
                         <configuration>
                             <target>
-
-                                <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
+                                  <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
                                      todir="testbedruntime@gold.cti.gr:/home/testbedruntime/dataCollector"
-                                     keyfile="~/.ssh/id_dsa"/>
+                                     keyfile="${user.home}/.ssh/id_rsa"
+                                     trust="true"    verbose="true"  port="22"
+                                     passphrase=""/>
                             </target>
                         </configuration>
                         <goals>
