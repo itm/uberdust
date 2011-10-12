@@ -13,7 +13,8 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ÜberDust - Show Link <c:forEach items="${links}" var="link">[<c:out value="${link.source}"/>,<c:out value="${link.target}"/>]</c:forEach> </title>
+    <title>ÜberDust - Show Link <c:forEach items="${links}" var="link">[<c:out value="${link.source}"/>,<c:out
+            value="${link.target}"/>]</c:forEach></title>
 </head>
 <body>
 

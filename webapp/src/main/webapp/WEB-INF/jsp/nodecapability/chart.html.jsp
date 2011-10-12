@@ -104,13 +104,13 @@
                     var node = json['nodeId'];
                     var readings = json['readings'];
                     var data = [];
-                    var j =0;
+                    var j = 0;
                     for (var i in readings) {
                         data.push({
                             x : readings[i].timestamp,
                             y : readings[i].reading
                         })
-                        if(j==500) break;
+                        if (j == 500) break;
                     }
                     chart.series[0].data = data;
                     chart.redraw();

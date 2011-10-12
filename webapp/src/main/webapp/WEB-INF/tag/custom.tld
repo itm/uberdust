@@ -7,7 +7,7 @@
     <short-name>util</short-name>
     <function>
         <name>checkIfDateIsToday</name>
-        <function-class>uberdust.util.Util</function-class>
+        <function-class>eu.uberdust.util.Util</function-class>
         <function-signature>boolean checkIfDateIsToday(java.util.Date)</function-signature>
     </function>
 </taglib>

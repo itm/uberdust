@@ -31,9 +31,9 @@
         <mapping resource="eu/wisebed/wisedb/model/Setup.hbm.xml"/>
         <mapping resource="eu/wisebed/wisedb/model/Node.hbm.xml"/>
         <mapping resource="eu/wisebed/wisedb/model/Capability.hbm.xml"/>
-        <mapping resource="eu/wisebed/wisedb/model/Link.hbm.xml" />
-        <mapping resource="eu/wisebed/wisedb/model/NodeReading.hbm.xml" />
-        <mapping resource="eu/wisebed/wisedb/model/LinkReading.hbm.xml" />
+        <mapping resource="eu/wisebed/wisedb/model/Link.hbm.xml"/>
+        <mapping resource="eu/wisebed/wisedb/model/NodeReading.hbm.xml"/>
+        <mapping resource="eu/wisebed/wisedb/model/LinkReading.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>

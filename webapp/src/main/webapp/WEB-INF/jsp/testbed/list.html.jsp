@@ -45,7 +45,7 @@
         </table>
     </c:when>
     <c:otherwise>
-         <p style="color : red"> No testbeds available</p>
+        <p style="color : red"> No testbeds available</p>
     </c:otherwise>
 </c:choose>
 </body>

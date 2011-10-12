@@ -279,7 +279,7 @@
                 <configuration>
                     <server>tomcat6</server>
                     <warFile>${project.build.directory}/${project.groupId}-${project.build.finalName}.war</warFile>
-                    <path>/uberdust</path>
+                    <path>/eu.uberdust</path>
                     <url>${gold.tomcat.manager.url}</url>
                 </configuration>
             </plugin>

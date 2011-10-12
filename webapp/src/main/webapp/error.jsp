@@ -10,20 +10,22 @@
     <title>ÜberDust - Error</title>
 </head>
 <body>
-   <table id="error" style="color:#ff6666">
-       <thead>
-            <th>Error Occured</th>
-       </thead>
-       <tbody>
-       <tr>
-           <td>Status</td>
-           <td><%=request.getAttribute("javax.servlet.error.status_code") %></td>
-       </tr>
-       <tr>
-           <td>Reason</td>
-           <td><%=request.getAttribute("javax.servlet.error.message") %></td>
-       </tr>
-       </tbody>
-   </table>
+<table id="error" style="color:#ff6666">
+    <thead>
+    <th>Error Occured</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Status</td>
+        <td><%=request.getAttribute("javax.servlet.error.status_code") %>
+        </td>
+    </tr>
+    <tr>
+        <td>Reason</td>
+        <td><%=request.getAttribute("javax.servlet.error.message") %>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

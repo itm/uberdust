@@ -12,7 +12,7 @@
     </parent>
 
     <groupId>uberdust</groupId>
-    <artifactId>TestbedListener</artifactId>
+    <artifactId>testbedlistener</artifactId>
     <packaging>jar</packaging>
     <name>ÜberDust - Testbed Listener</name>
     <version>1.0</version>
@@ -124,10 +124,10 @@
                         <phase>deploy</phase>
                         <configuration>
                             <target>
-                                  <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
+                                <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
                                      todir="testbedruntime@gold.cti.gr:/home/testbedruntime/dataCollector"
                                      keyfile="${user.home}/.ssh/id_rsa"
-                                     trust="true"    verbose="true"  port="22"
+                                     trust="true" verbose="true" port="22"
                                      passphrase=""/>
                             </target>
                         </configuration>

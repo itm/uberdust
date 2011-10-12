@@ -1,7 +1,6 @@
 package eu.uberdust.controller;
 
 import com.google.common.collect.Lists;
-import com.google.protobuf.ByteString;
 import de.uniluebeck.itm.wisebed.cmdlineclient.BeanShellHelper;
 import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient;
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
@@ -19,7 +18,6 @@ import org.apache.log4j.PropertyConfigurator;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -145,8 +143,8 @@ public class TestbedController {
 
         final String[] strPayload = protoCommand.getPayload().split(",");
         final byte[] payload = new byte[strPayload.length];
-        for (int i =0 ; i< payload.length;i++){
-              payload[i] = Integer.valueOf(strPayload[i],16).byteValue();
+        for (int i = 0; i < payload.length; i++) {
+            payload[i] = Integer.valueOf(strPayload[i], 16).byteValue();
         }
 
         final byte[] newPayload = new byte[macBytes.length + payload.length + 1 + PAYLOAD_HEADERS.length];

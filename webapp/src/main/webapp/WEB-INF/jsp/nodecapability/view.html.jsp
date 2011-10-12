@@ -1,6 +1,6 @@
 <%@ page import="eu.wisebed.wisedb.model.NodeReading" %>
-<%@ page import="java.util.Date" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ page session="false" %>

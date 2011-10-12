@@ -10,6 +10,6 @@
     <title>ÜberDust</title>
 </head>
 <body>
-    <jsp:forward page="/rest/testbed"/>
+<jsp:forward page="/rest/testbed"/>
 </body>
 </html>

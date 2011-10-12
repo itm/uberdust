@@ -74,7 +74,7 @@
 <%--<c:if test="${link != null}">--%>
 <%--<tr>--%>
 <%--<td>--%>
-<%--<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source}/${link.target}"><c:out--%>
+<%--<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/node/${link.source}/${link.target}"><c:out--%>
 <%--value="[${link.source},${link.target}]"/></a>--%>
 <%--</td>--%>
 <%--<td><c:out value="${(linkLastReadingDateMap[link.source])[link.target]}}"/></td>--%>

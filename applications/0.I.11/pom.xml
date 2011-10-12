@@ -95,7 +95,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>uberdust.lights.LightController</mainClass>
+                            <mainClass>eu.uberdust.lights.LightController</mainClass>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>

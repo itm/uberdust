@@ -2,7 +2,7 @@
 ======
 
 <dependency>
-    <groupId>uberdust</groupId>
+    <groupId>eu.uberdust</groupId>
     <artifactId>webapp</artifactId>
     <version>1.0</version>
 </dependency>

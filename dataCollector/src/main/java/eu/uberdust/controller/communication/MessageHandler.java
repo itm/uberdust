@@ -16,7 +16,7 @@ import java.net.Socket;
  */
 public class MessageHandler extends Thread {
 
-    private final static Logger LOGGER  = Logger.getLogger(MessageHandler.class);
+    private final static Logger LOGGER = Logger.getLogger(MessageHandler.class);
 
     private final Socket thisSocket;
 
@@ -47,7 +47,7 @@ public class MessageHandler extends Thread {
     @Override
     public void run() {
         super.run();
-         try {
+        try {
             CommandProtocol.Command
                     cmd = CommandProtocol.Command.parseFrom(thisSocket.getInputStream());
             LOGGER.info("New Command Received:\n" + cmd.toString());
