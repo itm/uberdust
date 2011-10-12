@@ -127,7 +127,7 @@
 
                                 <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
                                      todir="testbedruntime@gold.cti.gr:/home/testbedruntime/dataCollector"
-                                     keyfile="${user.home}/.ssh/id_dsa"/>
+                                     keyfile="~/.ssh/id_dsa"/>
                             </target>
                         </configuration>
                         <goals>
