@@ -121,7 +121,7 @@
                 <version>1.6</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>deploy</phase>
                         <configuration>
                             <target>
 
