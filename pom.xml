@@ -8,9 +8,9 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>applications</module>
         <module>dataCollector</module>
         <module>webapp</module>
+        <module>applications</module>
     </modules>
 
 
