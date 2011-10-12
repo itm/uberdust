@@ -1,10 +1,8 @@
 package uberdust.lights.timers;
 
 import org.apache.log4j.Logger;
-import uberdust.communication.RestClient;
 import uberdust.lights.LightController;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,9 +33,9 @@ public class LastReadingTask extends TimerTask {
         final long previousPirEvent = LightController.getInstance().getLastReading();
 
         final long lastPirEvent = LightController.getInstance().lastPirEvent();
-
+        LOGGER.info("Last pir event: " + new Date(lastPirEvent));
         if (System.currentTimeMillis() - lastPirEvent > 5000) {
-            LOGGER.debug("Too old Pir Event");
+            LOGGER.info("Too old Pir Event");
             return;
         }
 
@@ -45,7 +43,7 @@ public class LastReadingTask extends TimerTask {
             if (!LightController.getInstance().isZone1()) {
                 //turn on Zone 1;
                 LightController.getInstance().controlLight(true, 1);
-                LOGGER.debug("Turn On Zone 1");
+                LOGGER.info("Turn On Zone 1");
                 LightController.getInstance().setZone1(true);
                 LightController.getInstance().setLastZone1Reading(lastPirEvent);
                 //Start Timer to Turn off the Lights.
@@ -57,7 +55,7 @@ public class LastReadingTask extends TimerTask {
                         //turn on Zone 2;
                         //RestClient.getInstance().callRestfulWebService();
                         LightController.getInstance().controlLight(true, 2);
-                        LOGGER.debug("Turn On Zone 2");
+                        LOGGER.info("Turn On Zone 2");
                         LightController.getInstance().setZone2(true);
                         LightController.getInstance().setLastZone2Reading(lastPirEvent);
                     }
