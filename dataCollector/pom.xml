@@ -148,8 +148,8 @@
                         <version>0.1.38</version>
                     </dependency>
                 </dependencies>
-
             </plugin>
+
             <plugin>
                 <groupId>org.dstovall</groupId>
                 <artifactId>onejar-maven-plugin</artifactId>
