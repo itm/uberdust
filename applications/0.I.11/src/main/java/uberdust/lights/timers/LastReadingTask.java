@@ -33,12 +33,12 @@ public class LastReadingTask extends TimerTask {
         final long previousPirEvent = LightController.getInstance().getLastReading();
 
         final long lastPirEvent = LightController.getInstance().lastPirEvent();
-        LOGGER.info("Last pir event: " + new Date(lastPirEvent));
+
         if (System.currentTimeMillis() - lastPirEvent > 5000) {
-            LOGGER.info("Too old Pir Event");
+            //LOGGER.info("Too old Pir Event");
             return;
         }
-
+        LOGGER.info("New pir event: " + new Date(lastPirEvent));
         if (lastPirEvent - previousPirEvent > 0) {
             if (!LightController.getInstance().isZone1()) {
                 //turn on Zone 1;
