@@ -98,7 +98,7 @@
 </table>
 <table>
     <tr>
-        <td>
+        <td style="vertical-align:top">
             <p>Nodes</p>
             <c:choose>
                 <c:when test="${nodes == null || fn:length(nodes) == 0}">
@@ -120,7 +120,7 @@
                 </c:otherwise>
             </c:choose>
         </td>
-        <td>
+        <td style="vertical-align:top">
             <p>Links</p>
             <c:choose>
                 <c:when test="${links == null || fn:length(links) == 0 }">
@@ -131,7 +131,7 @@
                         <c:forEach items="${links}" var="link">
                             <tr>
                                 <td>
-                                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out
+                                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}"><c:out
                                             value="${link.source},${link.target}"/></a>
                                 </td>
                             </tr>
@@ -140,7 +140,7 @@
                 </c:otherwise>
             </c:choose>
         </td>
-        <td>
+        <td style="vertical-align:top">
             <p>Capabilities</p>
             <c:choose>
                 <c:when test="${capabilities == null || fn:length(capabilities) == 0 }">
