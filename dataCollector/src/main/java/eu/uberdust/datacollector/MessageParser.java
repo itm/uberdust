@@ -126,7 +126,7 @@ public class MessageParser implements Runnable {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
         final String testbedCapabilityPrefix = "urn:wisebed:link:capability:";
         final String sourceId = testbedUrnPrefix + sId;
-        final String targetId = testbedCapabilityPrefix + tId;
+        final String targetId = testbedUrnPrefix + tId;
 
         log.debug("Fount a link down " + sourceId + "<<--" + status + "-->>" + targetId);
 
