@@ -20,10 +20,10 @@ public class LightController {
     private final static Logger LOGGER = Logger.getLogger(LightController.class);
 
     private final String REST_LINK =
-            new String("http://gold.cti.gr:8080/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,");
+            "http://gold.cti.gr:8080/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
 
     private final String READINGS_LINK =
-            new String("http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading");
+            "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
 
     private boolean zone1;
 
