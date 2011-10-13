@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 // Import log4j classes.
 
-public class nodeFlasherJob implements Job {
+public class NodeFlasherJob implements Job {
 
     public static final int INTERVAL = 60;
     private static final int MINUTES_BEFORE = 40;
@@ -55,9 +55,9 @@ public class nodeFlasherJob implements Job {
 
     private String imagePath;
     private Properties properties;
-    private static final Logger log = Logger.getLogger(nodeFlasherJob.class);
+    private static final Logger log = Logger.getLogger(NodeFlasherJob.class);
 
-    public nodeFlasherJob() {
+    public NodeFlasherJob() {
 
     }
 

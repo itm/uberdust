@@ -16,11 +16,11 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Date: 10/6/11
  * Time: 3:18 PM
  */
-public class nodeFlasherController {
+public class NodeFlasherController {
 
-    private static final Logger log = Logger.getLogger(nodeFlasherController.class);
+    private static final Logger log = Logger.getLogger(NodeFlasherController.class);
 
-    public nodeFlasherController() {
+    public NodeFlasherController() {
 
 
         final SchedulerFactory sf = new StdSchedulerFactory();
@@ -29,8 +29,8 @@ public class nodeFlasherController {
         try {
             sched = sf.getScheduler();
 
-            final JobDetail nodeflasherjob = newJob(nodeFlasherJob.class)
-                    .withIdentity("nodeFlasherJob", "group1")
+            final JobDetail nodeflasherjob = newJob(NodeFlasherJob.class)
+                    .withIdentity("NodeFlasherJob", "group1")
                     .build();
 
 
@@ -54,6 +54,6 @@ public class nodeFlasherController {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        log.info("Started nodeFlasherController");
+        log.info("Started NodeFlasherController");
     }
 }
