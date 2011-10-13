@@ -88,7 +88,11 @@ public class LightController {
     public void controlLight(final boolean value, final int zone) {
         LOGGER.info(new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString());
         RestClient.getInstance().callRestfulWebService(new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString());
-
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            LOGGER.error(e);
+        }
         switch (zone) {
             case 1:
                 final String response1 = RestClient.getInstance().callRestfulWebService(ZONE_1_LINK);
