@@ -25,6 +25,11 @@ public class LightController {
     private final String READINGS_LINK =
             "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
 
+
+    private final String ZONE_1_LINK =
+            "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light1/latestreading";
+    private final String ZONE_2_LINK =
+            "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light2/latestreading";
     private boolean zone1;
 
     private boolean zone2;
@@ -83,6 +88,18 @@ public class LightController {
     public void controlLight(final boolean value, final int zone) {
         LOGGER.info(new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString());
         RestClient.getInstance().callRestfulWebService(new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString());
+
+        switch (zone) {
+            case 1:
+                final String response1 = RestClient.getInstance().callRestfulWebService(ZONE_1_LINK);
+                LOGGER.info(response1);
+                break;
+            case 2:
+                final String response2 = RestClient.getInstance().callRestfulWebService(ZONE_2_LINK);
+                LOGGER.info(response2);
+                break;
+        }
+
 
     }
 
