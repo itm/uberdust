@@ -83,6 +83,9 @@ public Int8DataHandler
 #endif
 {
 public:
+	virtual uint16 application_id(){return 1;}
+        virtual uint8 software_revision (void){return 1;}
+
     iSenseCollectorApplication(isense::Os& os);
 
     virtual ~iSenseCollectorApplication();
