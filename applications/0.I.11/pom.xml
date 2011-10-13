@@ -13,6 +13,7 @@
     <artifactId>0.I.11</artifactId>
     <version>1.0</version>
     <name>0.I.11</name>
+    <packaging>jar</packaging>
 
 
     <repositories>
