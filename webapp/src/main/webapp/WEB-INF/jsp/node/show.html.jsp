@@ -27,7 +27,7 @@
     <tbody>
     <tr>
         <td>Node ID</td>
-        <td><c:out value="${node.id}"/></td>
+        <td><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out value="${node.id}}"/></a></td>
     </tr>
     <tr>
         <td>Node Description</td>

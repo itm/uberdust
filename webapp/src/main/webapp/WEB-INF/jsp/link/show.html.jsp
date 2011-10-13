@@ -31,22 +31,22 @@
         </tr>
         <tr>
             <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}link/${link.source}/${link.target}"><c:out
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}"><c:out
                         value="${link.source},${link.target}"/></a>
             </td>
         </tr>
         <tr>
             <td>Source ID</td>
             <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source.id}"><c:out
-                        value="${link.source.id}"/></a>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source}"><c:out
+                        value="${link.source}"/></a>
             </td>
         </tr>
         <tr>
             <td>Target ID</td>
             <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.target.id}"><c:out
-                        value="${link.target.id}"/></a>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.target}"><c:out
+                        value="${link.target}"/></a>
             </td>
         </tr>
         <tr>

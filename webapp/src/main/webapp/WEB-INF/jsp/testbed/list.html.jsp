@@ -35,10 +35,8 @@
                         <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out
                                 value="${testbed.name}"/></a>
                     </td>
-                    <td>Nodes Count</td>
-                    <td><c:out value="${fn:length(testbed.setup.nodes)}"/></td>
-                    <td>Links Count</td>
-                    <td><c:out value="${fn:length(testbed.setup.link)}"/></td>
+                    <td>Nodes (<c:out value="${fn:length(testbed.setup.nodes)}"/>)</td>
+                    <td>Links (<c:out value="${fn:length(testbed.setup.link)}"/>)</td>
                 </tr>
             </c:forEach>
             </tbody>

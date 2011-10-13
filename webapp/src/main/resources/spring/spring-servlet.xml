@@ -3,7 +3,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 
     <!-- Set view resolver -->
@@ -239,6 +239,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     <bean name="listCapabilitiesController" class="eu.uberdust.controllers.ListCapabilitiesController">
         <property name="commandClass" value="eu.uberdust.commands.CapabilityCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/capability"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -254,9 +255,10 @@ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <!-- Show Capability Controller -->
     <bean name="showCapbilityController" class="eu.uberdust.controllers.ShowCapabilityController">
+        <property name="commandClass" value="eu.uberdust.commands.CapabilityCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/capability"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/capability/{capabilityName}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="capability/show.html"/>

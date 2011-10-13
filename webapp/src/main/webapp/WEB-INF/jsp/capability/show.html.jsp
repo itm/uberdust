@@ -13,7 +13,7 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>ÜberDust - List links</title>
+    <title>ÜberDust - Show Capability [<c:out value="${capability.name}"/>]</title>
 </head>
 <body>
 <p>
@@ -31,7 +31,10 @@
                     <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
                             value="${capability.name}"/></a>
                 </td>
-                <td><c:out value="${capability.name}"/></td>
+            </tr>
+            <tr>
+                <td>Number of nodes having this capability</td>
+                <td><c:out value="${fn:length(capability.nodes)}"/></td>
             </tr>
             <tr>
                 <td>Number of node Readings having this capability</td>

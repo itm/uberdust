@@ -99,7 +99,7 @@
 <table>
     <tr>
         <td style="vertical-align:top">
-            <p>Nodes</p>
+            <p><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node">Nodes</a></p>
             <c:choose>
                 <c:when test="${nodes == null || fn:length(nodes) == 0}">
                     <p style="color : red">No nodes found for testbed <c:out value="${testbed.name}"/>}</p>
@@ -121,7 +121,7 @@
             </c:choose>
         </td>
         <td style="vertical-align:top">
-            <p>Links</p>
+            <p><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link">Links</a></p>
             <c:choose>
                 <c:when test="${links == null || fn:length(links) == 0 }">
                     <p style="color : red">No links found for <c:out value="${testbed.name}"/></p>
@@ -141,7 +141,7 @@
             </c:choose>
         </td>
         <td style="vertical-align:top">
-            <p>Capabilities</p>
+            <p><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability">Capabilities</a></p>
             <c:choose>
                 <c:when test="${capabilities == null || fn:length(capabilities) == 0 }">
                     <p style="color : red">No capabilities found for <c:out value="${testbed.name}"/></p>

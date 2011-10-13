@@ -24,8 +24,8 @@ import java.util.Map;
 public class ListNodesController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ListNodesController.class);
     private NodeController nodeManager;
+    private static final Logger LOGGER = Logger.getLogger(ListNodesController.class);
 
     public ListNodesController() {
         super();

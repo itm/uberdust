@@ -67,6 +67,5 @@ public class ShowCapabilityController extends AbstractRestController {
         refData.put("testbed", testbed);
         refData.put("capability", capability);
         return new ModelAndView("capability/show.html", refData);
-
     }
 }
