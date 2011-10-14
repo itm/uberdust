@@ -79,18 +79,30 @@ public class NodeFlasherJob implements Job {
 
         // Authentication credentials and other relevant information used again and again as method parameters
 
-        Splitter csvSplitter = Splitter.on(",").trimResults().omitEmptyStrings();
+        final Splitter csvSplitter = Splitter.on(",").trimResults().omitEmptyStrings();
 
         urnPrefixes = Lists.newArrayList(csvSplitter.split(properties.getProperty("testbed.urnprefixes")));
 
         String passfilename = properties.getProperty("testbed.passwords");
+        FileInputStream fileInputStream = null;
         try {
             final Properties passproperties = new Properties();
-            passproperties.load(new FileInputStream(passfilename));
+            fileInputStream = new FileInputStream(passfilename);
+            passproperties.load(fileInputStream);
             usernames = Lists.newArrayList(csvSplitter.split(passproperties.getProperty("testbed.usernames")));
             passwords = Lists.newArrayList(csvSplitter.split(passproperties.getProperty("testbed.passwords")));
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+        } catch (final IOException e) {
+            log.error(e);
+
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (final IOException e) {
+                    log.error(e);
+                }
+            }
         }
 
         pccHost = properties.getProperty("testbed.protobuf.hostname");
