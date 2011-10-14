@@ -6,15 +6,14 @@ import eu.wisebed.wisedb.controller.NodeReadingController;
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MessageParser implements Runnable {
 
     private final String strLine;
-    private static Map<String, String> sensors = new HashMap<String, String>();
+    private final Map<String, String> sensors;
 
-    public MessageParser(String msg, Map<String, String> senses) {
+    public MessageParser(final String msg, final Map<String, String> senses) {
 
         strLine = msg.substring(msg.indexOf("binaryData:") + "binaryData:".length());
         sensors = senses;

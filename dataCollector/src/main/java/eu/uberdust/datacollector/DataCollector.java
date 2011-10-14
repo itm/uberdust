@@ -16,7 +16,6 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -34,10 +33,9 @@ public class DataCollector {
     private int port;
     private Channel channel;
     private ClientBootstrap bootstrap;
-    private static String[] Sensors_names, Sensors_prefixes;
-    private static Map<String, String> sensors = new HashMap<String, String>();
-    private static int messageCounter;
-    private static Date lastTime;
+    private final Map<String, String> sensors = new HashMap<String, String>();
+    private int messageCounter;
+    private long lastTime;
 
     public DataCollector() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
@@ -55,39 +53,39 @@ public class DataCollector {
         host = properties.getProperty("runtime.ipAddress");
         port = Integer.parseInt(properties.getProperty("runtime.port"));
 
-        Sensors_names = properties.getProperty("sensors.names").split(",");
-        Sensors_prefixes = properties.getProperty("sensors.prefixes").split(",");
+        final String[] sensors_names = properties.getProperty("sensors.names").split(",");
+        final String[] sensors_prefixes = properties.getProperty("sensors.prefixes").split(",");
 
-        String Sens = "Sensors Checked: ";
-        for (int i = 0; i < Sensors_names.length; i++) {
-            Sens += Sensors_names[i] + "[" + Sensors_prefixes[i] + "]" + ",";
-            sensors.put(Sensors_prefixes[i], Sensors_names[i]);
+        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: ");
+        for (int i = 0; i < sensors_names.length; i++) {
+            sensBuilder.append(sensors_names[i]).append("[").append(sensors_prefixes[i]).append("]" + ",");
+            sensors.put(sensors_prefixes[i], sensors_names[i]);
         }
-        log.info(Sens);
+        log.info(sensBuilder);
 
-        String[] device_types = properties.getProperty("device.Types").split(",");
-        Sens = "Devices Monitored: ";
+        final String[] device_types = properties.getProperty("device.Types").split(",");
+        final StringBuilder devBuilder = new StringBuilder("Devices Monitored: ");
         for (String device_type : device_types) {
-            Sens += device_type + ",";
+            devBuilder.append(device_type).append(",");
         }
-        log.info(Sens);
+        log.info(devBuilder);
         messageCounter = 0;
-        lastTime = new Date();
+        lastTime = System.currentTimeMillis();
     }
 
     private final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
-            Messages.Msg message = (Messages.Msg) e.getMessage();
+            final Messages.Msg message = (Messages.Msg) e.getMessage();
             if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
                 WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
                 parse(wsnAppMessage.toString());
                 messageCounter++;
                 if (messageCounter == 1000) {
-                    final long milis = new Date().getTime() - lastTime.getTime();
+                    final long milis = System.currentTimeMillis() - lastTime;
                     log.info(messageCounter + " messages in " + milis / 1000 + " sec");
-                    lastTime = new Date();
+                    lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
 
@@ -106,7 +104,7 @@ public class DataCollector {
         @Override
         public ChannelPipeline getPipeline() throws Exception {
 
-            ChannelPipeline p = pipeline();
+            final ChannelPipeline p = pipeline();
 
             p.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
             p.addLast("protobufEnvelopeMessageDecoder", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
@@ -132,7 +130,7 @@ public class DataCollector {
         bootstrap.setPipelineFactory(channelPipelineFactory);
 
         // Make a new connection.
-        ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
+        final ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
 
         // Wait until the connection is made successfully.
         channel = connectFuture.awaitUninterruptibly().getChannel();

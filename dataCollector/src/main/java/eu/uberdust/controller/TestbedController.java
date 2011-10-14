@@ -40,7 +40,7 @@ public class TestbedController {
     private String nodeUrnsToListen;
     private String pccHost;
     private Integer pccPort;
-
+    private final SocketServer socketServer;
 
     private WSNAsyncWrapper wsn;
     private List<String> nodeURNs = new ArrayList<String>();
@@ -74,9 +74,9 @@ public class TestbedController {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         readProperties();
         connectToRuntime();
-
+        socketServer = new SocketServer();
         //Start the Socket Server
-        (new SocketServer()).start();
+        socketServer.start();
     }
 
     private void readProperties() {
