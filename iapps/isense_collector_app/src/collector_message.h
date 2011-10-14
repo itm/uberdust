@@ -209,6 +209,29 @@ namespace wiselib {
         block_data_t buffer[Radio::MAX_MESSAGE_LENGTH]; // buffer for the message data
     };
 
+    template
+    < typename OsModel_P, typename Radio_P>
+    class BroadcastMsg {
+    public:
+        typedef typename Radio_P::size_t size_t;
+        typedef typename OsModel_P::block_data_t block_data_t;
+        // --------------------------------------------------------------------
+
+        BroadcastMsg() {
+            for (int i = 0; i < 10; i++) {
+                buffer[i] = i;
+            }
+        }
+
+        size_t length() {
+            return 10;
+        }
+
+    private:
+        block_data_t buffer[10]; // buffer for the message data
+
+    };
+
 }
 
 #endif	/* ECHOMSG_H */

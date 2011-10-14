@@ -59,11 +59,13 @@ typedef wiselib::Echo<WiselibOs, WiselibOs::TxRadio, WiselibOs::Timer, WiselibOs
 
 #include "collector_message.h"
 typedef wiselib::CollectorMsg<WiselibOs, WiselibOs::TxRadio> collectorMsg_t;
+typedef wiselib::BroadcastMsg<WiselibOs, WiselibOs::TxRadio> broadcastMsg_t;
 
 #define TASK_SLEEP 1
 #define TASK_WAKE 2
 #define TASK_READ_SENSORS 2
 #define TASK_SET_LIGHT_THRESHOLD 3
+#define TASK_BROADCAST_GATEWAY 4
 
 //----------------------------------------------------------------------------
 
@@ -83,8 +85,14 @@ public Int8DataHandler
 #endif
 {
 public:
-	virtual uint16 application_id(){return 1;}
-        virtual uint8 software_revision (void){return 1;}
+
+    virtual uint16 application_id() {
+        return 1;
+    }
+
+    virtual uint8 software_revision(void) {
+        return 3;
+    }
 
     iSenseCollectorApplication(isense::Os& os);
 
@@ -190,11 +198,7 @@ public:
     }
 
     void ND_callback(uint8 event, uint16 from, uint8 len, uint8 * data) {
-        if (event == nb_t::NEW_PAYLOAD_BIDI) {
-            if (data[0] == 1) {
-                mygateway_ = from;
-            }
-        } else if (event == nb_t::NEW_NB_BIDI) {
+        if (event == nb_t::NEW_NB_BIDI) {
             if (!is_gateway()) {
                 uint16 id1, id2;
                 id1 = os().id();
@@ -228,12 +232,13 @@ private:
 
     bool is_gateway() {
         switch (os().id()) {
-            case 0x6699:
-            case 0x0498:
-            case 0x1b7f:
-            case 0x1ccd:
-            case 0xc7a:
+            case 0x6699: //2.3
+            case 0x0498: //2.1
+            case 0x1b7f: //3.3
+            case 0x1ccd: //0.1
+            case 0xc7a: //0.2
             case 0x99ad: //3,1
+            case 0x8978: //1.1
                 return true;
             default:
                 return false;
@@ -313,6 +318,8 @@ void
 iSenseCollectorApplication::
 boot(void) {
 
+    os().debug("ON");
+
 #ifdef EM
     em_ = new isense::EnvironmentModule(os());
 #endif
@@ -324,20 +331,23 @@ boot(void) {
 
 #ifdef BM
 
-    // create SolarModule instance
-    sm_ = new SolarModule(os());
+    if (os().id() == 0xddba) {
+
+        // create SolarModule instance
+        sm_ = new SolarModule(os());
 
 
-    // if allocation of SolarModule was successful
-    if (sm_ != NULL) {
-        // read out the battery state
-        BatteryState bs = sm_->battery_state();
-        // estimate battery charge from the battery voltage
-        uint32 charge = sm_->estimate_charge(bs.voltage);
-        // set the estimated battery charge
-        sm_->set_battery_charge(charge);
-        // output voltage and estimated charge
-        //os().debug("Set estimated charge of %d uAh, voltage is %d mV", charge, bs.voltage);
+        // if allocation of SolarModule was successful
+        if (sm_ != NULL) {
+            // read out the battery state
+            BatteryState bs = sm_->battery_state();
+            // estimate battery charge from the battery voltage
+            uint32 charge = sm_->estimate_charge(bs.voltage);
+            // set the estimated battery charge
+            sm_->set_battery_charge(charge);
+            // output voltage and estimated charge
+            //os().debug("Set estimated charge of %d uAh, voltage is %d mV", charge, bs.voltage);
+        }
     }
 #endif
     // if allocation of EnvironmentModule was successful
@@ -371,20 +381,22 @@ boot(void) {
 
 
 
-    //    if (is_gateway()) {
+
     os().dispatcher().add_receiver(this);
-    //    }
+
     os().allow_sleep(false);
     // register task to be called in a minute for periodic sensor readings
     os().add_task_in(Time(10, 0), this, (void*) TASK_READ_SENSORS);
-
+    if (is_gateway()) {
+        // register task to be called in a minute for periodic sensor readings
+        os().add_task_in(Time(1, 0), this, (void*) TASK_BROADCAST_GATEWAY);
+    }
 
     gateway_id = 0xffff;
-    nb_.init(radio_, clock_, timer_, debug_, 4000, 50000, 220, 255);
+    nb_.init(radio_, clock_, timer_, debug_, 4000, 50000, 240, 255);
     nb_.enable();
 
-    nb_. reg_event_callback<iSenseCollectorApplication, &iSenseCollectorApplication::ND_callback > ((uint8) 2, nb_t::NEW_PAYLOAD | nb_t::NEW_NB_BIDI | nb_t::LOST_NB_BIDI | nb_t::DROPPED_NB, this);
-    nb_.register_payload_space((uint8) 2);
+    nb_. reg_event_callback<iSenseCollectorApplication, &iSenseCollectorApplication::ND_callback > ((uint8) 2, nb_t::LOST_NB_BIDI | nb_t::DROPPED_NB, this);
 
     uint8 buf;
     if (is_gateway()) {
@@ -428,24 +440,14 @@ wake_up(bool memory_held) {
 void
 iSenseCollectorApplication::
 execute(void* userdata) {
-    if ((os().id() == 0x1ccd) && (!lights_on)) {
-        uint8 mess[6];
-        mess[0] = 0x7f;
-        mess[1] = 0x69;
-        mess[2] = 112;
-        mess[3] = 1;
-        mess[4] = 0xff;
-        mess[5] = 0;
-        //os().radio().send(0x494,6,mess,0,0);
-    } else {
-        lights_on = false;
-    }
+
 #ifdef USE_LED
     cm_->led_on();
 #endif
-    //	os().debug("Channel %d",channel);
-    if (os().id() == 0xddba) {
+
+
 #ifdef BM
+    if (os().id() == 0xddba) {
         if ((uint32) userdata == TASK_WAKE) {
             os().add_task_in(60000, this, (void*) TASK_WAKE);
 
@@ -470,9 +472,9 @@ execute(void* userdata) {
                 duty_cycle_ = 300; // 30%
             } else
                 if (bs.capacity < 5000000) {
-                duty_cycle_ = 500; // 50%
+                duty_cycle_ = 650; // 50% 500
             } else {
-                duty_cycle_ = 880; // 88%
+                duty_cycle_ = 950; // 88% 880
             }
             // add task to allow sleeping again
             os().add_task_in(duty_cycle_ * 60, this, (void*) TASK_SLEEP);
@@ -482,20 +484,15 @@ execute(void* userdata) {
             // allow sleeping again
             os().allow_sleep(true);
         }
+    }
 #endif
 
-    } else {
-        // register as a task to wake up again in 1 minutes
-        if (os().id() != 0x1ccd) {
-            os().add_task_in(Time(180, 0), this, (void*) TASK_READ_SENSORS);
-        } else {
-            os().add_task_in(Time(30, 0), this, (void*) TASK_READ_SENSORS);
-        }
-        //if (channel==27){channel=11;}
-    }
 
     // Get the Temperature and Luminance from sensors and debug them
     if ((uint32) userdata == TASK_READ_SENSORS) {
+        if (os().id() != 0xddba) {
+            os().add_task_in(Time(180, 0), this, (void*) TASK_READ_SENSORS);
+        }
 
         if (!is_gateway()) {
 #ifdef EM
@@ -505,7 +502,7 @@ execute(void* userdata) {
                 collectorMsg_t mess;
                 mess.set_collector_type_id(collectorMsg_t::TEMPERATURE);
                 mess.set_temperature(&temp);
-                //os().debug("Contains temp %d - %d", mess.temperature(), temp);
+//                os().debug("Contains temp %x ", mygateway_);
                 os().radio().send(mygateway_, mess.buffer_size(), (uint8*) & mess, 0, 0);
             }
             if (light_sensor_) {
@@ -530,6 +527,10 @@ execute(void* userdata) {
             }
 #endif
         }
+    } else if ((uint32) userdata == TASK_BROADCAST_GATEWAY) {        
+        broadcastMsg_t msg;
+        os().radio().send(0xffff, msg.length(), (uint8*) & msg, 0, 0);
+        os().add_task_in(Time(20, 0), this, (void*) TASK_READ_SENSORS);
     }
 #ifdef USE_LED
     //    cm_->led_off();
@@ -541,10 +542,21 @@ execute(void* userdata) {
 void
 iSenseCollectorApplication::
 receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RADIO_ADDR_TYPE dest_addr, uint16 signal_strength, uint16 signal_quality, uint8 seq_no, uint8 interface, Time rx_time) {
-
-
+    
     //USED for the XBEE inside offices
     if (!is_gateway()) {
+
+        if ((len == 10) && (buf[0] == 0)) {
+            bool sGmsg = true;
+            for (int i = 1; i < 10; i++) {
+                sGmsg = sGmsg && (buf[i] == i);
+            }
+            if (sGmsg) {
+                mygateway_ = src_addr;
+            }
+        }
+
+
         bool doreturn = true;
         if ((os().id() == 0x585) && (src_addr == 0x42f)) doreturn = false;
 
@@ -638,7 +650,7 @@ receive(uint8 len, const uint8 * buf, ISENSE_RADIO_ADDR_TYPE src_addr, ISENSE_RA
         } else if (mess->collector_type_id() == collectorMsg_t::CHAIR) {
             os().debug("id::%x CS %d ", src_addr, mess->get_uint8());
         } else {
-            os().debug("unknown payload with id %d", mess->collector_type_id());
+//            os().debug("unknown payload with id %d", mess->collector_type_id());
             debug_payload(buf, len, src_addr);
         }
     }
