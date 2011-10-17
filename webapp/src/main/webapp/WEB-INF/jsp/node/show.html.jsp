@@ -43,27 +43,27 @@
                                 value="${thisCap.name}"/></a></li>
                 </c:forEach>
             </ul>
+            <span> Readings count : <c:out value="${fn:length(node.readings)}"/> </span>
         </td>
-        <td>Readings count : <c:out value="${fn:length(node.readings)}"/></td>
     </tr>
     <tr>
         <td>GeoRSS Feed</td>
         <td>
             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">GeoRSS
-                feed</a></td>
-        <td>
+                feed</a>
             <a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">View
-                On Google Maps</a></td>
+                On Google Maps</a>
+        </td>
     </tr>
     <tr>
         <td>KML Feed</td>
         <td>
             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">KML
-                feed</a></td>
-        <td>
+                feed</a>
             <a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">View
-                On Google Maps</a></td>
-        <td><p style="color : red">not implemented yet</p></td>
+                On Google Maps</a>
+            <span style="color : red">not implemented yet</span>
+        </td>
     </tr>
     </tbody>
 </table>

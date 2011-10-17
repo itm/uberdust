@@ -17,6 +17,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="validationQuery" value="select 1"/>
     </bean>
 
+
     <!-- Session Factory setup with hbm mappings in place -->
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
@@ -39,14 +40,22 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="current_session_context_class">thread</prop>
                 <prop key="hibernate.connection.useUnicode">true</prop>
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
-                <prop key="cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
                 <prop key="log4j.logger.net.sf.hibernate">warn</prop>
                 <prop key="show_sql">false</prop>
                 <prop key="format_sql">false</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.jdbc.batch_size">0</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">
+                    net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory
+                </prop>
             </props>
         </property>
+    </bean>
+
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
     </bean>
 
     <!-- injecting a hibernate interceptor to session factory -->

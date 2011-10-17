@@ -72,34 +72,38 @@
         <td>Testbed GeoRSS feed</td>
         <td>
             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/georss">GeoRSS
-                feed</a></td>
-        <td>
-            <a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/georss">View
-                On Google Maps</a></td>
+                feed</a>
+            (<a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/georss">View
+                On Google Maps</a>)
+        </td>
     </tr>
     <tr>
         <td>Testbed KML feed</td>
         <td>
             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/kml">KML
-                feed</a></td>
-        <td>
-            <a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/kml">View
-                On Google Maps</a></td>
-        <td><p style="color : red">not implemented yet</p></td>
+                feed</a>
+            (<a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/kml">View
+                On Google Maps</a>)
+            <span style="color : red">not implemented yet</span>
+        </td>
+
     </tr>
     <tr>
         <td>Testbed WiseML</td>
         <td>
             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/wiseml">WiseML</a>
+            <span style="color : red">not implemented yet</span>
         </td>
-        <td><p style="color : red">not implemented yet</p></td>
     </tr>
     </tbody>
 </table>
-<table>
+
+<table style="margin-top: 50px">
     <tr>
         <td style="vertical-align:top">
-            <p><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node">Nodes</a></p>
+            <p>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node">Nodes</a>
+            </p>
             <c:choose>
                 <c:when test="${nodes == null || fn:length(nodes) == 0}">
                     <p style="color : red">No nodes found for testbed <c:out value="${testbed.name}"/>}</p>
@@ -121,7 +125,9 @@
             </c:choose>
         </td>
         <td style="vertical-align:top">
-            <p><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link">Links</a></p>
+            <p>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link">Links</a>
+            </p>
             <c:choose>
                 <c:when test="${links == null || fn:length(links) == 0 }">
                     <p style="color : red">No links found for <c:out value="${testbed.name}"/></p>
@@ -141,7 +147,9 @@
             </c:choose>
         </td>
         <td style="vertical-align:top">
-            <p><a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability">Capabilities</a></p>
+            <p>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability">Capabilities</a>
+            </p>
             <c:choose>
                 <c:when test="${capabilities == null || fn:length(capabilities) == 0 }">
                     <p style="color : red">No capabilities found for <c:out value="${testbed.name}"/></p>
