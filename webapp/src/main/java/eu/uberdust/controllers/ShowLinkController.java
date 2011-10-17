@@ -4,6 +4,7 @@ import eu.uberdust.commands.LinkCommand;
 import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -22,8 +23,9 @@ import java.util.Map;
 public class ShowLinkController extends AbstractRestController {
 
     private LinkController linkManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
     private TestbedController testbedManager;
+    private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
+
 
     public void setLinkManager(LinkController linkManager) {
         this.linkManager = linkManager;
@@ -62,6 +64,9 @@ public class ShowLinkController extends AbstractRestController {
         Link link = null;
         Link linkInv = null;
         List<Link> links = new ArrayList<Link>();
+        Map<Link, Long> totalCounts = new HashMap<Link, Long>();
+        Map<Link, Map<Capability, Long>> countsPerCapability = new HashMap<Link, Map<Capability, Long>>();
+
 
         // Retrieve the link and it's inverse
         if (command.getSourceId() != null && command.getTargetId() != null) {
@@ -76,14 +81,32 @@ public class ShowLinkController extends AbstractRestController {
         }
 
         // if at least link or linkInv was found
-        if (link != null) links.add(link);
-        if (linkInv != null) links.add(linkInv);
+        if (link != null) {
+            links.add(link);
+            totalCounts.put(link, linkManager.getReadingsCount(link));
+            Map<Capability, Long> linkReadingCountPerCapability = new HashMap<Capability, Long>();
+            for (Capability capability : link.getCapabilities()) {
+                linkReadingCountPerCapability.put(capability, linkManager.getReadingsCount(link, capability));
+            }
+            countsPerCapability.put(link, linkReadingCountPerCapability);
+        }
+        if (linkInv != null) {
+            links.add(linkInv);
+            totalCounts.put(linkInv, linkManager.getReadingsCount(linkInv));
+            Map<Capability, Long> invLinkReadingCountPerCapability = new HashMap<Capability, Long>();
+            for (Capability capability : linkInv.getCapabilities()) {
+                invLinkReadingCountPerCapability.put(capability, linkManager.getReadingsCount(linkInv, capability));
+            }
+            countsPerCapability.put(linkInv, invLinkReadingCountPerCapability);
+        }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("testbed", testbed);
         refData.put("links", links);
+        refData.put("totalCounts", totalCounts);
+        refData.put("countsPerCapability", countsPerCapability);
         return new ModelAndView("link/show.html", refData);
     }
 

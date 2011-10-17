@@ -4,6 +4,7 @@ import eu.uberdust.commands.NodeCommand;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -15,13 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShowNodeController extends AbstractRestController {
 
     private NodeController nodeManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowNodeController.class);
     private TestbedController testbedManager;
+    private static final Logger LOGGER = Logger.getLogger(ShowNodeController.class);
+
 
     public ShowNodeController() {
         super();
@@ -68,12 +71,23 @@ public class ShowNodeController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + command.getNodeId() + "]."));
         }
 
+        // count all node readings
+        Long readingsCount = nodeManager.getReadingsCount(node);
+
+        // count node readings per capability
+        final Map<Capability,Long> readingCountsPerCapability = new HashMap<Capability, Long>();
+        for(Capability capability:node.getCapabilities()){
+            readingCountsPerCapability.put(capability,nodeManager.getReadingsCount(node,capability));
+        }
+
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
         refData.put("testbed", testbed);
         refData.put("node", node);
+        refData.put("readingsCount",readingsCount);
+        refData.put("readingCountsPerCapability",readingCountsPerCapability);
         return new ModelAndView("node/show.html", refData);
     }
 

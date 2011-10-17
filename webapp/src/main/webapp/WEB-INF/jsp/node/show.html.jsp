@@ -7,6 +7,8 @@
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
+<jsp:useBean id="readingsCount" scope="request" class="java.lang.Long"/>
+<jsp:useBean id="readingCountsPerCapability" scope="request" class="java.util.HashMap"/>
 
 <html>
 <head>
@@ -40,10 +42,10 @@
                 <c:forEach items="${node.capabilities}" var="thisCap">
                     <li>
                         <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${thisCap.name}"><c:out
-                                value="${thisCap.name}"/></a></li>
+                                value="${thisCap.name}"/></a>(<c:out value="${readingCountsPerCapability[thisCap]}"/>)</li>
                 </c:forEach>
             </ul>
-            <span> Readings count : <c:out value="${fn:length(node.readings)}"/> </span>
+            <span>Total Readings count : <c:out value="${readingsCount}"/> </span>
         </td>
     </tr>
     <tr>

@@ -7,6 +7,8 @@
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="totalCounts" scope="request" class="java.util.HashMap"/>
+<jsp:useBean id="countsPerCapability" scope="request" class="java.util.HashMap"/>
 
 <html>
 <head>
@@ -49,14 +51,19 @@
                         value="${link.target}"/></a>
             </td>
         </tr>
-        <tr>
-            <td>Capabilities count</td>
-            <td><c:out value="${fn:length(link.capabilities)}"/></td>
-        </tr>
-        <tr>
-            <td>Readings count</td>
-            <td><c:out value="${fn:length(link.readings)}"/></td>
-        </tr>
+<tr>
+        <td>Capabilities(<c:out value="${fn:length(link.capabilities)}"/>)</td>
+        <td>
+            <ul>
+                <c:forEach items="${link.capabilities}" var="thisCap">
+                    <li>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${thisCap.name}"><c:out
+                                value="${thisCap.name}"/></a>(<c:out value="${(countsPerCapability[link])[thisCap]}"/>)</li>
+                </c:forEach>
+            </ul>
+            <span>Total Readings count : <c:out value="${totalCounts[link]}"/> </span>
+        </td>
+    </tr>
     </c:forEach>
     </tbody>
 </table>
