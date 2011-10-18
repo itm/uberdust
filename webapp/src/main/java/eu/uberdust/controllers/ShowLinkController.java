@@ -2,6 +2,7 @@ package eu.uberdust.controllers;
 
 import eu.uberdust.commands.LinkCommand;
 import eu.wisebed.wisedb.controller.LinkController;
+import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
@@ -24,6 +25,8 @@ public class ShowLinkController extends AbstractRestController {
 
     private LinkController linkManager;
     private TestbedController testbedManager;
+    private LinkReadingController linkReadingManager;
+
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 
 
@@ -33,6 +36,10 @@ public class ShowLinkController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setLinkReadingManager(LinkReadingController linkReadingManager) {
+        this.linkReadingManager = linkReadingManager;
     }
 
     @Override
@@ -83,19 +90,19 @@ public class ShowLinkController extends AbstractRestController {
         // if at least link or linkInv was found
         if (link != null) {
             links.add(link);
-            totalCounts.put(link, linkManager.getReadingsCount(link));
+            totalCounts.put(link, linkReadingManager.getReadingsCount(link));
             Map<Capability, Long> linkReadingCountPerCapability = new HashMap<Capability, Long>();
             for (Capability capability : link.getCapabilities()) {
-                linkReadingCountPerCapability.put(capability, linkManager.getReadingsCount(link, capability));
+                linkReadingCountPerCapability.put(capability, linkReadingManager.getReadingsCount(link, capability));
             }
             countsPerCapability.put(link, linkReadingCountPerCapability);
         }
         if (linkInv != null) {
             links.add(linkInv);
-            totalCounts.put(linkInv, linkManager.getReadingsCount(linkInv));
+            totalCounts.put(linkInv, linkReadingManager.getReadingsCount(linkInv));
             Map<Capability, Long> invLinkReadingCountPerCapability = new HashMap<Capability, Long>();
             for (Capability capability : linkInv.getCapabilities()) {
-                invLinkReadingCountPerCapability.put(capability, linkManager.getReadingsCount(linkInv, capability));
+                invLinkReadingCountPerCapability.put(capability, linkReadingManager.getReadingsCount(linkInv, capability));
             }
             countsPerCapability.put(linkInv, invLinkReadingCountPerCapability);
         }

@@ -170,6 +170,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="commandClass" value="eu.uberdust.commands.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager" />
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -222,6 +223,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="commandClass" value="eu.uberdust.commands.LinkCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="linkManager" ref="linkManager"/>
+        <property name="linkReadingManager" ref="linkReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/link/{sourceId}/{targetId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">

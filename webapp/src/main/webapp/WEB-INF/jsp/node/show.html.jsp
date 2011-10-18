@@ -36,13 +36,13 @@
         <td><c:out value="${node.description}"/></td>
     </tr>
     <tr>
-        <td>Capabilities(<c:out value="${fn:length(node.capabilities)}"/>)</td>
+        <td>Capabilities(<c:out value="${fn:length(readingCountsPerCapability)}"/>)</td>
         <td>
             <ul>
-                <c:forEach items="${node.capabilities}" var="thisCap">
+                <c:forEach items="${readingCountsPerCapability}" var="thisCap">
                     <li>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${thisCap.name}"><c:out
-                                value="${thisCap.name}"/></a>(<c:out value="${readingCountsPerCapability[thisCap]}"/>)</li>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${thisCap.key.name}"><c:out
+                                value="${thisCap.key.name}"/></a>(<c:out value="${thisCap.value}"/>)</li>
                 </c:forEach>
             </ul>
             <span>Total Readings count : <c:out value="${readingsCount}"/> </span>

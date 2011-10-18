@@ -2,6 +2,7 @@ package eu.uberdust.controllers;
 
 import eu.uberdust.commands.NodeCommand;
 import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
@@ -23,6 +24,7 @@ public class ShowNodeController extends AbstractRestController {
 
     private NodeController nodeManager;
     private TestbedController testbedManager;
+    private NodeReadingController nodeReadingManager;
     private static final Logger LOGGER = Logger.getLogger(ShowNodeController.class);
 
 
@@ -39,6 +41,10 @@ public class ShowNodeController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public void setNodeReadingManager(NodeReadingController nodeReadingManager){
+        this.nodeReadingManager = nodeReadingManager;
     }
 
     @Override
@@ -72,13 +78,10 @@ public class ShowNodeController extends AbstractRestController {
         }
 
         // count all node readings
-        Long readingsCount = nodeManager.getReadingsCount(node);
+        Long readingsCount = nodeReadingManager.getReadingsCount(node);
 
         // count node readings per capability
-        final Map<Capability,Long> readingCountsPerCapability = new HashMap<Capability, Long>();
-        for(Capability capability:node.getCapabilities()){
-            readingCountsPerCapability.put(capability,nodeManager.getReadingsCount(node,capability));
-        }
+        final Map<Capability,Long> readingCountsPerCapability = nodeReadingManager.getReadingsCountPerCapability(node);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
