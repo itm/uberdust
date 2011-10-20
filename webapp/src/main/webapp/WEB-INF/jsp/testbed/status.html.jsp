@@ -47,7 +47,6 @@
                         <td style="color :red">${stat.latestTimestamp}</td>
                     </c:otherwise>
                 </c:choose>
-                <td>${stat.latestTimestamp}</td>
                 <td>${stat.maxReading}</td>
                 <td>${stat.minReading}</td>
                 <td>${stat.totalCount}</td>
