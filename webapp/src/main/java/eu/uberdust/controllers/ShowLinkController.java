@@ -91,20 +91,12 @@ public class ShowLinkController extends AbstractRestController {
         if (link != null) {
             links.add(link);
             totalCounts.put(link, linkReadingManager.getReadingsCount(link));
-            Map<Capability, Long> linkReadingCountPerCapability = new HashMap<Capability, Long>();
-            for (Capability capability : link.getCapabilities()) {
-                linkReadingCountPerCapability.put(capability, linkReadingManager.getReadingsCount(link, capability));
-            }
-            countsPerCapability.put(link, linkReadingCountPerCapability);
+            countsPerCapability.put(link,  linkReadingManager.getReadingsCountPerCapability(link));
         }
         if (linkInv != null) {
             links.add(linkInv);
             totalCounts.put(linkInv, linkReadingManager.getReadingsCount(linkInv));
-            Map<Capability, Long> invLinkReadingCountPerCapability = new HashMap<Capability, Long>();
-            for (Capability capability : linkInv.getCapabilities()) {
-                invLinkReadingCountPerCapability.put(capability, linkReadingManager.getReadingsCount(linkInv, capability));
-            }
-            countsPerCapability.put(linkInv, invLinkReadingCountPerCapability);
+            countsPerCapability.put(linkInv,  linkReadingManager.getReadingsCountPerCapability(linkInv));
         }
 
         // Prepare data to pass to jsp

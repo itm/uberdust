@@ -51,19 +51,20 @@
                         value="${link.target}"/></a>
             </td>
         </tr>
-<tr>
-        <td>Capabilities(<c:out value="${fn:length(link.capabilities)}"/>)</td>
-        <td>
-            <ul>
-                <c:forEach items="${link.capabilities}" var="thisCap">
-                    <li>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${thisCap.name}"><c:out
-                                value="${thisCap.name}"/></a>(<c:out value="${(countsPerCapability[link])[thisCap]}"/>)</li>
-                </c:forEach>
-            </ul>
-            <span>Total Readings count : <c:out value="${totalCounts[link]}"/> </span>
-        </td>
-    </tr>
+        <tr>
+            <td>Capabilities(<c:out value="${fn:length(countsPerCapability[link])}"/>)</td>
+            <td>
+                <ul>
+                    <c:forEach items="${countsPerCapability[link]}" var="thisCap">
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${thisCap.key.name}"><c:out
+                                    value="${thisCap.key.name}"/></a>(<c:out value="${thisCap.value}"/>)
+                        </li>
+                    </c:forEach>
+                </ul>
+                <span>Total Readings count : <c:out value="${totalCounts[link]}"/> </span>
+            </td>
+        </tr>
     </c:forEach>
     </tbody>
 </table>

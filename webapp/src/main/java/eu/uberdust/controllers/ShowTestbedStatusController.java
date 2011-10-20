@@ -4,6 +4,7 @@ import eu.uberdust.commands.TestbedCommand;
 import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.LinkReadingStat;
 import eu.wisebed.wisedb.model.NodeReadingStat;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
@@ -71,14 +72,23 @@ public class ShowTestbedStatusController extends AbstractRestController {
         }
 
         // get a list of node statistics from testbed
+        long before = System.currentTimeMillis();
         List<NodeReadingStat> nodeStats = nodeReadingManager.getLatestNodeReadingUpdates(testbed);
-        //List<LinkReadingStat> linkStats = linkReadingManager.getLatestLinkReadingUpdates(testbed);
+        long after = System.currentTimeMillis();
+        LOGGER.info("nodeReadingManager.getLatestNodeReadingUpdates(testbed) took " + (after-before) + " millis");
+
+        // get a list of link statistics from testbed
+        before = System.currentTimeMillis();
+        List<LinkReadingStat> linkStats = linkReadingManager.getLatestLinkReadingUpdates(testbed);
+        after = System.currentTimeMillis();
+        LOGGER.info("linkReadingManager.getLatestLinkReadingUpdates(testbed) took " + (after-before) + " millis");
+
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
         refData.put("testbed", testbed);
         refData.put("nodestats", nodeStats);
-        refData.put("linkstats", null);
+        refData.put("linkstats", linkStats);
 
         return new ModelAndView("testbed/status.html", refData);
     }
