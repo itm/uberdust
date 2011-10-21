@@ -5,6 +5,8 @@ import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
+import eu.wisebed.wiseml.model.setup.Link;
+import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShowCapabilityController extends AbstractRestController {
@@ -61,11 +64,20 @@ public class ShowCapabilityController extends AbstractRestController {
         // look up capability
         Capability capability = capabilityManager.getByID(command.getCapabilityName());
 
+        // look up nodes in testbed that have this capability
+        List<Node> nodes = capabilityManager.listCapabilityNodes(capability,testbed);
+
+        // look up links in testbed that have this capability
+        List<Link> links = capabilityManager.listCapabilityLinks(capability,testbed);
+
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("testbed", testbed);
         refData.put("capability", capability);
+        refData.put("nodes",nodes);
+        refData.put("links",links);
+
         return new ModelAndView("capability/show.html", refData);
     }
 }

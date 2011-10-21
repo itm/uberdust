@@ -55,10 +55,10 @@
             <td>Capabilities(<c:out value="${fn:length(countsPerCapability[link])}"/>)</td>
             <td>
                 <ul>
-                    <c:forEach items="${countsPerCapability[link]}" var="thisCap">
+                    <c:forEach items="${countsPerCapability[link]}" var="capability">
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${thisCap.key.name}"><c:out
-                                    value="${thisCap.key.name}"/></a>(<c:out value="${thisCap.value}"/>)
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${capability.key.name}"><c:out
+                                    value="${capability.key.name}"/></a>(<c:out value="${capability.value}"/>)
                         </li>
                     </c:forEach>
                 </ul>

@@ -39,10 +39,10 @@
         <td>Capabilities(<c:out value="${fn:length(readingCountsPerCapability)}"/>)</td>
         <td>
             <ul>
-                <c:forEach items="${readingCountsPerCapability}" var="thisCap">
+                <c:forEach items="${readingCountsPerCapability}" var="capability">
                     <li>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${thisCap.key.name}"><c:out
-                                value="${thisCap.key.name}"/></a>(<c:out value="${thisCap.value}"/>)</li>
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.key.name}"><c:out
+                                value="${capability.key.name}"/></a>(<c:out value="${capability.value}"/>)</li>
                 </c:forEach>
             </ul>
             <span>Total Readings count : <c:out value="${readingsCount}"/> </span>

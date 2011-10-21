@@ -7,6 +7,8 @@
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
+<jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -21,39 +23,46 @@
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}">capabilities</a>
 </p>
-<c:choose>
-    <c:when test="${capability != null}">
-        <table>
-            <tbody>
-            <tr>
-                <td>Capability name</td>
-                <td>
-                    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
-                            value="${capability.name}"/></a>
-                </td>
-            </tr>
-            <tr>
-                <td>Number of nodes having this capability</td>
-                <td><c:out value="${fn:length(capability.nodes)}"/></td>
-            </tr>
-            <tr>
-                <td>Number of node Readings having this capability</td>
-                <td><c:out value="${fn:length(capability.nodeReadings)}"/></td>
-            </tr>
-            <tr>
-                <td>Number of links having this capability</td>
-                <td><c:out value="${fn:length(capability.links)}"/></td>
-            </tr>
-            <tr>
-                <td>Number of link Readings having this capability</td>
-                <td><c:out value="${fn:length(capability.linkReadings)}"/></td>
-            </tr>
-            </tbody>
-        </table>
-    </c:when>
-    <c:otherwise>
-        <p>Cannot show capability</p>
-    </c:otherwise>
-</c:choose>
+<table>
+    <tbody>
+    <tr>
+        <td>Capability ID</td>
+        <td>
+            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                    value="${capability.name}"/></a>
+        </td>
+    </tr>
+    <c:if test="${fn:length(nodes) != 0}">
+        <tr>
+            <td>Nodes(<c:out value="${fn:length(nodes)}"/>)</td>
+            <td>
+                <ul>
+                    <c:forEach items="${nodes}" var="node">
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}"><c:out
+                                    value="${node.id}"/></a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </td>
+        </tr>
+    </c:if>
+    <c:if test="${fn:length(links) != 0}">
+        <tr>
+            <td>Links(<c:out value="${fn:length(links)}"/>)</td>
+            <td>
+                <ul>
+                    <c:forEach items="${links}" var="link">
+                        <li>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${capability.name}"><c:out
+                                    value="[${link.source},${link.target}]"/></a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </td>
+        </tr>
+    </c:if>
+    </tbody>
+</table>
 </body>
 </html>
