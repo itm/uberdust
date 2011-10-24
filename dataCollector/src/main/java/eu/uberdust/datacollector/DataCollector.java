@@ -94,6 +94,14 @@ public class DataCollector {
             }
         }
 
+        @Override
+        public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+            super.channelDisconnected(ctx, e);    //To change body of overridden methods use File | Settings | File Templates.
+            log.info("channelDisconnected");
+            System.exit(1);
+        }
+
+
         private void parse(String toString) {
             (new Thread(new MessageParser(toString, sensors))).start();
         }
@@ -119,11 +127,11 @@ public class DataCollector {
         }
     };
 
+
     //used to connect to testbedruntime
     public void start() {
+        NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
-        NioClientSocketChannelFactory factory =
-                new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
         bootstrap = new ClientBootstrap(factory);
 
         // Configure the event pipeline factory.
