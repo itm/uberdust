@@ -5,6 +5,9 @@ msp430:
 	@make -f Makefile.msp430
 	@echo "----- Done  ------"
 
+push:
+        scp  bin/msp430/TelosBCollectorApp.ihex testbedruntime@gold.cti.gr:/home/testbedruntime/dataCollector/
+
 clean: clean-msp430
 	
 clean-msp430:
