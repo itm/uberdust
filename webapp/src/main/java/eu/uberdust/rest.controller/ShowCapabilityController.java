@@ -44,8 +44,8 @@ public class ShowCapabilityController extends AbstractRestController {
                                   Object commandObj, BindException e) throws Exception {
         // set command object
         CapabilityCommand command = (CapabilityCommand) commandObj;
-        LOGGER.info("command.getCapabilityName() : " + command.getCapabilityName());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
+        LOGGER.info("command.getCapabilityName() : " + command.getCapabilityName());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -64,19 +64,32 @@ public class ShowCapabilityController extends AbstractRestController {
         // look up capability
         Capability capability = capabilityManager.getByID(command.getCapabilityName());
 
-        // look up nodes in testbed that have this capability
-        List<Node> nodes = capabilityManager.listCapabilityNodes(capability,testbed);
+        // how many readings has this capability
+        Long linkReadingsCount = capabilityManager.getLinkReadingsCount(capability,testbed);
+        Long nodeReadingsCount = capabilityManager.getNodeReadingsCount(capability,testbed);
+        Map<Node, Long> readingCountsPerNode = new HashMap<Node, Long>();
+        Map<Link, Long> readingCountsPerLink = new HashMap<Link, Long>();
 
-        // look up links in testbed that have this capability
-        List<Link> links = capabilityManager.listCapabilityLinks(capability,testbed);
+        // if this capability has no node readings.
+        if (nodeReadingsCount == 0) {
+            // find the reading count of capabilities per link
+            readingCountsPerLink = capabilityManager.getReadingsCountPerLink(capability,testbed);
+        }
+
+        // if this capability has no links.
+        if (linkReadingsCount == 0) {
+            // find the reading count of capabilities per node
+            readingCountsPerNode = capabilityManager.getReadingsCountPerNode(capability,testbed);
+        }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
-
         refData.put("testbed", testbed);
         refData.put("capability", capability);
-        refData.put("nodes",nodes);
-        refData.put("links",links);
+        refData.put("nodeReadingsCount", nodeReadingsCount);
+        refData.put("linkReadingsCount", linkReadingsCount);
+        refData.put("readingCountsPerNode", readingCountsPerNode);
+        refData.put("readingCountsPerLink", readingCountsPerLink);
 
         return new ModelAndView("capability/show.html", refData);
     }

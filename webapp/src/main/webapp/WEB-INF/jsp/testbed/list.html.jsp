@@ -21,8 +21,7 @@
         <table>
             <tbody>
             <tr>
-                <td>Available Testbeds</td>
-                <td><c:out value="${fn:length(testbeds)}"/></td>
+                <td>Available Testbeds : (<c:out value="${fn:length(testbeds)}"/>)</td>
             </tr>
             </tbody>
         </table>
