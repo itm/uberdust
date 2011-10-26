@@ -2,6 +2,8 @@ package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.CapabilityCommand;
 import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.LinkReadingController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
@@ -21,8 +23,11 @@ import java.util.Map;
 public class ShowCapabilityController extends AbstractRestController {
 
     private static final Logger LOGGER = Logger.getLogger(ShowCapabilityController.class);
-    private CapabilityController capabilityManager;
     private TestbedController testbedManager;
+    private CapabilityController capabilityManager;
+    private NodeReadingController nodeReadingManager;
+    private LinkReadingController linkReadingManager;
+
 
     public ShowCapabilityController() {
         super();
@@ -37,6 +42,22 @@ public class ShowCapabilityController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    public NodeReadingController getNodeReadingManager() {
+        return nodeReadingManager;
+    }
+
+    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
+    public LinkReadingController getLinkReadingManager() {
+        return linkReadingManager;
+    }
+
+    public void setLinkReadingManager(LinkReadingController linkReadingManager) {
+        this.linkReadingManager = linkReadingManager;
     }
 
     @Override
@@ -65,21 +86,21 @@ public class ShowCapabilityController extends AbstractRestController {
         Capability capability = capabilityManager.getByID(command.getCapabilityName());
 
         // how many readings has this capability
-        Long linkReadingsCount = capabilityManager.getLinkReadingsCount(capability,testbed);
-        Long nodeReadingsCount = capabilityManager.getNodeReadingsCount(capability,testbed);
+        Long nodeReadingsCount = nodeReadingManager.getNodeCapabilityReadingsCount(capability, testbed);
+        Long linkReadingsCount = linkReadingManager.getLinkCapabilityReadingsCount(capability, testbed);
         Map<Node, Long> readingCountsPerNode = new HashMap<Node, Long>();
         Map<Link, Long> readingCountsPerLink = new HashMap<Link, Long>();
 
         // if this capability has no node readings.
         if (nodeReadingsCount == 0) {
             // find the reading count of capabilities per link
-            readingCountsPerLink = capabilityManager.getReadingsCountPerLink(capability,testbed);
+            readingCountsPerLink = linkReadingManager.getLinkCapabilityReadingsCountPerLink(capability, testbed);
         }
 
         // if this capability has no links.
         if (linkReadingsCount == 0) {
             // find the reading count of capabilities per node
-            readingCountsPerNode = capabilityManager.getReadingsCountPerNode(capability,testbed);
+            readingCountsPerNode = nodeReadingManager.getNodeCapabilityReadingsCountPerNode(capability, testbed);
         }
 
         // Prepare data to pass to jsp

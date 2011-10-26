@@ -42,7 +42,7 @@ public class ShowNodeController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setNodeReadingManager(NodeReadingController nodeReadingManager){
+    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
         this.nodeReadingManager = nodeReadingManager;
     }
 
@@ -80,7 +80,8 @@ public class ShowNodeController extends AbstractRestController {
         Long readingsCount = nodeReadingManager.getReadingsCount(node);
 
         // count node readings per capability
-        final Map<Capability,Long> readingCountsPerCapability = nodeReadingManager.getReadingsCountPerCapability(node);
+        final Map<Capability, Long> readingCountsPerCapability =
+                nodeReadingManager.getNodeCapabilityReadingsCountPerCapability(node);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -88,8 +89,8 @@ public class ShowNodeController extends AbstractRestController {
         // else put thisNode instance in refData and return index view
         refData.put("testbed", testbed);
         refData.put("node", node);
-        refData.put("readingsCount",readingsCount);
-        refData.put("readingCountsPerCapability",readingCountsPerCapability);
+        refData.put("readingsCount", readingsCount);
+        refData.put("readingCountsPerCapability", readingCountsPerCapability);
         return new ModelAndView("node/show.html", refData);
     }
 
