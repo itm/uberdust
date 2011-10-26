@@ -18,7 +18,7 @@ public class LastReadingTask extends TimerTask {
 
     private final static Logger LOGGER = Logger.getLogger(LastReadingTask.class);
 
-    public static final int DELAY = 1000;
+    public static final int DELAY = 500;
 
     final Timer timer;
 
