@@ -30,6 +30,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <value>eu/wisebed/wisedb/model/NodeReading.hbm.xml</value>
                 <value>eu/wisebed/wisedb/model/Setup.hbm.xml</value>
                 <value>eu/wisebed/wisedb/model/Testbed.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/LastNodeReading.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/LastLinkReading.hbm.xml</value>
             </list>
         </property>
         <!-- Also set of hibernate properties -->
@@ -52,7 +54,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     </bean>
 
     <!--<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">-->
-        <!--<property name="configLocation" value="classpath:ehcache.xml"/>-->
+    <!--<property name="configLocation" value="classpath:ehcache.xml"/>-->
     <!--</bean>-->
 
     <!-- injecting a hibernate interceptor to session factory -->
@@ -151,6 +153,22 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     </bean>
     <bean id="linkReadingManagerTarget"
           class="eu.wisebed.wisedb.controller.LinkReadingController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
+    <bean id="lastNodeReadingManager" parent="proxyTemplate">
+        <property name="target" ref="lastNodeReadingTarget"/>
+    </bean>
+    <bean id="lastNodeReadingTarget"
+          class="eu.wisebed.wisedb.controller.LastNodeReadingController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+
+    <bean id="lastLinkReadingManager" parent="proxyTemplate">
+        <property name="target" ref="lastLinkReadingTarget"/>
+    </bean>
+    <bean id="lastLinkReadingTarget"
+          class="eu.wisebed.wisedb.controller.LastLinkReadingController"
           parent="abstractManager"
           factory-method="getInstance"/>
 

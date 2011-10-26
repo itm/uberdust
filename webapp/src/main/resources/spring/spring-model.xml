@@ -18,5 +18,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <bean id="Testbed" class="eu.wisebed.wisedb.model.Testbed"/>
     <bean id="Origin" class="eu.wisebed.wiseml.model.setup.Origin"/>
     <bean id="TimeInfo" class="eu.wisebed.wiseml.model.setup.TimeInfo"/>
+    <bean id="LastNodeReading" class="eu.wisebed.wisedb.model.LastNodeReading"/>
+    <bean id="LastLinkReading" class="eu.wisebed.wisedb.model.LastLinkReading"/>
 
 </beans>
