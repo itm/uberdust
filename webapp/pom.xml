@@ -13,7 +13,7 @@
 
     <groupId>uberdust</groupId>
     <artifactId>webapp</artifactId>
-    <name>ÜberDust - Web/REST Interface Application</name>
+    <name>UberDust - Web/REST Interface Application</name>
     <version>1.0</version>
     <packaging>war</packaging>
 
@@ -243,7 +243,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <warName>${project.groupId}-${project.build.finalName}</warName>
+                    <warName>${project.groupId}</warName>
                     <webResources>
                         <resource>
                             <directory>${project.basedir}/lib</directory>
@@ -278,7 +278,7 @@
                 <version>1.1</version>
                 <configuration>
                     <server>tomcat6</server>
-                    <warFile>${project.build.directory}/${project.groupId}-${project.build.finalName}.war</warFile>
+                    <warFile>${project.build.directory}/${project.groupId}.war</warFile>
                     <path>/uberdust</path>
                     <url>${gold.tomcat.manager.url}</url>
                 </configuration>
