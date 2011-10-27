@@ -90,13 +90,13 @@ public class ShowLinkController extends AbstractRestController {
         // if at least link or linkInv was found
         if (link != null) {
             links.add(link);
-            totalCounts.put(link, linkReadingManager.getReadingsCount(link));
-            countsPerCapability.put(link,  linkReadingManager.getReadingsCountPerCapability(link));
+            totalCounts.put(link, linkReadingManager.getLinkReadingsCount(link));
+            countsPerCapability.put(link,  linkReadingManager.getLinkReadingsCountMap(link));
         }
         if (linkInv != null) {
             links.add(linkInv);
-            totalCounts.put(linkInv, linkReadingManager.getReadingsCount(linkInv));
-            countsPerCapability.put(linkInv,  linkReadingManager.getReadingsCountPerCapability(linkInv));
+            totalCounts.put(linkInv, linkReadingManager.getLinkReadingsCount(linkInv));
+            countsPerCapability.put(linkInv,  linkReadingManager.getLinkReadingsCountMap(linkInv));
         }
 
         // Prepare data to pass to jsp

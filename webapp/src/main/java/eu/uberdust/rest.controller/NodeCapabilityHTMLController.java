@@ -99,7 +99,7 @@ public class NodeCapabilityHTMLController extends AbstractRestController {
         }
 
         // retrieve readings based on node/capability
-        List<NodeReading> nodeReadings = nodeReadingManager.listReadings(node, capability);
+        List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

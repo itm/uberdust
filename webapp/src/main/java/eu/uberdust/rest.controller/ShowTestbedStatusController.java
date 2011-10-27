@@ -73,13 +73,13 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
         // get a list of node statistics from testbed
         long before = System.currentTimeMillis();
-        List<NodeReadingStat> nodeStats = nodeReadingManager.getLatestNodeReadingUpdates(testbed);
+        List<NodeReadingStat> nodeStats = nodeReadingManager.getNodeReadingStats(testbed);
         long after = System.currentTimeMillis();
         LOGGER.info("nodeReadingManager.getLatestNodeReadingUpdates(testbed) took " + (after-before) + " millis");
 
         // get a list of link statistics from testbed
         before = System.currentTimeMillis();
-        List<LinkReadingStat> linkStats = linkReadingManager.getLatestLinkReadingUpdates(testbed);
+        List<LinkReadingStat> linkStats = linkReadingManager.getLinkReadingStats(testbed);
         after = System.currentTimeMillis();
         LOGGER.info("linkReadingManager.getLatestLinkReadingUpdates(testbed) took " + (after-before) + " millis");
 

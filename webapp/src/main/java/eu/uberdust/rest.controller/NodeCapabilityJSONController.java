@@ -103,7 +103,7 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
         NodeReadingJson nodeReadingInJson = new NodeReadingJson(nodeId, capabilityId, new ArrayList<ReadingJson>());
-        for (NodeReading nodeReading : nodeReadingManager.listReadings(node, capability)) {
+        for (NodeReading nodeReading : nodeReadingManager.listNodeReadings(node, capability)) {
             nodeReadingInJson.getReadings().add(new ReadingJson(nodeReading.getTimestamp().getTime(), nodeReading.getReading()));
         }
 

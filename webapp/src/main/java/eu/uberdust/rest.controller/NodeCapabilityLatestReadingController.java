@@ -1,11 +1,8 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.NodeCapabilityCommand;
-import eu.wisebed.wisedb.controller.CapabilityController;
-import eu.wisebed.wisedb.controller.NodeController;
-import eu.wisebed.wisedb.controller.NodeReadingController;
-import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.model.NodeReadingStat;
+import eu.wisebed.wisedb.controller.*;
+import eu.wisebed.wisedb.model.LastNodeReading;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
@@ -25,7 +22,7 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
     private TestbedController testbedManager;
     private NodeController nodeManager;
     private CapabilityController capabilityManager;
-    private NodeReadingController nodeReadingManager;
+    private LastNodeReadingController lastNodeReadingManager;
 
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityLatestReadingController.class);
 
@@ -35,10 +32,6 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
-    }
-
-    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
-        this.nodeReadingManager = nodeReadingManager;
     }
 
     public void setTestbedManager(TestbedController testbedManager) {
@@ -51,6 +44,10 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
 
     public void setCapabilityManager(CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
+    }
+
+    public void setLastNodeReadingManager(LastNodeReadingController lastNodeReadingManager) {
+        this.lastNodeReadingManager = lastNodeReadingManager;
     }
 
     @Override
@@ -96,11 +93,11 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
         }
 
         // retrieve node/capability statistics
-        NodeReadingStat stat = nodeReadingManager.getLatestNodeReadingUpdate(node, capability);
+        LastNodeReading lnr = lastNodeReadingManager.getByID(node, capability);
 
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());
-        textOutput.write(stat.getLatestTimestamp().getTime() + "\t" + stat.getLatestReading() + "\n");
+        textOutput.write(lnr.getTimestamp()+ "\t" + lnr.getReading() + "\n");
         textOutput.flush();
         textOutput.close();
 

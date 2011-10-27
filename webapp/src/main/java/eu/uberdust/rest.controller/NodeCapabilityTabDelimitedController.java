@@ -97,7 +97,7 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
         }
 
         // retrieve readings based on node/capability
-        List<NodeReading> nodeReadings = nodeReadingManager.listReadings(node, capability);
+        List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
 
         // write on the HTTP response
         httpServletResponse.setContentType("text/plain");

@@ -374,7 +374,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="nodeReadingManager" ref="nodeReadingManager"/>
+        <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/latestreading"/>
     </bean>
 

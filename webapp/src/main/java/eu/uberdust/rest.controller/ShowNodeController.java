@@ -77,11 +77,11 @@ public class ShowNodeController extends AbstractRestController {
         }
 
         // count all node readings
-        Long readingsCount = nodeReadingManager.getReadingsCount(node);
+        Long readingsCount = nodeReadingManager.getNodeReadingsCount(node);
 
         // count node readings per capability
         final Map<Capability, Long> readingCountsPerCapability =
-                nodeReadingManager.getNodeCapabilityReadingsCountPerCapability(node);
+                nodeReadingManager.getNodeReadingsCountMap(node);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
