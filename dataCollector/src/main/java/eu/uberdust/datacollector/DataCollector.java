@@ -3,6 +3,7 @@ package eu.uberdust.datacollector;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
+import eu.wisebed.wisedb.HibernateUtil;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -41,6 +42,10 @@ public class DataCollector {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
 
         log.setLevel(Level.INFO);
+
+
+        // Initialize hibernate
+        HibernateUtil.connectEntityManagers();
 
         Properties properties = new Properties();
         try {

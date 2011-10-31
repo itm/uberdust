@@ -36,8 +36,6 @@ public class MessageParser implements Runnable {
 
     public void run() {
 
-        // Initialize hibernate
-        HibernateUtil.connectEntityManagers();
 
         //get the node id
         final String node_id = extractNodeId(strLine);
@@ -103,7 +101,8 @@ public class MessageParser implements Runnable {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
         final String testbedCapabilityPrefix = "urn:wisebed:node:capability:";
         final String nodeId = testbedUrnPrefix + node_id;
-        final String capabilityName = testbedCapabilityPrefix + sensor;
+        final String capabilityName = testbedCapabilityPrefix.toLowerCase() + sensor.toLowerCase();
+
 
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
@@ -114,7 +113,8 @@ public class MessageParser implements Runnable {
             log.info("Added " + nodeId + "," + capabilityName + "," + value);
 
         } catch (Exception e) {
-            log.error("Problem with " + nodeId + "," + capabilityName + "," + value);
+            log.error("Problem with " + nodeId + "," + capabilityName + "," + value + " Exception: ");
+            log.error(e);
             tx.rollback();
         } finally {
             HibernateUtil.getInstance().closeSession();
@@ -123,7 +123,7 @@ public class MessageParser implements Runnable {
 
     private void CommitLinkReading(String sId, String tId, int status) {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
-        final String testbedCapabilityPrefix = "urn:wisebed:link:capability:";
+        final String testbedCapabilityPrefix = "status";
         final String sourceId = testbedUrnPrefix + sId;
         final String targetId = testbedUrnPrefix + tId;
 
@@ -132,7 +132,7 @@ public class MessageParser implements Runnable {
         Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            LinkReadingController.getInstance().insertReading(sourceId, targetId, "status", testbedUrnPrefix, status, 0,
+            LinkReadingController.getInstance().insertReading(sourceId, targetId, testbedCapabilityPrefix, testbedUrnPrefix, status, 0,
                     new java.util.Date());
             tx.commit();
             log.info("Added Link " + sourceId + "<<--" + status + "-->>" + targetId);
