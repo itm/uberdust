@@ -238,6 +238,42 @@
             </resource>
         </resources>
         <plugins>
+	
+	    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <target>
+                                <scp file="${project.build.directory}/${project.groupId}.war"
+                                     todir="testbedruntime@gold.cti.gr:/var/www/webapps/"
+                                     keyfile="${user.home}/.ssh/id_rsa"
+                                     trust="true" verbose="true" port="22"
+                                     passphrase=""/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-jsch</artifactId>
+                        <version>1.7.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcraft</groupId>
+                        <artifactId>jsch</artifactId>
+                        <version>0.1.38</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+	
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -294,7 +330,6 @@
         </plugins>
     </build>
 
-
     <distributionManagement>
         <!-- use the following if you're not using a snapshot version. -->
         <repository>
@@ -304,4 +339,5 @@
         </repository>
 
     </distributionManagement>
+
 </project>
