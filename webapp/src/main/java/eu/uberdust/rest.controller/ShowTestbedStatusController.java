@@ -97,10 +97,7 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        String formattedErrorForFrontEnd = exception.getMessage();
-        exception.printStackTrace(pw);
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd + sw.toString());
+        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

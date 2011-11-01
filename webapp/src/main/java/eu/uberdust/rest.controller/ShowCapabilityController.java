@@ -11,11 +11,13 @@ import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,10 @@ public class ShowCapabilityController extends AbstractRestController {
 
         // look up capability
         Capability capability = capabilityManager.getByID(command.getCapabilityName());
+        if(capability == null){
+            // if no capability is found throw exception
+            throw new Exception(new Throwable("Cannot find capability [" + command.getCapabilityName() + "]."));
+        }
 
         // how many readings has this capability
         Long nodeReadingsCount = nodeReadingManager.getNodeCapabilityReadingsCount(capability, testbed);
@@ -113,5 +119,11 @@ public class ShowCapabilityController extends AbstractRestController {
         refData.put("readingCountsPerLink", readingCountsPerLink);
 
         return new ModelAndView("capability/show.html", refData);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }
