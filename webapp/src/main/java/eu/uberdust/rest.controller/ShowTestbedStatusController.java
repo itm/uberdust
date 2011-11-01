@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +97,10 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        String formattedErrorForFrontEnd = exception.getMessage();
+        exception.printStackTrace(pw);
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd + sw.toString());
     }
 }

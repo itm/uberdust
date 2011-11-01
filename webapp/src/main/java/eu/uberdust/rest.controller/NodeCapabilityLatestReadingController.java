@@ -97,7 +97,13 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
 
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());
-        textOutput.write(lnr.getTimestamp()+ "\t" + lnr.getReading() + "\n");
+        if(lnr != null){
+            // if a last node reading row is found
+            textOutput.write(lnr.getTimestamp().getTime() + "\t" + lnr.getReading() + "\n");
+        }else{
+            // if no rows found
+            textOutput.write("error");
+        }
         textOutput.flush();
         textOutput.close();
 

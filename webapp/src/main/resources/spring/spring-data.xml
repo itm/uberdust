@@ -157,17 +157,17 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
           factory-method="getInstance"/>
 
     <bean id="lastNodeReadingManager" parent="proxyTemplate">
-        <property name="target" ref="lastNodeReadingTarget"/>
+        <property name="target" ref="lastNodeReadingManagerTarget"/>
     </bean>
-    <bean id="lastNodeReadingTarget"
+    <bean id="lastNodeReadingManagerTarget"
           class="eu.wisebed.wisedb.controller.LastNodeReadingController"
           parent="abstractManager"
           factory-method="getInstance"/>
 
     <bean id="lastLinkReadingManager" parent="proxyTemplate">
-        <property name="target" ref="lastLinkReadingTarget"/>
+        <property name="target" ref="lastLinkReadingManagerTarget"/>
     </bean>
-    <bean id="lastLinkReadingTarget"
+    <bean id="lastLinkReadingManagerTarget"
           class="eu.wisebed.wisedb.controller.LastLinkReadingController"
           parent="abstractManager"
           factory-method="getInstance"/>
