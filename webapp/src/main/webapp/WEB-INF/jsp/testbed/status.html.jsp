@@ -39,14 +39,16 @@
                                 value="${stat.node.id}"/></a>
                     </td>
                     <td><c:out value="${stat.node.description}"/></td>
-                    <c:choose>
-                        <c:when test="${util:checkIfDateIsToday(stat.latestTimestamp)}">
-                            <td>${stat.latestTimestamp}</td>
-                        </c:when>
-                        <c:otherwise>
-                            <td style="color :red">${stat.latestTimestamp}</td>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${stat.lastTimestamp != null}">
+                        <c:choose>
+                            <c:when test="${util:checkIfDateIsToday(stat.lastTimestamp)}">
+                                <td>${stat.lastTimestamp}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td style="color :red">${stat.lastTimestamp}</td>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                     <td>${stat.maxReading}</td>
                     <td>${stat.minReading}</td>
                     <td>${stat.totalCount}</td>
@@ -75,17 +77,19 @@
             <c:forEach items="${linkstats}" var="stat">
                 <tr>
                     <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/node/${stat.link.source}/${stat.link.target}"><c:out
+                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/link/${stat.link.source}/${stat.link.target}"><c:out
                                 value="[${stat.link.source},${stat.link.target}]"/></a>
                     </td>
-                    <c:choose>
-                        <c:when test="${util:checkIfDateIsToday(stat.latestTimestamp)}">
-                            <td>${stat.latestTimestamp}</td>
-                        </c:when>
-                        <c:otherwise>
-                            <td style="color :red">${stat.latestTimestamp}</td>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${stat.lastTimestamp != null}">
+                        <c:choose>
+                            <c:when test="${util:checkIfDateIsToday(stat.lastTimestamp)}">
+                                <td>${stat.lastTimestamp}</td>
+                            </c:when>
+                            <c:otherwise>
+                                <td style="color :red">${stat.lastTimestamp}</td>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                     <td>${stat.maxReading}</td>
                     <td>${stat.minReading}</td>
                     <td>${stat.totalCount}</td>
@@ -95,7 +99,7 @@
         </table>
     </c:when>
     <c:otherwise>
-        <p style="color :red"> No node status available</p>
+        <p style="color :red"> No link status available</p>
     </c:otherwise>
 </c:choose>
 </body>
