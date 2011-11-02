@@ -39,7 +39,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <!-- Capability Related Controllers -->
                 <prop key="GET /testbed/*/capability">listCapabilitiesController</prop>
                 <prop key="GET /testbed/*/capability/*">showCapbilityController</prop>
-                <prop key="GET /testbed/*/capability/*/latestreadings">capabilityLastReadingController</prop>
+                <prop key="GET /testbed/*/capability/*/tabdelimited">capabilityTabDelimitedController</prop>
 
                 <!-- Node/Capability Controllers for readings -->
                 <prop key="GET /testbed/*/node/*/capability/*">nodeCapabilityController</prop>
@@ -49,9 +49,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/wiseml">nodeCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading">nodeCapabilityLastReadingController</prop>
-                <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">
-                    nodeCapabilityInsertReadingController
-                </prop>
+                <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">nodeCapabilityInsertReadingController</prop>
 
                 <!-- Link/Capability Controllers for readings
                 <prop key="GET /testbed/*/link/*/*/capability/*">linkCapabilityController</prop>
@@ -276,13 +274,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     </bean>
 
     <!-- Latest Capability node readings -->
-    <bean name="capabilityLastReadingController" class="eu.uberdust.rest.controller.CapabilityLatestReading">
+    <bean name="capabilityTabDelimitedController" class="eu.uberdust.rest.controller.CapabilityTabDelimitedController">
         <property name="commandClass" value="eu.uberdust.command.CapabilityCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
         <property name="lastLinkReadingManager" ref="lastLinkReadingManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/capability/{capabilityName}/latestreadings"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/capability/{capabilityName}/tabdelimited"/>
     </bean>
 
 

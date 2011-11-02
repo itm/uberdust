@@ -7,7 +7,6 @@ import eu.wisebed.wisedb.controller.LastNodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.LastLinkReading;
 import eu.wisebed.wisedb.model.LastNodeReading;
-import eu.wisebed.wisedb.model.NodeReading;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import org.springframework.validation.BindException;
@@ -25,13 +24,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class CapabilityLatestReading extends AbstractRestController {
+public class CapabilityTabDelimitedController extends AbstractRestController {
 
     private TestbedController testbedManager;
     private CapabilityController capabilityManager;
     private LastNodeReadingController lastNodeReadingManager;
     private LastLinkReadingController lastLinkReadingManager;
-    private static final Logger LOGGER = Logger.getLogger(CapabilityLatestReading.class);
+    private static final Logger LOGGER = Logger.getLogger(CapabilityTabDelimitedController.class);
 
 
     public void setTestbedManager(TestbedController testbedManager) {
@@ -85,20 +84,33 @@ public class CapabilityLatestReading extends AbstractRestController {
         // write on the HTTP response
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
+
         // get latest node readings
-        List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByCapability(capability);
-        if (lastNodeReadings != null || !lastNodeReadings.isEmpty()) {
+        List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByCapability(testbed, capability);
+
+
+        if (lastNodeReadings == null || lastNodeReadings.isEmpty()) {
+            // if not last node readings are found for this capability and testbed check for last link readings
+            List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByCapability(testbed, capability);
+            if (lastLinkReadings == null || lastLinkReadings.isEmpty()) {
+                // if not found return nothing
+                textOutput.flush();
+                textOutput.close();
+                return null;
+            } else {
+                // get lastest link readings
+                for (LastLinkReading llr : lastLinkReadings) {
+                    textOutput.write("[" + llr.getLink().getSource() + " -> " + llr.getLink().getTarget() + "]\t"
+                            + llr.getTimestamp().getTime() + "\t" + llr.getReading() + "\n");
+                }
+            }
+        } else {
+            // get lastest node readings
             for (LastNodeReading lnr : lastNodeReadings) {
                 textOutput.write(lnr.getNode().getId() + "\t" + lnr.getTimestamp().getTime() + "\t" + lnr.getReading() + "\n");
             }
-        } else {
-            // get lastest link readings
-            List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByCapability(capability);
-            for (LastLinkReading llr : lastLinkReadings) {
-                textOutput.write("[" + llr.getLink().getSource() + " -> " + llr.getLink().getTarget() + "]\t"
-                        + llr.getTimestamp().getTime() + "\t" + llr.getReading() + "\n");
-            }
         }
+
         // flush close output
         textOutput.flush();
         textOutput.close();
