@@ -238,8 +238,8 @@
             </resource>
         </resources>
         <plugins>
-	
-	    <plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>
@@ -273,7 +273,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
-	
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -294,6 +294,11 @@
                             <targetPath>css</targetPath>
                         </resource>
                     </webResources>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Version>${BUILD_NUMBER}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
