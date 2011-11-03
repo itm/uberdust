@@ -25,27 +25,32 @@
         <table>
             <thead>
             <th>Node</th>
-            <th>Description</th>
+            <th>Capability</th>
             <th>Last Reading Timestamp</th>
             <th>Last Reading Value</th>
+            <th>Description</th>
             </thead>
             <tbody>
             <c:forEach items="${lastNodeReadings}" var="lnr">
                 <c:if test="${lnr != null}">
                     <tr>
                         <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${lnr.node.id}"><c:out
-                                    value="${lnr.node.id}"/></a>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${lnr.node.id}"><c:out value="${lnr.node.id}"/></a>
                         </td>
-                        <td><c:out value="${lnr.node.description}"/></td>
+                        <td>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${lnr.capability.name}"><c:out value="${lnr.capability.name}"/></a>
+                        </td>
                         <c:choose>
                             <c:when test="${util:checkIfDateIsToday(lnr.timestamp)}">
                                 <td>${lnr.timestamp}</td>
+                                <td>${lnr.reading}</td>
                             </c:when>
                             <c:otherwise>
                                 <td style="color :red">${lnr.timestamp}</td>
+                                <td style="color :red">${lnr.reading}</td>
                             </c:otherwise>
                         </c:choose>
+                        <td><c:out value="${lnr.node.description}"/></td>
                     </tr>
                 </c:if>
             </c:forEach>
@@ -63,6 +68,7 @@
         <table>
             <thead>
             <th>Link</th>
+            <th>Capability</th>
             <th>Last Reading Timestamp</th>
             <th>Last Reading Value</th>
             </thead>
@@ -74,12 +80,17 @@
                             <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/link/${llr.link.source}/${llr.link.target}"><c:out
                                     value="[${llr.link.source},${llr.link.target}]"/></a>
                         </td>
+                        <td>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${llr.capability.name}"><c:out value="${llr.capability.name}"/></a>
+                        </td>
                         <c:choose>
                             <c:when test="${util:checkIfDateIsToday(llr.timestamp)}">
                                 <td>${llr.timestamp}</td>
+                                <td>${llr.reading}</td>
                             </c:when>
                             <c:otherwise>
                                 <td style="color :red">${llr.timestamp}</td>
+                                <td style="color :red">${llr.reading}</td>
                             </c:otherwise>
                         </c:choose>
                     </tr>
