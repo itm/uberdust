@@ -26,8 +26,8 @@
     <c:when test="${capabilities != null || fn:length(capabilities) != 0}">
         <table>
             <tr>
-                <td>Capabilities found</td>
-                <td><c:out value="${fn:length(capabilities)}"/></td>
+                <td>Capabilities</td>
+                <td>(<c:out value="${fn:length(capabilities)}"/>)</td>
             </tr>
         </table>
         <table>

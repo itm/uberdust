@@ -29,8 +29,8 @@
         <table>
             <tbody>
             <tr>
-                <td>Links found</td>
-                <td><c:out value="${fn:length(links)}"/></td>
+                <td>Links</td>
+                <td>(<c:out value="${fn:length(links)}"/>)</td>
             </tr>
             </tbody>
         </table>

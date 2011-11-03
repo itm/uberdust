@@ -31,8 +31,8 @@
         <table>
             <tbody>
             <tr>
-                <td>Nodes found</td>
-                <td><c:out value="${fn:length(nodes)}"/></td>
+                <td>Nodes</td>
+                <td>(<c:out value="${fn:length(nodes)}"/>)</td>
             </tr>
             </tbody>
         </table>
