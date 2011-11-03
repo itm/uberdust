@@ -32,6 +32,12 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
     private LastLinkReadingController lastLinkReadingManager;
     private static final Logger LOGGER = Logger.getLogger(CapabilityTabDelimitedController.class);
 
+    public CapabilityTabDelimitedController(){
+                super();
+
+        // Make sure to set which method this controller will support.
+        this.setSupportedMethods(new String[]{METHOD_GET});
+    }
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
@@ -87,8 +93,6 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
 
         // get latest node readings
         List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByCapability(testbed, capability);
-
-
         if (lastNodeReadings == null || lastNodeReadings.isEmpty()) {
             // if not last node readings are found for this capability and testbed check for last link readings
             List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByCapability(testbed, capability);

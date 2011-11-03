@@ -7,8 +7,8 @@
 <%@taglib uri="/WEB-INF/tag/custom.tld" prefix="util" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
-<jsp:useBean id="nodestats" scope="request" class="java.util.ArrayList"/>
-<jsp:useBean id="linkstats" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="lastNodeReadings" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="lastLinkReadings" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -20,39 +20,34 @@
 <body>
 <h1>Testbed <c:out value="${testbed.name}"/> status page</h1>
 <c:choose>
-    <c:when test="${nodestats != null}">
+    <c:when test="${lastLinkReadings != null}">
         <h2>Nodes</h2>
         <table>
             <thead>
             <th>Node</th>
             <th>Description</th>
-            <th>Last Recorded Date</th>
-            <th>Max Reading</th>
-            <th>Min Reading</th>
-            <th>Total Readings Count</th>
+            <th>Last Reading Timestamp</th>
+            <th>Last Reading Value</th>
             </thead>
             <tbody>
-            <c:forEach items="${nodestats}" var="stat">
-                <tr>
-                    <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${stat.node.id}"><c:out
-                                value="${stat.node.id}"/></a>
-                    </td>
-                    <td><c:out value="${stat.node.description}"/></td>
-                    <c:if test="${stat.lastTimestamp != null}">
+            <c:forEach items="${lastNodeReadings}" var="lnr">
+                <c:if test="${lnr != null}">
+                    <tr>
+                        <td>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${lnr.node.id}"><c:out
+                                    value="${lnr.node.id}"/></a>
+                        </td>
+                        <td><c:out value="${lnr.node.description}"/></td>
                         <c:choose>
-                            <c:when test="${util:checkIfDateIsToday(stat.lastTimestamp)}">
-                                <td>${stat.lastTimestamp}</td>
+                            <c:when test="${util:checkIfDateIsToday(lnr.timestamp)}">
+                                <td>${lnr.timestamp}</td>
                             </c:when>
                             <c:otherwise>
-                                <td style="color :red">${stat.lastTimestamp}</td>
+                                <td style="color :red">${lnr.timestamp}</td>
                             </c:otherwise>
                         </c:choose>
-                    </c:if>
-                    <td>${stat.maxReading}</td>
-                    <td>${stat.minReading}</td>
-                    <td>${stat.totalCount}</td>
-                </tr>
+                    </tr>
+                </c:if>
             </c:forEach>
             </tbody>
         </table>
@@ -63,37 +58,32 @@
 </c:choose>
 
 <c:choose>
-    <c:when test="${linkstats != null}">
+    <c:when test="${lastLinkReadings != null}">
         <h2>Links</h2>
         <table>
             <thead>
             <th>Link</th>
-            <th>Last Recorded Date</th>
-            <th>Max Reading</th>
-            <th>Min Reading</th>
-            <th>Total Readings Count</th>
+            <th>Last Reading Timestamp</th>
+            <th>Last Reading Value</th>
             </thead>
             <tbody>
-            <c:forEach items="${linkstats}" var="stat">
-                <tr>
-                    <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/link/${stat.link.source}/${stat.link.target}"><c:out
-                                value="[${stat.link.source},${stat.link.target}]"/></a>
-                    </td>
-                    <c:if test="${stat.lastTimestamp != null}">
+            <c:forEach items="${lastLinkReadings}" var="llr">
+                <c:if test="${llr != null}">
+                    <tr>
+                        <td>
+                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/link/${llr.link.source}/${llr.link.target}"><c:out
+                                    value="[${llr.link.source},${llr.link.target}]"/></a>
+                        </td>
                         <c:choose>
-                            <c:when test="${util:checkIfDateIsToday(stat.lastTimestamp)}">
-                                <td>${stat.lastTimestamp}</td>
+                            <c:when test="${util:checkIfDateIsToday(llr.timestamp)}">
+                                <td>${llr.timestamp}</td>
                             </c:when>
                             <c:otherwise>
-                                <td style="color :red">${stat.lastTimestamp}</td>
+                                <td style="color :red">${llr.timestamp}</td>
                             </c:otherwise>
                         </c:choose>
-                    </c:if>
-                    <td>${stat.maxReading}</td>
-                    <td>${stat.minReading}</td>
-                    <td>${stat.totalCount}</td>
-                </tr>
+                    </tr>
+                </c:if>
             </c:forEach>
             </tbody>
         </table>

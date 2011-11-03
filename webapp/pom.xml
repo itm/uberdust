@@ -316,7 +316,7 @@
                     <server>tomcat6</server>
                     <warFile>${project.build.directory}/${project.groupId}.war</warFile>
                     <path>/uberdust</path>
-                    <url>${local.tomcat.manager.url}</url>
+                    <url>${carrot.tomcat.manager.url}</url>
                 </configuration>
             </plugin>
             <plugin>

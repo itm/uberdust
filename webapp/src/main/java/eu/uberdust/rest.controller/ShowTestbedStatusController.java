@@ -1,12 +1,8 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.TestbedCommand;
-import eu.wisebed.wisedb.controller.LinkReadingController;
-import eu.wisebed.wisedb.controller.NodeReadingController;
-import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.model.LinkReadingStat;
-import eu.wisebed.wisedb.model.NodeReadingStat;
-import eu.wisebed.wisedb.model.Testbed;
+import eu.wisebed.wisedb.controller.*;
+import eu.wisebed.wisedb.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,9 +21,9 @@ import java.util.Map;
 public class ShowTestbedStatusController extends AbstractRestController {
 
     private TestbedController testbedManager;
-    private NodeReadingController nodeReadingManager;
-    private LinkReadingController linkReadingManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedStatusController.class);
+    private LastNodeReadingController lastNodeReadingManager;
+    private LastLinkReadingController lastLinkReadingManager;
 
 
     public ShowTestbedStatusController() {
@@ -41,12 +37,12 @@ public class ShowTestbedStatusController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
-        this.nodeReadingManager = nodeReadingManager;
+    public void setLastNodeReadingManager(LastNodeReadingController lastNodeReadingManager) {
+        this.lastNodeReadingManager = lastNodeReadingManager;
     }
 
-    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
-        this.linkReadingManager = linkReadingManager;
+    public void setLastLinkReadingManager(LastLinkReadingController lastLinkReadingManager) {
+        this.lastLinkReadingManager = lastLinkReadingManager;
     }
 
     @Override
@@ -73,24 +69,24 @@ public class ShowTestbedStatusController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
-        // get a list of node statistics from testbed
+        // get a list of node last readings from testbed
         long before = System.currentTimeMillis();
-        List<NodeReadingStat> nodeStats = nodeReadingManager.getNodeReadingStats(testbed);
+        List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByTestbed(testbed);
         long after = System.currentTimeMillis();
-        LOGGER.info("nodeReadingManager.getLatestNodeReadingUpdates(testbed) took " + (after-before) + " millis");
+        LOGGER.info("lastNodeReadingManager.getByTestbed(testbed) took " + (after-before) + " millis");
 
         // get a list of link statistics from testbed
         before = System.currentTimeMillis();
-        List<LinkReadingStat> linkStats = linkReadingManager.getLinkReadingStats(testbed);
+        List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByTestbed(testbed);
         after = System.currentTimeMillis();
-        LOGGER.info("linkReadingManager.getLatestLinkReadingUpdates(testbed) took " + (after-before) + " millis");
+        LOGGER.info("lastLinkReadingManager.getByTestbed(testbed) took " + (after-before) + " millis");
 
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
         refData.put("testbed", testbed);
-        refData.put("nodestats", nodeStats);
-        refData.put("linkstats", linkStats);
+        refData.put("lastNodeReadings", lastNodeReadings);
+        refData.put("lastLinkReadings", lastLinkReadings);
 
         return new ModelAndView("testbed/status.html", refData);
     }
