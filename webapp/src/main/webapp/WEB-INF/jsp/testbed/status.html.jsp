@@ -18,6 +18,7 @@
     <title>ÜberDust - Testbed <c:out value="${testbed.name}"/> status page</title>
 </head>
 <body>
+<%@include file="/header.jsp"%>
 <h1>Testbed <c:out value="${testbed.name}"/> status page</h1>
 <c:choose>
     <c:when test="${lastLinkReadings != null}">
@@ -103,5 +104,6 @@
         <p style="color :red"> No link status available</p>
     </c:otherwise>
 </c:choose>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

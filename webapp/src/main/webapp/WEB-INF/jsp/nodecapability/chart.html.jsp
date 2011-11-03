@@ -11,7 +11,7 @@
 
 
 <html>
-
+<%@include file="/header.jsp"%>
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script type="text/javascript" src=<c:url value="/js/highcharts.js"/>></script>
@@ -126,5 +126,6 @@
 </head>
 <body>
 <div id="container" style="width: 100%; height: 400px"></div>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

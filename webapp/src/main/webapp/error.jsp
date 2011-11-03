@@ -11,6 +11,7 @@
     <title>ÜberDust - Error</title>
 </head>
 <body>
+<%@include file="/header.jsp"%>
 <table id="error" style="color:#ff6666">
     <thead>
     <th>Error Occured</th>
@@ -28,5 +29,6 @@
     </tr>
     </tbody>
 </table>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

@@ -17,7 +17,7 @@
     <title>ÜberDust - Show Node : <c:out value="${node.id}"/></title>
 </head>
 <body>
-
+<%@include file="/header.jsp"%>
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
@@ -73,5 +73,6 @@
     </tr>
     </tbody>
 </table>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

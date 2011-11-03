@@ -14,7 +14,7 @@
     <title>ÜberDust - List Testbeds</title>
 </head>
 <body>
-
+<%@include file="/header.jsp"%>
 <h1>Welcome to ÜberDust</h1>
 <c:choose>
     <c:when test="${testbeds !=null && fn:length(testbeds)!=0}">
@@ -45,5 +45,6 @@
         <p style="color : red"> No testbeds available</p>
     </c:otherwise>
 </c:choose>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

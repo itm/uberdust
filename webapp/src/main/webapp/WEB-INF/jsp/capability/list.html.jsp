@@ -16,6 +16,7 @@
     <title>ÜberDust - List Capabilities</title>
 </head>
 <body>
+<%@include file="/header.jsp"%>
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
@@ -45,5 +46,6 @@
         <p style="color : red">No capabilities found for testbed <c:out value="${testbed.name}"/></p>
     </c:otherwise>
 </c:choose>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

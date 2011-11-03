@@ -18,7 +18,7 @@
     <title>ÜberDust - Show testbed : <c:out value="${testbed.name}"/></title>
 </head>
 <body>
-
+<%@include file="/header.jsp"%>
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>
@@ -170,5 +170,6 @@
         </td>
     </tr>
 </table>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

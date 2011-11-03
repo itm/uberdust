@@ -40,7 +40,7 @@
 </head>
 
 <body>
-
+<%@include file="/header.jsp"%>
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a
@@ -134,5 +134,6 @@
             value="${capability.name}"/>
     </c:otherwise>
 </c:choose>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

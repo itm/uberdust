@@ -17,7 +17,7 @@
             value="${link.target}"/>]</c:forEach></title>
 </head>
 <body>
-
+<%@include file="/header.jsp"%>
 <table>
     <tbody>
 
@@ -72,5 +72,6 @@
     </c:forEach>
     </tbody>
 </table>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

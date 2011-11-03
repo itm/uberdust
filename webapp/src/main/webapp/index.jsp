@@ -10,6 +10,8 @@
     <title>ÜberDust</title>
 </head>
 <body>
+<%@include file="/header.jsp"%>
 <jsp:forward page="/rest/testbed"/>
+<%@include file="/footer.jsp"%>
 </body>
 </html>

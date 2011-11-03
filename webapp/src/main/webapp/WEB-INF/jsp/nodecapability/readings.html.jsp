@@ -16,7 +16,7 @@
 </head>
 
 <body>
-
+<%@include file="/header.jsp" %>
 <c:choose>
     <c:when test="${fn:length(readings) == 0}">
         <h2> No readings found </h2>
@@ -43,5 +43,6 @@
         </table>
     </c:otherwise>
 </c:choose>
+<%@include file="/footer.jsp" %>
 </body>
 </html>

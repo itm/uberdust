@@ -17,6 +17,7 @@
     <title>ÜberDust - List links</title>
 </head>
 <body>
+<%@include file="/header.jsp"%>
 
 <p>
     /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
@@ -51,6 +52,7 @@
         <p style="color : red">No links found for testbed <c:out value="${testbed.name}"/></p>
     </c:otherwise>
 </c:choose>
+<%@include file="/footer.jsp"%>
 </body>
 </html>
 
