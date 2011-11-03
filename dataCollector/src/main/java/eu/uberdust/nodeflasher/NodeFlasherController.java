@@ -22,16 +22,24 @@ public class NodeFlasherController {
 
     public NodeFlasherController() {
 
-
         final SchedulerFactory sf = new StdSchedulerFactory();
 
         final Scheduler sched;
         try {
             sched = sf.getScheduler();
 
-            final JobDetail nodeflasherjob = newJob(NodeFlasherJob.class)
+            final JobDetail nodeFlasherJob = newJob(NodeFlasherJob.class)
                     .withIdentity("NodeFlasherJob", "group1")
                     .build();
+
+            log.debug("Created NodeFlasherJob in group1");
+
+
+            final JobDetail telosReflasherJob = newJob(PeriodicFlasherJob.class)
+                    .withIdentity("telosReflasherJob", "group2")
+                    .build();
+
+            log.debug("Created telosReflasherJob in group2");
 
 
             // Trigger the job to run on the next round minute
@@ -42,13 +50,32 @@ public class NodeFlasherController {
                             .withIntervalInMinutes(60)
                             .repeatForever()).build();
 
+            log.debug("Created nodeFlasherTrigger");
+
+
+            // Trigger the job to run on the next round minute
+            final Trigger telosReFlasherTrigger = newTrigger()
+                    .withIdentity("telosReFlasherTrigger", "group2")
+                    .startAt(new Date(System.currentTimeMillis() + 10000))
+                    .withSchedule(simpleSchedule()
+                            .withIntervalInHours(24)
+                            .repeatForever()).build();
+
+            log.debug("Created telosReFlasherTrigger");
+
 
             // Tell quartz to schedule the job using our trigger
-            sched.scheduleJob(nodeflasherjob, nodeFlasherTrigger);
+            sched.scheduleJob(nodeFlasherJob, nodeFlasherTrigger);
+            log.debug("scheduled nodeFlasherJob by nodeFlasherTrigger");
+
+            // Tell quartz to schedule the job using our trigger
+            sched.scheduleJob(telosReflasherJob, telosReFlasherTrigger);
+            log.debug("scheduled telosReflasherJob by telosReFlasherTrigger");
 
             // Start up the scheduler (nothing can actually run until the
             // scheduler has been started)
             sched.start();
+            log.debug("stated scheduler");
 
         } catch (SchedulerException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -56,4 +83,6 @@ public class NodeFlasherController {
 
         log.info("Started NodeFlasherController");
     }
+
+
 }
