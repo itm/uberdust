@@ -7,10 +7,8 @@
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
-<jsp:useBean id="nodeReadingsCount" scope="request" class="java.lang.Long"/>
-<jsp:useBean id="linkReadingsCount" scope="request" class="java.lang.Long"/>
-<jsp:useBean id="readingCountsPerNode" scope="request" class="java.util.HashMap"/>
-<jsp:useBean id="readingCountsPerLink" scope="request" class="java.util.HashMap"/>
+<jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -34,35 +32,47 @@
                     value="${capability.name}"/></a>
         </td>
     </tr>
-    <c:if test="${nodeReadingsCount != 0}">
+    <c:if test="${nodes != null && fn:length(nodes) != 0}">
         <tr>
-            <td>Nodes(<c:out value="${nodeReadingsCount}"/>)</td>
+            <td>Nodes(<c:out value="${fn:length(nodes)}"/>)</td>
             <td>
-                <ul>
-                    <c:forEach items="${readingCountsPerNode}" var="node">
-                        <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.key.id}/capability/${capability.name}"><c:out
-                                    value="${node.key.id}"/></a>(<c:out value="${node.value}"/>)
-                        </li>
+                <table>
+                    <tbody>
+                    <c:forEach items="${nodes}" var="node">
+                        <tr>
+                            <td>
+                                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+                                        value="${node.id}"/></a>
+                            </td>
+                            <td>
+                                <!-- add stuff here ! -->
+                            </td>
+                        </tr>
                     </c:forEach>
-                </ul>
-                <span>Total Readings count : <c:out value="${nodeReadingsCount}"/> </span>
+                    </tbody>
+                </table>
             </td>
         </tr>
     </c:if>
-    <c:if test="${linkReadingsCount != 0}">
+    <c:if test="${links != null && fn:length(links) != 0}">
         <tr>
-            <td>Links(<c:out value="${linkReadingsCount}"/>)</td>
+            <td>Links(<c:out value="${fn:length(links)}"/>)</td>
             <td>
-                <ul>
-                    <c:forEach items="${readingCountsPerLink}" var="link">
-                        <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}/capability/${capability.name}"><c:out
-                                    value="[${link.key.source},${link.key.target}]"/></a>(<c:out value="${link.value}"/>)
-                        </li>
+                <table>
+                    <tbody>
+                    <c:forEach items="${links}" var="link">
+                        <tr>
+                            <td>
+                                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}}"><c:out
+                                        value="[${link.source},${link.target}]"/></a>
+                            </td>
+                            <td>
+                                <!-- add stuff here ! -->
+                            </td>
+                        </tr>
                     </c:forEach>
-                </ul>
-                <span>Total Readings count : <c:out value="${linkReadingsCount}"/> </span>
+                    </tbody>
+                </table>
             </td>
         </tr>
     </c:if>

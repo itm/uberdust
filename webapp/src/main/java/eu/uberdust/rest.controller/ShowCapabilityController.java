@@ -1,10 +1,7 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.CapabilityCommand;
-import eu.wisebed.wisedb.controller.CapabilityController;
-import eu.wisebed.wisedb.controller.LinkReadingController;
-import eu.wisebed.wisedb.controller.NodeReadingController;
-import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.controller.*;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
@@ -27,9 +24,8 @@ public class ShowCapabilityController extends AbstractRestController {
     private static final Logger LOGGER = Logger.getLogger(ShowCapabilityController.class);
     private TestbedController testbedManager;
     private CapabilityController capabilityManager;
-    private NodeReadingController nodeReadingManager;
-    private LinkReadingController linkReadingManager;
-
+    private NodeController nodeManager;
+    private LinkController linkManager;
 
     public ShowCapabilityController() {
         super();
@@ -46,20 +42,12 @@ public class ShowCapabilityController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public NodeReadingController getNodeReadingManager() {
-        return nodeReadingManager;
+    public void setNodeManager(NodeController nodeManager) {
+        this.nodeManager = nodeManager;
     }
 
-    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
-        this.nodeReadingManager = nodeReadingManager;
-    }
-
-    public LinkReadingController getLinkReadingManager() {
-        return linkReadingManager;
-    }
-
-    public void setLinkReadingManager(LinkReadingController linkReadingManager) {
-        this.linkReadingManager = linkReadingManager;
+    public void setLinkManager(LinkController linkManager) {
+        this.linkManager = linkManager;
     }
 
     @Override
@@ -91,33 +79,16 @@ public class ShowCapabilityController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find capability [" + command.getCapabilityName() + "]."));
         }
 
-        // how many readings has this capability
-        Long nodeReadingsCount = nodeReadingManager.getNodeCapabilityReadingsCount(capability, testbed);
-        Long linkReadingsCount = linkReadingManager.getLinkCapabilityReadingsCount(capability, testbed);
-        Map<Node, Long> readingCountsPerNode = new HashMap<Node, Long>();
-        Map<Link, Long> readingCountsPerLink = new HashMap<Link, Long>();
-
-        // if this capability has no node readings.
-        if (nodeReadingsCount == 0) {
-            // find the reading count of capabilities per link
-            readingCountsPerLink = linkReadingManager.getLinkCapabilityReadingsCountPerLink(capability, testbed);
-        }
-
-        // if this capability has no links.
-        if (linkReadingsCount == 0) {
-            // find the reading count of capabilities per node
-            readingCountsPerNode = nodeReadingManager.getNodeCapabilityReadingsCountPerNode(capability, testbed);
-        }
+        // get testbed nodes only
+        List<Node> nodes = nodeManager.listCapabilityNodes(capability,testbed);
+        List<Link> links = linkManager.listCapabilityLinks(capability,testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
         refData.put("testbed", testbed);
         refData.put("capability", capability);
-        refData.put("nodeReadingsCount", nodeReadingsCount);
-        refData.put("linkReadingsCount", linkReadingsCount);
-        refData.put("readingCountsPerNode", readingCountsPerNode);
-        refData.put("readingCountsPerLink", readingCountsPerLink);
-
+        refData.put("nodes", nodes);
+        refData.put("links", links);
         return new ModelAndView("capability/show.html", refData);
     }
 

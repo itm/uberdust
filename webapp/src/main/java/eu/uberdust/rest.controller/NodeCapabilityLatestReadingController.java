@@ -93,7 +93,10 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
         }
 
         // retrieve node/capability statistics
+        long before = System.currentTimeMillis();
         LastNodeReading lnr = lastNodeReadingManager.getByID(node, capability);
+        long after = System.currentTimeMillis();
+        LOGGER.info("lastNodeReadingManager.getByID(node, capability) took " + (after-before) + " millis.");
 
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());

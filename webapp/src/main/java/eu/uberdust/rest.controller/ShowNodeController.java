@@ -23,7 +23,6 @@ public class ShowNodeController extends AbstractRestController {
 
     private NodeController nodeManager;
     private TestbedController testbedManager;
-    private NodeReadingController nodeReadingManager;
     private static final Logger LOGGER = Logger.getLogger(ShowNodeController.class);
 
 
@@ -40,10 +39,6 @@ public class ShowNodeController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
-    }
-
-    public void setNodeReadingManager(NodeReadingController nodeReadingManager) {
-        this.nodeReadingManager = nodeReadingManager;
     }
 
     @Override
@@ -76,21 +71,13 @@ public class ShowNodeController extends AbstractRestController {
             throw new Exception(new Throwable("Cannot find testbed [" + command.getNodeId() + "]."));
         }
 
-        // count all node readings
-        Long readingsCount = nodeReadingManager.getNodeReadingsCount(node);
-
-        // count node readings per capability
-        final Map<Capability, Long> readingCountsPerCapability =
-                nodeReadingManager.getNodeReadingsCountMap(node);
-
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         // else put thisNode instance in refData and return index view
         refData.put("testbed", testbed);
         refData.put("node", node);
-        refData.put("readingsCount", readingsCount);
-        refData.put("readingCountsPerCapability", readingCountsPerCapability);
+        refData.put("capabilities", node.getCapabilities());
         return new ModelAndView("node/show.html", refData);
     }
 

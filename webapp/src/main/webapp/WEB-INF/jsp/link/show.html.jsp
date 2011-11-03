@@ -6,9 +6,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
-<jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
-<jsp:useBean id="totalCounts" scope="request" class="java.util.HashMap"/>
-<jsp:useBean id="countsPerCapability" scope="request" class="java.util.HashMap"/>
+<jsp:useBean id="linkCapabilityMap" scope="request" class="java.util.HashMap"/>
 
 <html>
 <head>
@@ -23,46 +21,52 @@
 <table>
     <tbody>
 
-    <c:forEach items="${links}" var="link">
+    <c:forEach items="${linkCapabilityMap}" var="link">
         <tr>
             <td>
                 /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
                     href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-                    href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}">link</a>
+                    href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}">link</a>
             </td>
         </tr>
         <tr>
             <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}"><c:out
-                        value="${link.source},${link.target}"/></a>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}"><c:out
+                        value="${link.key.source},${link.key.target}"/></a>
             </td>
         </tr>
         <tr>
             <td>Source ID</td>
             <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.source}"><c:out
-                        value="${link.source}"/></a>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.key.source}"><c:out
+                        value="${link.key.source}"/></a>
             </td>
         </tr>
         <tr>
             <td>Target ID</td>
             <td>
-                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.target}"><c:out
-                        value="${link.target}"/></a>
+                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${link.key.target}"><c:out
+                        value="${link.key.target}"/></a>
             </td>
         </tr>
         <tr>
-            <td>Capabilities(<c:out value="${fn:length(countsPerCapability[link])}"/>)</td>
+            <td>Capabilities(<c:out value="${fn:length(link.value)}"/>)</td>
             <td>
-                <ul>
-                    <c:forEach items="${countsPerCapability[link]}" var="capability">
-                        <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}/capability/${capability.key.name}"><c:out
-                                    value="${capability.key.name}"/></a>(<c:out value="${capability.value}"/>)
-                        </li>
+                <table>
+                    <tbody>
+                    <c:forEach items="${link.value}" var="capability">
+                        <tr>
+                            <td>
+                                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}/capability/${capability.name}"><c:out
+                                        value="${capability.name}"/></a>
+                            </td>
+                            <td>
+                                <!-- add stuff in future here -->
+                            </td>
+                        </tr>
                     </c:forEach>
-                </ul>
-                <span>Total Readings count : <c:out value="${totalCounts[link]}"/> </span>
+                    </tbody>
+                </table>
             </td>
         </tr>
     </c:forEach>

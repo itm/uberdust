@@ -2,7 +2,6 @@ package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.LinkCommand;
 import eu.wisebed.wisedb.controller.LinkController;
-import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,6 @@ public class ShowLinkController extends AbstractRestController {
 
     private LinkController linkManager;
     private TestbedController testbedManager;
-    private LinkReadingController linkReadingManager;
 
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 
@@ -36,10 +33,6 @@ public class ShowLinkController extends AbstractRestController {
 
     public void setTestbedManager(TestbedController testbedManager) {
         this.testbedManager = testbedManager;
-    }
-
-    public void setLinkReadingManager(LinkReadingController linkReadingManager) {
-        this.linkReadingManager = linkReadingManager;
     }
 
     @Override
@@ -70,10 +63,7 @@ public class ShowLinkController extends AbstractRestController {
         // a link instance  and link list
         Link link = null;
         Link linkInv = null;
-        List<Link> links = new ArrayList<Link>();
-        Map<Link, Long> totalCounts = new HashMap<Link, Long>();
-        Map<Link, Map<Capability, Long>> countsPerCapability = new HashMap<Link, Map<Capability, Long>>();
-
+        Map<Link,List<Capability>> linkCapabilityMap = new HashMap<Link,List<Capability>>();
 
         // Retrieve the link and it's inverse
         if (command.getSourceId() != null && command.getTargetId() != null) {
@@ -89,23 +79,17 @@ public class ShowLinkController extends AbstractRestController {
 
         // if at least link or linkInv was found
         if (link != null) {
-            links.add(link);
-            totalCounts.put(link, linkReadingManager.getLinkReadingsCount(link));
-            countsPerCapability.put(link,  linkReadingManager.getLinkReadingsCountMap(link));
+            linkCapabilityMap.put(link,link.getCapabilities());
         }
         if (linkInv != null) {
-            links.add(linkInv);
-            totalCounts.put(linkInv, linkReadingManager.getLinkReadingsCount(linkInv));
-            countsPerCapability.put(linkInv,  linkReadingManager.getLinkReadingsCountMap(linkInv));
+            linkCapabilityMap.put(linkInv,linkInv.getCapabilities());
         }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("testbed", testbed);
-        refData.put("links", links);
-        refData.put("totalCounts", totalCounts);
-        refData.put("countsPerCapability", countsPerCapability);
+        refData.put("linkCapabilityMap",linkCapabilityMap);
         return new ModelAndView("link/show.html", refData);
     }
 
