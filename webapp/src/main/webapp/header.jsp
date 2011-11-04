@@ -1,12 +1,27 @@
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.util.jar.Manifest" %>
-<%@ page import="eu.wisebed.api.controller.RequestStatus" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <%
-    InputStream inputStream =  getServletConfig().getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF");
-    Manifest manifest = new Manifest(inputStream);
-    String implVersion = manifest.getMainAttributes().getValue("Implementation-Version");
+    Manifest manifest = new Manifest(getServletConfig().getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF"));
+    final String implVersion = manifest.getMainAttributes().getValue("Implementation-Version");
+    final String jobName = manifest.getMainAttributes().getValue("Job-Name");
+    final String hudsonServerUrl = manifest.getMainAttributes().getValue("Hudson-URL");
 %>
-<% if (implVersion != null && !implVersion.isEmpty()) {%>
-    <p>Hudson Implementation Version : <%= implVersion %></p>
-<% }%>
+
+<c:set var="implVersion" value="<%= implVersion%>" scope="application" />
+<c:set var="jobName" value="<%= jobName %>" scope="application" />
+<c:set var="hudsonServerUrl" value="<%= hudsonServerUrl %>" scope="application" />
+
+<c:if test="${implVersion != null && fn:length(implVersion) != 0}">
+    <c:set var="buildUrl" value="${hudsonServerUrl}//${jobName}//${implVersion}" scope="application"/>
+</c:if>
+
+
+<c:if test="${buildUrl != null && fn:length(buildUrl) != 0}">
+    <p>Uberdust[<a href="<c:out value="${buildUrl}"/>"><c:out value="${implVersion}"/></a>]</p>
+</c:if>
+

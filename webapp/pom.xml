@@ -296,7 +296,11 @@
                     </webResources>
                     <archive>
                         <manifestEntries>
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
                             <Implementation-Version>${BUILD_NUMBER}</Implementation-Version>
+                            <Job-Name>${JOB_NAME}</Job-Name>
+                            <Hudson-URL>${HUDSON_URL}</Hudson-URL>
                         </manifestEntries>
                     </archive>
                 </configuration>
