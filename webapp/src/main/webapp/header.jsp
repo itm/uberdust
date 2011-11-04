@@ -22,6 +22,6 @@
 
 
 <c:if test="${buildUrl != null && fn:length(buildUrl) != 0}">
-    <p style="font-size:small">Uberdust[<a href="<c:out value="${buildUrl}"/>"><c:out value="${implVersion}"/></a>]</p>
+    <p style="font-size:small">Überdust[<a href="<c:out value="${buildUrl}"/>"><c:out value="${implVersion}"/></a>]</p>
 </c:if>
 

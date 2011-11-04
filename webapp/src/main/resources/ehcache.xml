@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
 
-    <defaultCache
-            maxElementsInMemory="100000"
-            eternal="false"
-            overflowToDisk="true"
-            timeToLiveSeconds="60"
-            timeToIdleSeconds="30"/>
+    <defaultCache/>
 
-    <cache name="eu.wisebed.wiseml.model.setup.Node"
-           maxElementsInMemory="100"
-           eternal="false"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LRU"
-           statistics="true"
-           overflowToDisk="true"
+    <cache name="eu.wisebed.model.setup.Node"
+           maxElementsInMemory="500"
+           eternal="true"
             />
-    <cache name="eu.wisebed.wiseml.model.setup.Node.readings"
+    <cache name="eu.wisebed.model.setup.Link"
            maxElementsInMemory="1000"
-           eternal="false"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="600"
-           memoryStoreEvictionPolicy="LRU"
-           statistics="true"
-           overflowToDisk="true"
+           eternal="true"
+            />
+    <cache name="eu.wisebed.model.setup.Capability"
+           maxElementsInMemory="100"
+           eternal="true"
+            />
+    <cache name="eu.wisebed.model.setup.Testbed"
+           maxElementsInMemory="20"
+           eternal="true"
+            />
+    <cache name="eu.wisebed.model.setup.Setup"
+           maxElementsInMemory="20"
+           eternal="true"
             />
     <cache
             name="org.hibernate.cache.StandardQueryCache"
-            maxElementsInMemory="50"
+            maxElementsInMemory="100"
             eternal="false"
             timeToLiveSeconds="120"
-            memoryStoreEvictionPolicy="LRU"
-            statistics="true"
-            overflowToDisk="true"/>
+            overflowToDisk="false"
+            />
+    <cache
+            name="org.hibernate.cache.UpdateTimestampsCache"
+            maxElementsInMemory="100"
+            eternal="false"
+            timeToLiveSeconds="120"
+            overflowToDisk="false"
+            />
 </ehcache>
