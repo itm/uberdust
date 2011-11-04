@@ -17,11 +17,11 @@
 <c:set var="hudsonServerUrl" value="<%= hudsonServerUrl %>" scope="application" />
 
 <c:if test="${implVersion != null && fn:length(implVersion) != 0}">
-    <c:set var="buildUrl" value="${hudsonServerUrl}//${jobName}//${implVersion}" scope="application"/>
+    <c:set var="buildUrl" value="${hudsonServerUrl}/${jobName}/${implVersion}" scope="application"/>
 </c:if>
 
 
 <c:if test="${buildUrl != null && fn:length(buildUrl) != 0}">
-    <p>Uberdust[<a href="<c:out value="${buildUrl}"/>"><c:out value="${implVersion}"/></a>]</p>
+    <p style="font-size:x-small">Uberdust[<a href="<c:out value="${buildUrl}"/>"><c:out value="${implVersion}"/></a>]</p>
 </c:if>
 
