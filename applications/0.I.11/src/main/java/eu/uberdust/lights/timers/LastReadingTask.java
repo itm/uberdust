@@ -29,7 +29,7 @@ public class LastReadingTask extends TimerTask {
 
     @Override
     public void run() {
-
+        final long start = System.currentTimeMillis();
         final long previousPirEvent = LightController.getInstance().getLastReading();
 
         final long lastPirEvent = LightController.getInstance().lastPirEvent();
@@ -64,5 +64,8 @@ public class LastReadingTask extends TimerTask {
             }
             LightController.getInstance().setLastReading(lastPirEvent);
         }
+
+        final long end = System.currentTimeMillis();
+        LOGGER.info(end - start);
     }
 }
