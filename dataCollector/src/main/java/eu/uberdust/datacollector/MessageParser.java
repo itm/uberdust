@@ -19,14 +19,14 @@ public class MessageParser implements Runnable {
         sensors = senses;
     }
 
-    private static final Logger log = Logger.getLogger(DataCollector.class);
+    private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
-    //USEd to get the node id from the string received
-    private String extractNodeId(String linea) {
-        final String line = linea.substring(7);
+
+    private String extractNodeId(final String paramLine) {
+        final String line = paramLine.substring(7);
         final int start = line.indexOf("0x");
         if (start > 0) {
-            final int end = line.indexOf(" ", start);
+            final int end = line.indexOf(' ', start);
             if (end > 0) {
                 return line.substring(start, end);
             }
@@ -41,11 +41,11 @@ public class MessageParser implements Runnable {
         final String node_id = extractNodeId(strLine);
 
         //if there is a node id
-        if (node_id.equals("")) {
+        if ("".equals(node_id)) {
             return;
         }
 
-        log.debug("Node id is " + node_id);
+        LOGGER.debug("Node id is " + node_id);
         //check for capability readings
         boolean found_reading = false;
         //check for all given capabilities
@@ -55,23 +55,21 @@ public class MessageParser implements Runnable {
                 found_reading = true;
                 final int start = strLine.indexOf(sensor) + sensor.length() + 1;
 
-                int end = strLine.indexOf(" ", start);
+                int end = strLine.indexOf(' ', start);
                 if (end == -1) {
                     end = strLine.length() - 2;
                 }
                 int value;
                 try {
                     value = Integer.parseInt(strLine.substring(start, end));
-                    log.debug(sensors.get(sensor) + " value " + value + " node " + node_id);
-                    found_reading = true;
-
-                    CommitNodeReading(node_id, sensors.get(sensor), value);
+                    LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + node_id);
+                    commitNodeReading(node_id, sensors.get(sensor), value);
 
                 } catch (Exception e) {
-                    log.error("Cannot parse value for " + sensor + "'" + strLine.substring(start, end) + "'");
+                    LOGGER.error("Cannot parse value for " + sensor + "'" + strLine.substring(start, end) + "'");
                 }
 
-                if (found_reading) break;
+                break;
             }
         }
 
@@ -81,64 +79,64 @@ public class MessageParser implements Runnable {
             if (strLine.contains("LINK_DOWN")) {
                 //get the target id
                 final int target_start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
-                final int target_end = strLine.indexOf(" ", target_start);
+                final int target_end = strLine.indexOf(' ', target_start);
 
-                CommitLinkReading(node_id, strLine.substring(target_start, target_end), 0);
+                commitLinkReading(node_id, strLine.substring(target_start, target_end), 0);
 
             } else if (strLine.contains("LINK_UP")) {
                 //get the target id
                 final int target_start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
-                final int target_end = strLine.indexOf(" ", target_start);
+                final int target_end = strLine.indexOf(' ', target_start);
 
-                CommitLinkReading(node_id, strLine.substring(target_start, target_end), 1);
+                commitLinkReading(node_id, strLine.substring(target_start, target_end), 1);
             }
         }
     }
 
 
-    private void CommitNodeReading(String node_id, String sensor, int value) {
+    private void commitNodeReading(final String node_id, final String sensor, final int value) {
         //get the node from hibernate
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
-        final String testbedCapabilityPrefix = "urn:wisebed:node:capability:";
+        final String testbedCapPrefix = "urn:wisebed:node:capability:";
         final String nodeId = testbedUrnPrefix + node_id;
-        final String capabilityName = testbedCapabilityPrefix.toLowerCase() + sensor.toLowerCase();
+        final String capabilityName = testbedCapPrefix .toLowerCase() + sensor.toLowerCase();
 
 
-        Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
+        final Transaction transaction = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
             NodeReadingController.getInstance().insertReading(nodeId, capabilityName, testbedUrnPrefix,
                     value, new java.util.Date());
-            tx.commit();
-            log.info("Added " + nodeId + "," + capabilityName + "," + value);
+            transaction.commit();
+            LOGGER.info("Added " + nodeId + "," + capabilityName + "," + value);
 
         } catch (Exception e) {
-            log.error("Problem with " + nodeId + "," + capabilityName + "," + value + " Exception: ");
-            log.error(e);
-            tx.rollback();
+            LOGGER.error("Problem with " + nodeId + "," + capabilityName + "," + value + " Exception: ");
+            LOGGER.error(e);
+            transaction.rollback();
         } finally {
             HibernateUtil.getInstance().closeSession();
         }
     }
 
-    private void CommitLinkReading(String sId, String tId, int status) {
+    private void commitLinkReading(final String sId, final String tId,final int status) {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
-        final String testbedCapabilityPrefix = "status";
+        final String testbedCapPrefix = "status";
         final String sourceId = testbedUrnPrefix + sId;
         final String targetId = testbedUrnPrefix + tId;
 
-        log.debug("Fount a link down " + sourceId + "<<--" + status + "-->>" + targetId);
+        LOGGER.debug("Fount a link down " + sourceId + "<<--" + status + "-->>" + targetId);
 
-        Transaction tx = HibernateUtil.getInstance().getSession().beginTransaction();
+        final Transaction transaction = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            LinkReadingController.getInstance().insertReading(sourceId, targetId, testbedCapabilityPrefix, testbedUrnPrefix, status, 0,
+            LinkReadingController.getInstance().insertReading(sourceId, targetId, testbedCapPrefix, testbedUrnPrefix, status, 0,
                     new java.util.Date());
-            tx.commit();
-            log.info("Added Link " + sourceId + "<<--" + status + "-->>" + targetId);
+            transaction.commit();
+            LOGGER.info("Added Link " + sourceId + "<<--" + status + "-->>" + targetId);
         } catch (Exception e) {
-            tx.rollback();
-            log.error("Problem Link " + sourceId + "<<--" + status + "-->>" + targetId);
+            transaction.rollback();
+            LOGGER.error("Problem Link " + sourceId + "<<--" + status + "-->>" + targetId);
         } finally {
             HibernateUtil.getInstance().closeSession();
         }

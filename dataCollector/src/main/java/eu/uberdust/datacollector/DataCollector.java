@@ -1,5 +1,6 @@
 package eu.uberdust.datacollector;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
@@ -29,7 +30,7 @@ import static org.jboss.netty.channel.Channels.pipeline;
 public class DataCollector {
 
 
-    private static final Logger log = Logger.getLogger(DataCollector.class);
+    private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
     private String host;
     private int port;
     private Channel channel;
@@ -41,17 +42,17 @@ public class DataCollector {
     public DataCollector() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
 
-        log.setLevel(Level.INFO);
+        LOGGER.setLevel(Level.INFO);
 
 
         // Initialize hibernate
         HibernateUtil.connectEntityManagers();
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
         } catch (IOException e) {
-            log.info("No properties file found! dataCollector.properties not found!");
+            LOGGER.info("No properties file found! dataCollector.properties not found!");
             return;
         }
 
@@ -66,14 +67,14 @@ public class DataCollector {
             sensBuilder.append(sensors_names[i]).append("[").append(sensors_prefixes[i]).append("]" + ",");
             sensors.put(sensors_prefixes[i], sensors_names[i]);
         }
-        log.info(sensBuilder);
+        LOGGER.info(sensBuilder);
 
         final String[] device_types = properties.getProperty("device.Types").split(",");
         final StringBuilder devBuilder = new StringBuilder("Devices Monitored: ");
         for (String device_type : device_types) {
             devBuilder.append(device_type).append(",");
         }
-        log.info(devBuilder);
+        LOGGER.info(devBuilder);
         messageCounter = 0;
         lastTime = System.currentTimeMillis();
     }
@@ -81,53 +82,53 @@ public class DataCollector {
     private final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e) throws Exception {
-            final Messages.Msg message = (Messages.Msg) e.getMessage();
+        public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent) throws InvalidProtocolBufferException {
+            final Messages.Msg message = (Messages.Msg) messageEvent.getMessage();
             if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
-                WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
+                final WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
                 parse(wsnAppMessage.toString());
                 messageCounter++;
                 if (messageCounter == 1000) {
                     final long milis = System.currentTimeMillis() - lastTime;
-                    log.info(messageCounter + " messages in " + milis / 1000 + " sec");
+                    LOGGER.info(messageCounter + " messages in " + milis / 1000 + " sec");
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
 
             } else {
-                log.info("got a message of type " + message.getMsgType());
+                LOGGER.info("got a message of type " + message.getMsgType());
             }
         }
 
         @Override
-        public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-            super.channelDisconnected(ctx, e);    //To change body of overridden methods use File | Settings | File Templates.
-            log.info("channelDisconnected");
+        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {
+            super.channelDisconnected(ctx, channelStateEvent);
+            LOGGER.info("channelDisconnected");
             System.exit(1);
         }
 
 
-        private void parse(String toString) {
+        private void parse(final String toString) {
             (new Thread(new MessageParser(toString, sensors))).start();
         }
     };
 
-    private final ChannelPipelineFactory channelPipelineFactory = new ChannelPipelineFactory() {
+    private final ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
         @Override
-        public ChannelPipeline getPipeline() throws Exception {
+        public ChannelPipeline getPipeline() {
 
-            final ChannelPipeline p = pipeline();
+            final ChannelPipeline channelPipeline = pipeline();
 
-            p.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
-            p.addLast("protobufEnvelopeMessageDecoder", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
+            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
+            channelPipeline.addLast("protobufEnvelopeMessageDecoder", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
 
-            p.addLast("frameEncoder", new LengthFieldPrepender(4));
-            p.addLast("protobufEncoder", new ProtobufEncoder());
+            channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+            channelPipeline.addLast("protobufEncoder", new ProtobufEncoder());
 
-            p.addLast("handler", upstreamHandler);
+            channelPipeline.addLast("handler", upstreamHandler);
 
-            return p;
+            return channelPipeline;
 
         }
     };
@@ -135,12 +136,12 @@ public class DataCollector {
 
     //used to connect to testbedruntime
     public void start() {
-        NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+        final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
         bootstrap = new ClientBootstrap(factory);
 
         // Configure the event pipeline factory.
-        bootstrap.setPipelineFactory(channelPipelineFactory);
+        bootstrap.setPipelineFactory(chPipelineFactory);
 
         // Make a new connection.
         final ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
@@ -148,16 +149,7 @@ public class DataCollector {
         // Wait until the connection is made successfully.
         channel = connectFuture.awaitUninterruptibly().getChannel();
         if (!connectFuture.isSuccess()) {
-            log.error("client connect failed!", connectFuture.getCause());
+            LOGGER.error("client connect failed!", connectFuture.getCause());
         }
-    }
-
-    private void stop() {
-
-        channel.close().awaitUninterruptibly();
-        channel = null;
-
-        bootstrap.releaseExternalResources();
-        bootstrap = null;
     }
 }
