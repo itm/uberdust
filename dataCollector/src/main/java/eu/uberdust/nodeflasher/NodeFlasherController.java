@@ -1,6 +1,6 @@
 package eu.uberdust.nodeflasher;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -28,54 +28,54 @@ public class NodeFlasherController {
         try {
             sched = schedulerFactory.getScheduler();
 
-            final JobDetail nFlasherJob = newJob(NodeFlasherJob.class)
-                    .withIdentity("NodeFlasherJob", "group1")
+            final JobDetail nodeFlasherJob = newJob(NodeFlasherJob.class)
+                    .withIdentity("nodeFlasherJob", "group1")
                     .build();
 
-            LOGGER.debug("Created NodeFlasherJob in group1");
+            LOGGER.info("Created nodeFlasherJob in group1");
 
 
-            final JobDetail tReFlasherJob = newJob(PeriodicFlasherJob.class)
-                    .withIdentity("tReFlasherJob", "group2")
+            final JobDetail telosReFlasherJob = newJob(PeriodicFlasherJob.class)
+                    .withIdentity("telosReFlasherJob", "group2")
                     .build();
 
-            LOGGER.debug("Created tReFlasherJob in group2");
+            LOGGER.info("Created telosReFlasherJob in group2");
 
 
             // Trigger the job to run on the next round minute
-            final Trigger pFlasherTrigger = newTrigger()
-                    .withIdentity("pFlasherTrigger", "group1")
+            final Trigger nodeFlasherTrigger = newTrigger()
+                    .withIdentity("nodeFlasherTrigger", "group1")
                     .startAt(new Date(System.currentTimeMillis() + 10000))
                     .withSchedule(simpleSchedule()
                             .withIntervalInMinutes(60)
                             .repeatForever()).build();
 
-            LOGGER.debug("Created pFlasherTrigger");
+            LOGGER.info("Created nodeFlasherTrigger");
 
 
             // Trigger the job to run on the next round minute
-            final Trigger tReFlasherTrigger = newTrigger()
-                    .withIdentity("tReFlasherTrigger", "group2")
-                    .startAt(new Date(System.currentTimeMillis() + 10000))
+            final Trigger telosReFlasherTrigger = newTrigger()
+                    .withIdentity("telosReFlasherTrigger", "group2")
+                    .startAt(new Date(System.currentTimeMillis() + 60000))
                     .withSchedule(simpleSchedule()
                             .withIntervalInHours(24)
                             .repeatForever()).build();
 
-            LOGGER.debug("Created tReFlasherTrigger");
+            LOGGER.info("Created telosReFlasherTrigger");
 
 
             // Tell quartz to schedule the job using our trigger
-            sched.scheduleJob(nFlasherJob, pFlasherTrigger);
-            LOGGER.debug("scheduled nFlasherJob by pFlasherTrigger");
+            sched.scheduleJob(nodeFlasherJob, nodeFlasherTrigger);
+            LOGGER.info("scheduled nodeFlasherJob by nodeFlasherTrigger");
 
             // Tell quartz to schedule the job using our trigger
-            sched.scheduleJob(tReFlasherJob, tReFlasherTrigger);
-            LOGGER.debug("scheduled tReFlasherJob by tReFlasherTrigger");
+            sched.scheduleJob(telosReFlasherJob, telosReFlasherTrigger);
+            LOGGER.info("scheduled telosReFlasherJob by telosReFlasherTrigger");
 
             // Start up the scheduler (nothing can actually run until the
             // scheduler has been started)
             sched.start();
-            LOGGER.debug("stated scheduler");
+            LOGGER.info("stated scheduler");
 
         } catch (SchedulerException e) {
             LOGGER.error(e);  //To change body of catch statement use File | Settings | File Templates.

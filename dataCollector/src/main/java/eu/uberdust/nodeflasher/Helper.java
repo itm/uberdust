@@ -38,7 +38,7 @@ public class Helper {
 
     private RS reservationSystem;
     private SessionManagement sessionManagement;
-    private ArrayList<String> usernames;
+    private List usernames;
     private List urnPrefixes;
     private List secretAuthKeys;
     private String pccHost;
@@ -103,7 +103,7 @@ public class Helper {
 
 
         // Retrieve Java proxies of the endpoint URLs above
-        SNAA authSystem = SNAAServiceHelper.getSNAAService(snaaEndpointURL);
+        final SNAA authSystem = SNAAServiceHelper.getSNAAService(snaaEndpointURL);
         reservationSystem = RSServiceHelper.getRSService(rsEndpointURL);
         sessionManagement = WSNServiceHelper.getSessionManagementService(smEndpointURL);
 
@@ -115,7 +115,7 @@ public class Helper {
             final AuthenticationTriple credentials = new AuthenticationTriple();
 
             credentials.setUrnPrefix((String) urnPrefixes.get(i));
-            credentials.setUsername(usernames.get(i));
+            credentials.setUsername((String) usernames.get(i));
             credentials.setPassword(passwords.get(i));
 
             credentialsList.add(credentials);
@@ -166,7 +166,7 @@ public class Helper {
 
     }
 
-    List getReservations(XMLGregorianCalendar timeFrom, XMLGregorianCalendar timeTo) throws RSExceptionException {
+    List getReservations(final XMLGregorianCalendar timeFrom, final XMLGregorianCalendar timeTo) throws RSExceptionException {
         return reservationSystem.getReservations(timeFrom, timeTo);
     }
 
@@ -174,7 +174,7 @@ public class Helper {
         final String imagePath = properties.getProperty("image." + type);
         try {
             final String reskey = reserveNodes(nodes);
-            String wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reskey), "NONE");
+            final String wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reskey), "NONE");
 
             LOGGER.info("|+   Got a WSN instance URL, endpoint is: " + wsnEndpointURL);
             final WSN wsnService = WSNServiceHelper.getWSNService(wsnEndpointURL);
@@ -190,23 +190,23 @@ public class Helper {
                     wsn.receive(requestStatuses);
                 }
 
-                public void receiveNotification(List msgs) {
+                public void receiveNotification(final List msgs) {
                     for (Object msg : msgs) {
                         LOGGER.info(msg);
                     }
                 }
 
                 public void experimentEnded() {
-                    LOGGER.debug("|+   Experiment ended");
+                    LOGGER.info("|+   Experiment ended");
                     System.exit(0);
                 }
 
                 public void onConnectionEstablished() {
-                    LOGGER.debug("|+   Connection established.");
+                    LOGGER.info("|+   Connection established.");
                 }
 
                 public void onConnectionClosed() {
-                    LOGGER.debug("|+   Connection closed.");
+                    LOGGER.info("|+   Connection closed.");
                 }
             });
             pcc.connect();
@@ -257,7 +257,7 @@ public class Helper {
         }
     }
 
-    public String[] getNodes(String s) {
-        return properties.getProperty(s).split(",");
+    public String[] getNodes(final String nodetype) {
+        return properties.getProperty(nodetype).split(",");
     }
 }
