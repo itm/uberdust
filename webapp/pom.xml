@@ -26,6 +26,7 @@
         <hsqldb.version>2.0.0</hsqldb.version>
         <mysql.connector.version>5.1.10</mysql.connector.version>
         <hibernate.version>3.5.6-Final</hibernate.version>
+        <jetty-version>7.5.0.v20110901</jetty-version>
     </properties>
 
     <repositories>
@@ -71,6 +72,12 @@
             </snapshots>
         </repository>
 
+        <repository>
+            <id>caucho.com/m2/</id>
+            <name>caucho.com/m2/</name>
+            <url>http://caucho.com/m2/</url>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -85,6 +92,18 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
+
+        <pluginRepository>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <id>caucho</id>
+            <name>Caucho</name>
+            <url>http://caucho.com/m2-snapshot</url>
+        </pluginRepository>
+
     </pluginRepositories>
 
     <dependencies>
@@ -223,6 +242,23 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>1.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>resin</artifactId>
+            <version>4.0.23</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>${jetty-version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty-version}</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 

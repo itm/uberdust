@@ -1,0 +1,9 @@
+<web-app xmlns="http://caucho.com/ns/resin">
+
+    <servlet servlet-name="lastreading"
+             servlet-class="eu.uberdust.websockets.LastReadingWebSocket"/>
+    <servlet-mapping url-pattern="/lastreading"
+                     servlet-name="lastreading"/>
+
+</web-app>
+
