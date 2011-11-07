@@ -1,6 +1,6 @@
 package eu.uberdust.nodeflasher;
 
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -56,7 +56,7 @@ public class NodeFlasherController {
             // Trigger the job to run on the next round minute
             final Trigger telosReFlasherTrigger = newTrigger()
                     .withIdentity("telosReFlasherTrigger", "group2")
-                    .startAt(new Date(System.currentTimeMillis() + 60000))
+                    .startAt(new Date(System.currentTimeMillis() + 20000))
                     .withSchedule(simpleSchedule()
                             .withIntervalInHours(24)
                             .repeatForever()).build();

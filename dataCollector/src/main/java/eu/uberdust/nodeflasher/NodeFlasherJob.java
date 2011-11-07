@@ -1,11 +1,18 @@
 package eu.uberdust.nodeflasher;
 
-import eu.wisebed.api.rs.*;
-import org.apache.log4j.*;
-import org.quartz.*;
+import eu.wisebed.api.rs.PublicReservationData;
+import eu.wisebed.api.rs.RSExceptionException;
+import org.apache.log4j.Logger;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
-import javax.xml.datatype.*;
-import java.util.*;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class NodeFlasherJob implements Job {
 
@@ -16,19 +23,21 @@ public class NodeFlasherJob implements Job {
     private static final Logger LOGGER = Logger.getLogger(NodeFlasherJob.class);
     private final Helper helper;
 
-    NodeFlasherJob() {
+    public NodeFlasherJob() {
         helper = new Helper();
     }
 
     public void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
+        checkAndFlash();
+    }
+
+    public void checkAndFlash() {
         LOGGER.info(" |=== Starting a new nodeFlasher");
 
         helper.authenticate();
 
         checkReservations(helper.getNodes("nodes.isense"), "isense");
         checkReservations(helper.getNodes("nodes.telosb"), "telosb");
-
-
     }
 
     private void checkReservations(final String[] nodes, final String type) {

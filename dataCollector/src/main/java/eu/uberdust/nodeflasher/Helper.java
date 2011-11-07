@@ -18,7 +18,8 @@ import eu.wisebed.api.wsn.WSN;
 import eu.wisebed.testbed.api.rs.RSServiceHelper;
 import eu.wisebed.testbed.api.snaa.helpers.SNAAServiceHelper;
 import eu.wisebed.testbed.api.wsn.WSNServiceHelper;
-import org.apache.log4j.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.FileInputStream;
@@ -91,10 +92,12 @@ public class Helper {
 
         pccHost = properties.getProperty("testbed.protobuf.hostname");
         pccPort = Integer.parseInt(properties.getProperty("testbed.protobuf.port"));
+
         Preconditions.checkArgument(
                 urnPrefixes.size() == usernames.size() && usernames.size() == passwords.size(),
                 "The list of URN prefixes must have the same length as the list of usernames and the list of passwords"
         );
+
 
         // Endpoint URLs of Authentication (SNAA), Reservation (RS) and Experimentation (iWSN) services
         final String snaaEndpointURL = properties.getProperty("testbed.snaa.endpointurl");
@@ -171,9 +174,13 @@ public class Helper {
     }
 
     void flash(final String[] nodes, final String type) {
+        LOGGER.info("|+   flashing nodes of type: " + type);
         final String imagePath = properties.getProperty("image." + type);
+        LOGGER.info("|+   set image path to " + imagePath);
         try {
             final String reskey = reserveNodes(nodes);
+            LOGGER.info("|+   reskey=" + reskey);
+
             final String wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reskey), "NONE");
 
             LOGGER.info("|+   Got a WSN instance URL, endpoint is: " + wsnEndpointURL);
@@ -258,6 +265,7 @@ public class Helper {
     }
 
     public String[] getNodes(final String nodetype) {
+        LOGGER.info("| gotNodes " + nodetype);
         return properties.getProperty(nodetype).split(",");
     }
 }
