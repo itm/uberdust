@@ -95,7 +95,8 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     public void update(final Observable o, final Object arg) {
         if (o instanceof LastNodeReadingObservable && arg instanceof NodeReading) {
             final NodeReading lastReading = (NodeReading) arg;
-
+            LOGGER.info(new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString());
+            LOGGER.info(thisProtocol);
             if ((new StringBuilder().append(lastReading.getCapability().getName()).append(":").append(lastReading.getNode().getId()).toString())
                     .equals(thisProtocol)) {
 

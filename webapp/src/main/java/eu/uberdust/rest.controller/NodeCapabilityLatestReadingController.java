@@ -56,9 +56,9 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
 
         // set commandNode object
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
+        //LOGGER.info("command.getNodeId() : " + command.getNodeId());
+        //LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
+        //LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // check input
         if (command.getNodeId() == null || command.getNodeId().isEmpty() || command.getCapabilityId() == null ||
@@ -93,10 +93,10 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
         }
 
         // retrieve node/capability statistics
-        long before = System.currentTimeMillis();
+        //long before = System.currentTimeMillis();
         LastNodeReading lnr = lastNodeReadingManager.getByID(node, capability);
-        long after = System.currentTimeMillis();
-        LOGGER.info("lastNodeReadingManager.getByID(node, capability) took " + (after-before) + " millis.");
+        //long after = System.currentTimeMillis();
+        //LOGGER.info("lastNodeReadingManager.getByID(node, capability) took " + (after-before) + " millis.");
 
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());

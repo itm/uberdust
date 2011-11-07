@@ -26,7 +26,6 @@
         <hsqldb.version>2.0.0</hsqldb.version>
         <mysql.connector.version>5.1.10</mysql.connector.version>
         <hibernate.version>3.5.6-Final</hibernate.version>
-        <jetty-version>7.5.0.v20110901</jetty-version>
     </properties>
 
     <repositories>
@@ -247,18 +246,6 @@
             <groupId>com.caucho</groupId>
             <artifactId>resin</artifactId>
             <version>4.0.23</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-websocket</artifactId>
-            <version>${jetty-version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty-version}</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 
