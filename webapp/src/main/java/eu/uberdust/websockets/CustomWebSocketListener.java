@@ -6,8 +6,6 @@ import eu.wisebed.wisedb.listeners.LastNodeReadingObservable;
 import eu.wisebed.wisedb.model.NodeReading;
 import org.apache.log4j.Logger;
 
-import javax.persistence.metamodel.StaticMetamodel;
-import javax.xml.soap.Node;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -49,7 +47,6 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     public CustomWebSocketListener(final String protocol) {
         super();
         thisProtocol = protocol;
-        LastNodeReadingObservable.getInstance().addObserver(this);
     }
 
     @Override
@@ -96,7 +93,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         if (o instanceof LastNodeReadingObservable && arg instanceof NodeReading) {
             final NodeReading lastReading = (NodeReading) arg;
             LOGGER.info(new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString());
-            LOGGER.info(thisProtocol);
+            LOGGER.info(this);
             if ((new StringBuilder().append(lastReading.getCapability().getName()).append(":").append(lastReading.getNode().getId()).toString())
                     .equals(thisProtocol)) {
 

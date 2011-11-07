@@ -1,6 +1,7 @@
 package eu.uberdust.websockets;
 
 import com.caucho.websocket.WebSocketServletRequest;
+import eu.wisebed.wisedb.listeners.LastNodeReadingObservable;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
@@ -62,6 +63,7 @@ public class LastReadingWebSocket extends GenericServlet {
             thisListener = listeners.get(protocol);
         } else {
             thisListener = new CustomWebSocketListener(protocol);
+            LastNodeReadingObservable.getInstance().addObserver(thisListener);
             listeners.put(protocol, thisListener);
             res.setHeader("Sec-WebSocket-Protocol", protocol);
         }
