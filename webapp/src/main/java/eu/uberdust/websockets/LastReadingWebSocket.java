@@ -2,6 +2,7 @@ package eu.uberdust.websockets;
 
 import com.caucho.websocket.WebSocketServletRequest;
 import eu.wisebed.wisedb.listeners.LastNodeReadingObservable;
+import org.apache.log4j.Logger;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
@@ -16,6 +17,12 @@ import java.util.HashMap;
  * Validates the initial HTTP request and  dispatches a new WebSocket connection.
  */
 public class LastReadingWebSocket extends GenericServlet {
+
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LastReadingWebSocket.class);
+
 
     /**
      * A HashMap<CapabilityID:NodeID>.
@@ -63,7 +70,9 @@ public class LastReadingWebSocket extends GenericServlet {
             thisListener = listeners.get(protocol);
         } else {
             thisListener = new CustomWebSocketListener(protocol);
+            LOGGER.info(LastNodeReadingObservable.getInstance().countObservers());
             LastNodeReadingObservable.getInstance().addObserver(thisListener);
+            LOGGER.info(LastNodeReadingObservable.getInstance().countObservers());
             listeners.put(protocol, thisListener);
             res.setHeader("Sec-WebSocket-Protocol", protocol);
         }
