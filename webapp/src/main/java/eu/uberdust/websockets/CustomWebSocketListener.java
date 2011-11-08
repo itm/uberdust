@@ -90,6 +90,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
 
     @Override
     public void update(final Observable o, final Object arg) {
+        LOGGER.info("New Update");
         if (o instanceof LastNodeReadingObservable && arg instanceof NodeReading) {
             final NodeReading lastReading = (NodeReading) arg;
             LOGGER.info(new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString());
