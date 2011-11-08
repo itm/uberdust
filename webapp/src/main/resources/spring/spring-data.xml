@@ -58,7 +58,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             <map>
                 <entry key="save-update">
                     <bean class="eu.wisebed.wisedb.listeners.LastNodeReadingListener"/>
-                    <bean class="org.hibernate.event.def.DefaultSaveOrUpdateEventListener"/>
                 </entry>
             </map>
         </property>
