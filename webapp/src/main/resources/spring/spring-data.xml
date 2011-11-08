@@ -48,14 +48,26 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="hibernate.jdbc.batch_size">0</prop>
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
                 <prop key="hibernate.cache.use_query_cache">false</prop>
-                <prop key="hibernate.cache.region.factory_class"> net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory</prop>
+                <prop key="hibernate.cache.region.factory_class">
+                    net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory
+                </prop>
             </props>
         </property>
+
+        <property name="eventListeners">
+            <map>
+                <entry key="save-update">
+                    <bean class="eu.wisebed.wisedb.listeners.LastNodeReadingListener"/>
+                    <bean class="org.hibernate.event.def.DefaultSaveOrUpdateEventListener"/>
+                </entry>
+            </map>
+        </property>
+
     </bean>
 
     <!-- injecting an ehcache manager -->
     <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-    <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="configLocation" value="classpath:ehcache.xml"/>
     </bean>
 
     <!-- injecting a hibernate interceptor to session factory -->
@@ -177,4 +189,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <bean id="lastNodeReadingObservable"
           class="eu.wisebed.wisedb.listeners.LastNodeReadingObservable"
           factory-method="getInstance"/>
+
+
 </beans>
