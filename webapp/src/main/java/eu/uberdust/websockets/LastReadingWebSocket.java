@@ -3,6 +3,8 @@ package eu.uberdust.websockets;
 import com.caucho.websocket.WebSocketServletRequest;
 import eu.wisebed.wisedb.listeners.LastNodeReadingObservable;
 import org.apache.log4j.Logger;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
@@ -16,7 +18,9 @@ import java.util.HashMap;
 /**
  * Validates the initial HTTP request and  dispatches a new WebSocket connection.
  */
-public class LastReadingWebSocket extends GenericServlet {
+public class LastReadingWebSocket
+        extends GenericServlet
+        implements Controller {
 
     /**
      * Static Logger.
@@ -46,40 +50,52 @@ public class LastReadingWebSocket extends GenericServlet {
      * @throws IOException
      */
     @Override
-    public void service(final ServletRequest servletRequest, final ServletResponse servletResponse) throws ServletException, IOException {
-        final HttpServletRequest req = (HttpServletRequest) servletRequest;
-        final HttpServletResponse res = (HttpServletResponse) servletResponse;
-
+    public ModelAndView handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
         /*
         * Process the handshake, selecting the protocol to be used.
         * The protocol is Defined by: capabilityID:NodeID
         */
-        final String protocol = req.getHeader("Sec-WebSocket-Protocol");
+        final String protocol = servletRequest.getHeader("Sec-WebSocket-Protocol");
 
         /**
          * TODO: FIX this check.
          */
         if (protocol == null) {
-            res.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
-            return;
+            servletResponse.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            return null;
         }
 
         final CustomWebSocketListener thisListener;
         if (listeners.containsKey(protocol)) {
-            res.setHeader("Sec-WebSocket-Protocol", protocol);
+            servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
             thisListener = listeners.get(protocol);
+
+
         } else {
             thisListener = new CustomWebSocketListener(protocol);
+
+
             LOGGER.info(LastNodeReadingObservable.getInstance().countObservers());
             LastNodeReadingObservable.getInstance().addObserver(thisListener);
             LOGGER.info(LastNodeReadingObservable.getInstance().countObservers());
+
             listeners.put(protocol, thisListener);
-            res.setHeader("Sec-WebSocket-Protocol", protocol);
+            servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
         }
 
         final WebSocketServletRequest wsRequest = (WebSocketServletRequest) servletRequest;
         wsRequest.startWebSocket(thisListener);
+
+        return null;
     }
 
+    @Override
+    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+        try {
+            handleRequest((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
+        } catch (Exception ex) {
+            LOGGER.fatal(ex);
+        }
+    }
 }
 

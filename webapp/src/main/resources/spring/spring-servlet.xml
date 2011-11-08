@@ -49,7 +49,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/wiseml">nodeCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading">nodeCapabilityLastReadingController</prop>
-                <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">nodeCapabilityInsertReadingController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">
+                    nodeCapabilityInsertReadingController
+                </prop>
 
                 <!-- Link/Capability Controllers for readings
                 <prop key="GET /testbed/*/link/*/*/capability/*">linkCapabilityController</prop>
@@ -66,6 +68,17 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
             </props>
         </property>
+    </bean>
+
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/lastreading.ws">lastReadingController</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="lastReadingController" class="eu.uberdust.websockets.LastReadingWebSocket">
     </bean>
 
     <!-- List Testbeds Controller -->
