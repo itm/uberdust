@@ -177,5 +177,4 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <bean id="lastNodeReadingObservable"
           class="eu.wisebed.wisedb.listeners.LastNodeReadingObservable"
           factory-method="getInstance"/>
-
 </beans>
