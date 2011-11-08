@@ -2,26 +2,39 @@ package eu.uberdust.datacollector;
 
 import eu.wisebed.wisedb.HibernateUtil;
 import eu.wisebed.wisedb.controller.LinkReadingController;
-import eu.wisebed.wisedb.controller.NodeReadingController;
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 public class MessageParser implements Runnable {
 
-    private final String strLine;
-    private final Map<String, String> sensors;
+    private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
+    private transient final String strLine;
+    private transient final Map<String, String> sensors;
+
+    /**
+     * @param msg    the message received from the testbed
+     * @param senses the Map containing the sensor codenames on testbed , capability names
+     */
     public MessageParser(final String msg, final Map<String, String> senses) {
 
         strLine = msg.substring(msg.indexOf("binaryData:") + "binaryData:".length());
         sensors = senses;
     }
 
-    private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
-
+    /**
+     * extracts the nodeid from a received testbed message
+     *
+     * @param paramLine the message received from the testbed
+     * @return the node id in hex
+     */
     private String extractNodeId(final String paramLine) {
         final String line = paramLine.substring(7);
         final int start = line.indexOf("0x");
@@ -34,6 +47,9 @@ public class MessageParser implements Runnable {
         return "";
     }
 
+    /**
+     *
+     */
     public void run() {
 
 
@@ -93,50 +109,71 @@ public class MessageParser implements Runnable {
         }
     }
 
-
-    private void commitNodeReading(final String node_id, final String sensor, final int value) {
+    /**
+     * commits a nodeReading to the database using the REST interface
+     *
+     * @param nodeId     the id of the node reporting the reading
+     * @param capability the name of the capability
+     * @param value      the value of the reading
+     */
+    private void commitNodeReading(final String nodeId, final String capability, final int value) {
         //get the node from hibernate
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
         final String testbedCapPrefix = "urn:wisebed:node:capability:";
-        final String nodeId = testbedUrnPrefix + node_id;
-        final String capabilityName = testbedCapPrefix .toLowerCase() + sensor.toLowerCase();
+        final String nodeUrn = testbedUrnPrefix + nodeId;
+        final String capabilityName = testbedCapPrefix.toLowerCase() + capability.toLowerCase();
+        final long milis = System.currentTimeMillis();
 
+        final String insertReadingUrl = "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milis + "/reading/" + value;
 
-        final Transaction transaction = HibernateUtil.getInstance().getSession().beginTransaction();
+        HttpURLConnection httpURLConnection = null;
         try {
-            // insert reading
-            NodeReadingController.getInstance().insertReading(nodeId, capabilityName, testbedUrnPrefix,
-                    value, new java.util.Date());
-            transaction.commit();
-            LOGGER.info("Added " + nodeId + "," + capabilityName + "," + value);
+            final URL url = new URL(insertReadingUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+            if (httpURLConnection.getResponseCode() == 200) {
+                LOGGER.info("Added " + nodeUrn + "," + capabilityName + "," + value);
+            } else {
+                LOGGER.error("Problem with " + nodeUrn + "," + capabilityName + "," + value + " Response: " + httpURLConnection.getResponseCode());
+            }
 
-        } catch (Exception e) {
-            LOGGER.error("Problem with " + nodeId + "," + capabilityName + "," + value + " Exception: ");
-            LOGGER.error(e);
-            transaction.rollback();
+        } catch (final MalformedURLException exception) {
+            LOGGER.error(exception);
+        } catch (final IOException exception) {
+            LOGGER.error(exception);
         } finally {
-            HibernateUtil.getInstance().closeSession();
+            try {
+                httpURLConnection.disconnect();
+            } catch (NullPointerException ignore) {
+            }
         }
     }
 
-    private void commitLinkReading(final String sId, final String tId,final int status) {
+    /**
+     * commits a nodeReading to the database using the Hibernate
+     *
+     * @param sourceId the id of the source node of the link
+     * @param targetId the id of the target node of the link
+     * @param status   the status value of the link
+     */
+    private void commitLinkReading(final String sourceId, final String targetId, final int status) {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
         final String testbedCapPrefix = "status";
-        final String sourceId = testbedUrnPrefix + sId;
-        final String targetId = testbedUrnPrefix + tId;
+        final String sourceUrn = testbedUrnPrefix + sourceId;
+        final String targetUrn = testbedUrnPrefix + targetId;
 
-        LOGGER.debug("Fount a link down " + sourceId + "<<--" + status + "-->>" + targetId);
+        LOGGER.debug("Fount a link down " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
 
         final Transaction transaction = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            LinkReadingController.getInstance().insertReading(sourceId, targetId, testbedCapPrefix, testbedUrnPrefix, status, 0,
+            LinkReadingController.getInstance().insertReading(sourceUrn, targetUrn, testbedCapPrefix, testbedUrnPrefix, status, 0,
                     new java.util.Date());
             transaction.commit();
-            LOGGER.info("Added Link " + sourceId + "<<--" + status + "-->>" + targetId);
+            LOGGER.info("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         } catch (Exception e) {
             transaction.rollback();
-            LOGGER.error("Problem Link " + sourceId + "<<--" + status + "-->>" + targetId);
+            LOGGER.error("Problem Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         } finally {
             HibernateUtil.getInstance().closeSession();
         }
