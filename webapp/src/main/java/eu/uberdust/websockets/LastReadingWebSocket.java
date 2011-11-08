@@ -52,6 +52,7 @@ public class LastReadingWebSocket
      */
     @Override
     public ModelAndView handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
+        LOGGER.info("handleRequest");
         /*
         * Process the handshake, selecting the protocol to be used.
         * The protocol is Defined by: capabilityID:NodeID
@@ -70,8 +71,6 @@ public class LastReadingWebSocket
         if (listeners.containsKey(protocol)) {
             servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
             thisListener = listeners.get(protocol);
-
-
         } else {
             thisListener = new CustomWebSocketListener(protocol);
 
@@ -92,6 +91,7 @@ public class LastReadingWebSocket
 
     @Override
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+        LOGGER.info("service");
         try {
             handleRequest((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
         } catch (Exception ex) {
