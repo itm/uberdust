@@ -82,9 +82,9 @@
     </filter-mapping>
 
 
-    <servlet-mapping>
-        <servlet-name>uberdust-web</servlet-name>
+   <!-- <servlet-mapping>
+        <servlet-name>lastreading</servlet-name>
         <url-pattern>*.ws</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 
 </web-app>
