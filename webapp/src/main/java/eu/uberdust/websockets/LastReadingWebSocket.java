@@ -22,6 +22,7 @@ public class LastReadingWebSocket extends GenericServlet {
      * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(LastReadingWebSocket.class);
+    private static final long serialVersionUID = -7328799291894688509L;
 
 
     /**
