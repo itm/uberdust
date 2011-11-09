@@ -43,34 +43,34 @@ public class NodeFlasherController {
 
 
             // Trigger the job to run on the next round minute
-            final Trigger nodeFlasherTrigger = newTrigger()
-                    .withIdentity("nodeFlasherTrigger", "group1")
+            final Trigger nodeFlasherTg = newTrigger()
+                    .withIdentity("nodeFlasherTg", "group1")
                     .startAt(new Date(System.currentTimeMillis() + 10000))
                     .withSchedule(simpleSchedule()
                             .withIntervalInMinutes(60)
                             .repeatForever()).build();
 
-            LOGGER.info("Created nodeFlasherTrigger");
+            LOGGER.info("Created nodeFlasherTg");
 
 
             // Trigger the job to run on the next round minute
-            final Trigger telosReFlasherTrigger = newTrigger()
-                    .withIdentity("telosReFlasherTrigger", "group2")
+            final Trigger telosReFlasherTg = newTrigger()
+                    .withIdentity("telosReFlasherTg", "group2")
                     .startAt(new Date(System.currentTimeMillis() + 20000))
                     .withSchedule(simpleSchedule()
                             .withIntervalInHours(24)
                             .repeatForever()).build();
 
-            LOGGER.info("Created telosReFlasherTrigger");
+            LOGGER.info("Created telosReFlasherTg");
 
 
             // Tell quartz to schedule the job using our trigger
-            sched.scheduleJob(nodeFlasherJob, nodeFlasherTrigger);
-            LOGGER.info("scheduled nodeFlasherJob by nodeFlasherTrigger");
+            sched.scheduleJob(nodeFlasherJob, nodeFlasherTg);
+            LOGGER.info("scheduled nodeFlasherJob by nodeFlasherTg");
 
             // Tell quartz to schedule the job using our trigger
-            sched.scheduleJob(telosReFlasherJob, telosReFlasherTrigger);
-            LOGGER.info("scheduled telosReFlasherJob by telosReFlasherTrigger");
+            sched.scheduleJob(telosReFlasherJob, telosReFlasherTg);
+            LOGGER.info("scheduled telosReFlasherJob by telosReFlasherTg");
 
             // Start up the scheduler (nothing can actually run until the
             // scheduler has been started)

@@ -2,7 +2,7 @@ package eu.uberdust.websockets;
 
 import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
-import eu.wisebed.wisedb.listeners.LastNodeReadingObservable;
+import eu.wisebed.wisedb.listeners.AbstractNodeReadingListener;
 import eu.wisebed.wisedb.model.NodeReading;
 import org.apache.log4j.Logger;
 
@@ -12,8 +12,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,7 +20,7 @@ import java.util.Observer;
  * Time: 12:00 AM
  * To change this template use File | Settings | File Templates.
  */
-public class CustomWebSocketListener extends AbstractWebSocketListener implements Observer {
+public class CustomWebSocketListener extends AbstractWebSocketListener implements AbstractNodeReadingListener {
 
     /**
      * Static Logger.
@@ -87,27 +85,19 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         users.remove(context);
     }
 
-
     @Override
-    public void update(final Observable o, final Object arg) {
-        LOGGER.info("New Update");
-        if (o instanceof LastNodeReadingObservable && arg instanceof NodeReading) {
-            final NodeReading lastReading = (NodeReading) arg;
-            LOGGER.info(new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString());
-            LOGGER.info(this);
-            if ((new StringBuilder().append(lastReading.getCapability().getName()).append(":").append(lastReading.getNode().getId()).toString())
-                    .equals(thisProtocol)) {
-
-                final String response = new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString();
-                LOGGER.info(response);
-                for (final WebSocketContext user : users) {
-                    try {
-                        final PrintWriter thisWriter = user.startTextMessage();
-                        thisWriter.println(response);
-                        thisWriter.close();
-                    } catch (final IOException e) {
-                        LOGGER.error(e);
-                    }
+    public void update(final NodeReading lastReading) {
+        LOGGER.info("Update");
+        if ((new StringBuilder().append(lastReading.getCapability().getName()).append(LastReadingWebSocket.DELIMITER).append(lastReading.getNode().getId()).toString())
+                .equals(thisProtocol)) {
+            final String response = new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString();
+            for (final WebSocketContext user : users) {
+                try {
+                    final PrintWriter thisWriter = user.startTextMessage();
+                    thisWriter.println(response);
+                    thisWriter.close();
+                } catch (final IOException e) {
+                    LOGGER.error(e);
                 }
             }
         }

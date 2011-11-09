@@ -9,6 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.jboss.netty.bootstrap.ClientBootstrap;
+
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
@@ -18,6 +19,7 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -25,19 +27,41 @@ import java.util.concurrent.Executors;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
-// Import log4j classes.
 
+/**
+ * Opens a connection to a TestbedRuntime server and received debug messages from all nodes to collect data
+ */
 public class DataCollector {
 
-
+    /**
+     * Logger
+     */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
-    private String host;
-    private int port;
-    private Channel channel;
-    private ClientBootstrap bootstrap;
+    /**
+     * testbed hostname
+     */
+    private transient String host;
+    /**
+     * testbed port to connect to
+     */
+    private transient int port;
+    /**
+     * channel used when connecting to receive messages
+     */
+    private transient Channel channel;
+    private transient ClientBootstrap bootstrap;
+    /**
+     * map of the names used in iSense application to capability names
+     */
     private final Map<String, String> sensors = new HashMap<String, String>();
-    private int messageCounter;
-    private long lastTime;
+    /**
+     * counts the messages received - stats
+     */
+    private transient int messageCounter;
+    /**
+     * saves the last time 1000 messages were received - stats
+     */
+    private transient long lastTime;
 
     public DataCollector() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
@@ -45,6 +69,16 @@ public class DataCollector {
         // Initialize hibernate
         HibernateUtil.connectEntityManagers();
 
+        readProperties();
+
+        messageCounter = 0;
+        lastTime = System.currentTimeMillis();
+    }
+
+    /**
+     * Reads the property file
+     */
+    private final void readProperties() {
         final Properties properties = new Properties();
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
@@ -56,27 +90,28 @@ public class DataCollector {
         host = properties.getProperty("runtime.ipAddress");
         port = Integer.parseInt(properties.getProperty("runtime.port"));
 
-        final String[] sensors_names = properties.getProperty("sensors.names").split(",");
-        final String[] sensors_prefixes = properties.getProperty("sensors.prefixes").split(",");
+        final String[] sensorsNames = properties.getProperty("sensors.names").split(",");
+        final String[] sensorsPrefixes = properties.getProperty("sensors.prefixes").split(",");
 
         final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: ");
-        for (int i = 0; i < sensors_names.length; i++) {
-            sensBuilder.append(sensors_names[i]).append("[").append(sensors_prefixes[i]).append("]" + ",");
-            sensors.put(sensors_prefixes[i], sensors_names[i]);
+        for (int i = 0; i < sensorsNames.length; i++) {
+            sensBuilder.append(sensorsNames[i]).append("[").append(sensorsPrefixes[i]).append("]" + ",");
+            sensors.put(sensorsPrefixes[i], sensorsNames[i]);
         }
         LOGGER.info(sensBuilder);
 
-        final String[] device_types = properties.getProperty("device.Types").split(",");
+        final String[] deviceTypes = properties.getProperty("device.Types").split(",");
         final StringBuilder devBuilder = new StringBuilder("Devices Monitored: ");
-        for (String device_type : device_types) {
-            devBuilder.append(device_type).append(",");
+        for (String deviceType : deviceTypes) {
+            devBuilder.append(deviceType).append(",");
         }
         LOGGER.info(devBuilder);
-        messageCounter = 0;
-        lastTime = System.currentTimeMillis();
     }
 
-    private final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
+    /**
+     * Chanel handler that receives the messages and Generates parser threads
+     */
+    private transient final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent) throws InvalidProtocolBufferException {
@@ -86,8 +121,8 @@ public class DataCollector {
                 parse(wsnAppMessage.toString());
                 messageCounter++;
                 if (messageCounter == 1000) {
-                    final long milis = System.currentTimeMillis() - lastTime;
-                    LOGGER.info(messageCounter + " messages in " + milis / 1000 + " sec");
+                    final long milliseconds = System.currentTimeMillis() - lastTime;
+                    LOGGER.info(messageCounter + " messages in " + milliseconds / 1000 + " sec");
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
@@ -98,7 +133,7 @@ public class DataCollector {
         }
 
         @Override
-        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {
+        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {    // NOPMD
             super.channelDisconnected(ctx, channelStateEvent);
             LOGGER.error("channelDisconnected");
             System.exit(1);
@@ -110,7 +145,10 @@ public class DataCollector {
         }
     };
 
-    private final ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
+    /**
+     * Channel factory with custom channelPipeline to parse the received messages
+     */
+    private transient final ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
         @Override
         public ChannelPipeline getPipeline() {
@@ -131,8 +169,10 @@ public class DataCollector {
     };
 
 
-    //used to connect to testbedruntime
-    public void start() {
+    /**
+     * Connects to testbedruntime overlay port to receive all incoming debug messages
+     */
+    public final void start() {
         final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
         bootstrap = new ClientBootstrap(factory);
