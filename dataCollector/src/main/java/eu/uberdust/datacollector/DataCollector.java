@@ -34,6 +34,11 @@ public class DataCollector {
      * Logger
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
+
+    /**
+     *
+     */
+       private static final int REPORT_LIMIT = 1000;
     /**
      * testbed hostname
      */
@@ -45,7 +50,7 @@ public class DataCollector {
     /**
      * map of the names used in iSense application to capability names
      */
-    private final Map<String, String> sensors = new HashMap<String, String>();
+    private transient final Map<String, String> sensors = new HashMap<String, String>();
     /**
      * counts the messages received - stats
      */
@@ -56,7 +61,7 @@ public class DataCollector {
     private transient long lastTime;
 
     public DataCollector() {
-        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
+        PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
 
         // Initialize hibernate
         HibernateUtil.connectEntityManagers();
@@ -73,7 +78,7 @@ public class DataCollector {
     private final void readProperties() {
         final Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("dataCollector.properties"));
         } catch (IOException e) {
             LOGGER.error("No properties file found! dataCollector.properties not found!");
             return;
@@ -112,9 +117,9 @@ public class DataCollector {
                 final WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
                 parse(wsnAppMessage.toString());
                 messageCounter++;
-                if (messageCounter == 100) {
+                if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info(messageCounter + " messages in " + milliseconds / 1000 + " sec");
+                    LOGGER.info("MessageRate : " + (double) messageCounter / (milliseconds / 1000) + " messages/sec");
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
@@ -167,7 +172,7 @@ public class DataCollector {
     public final void start() {
         final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
-        ClientBootstrap bootstrap = new ClientBootstrap(factory);
+        final ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         // Configure the event pipeline factory.
         bootstrap.setPipelineFactory(chPipelineFactory);
@@ -175,8 +180,10 @@ public class DataCollector {
         // Make a new connection.
         final ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
 
+        final Channel channel = connectFuture.awaitUninterruptibly().getChannel();
+        LOGGER.debug(channel.getId());
+
         // Wait until the connection is made successfully.
-        Channel channel = connectFuture.awaitUninterruptibly().getChannel();
         if (!connectFuture.isSuccess()) {
             LOGGER.error("client connect failed!", connectFuture.getCause());
         }
