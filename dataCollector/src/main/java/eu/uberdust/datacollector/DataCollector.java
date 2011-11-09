@@ -5,11 +5,9 @@ import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import eu.wisebed.wisedb.HibernateUtil;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.jboss.netty.bootstrap.ClientBootstrap;
-
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
@@ -19,7 +17,6 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -45,11 +42,6 @@ public class DataCollector {
      * testbed port to connect to
      */
     private transient int port;
-    /**
-     * channel used when connecting to receive messages
-     */
-    private transient Channel channel;
-    private transient ClientBootstrap bootstrap;
     /**
      * map of the names used in iSense application to capability names
      */
@@ -93,17 +85,17 @@ public class DataCollector {
         final String[] sensorsNames = properties.getProperty("sensors.names").split(",");
         final String[] sensorsPrefixes = properties.getProperty("sensors.prefixes").split(",");
 
-        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: ");
+        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: \n");
         for (int i = 0; i < sensorsNames.length; i++) {
-            sensBuilder.append(sensorsNames[i]).append("[").append(sensorsPrefixes[i]).append("]" + ",");
+            sensBuilder.append(sensorsNames[i]).append("[").append(sensorsPrefixes[i]).append("]").append("\n");
             sensors.put(sensorsPrefixes[i], sensorsNames[i]);
         }
         LOGGER.info(sensBuilder);
 
         final String[] deviceTypes = properties.getProperty("device.Types").split(",");
-        final StringBuilder devBuilder = new StringBuilder("Devices Monitored: ");
+        final StringBuilder devBuilder = new StringBuilder("Devices Monitored: \n");
         for (String deviceType : deviceTypes) {
-            devBuilder.append(deviceType).append(",");
+            devBuilder.append(deviceType).append("\n");
         }
         LOGGER.info(devBuilder);
     }
@@ -120,7 +112,7 @@ public class DataCollector {
                 final WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
                 parse(wsnAppMessage.toString());
                 messageCounter++;
-                if (messageCounter == 1000) {
+                if (messageCounter == 100) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
                     LOGGER.info(messageCounter + " messages in " + milliseconds / 1000 + " sec");
                     lastTime = System.currentTimeMillis();
@@ -175,7 +167,7 @@ public class DataCollector {
     public final void start() {
         final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
-        bootstrap = new ClientBootstrap(factory);
+        ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         // Configure the event pipeline factory.
         bootstrap.setPipelineFactory(chPipelineFactory);
@@ -184,7 +176,7 @@ public class DataCollector {
         final ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
 
         // Wait until the connection is made successfully.
-        channel = connectFuture.awaitUninterruptibly().getChannel();
+        Channel channel = connectFuture.awaitUninterruptibly().getChannel();
         if (!connectFuture.isSuccess()) {
             LOGGER.error("client connect failed!", connectFuture.getCause());
         }
