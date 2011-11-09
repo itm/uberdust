@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-public class MessageParser implements Runnable {
+public class MessageParser implements Runnable {                   // NOPMD
 
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 

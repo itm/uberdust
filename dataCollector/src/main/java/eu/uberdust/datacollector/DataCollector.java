@@ -141,7 +141,7 @@ public class DataCollector {
 
 
         private void parse(final String toString) {
-            (new Thread(new MessageParser(toString, sensors))).start();
+            (new Thread(new MessageParser(toString, sensors))).start(); //NOPMD
         }
     };
 
