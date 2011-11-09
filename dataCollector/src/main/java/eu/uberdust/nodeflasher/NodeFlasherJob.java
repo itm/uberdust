@@ -158,6 +158,7 @@ public class NodeFlasherJob implements Job {
             }
         }
 
+
         return futureResList.isEmpty();
 
     }
