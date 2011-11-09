@@ -5,11 +5,9 @@ import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import eu.wisebed.wisedb.HibernateUtil;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.jboss.netty.bootstrap.ClientBootstrap;
-
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
@@ -19,7 +17,6 @@ import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -29,45 +26,42 @@ import static org.jboss.netty.channel.Channels.pipeline;
 
 
 /**
- * Opens a connection to a TestbedRuntime server and received debug messages from all nodes to collect data
+ * Opens a connection to a TestbedRuntime server and received debug messages from all nodes to collect data.
  */
 public class DataCollector {
 
     /**
-     * Logger
+     * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
+
+    /**
+     *
+     */
+       private static final int REPORT_LIMIT = 1000;
     /**
      * testbed hostname
      */
     private transient String host;
     /**
-     * testbed port to connect to
+     * testbed port to connect to.
      */
     private transient int port;
     /**
-     * channel used when connecting to receive messages
+     * map of the names used in iSense application to capability names.
      */
-    private transient Channel channel;
-    private transient ClientBootstrap bootstrap;
+    private transient final Map<String, String> sensors = new HashMap<String, String>();
     /**
-     * map of the names used in iSense application to capability names
-     */
-    private final Map<String, String> sensors = new HashMap<String, String>();
-    /**
-     * counts the messages received - stats
+     * counts the messages received - stats.
      */
     private transient int messageCounter;
     /**
-     * saves the last time 1000 messages were received - stats
+     * saves the last time 1000 messages were received - stats.
      */
     private transient long lastTime;
 
     public DataCollector() {
-        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
-
-        LOGGER.setLevel(Level.INFO);
-
+        PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
 
         // Initialize hibernate
         HibernateUtil.connectEntityManagers();
@@ -79,14 +73,14 @@ public class DataCollector {
     }
 
     /**
-     * Reads the property file
+     * Reads the property file.
      */
     private final void readProperties() {
         final Properties properties = new Properties();
         try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("dataCollector.properties"));
         } catch (IOException e) {
-            LOGGER.info("No properties file found! dataCollector.properties not found!");
+            LOGGER.error("No properties file found! dataCollector.properties not found!");
             return;
         }
 
@@ -96,23 +90,23 @@ public class DataCollector {
         final String[] sensorsNames = properties.getProperty("sensors.names").split(",");
         final String[] sensorsPrefixes = properties.getProperty("sensors.prefixes").split(",");
 
-        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: ");
+        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: \n");
         for (int i = 0; i < sensorsNames.length; i++) {
-            sensBuilder.append(sensorsNames[i]).append("[").append(sensorsPrefixes[i]).append("]" + ",");
+            sensBuilder.append(sensorsNames[i]).append("[").append(sensorsPrefixes[i]).append("]").append("\n");
             sensors.put(sensorsPrefixes[i], sensorsNames[i]);
         }
         LOGGER.info(sensBuilder);
 
         final String[] deviceTypes = properties.getProperty("device.Types").split(",");
-        final StringBuilder devBuilder = new StringBuilder("Devices Monitored: ");
+        final StringBuilder devBuilder = new StringBuilder("Devices Monitored: \n");
         for (String deviceType : deviceTypes) {
-            devBuilder.append(deviceType).append(",");
+            devBuilder.append(deviceType).append("\n");
         }
         LOGGER.info(devBuilder);
     }
 
     /**
-     * Chanel handler that receives the messages and Generates parser threads
+     * Chanel handler that receives the messages and Generates parser threads.
      */
     private transient final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
@@ -123,33 +117,33 @@ public class DataCollector {
                 final WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
                 parse(wsnAppMessage.toString());
                 messageCounter++;
-                if (messageCounter == 1000) {
+                if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info(messageCounter + " messages in " + milliseconds / 1000 + " sec");
+                    LOGGER.info("MessageRate : " + (double) messageCounter / (milliseconds / 1000) + " messages/sec");
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
 
             } else {
-                LOGGER.info("got a message of type " + message.getMsgType());
+                LOGGER.error("got a message of type " + message.getMsgType());
             }
         }
 
         @Override
         public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {    // NOPMD
             super.channelDisconnected(ctx, channelStateEvent);
-            LOGGER.info("channelDisconnected");
+            LOGGER.error("channelDisconnected");
             System.exit(1);
         }
 
 
         private void parse(final String toString) {
-            (new Thread(new MessageParser(toString, sensors))).start();
+            (new Thread(new MessageParser(toString, sensors))).start(); //NOPMD
         }
     };
 
     /**
-     * Channel factory with custom channelPipeline to parse the received messages
+     * Channel factory with custom channelPipeline to parse the received messages.
      */
     private transient final ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
@@ -173,12 +167,12 @@ public class DataCollector {
 
 
     /**
-     * Connects to testbedruntime overlay port to receive all incoming debug messages
+     * Connects to testbedruntime overlay port to receive all incoming debug messages.
      */
     public final void start() {
         final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
-        bootstrap = new ClientBootstrap(factory);
+        final ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
         // Configure the event pipeline factory.
         bootstrap.setPipelineFactory(chPipelineFactory);
@@ -186,8 +180,10 @@ public class DataCollector {
         // Make a new connection.
         final ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
 
+        final Channel channel = connectFuture.awaitUninterruptibly().getChannel();
+        LOGGER.debug(channel.getId());
+
         // Wait until the connection is made successfully.
-        channel = connectFuture.awaitUninterruptibly().getChannel();
         if (!connectFuture.isSuccess()) {
             LOGGER.error("client connect failed!", connectFuture.getCause());
         }

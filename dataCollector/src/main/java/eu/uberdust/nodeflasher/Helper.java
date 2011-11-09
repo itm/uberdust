@@ -62,7 +62,7 @@ public class Helper {
     }
 
     /**
-     * Authenticates to the testbed authentication system
+     * Authenticates to the testbed authentication system.
      */
     void authenticate() {
 
@@ -166,10 +166,13 @@ public class Helper {
             );
         } catch (AuthorizationExceptionException e) {
             LOGGER.error(e);
+            return "";
         } catch (RSExceptionException e) {
             LOGGER.error(e);
+            return "";
         } catch (ReservervationConflictExceptionException e) {
             LOGGER.error(e);
+            return "";
         }
         LOGGER.info("|+   Successfully reserved " + nodeURNsToReserve.size() + " nodes");
         LOGGER.info("|+   Reservation Key(s): " + BeanShellHelper.toString(secretResKeys));
@@ -179,7 +182,7 @@ public class Helper {
     }
 
     /**
-     * Rethrieves the list of testbed reservations from the TestbedRuntime RS
+     * Rethrieves the list of testbed reservations from the TestbedRuntime RS.
      *
      * @param timeFrom Starting time
      * @param timeTo   Ending time
@@ -191,7 +194,7 @@ public class Helper {
     }
 
     /**
-     * flashes the nodes with the default image defined by type
+     * flashes the nodes with the default image defined by type.
      *
      * @param nodes The nodes to flash
      * @param type  The type of the nodes, used to select the correct image
@@ -202,6 +205,7 @@ public class Helper {
         LOGGER.info("|+   set image path to " + imagePath);
         try {
             final String reservationKey = reserveNodes(nodes);
+            if ("".equals(reservationKey)) return;
             LOGGER.info("|+   reservationKey=" + reservationKey);
 
             final String wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reservationKey), "NONE");
@@ -277,15 +281,15 @@ public class Helper {
             pcc.disconnect();
 
         } catch (ExperimentNotRunningException_Exception e) {
-            LOGGER.error(e);
+            LOGGER.error(e.toString());
         } catch (ExecutionException e) {
-            LOGGER.error(e);
+            LOGGER.error(e.toString());
         } catch (UnknownReservationIdException_Exception e) {
-            LOGGER.error(e);
+            LOGGER.error(e.toString());
         } catch (InterruptedException e) {
-            LOGGER.error(e);
+            LOGGER.error(e.toString());
         } catch (Exception e) {
-            LOGGER.error(e);
+            LOGGER.error(e.toString());
         }
     }
 

@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-public class MessageParser implements Runnable {
+public class MessageParser implements Runnable {                   // NOPMD
 
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
@@ -143,7 +143,7 @@ public class MessageParser implements Runnable {
             httpURLConnection.connect();
 
             if (httpURLConnection.getResponseCode() == 200) {
-                LOGGER.info("Added " + nodeUrn + "," + capabilityName + "," + value);
+                LOGGER.debug("Added " + nodeUrn + "," + capabilityName + "," + value);
             } else {
                 LOGGER.error("Problem with " + nodeUrn + "," + capabilityName + "," + value + " Response: " + httpURLConnection.getResponseCode());
             }
@@ -154,7 +154,7 @@ public class MessageParser implements Runnable {
     }
 
     /**
-     * commits a nodeReading to the database using the Hibernate
+     * commits a nodeReading to the database using the Hibernate.
      *
      * @param sourceId the id of the source node of the link
      * @param targetId the id of the target node of the link
@@ -174,7 +174,7 @@ public class MessageParser implements Runnable {
             LinkReadingController.getInstance().insertReading(sourceUrn, targetUrn, testbedCapPrefix, testbedUrnPrefix, status, 0,
                     new java.util.Date());
             transaction.commit();
-            LOGGER.info("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
+            LOGGER.debug("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         } catch (Exception e) {
             transaction.rollback();
             LOGGER.error("Problem Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
