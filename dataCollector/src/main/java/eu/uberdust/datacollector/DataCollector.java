@@ -38,9 +38,9 @@ public class DataCollector {
     /**
      *
      */
-       private static final int REPORT_LIMIT = 1000;
+    private static final int REPORT_LIMIT = 1000;
     /**
-     * testbed hostname
+     * testbed hostname.
      */
     private transient String host;
     /**
@@ -50,7 +50,7 @@ public class DataCollector {
     /**
      * map of the names used in iSense application to capability names.
      */
-    private transient final Map<String, String> sensors = new HashMap<String, String>();
+    private final transient Map<String, String> sensors = new HashMap<String, String>();
     /**
      * counts the messages received - stats.
      */
@@ -60,6 +60,9 @@ public class DataCollector {
      */
     private transient long lastTime;
 
+    /**
+     * Default Constructor.
+     */
     public DataCollector() {
         PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
 
@@ -75,7 +78,7 @@ public class DataCollector {
     /**
      * Reads the property file.
      */
-    private final void readProperties() {
+    private void readProperties() {
         final Properties properties = new Properties();
         try {
             properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("dataCollector.properties"));
@@ -108,7 +111,7 @@ public class DataCollector {
     /**
      * Chanel handler that receives the messages and Generates parser threads.
      */
-    private transient final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
+    private final transient SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent) throws InvalidProtocolBufferException {
@@ -119,7 +122,7 @@ public class DataCollector {
                 messageCounter++;
                 if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info("MessageRate : " + (double) messageCounter / (milliseconds / 1000) + " messages/sec");
+                    LOGGER.info("MessageRate : " + messageCounter / (double) (milliseconds / 1000) + " messages/sec");
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
@@ -145,7 +148,7 @@ public class DataCollector {
     /**
      * Channel factory with custom channelPipeline to parse the received messages.
      */
-    private transient final ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
+    private final transient ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
         @Override
         public ChannelPipeline getPipeline() {
