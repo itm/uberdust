@@ -21,7 +21,7 @@ public class NodeFlasherJob implements Job {
     private static final int MINUTES_AFTER = 60;
 
     private static final Logger LOGGER = Logger.getLogger(NodeFlasherJob.class);
-    private final Helper helper;
+    private transient final Helper helper;
 
     public NodeFlasherJob() {
         helper = new Helper();
@@ -44,90 +44,121 @@ public class NodeFlasherJob implements Job {
 
 
         LOGGER.info("|==  Checking for " + type + " nodes");
-        try {
-
-            GregorianCalendar cal = new GregorianCalendar();
-            long from = (new Date()).getTime();
-            cal.setTimeInMillis(from);
-            XMLGregorianCalendar timeFrom;
-
-            timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-            from = (new Date()).getTime() + MINUTES_AFTER * 60 * 1000;
-            cal.setTimeInMillis(from);
-            XMLGregorianCalendar timeTo;
-            timeTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-            List futureResList;
-
-            futureResList = helper.getReservations(timeFrom, timeTo);
 
 
-            for (int i = 0; i < futureResList.size(); i++) {
-                final PublicReservationData pubData = (PublicReservationData) futureResList.get(i);
-
-                boolean isRelevant = false;
-                for (String nodeurn : nodes) {
-                    if (pubData.getNodeURNs().toString().contains(nodeurn)) {
-                        isRelevant = true;
-                    }
-                }
-                if (!isRelevant) {
-                    futureResList.remove(i);
-                    //move back to the next reservation which is now current i
-                    i--;
-                }
-            }
-
-
-            cal = new GregorianCalendar();
-            from = (new Date()).getTime() - MINUTES_BEFORE * 60 * 1000;
-            cal.setTimeInMillis(from);
-
-
-            timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-            from = (new Date()).getTime();
-            cal.setTimeInMillis(from);
-
-            timeTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-
-            List previousResList;
-            previousResList = helper.getReservations(timeFrom, timeTo);
-
-            for (int i = 0; i < previousResList.size(); i++) {
-                final PublicReservationData pubData = (PublicReservationData) previousResList.get(i);
-                boolean isRelevant = false;
-                for (String nodeurn : nodes) {
-                    if (pubData.getNodeURNs().toString().contains(nodeurn)) {
-                        isRelevant = true;
-                    }
-                }
-                if (!isRelevant) {
-                    previousResList.remove(i);
-                    //move back to the next reservation which is now current i
-                    i--;
-                }
-            }
-
-
-            if (futureResList.isEmpty()) {
-                if (previousResList.isEmpty()) {
-                    LOGGER.info("|=  No reservations found, No need to reFlash the " + type + " nodes.");
-                } else {
-                    LOGGER.info("|== Need to reFlash the " + type + " nodes.");
-                    helper.flash(nodes, type);
-                }
+        if (emptyFutureList(nodes)) {
+            if (existedPreviousList(nodes)) {
+                LOGGER.info("|== Need to reFlash the " + type + " nodes.");
+                helper.flash(nodes, type);
             } else {
-                LOGGER.info("|=  Pending Reservation, Cannot reFlash the " + type + " nodes now.");
+                LOGGER.info("|=  No reservations found, No need to reFlash the " + type + " nodes.");
             }
-
-
-        } catch (DatatypeConfigurationException e) {
-            LOGGER.error(e);
-        } catch (RSExceptionException e) {
-            LOGGER.error(e);
+        } else {
+            LOGGER.info("|=  Pending Reservation, Cannot reFlash the " + type + " nodes now.");
         }
+
+
+    }
+
+    private boolean existedPreviousList(final String[] nodes) {
+        GregorianCalendar cal = new GregorianCalendar();
+        long from = (new Date()).getTime() - MINUTES_BEFORE * 60 * 1000;
+        cal.setTimeInMillis(from);
+        XMLGregorianCalendar timeFrom;
+
+        try {
+            timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        } catch (DatatypeConfigurationException e) {
+            LOGGER.error("PreviousTimeFrom :" + e);
+            return false;
+        }
+
+        from = (new Date()).getTime();
+        cal.setTimeInMillis(from);
+        XMLGregorianCalendar timeTo;
+        try {
+            timeTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        } catch (DatatypeConfigurationException e) {
+            LOGGER.error("PreviousTimeTo :" + e);
+            return false;
+        }
+
+        List previousResList;
+        try {
+            previousResList = helper.getReservations(timeFrom, timeTo);
+        } catch (RSExceptionException e) {
+            LOGGER.error("previousResList.getReservations " + e);
+            return false;
+        }
+
+        for (int i = 0; i < previousResList.size(); i++) {
+            final PublicReservationData pubData = (PublicReservationData) previousResList.get(i);
+            boolean isRelevant = false;
+            for (String nodeUrn : nodes) {
+                if (pubData.getNodeURNs().toString().contains(nodeUrn)) {
+                    isRelevant = true;
+                }
+            }
+            if (!isRelevant) {
+                previousResList.remove(i);
+                //move back to the next reservation which is now current i
+                i--;
+            }
+        }
+        return !previousResList.isEmpty();
+    }
+
+    private boolean emptyFutureList(final String[] nodes) {
+
+        GregorianCalendar cal = new GregorianCalendar();
+        long from = (new Date()).getTime();
+        cal.setTimeInMillis(from);
+        XMLGregorianCalendar timeFrom;
+
+        try {
+            timeFrom = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        } catch (DatatypeConfigurationException e) {
+            LOGGER.error("FutureTimeFrom :" + e);
+            return false;
+        }
+
+        from = (new Date()).getTime() + MINUTES_AFTER * 60 * 1000;
+        cal.setTimeInMillis(from);
+        XMLGregorianCalendar timeTo;
+        try {
+            timeTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+        } catch (DatatypeConfigurationException e) {
+            LOGGER.error("FutureTimeTo :" + e);
+            return false;
+        }
+
+        List futureResList;
+
+        try {
+            futureResList = helper.getReservations(timeFrom, timeTo);
+        } catch (RSExceptionException e) {
+            LOGGER.error("futureResList.getReservations " + e);
+            return false;
+        }
+
+
+        for (int i = 0; i < futureResList.size(); i++) {
+            final PublicReservationData pubData = (PublicReservationData) futureResList.get(i);
+
+            boolean isRelevant = false;
+            for (String nodeUrn : nodes) {
+                if (pubData.getNodeURNs().toString().contains(nodeUrn)) {
+                    isRelevant = true;
+                }
+            }
+            if (!isRelevant) {
+                futureResList.remove(i);
+                //move back to the next reservation which is now current i
+                i--;
+            }
+        }
+
+        return futureResList.isEmpty();
 
     }
 

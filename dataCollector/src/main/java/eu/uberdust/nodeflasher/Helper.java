@@ -9,7 +9,9 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient
 import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClientListener;
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
 import eu.wisebed.api.rs.*;
+import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
 import eu.wisebed.api.sm.SessionManagement;
+import eu.wisebed.api.sm.UnknownReservationIdException_Exception;
 import eu.wisebed.api.snaa.AuthenticationExceptionException;
 import eu.wisebed.api.snaa.AuthenticationTriple;
 import eu.wisebed.api.snaa.SNAA;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -37,13 +40,13 @@ public class Helper {
     private static final Logger LOGGER = Logger.getLogger(Helper.class);
     Properties properties;
 
-    private RS reservationSystem;
-    private SessionManagement sessionManagement;
-    private List usernames;
-    private List urnPrefixes;
-    private List secretAuthKeys;
-    private String pccHost;
-    private int pccPort;
+    private transient RS reservationSystem;
+    private transient SessionManagement sessionManagement;
+    private transient List usernames;
+    private transient List urnPrefixes;
+    private transient List secretAuthKeys;
+    private transient String pccHost;
+    private transient int pccPort;
 
     Helper() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
@@ -58,6 +61,9 @@ public class Helper {
 
     }
 
+    /**
+     * Authenticates to the testbed authentication system
+     */
     void authenticate() {
 
         // Authentication credentials and other relevant information used again and again as method parameters
@@ -138,7 +144,10 @@ public class Helper {
 
     }
 
-
+    /**
+     * @param nodes The nodes to reserve
+     * @return The resulting Res Key
+     */
     String reserveNodes(final String[] nodes) {
 
         LOGGER.info("|+   Trying to reserve " + nodes.length + " nodes");
@@ -169,25 +178,39 @@ public class Helper {
 
     }
 
+    /**
+     * Rethrieves the list of testbed reservations from the TestbedRuntime RS
+     *
+     * @param timeFrom Starting time
+     * @param timeTo   Ending time
+     * @return list of the Reservations
+     * @throws RSExceptionException
+     */
     List getReservations(final XMLGregorianCalendar timeFrom, final XMLGregorianCalendar timeTo) throws RSExceptionException {
         return reservationSystem.getReservations(timeFrom, timeTo);
     }
 
+    /**
+     * flashes the nodes with the default image defined by type
+     *
+     * @param nodes The nodes to flash
+     * @param type  The type of the nodes, used to select the correct image
+     */
     void flash(final String[] nodes, final String type) {
         LOGGER.info("|+   flashing nodes of type: " + type);
         final String imagePath = properties.getProperty("image." + type);
         LOGGER.info("|+   set image path to " + imagePath);
         try {
-            final String reskey = reserveNodes(nodes);
-            LOGGER.info("|+   reskey=" + reskey);
+            final String reservationKey = reserveNodes(nodes);
+            LOGGER.info("|+   reservationKey=" + reservationKey);
 
-            final String wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reskey), "NONE");
+            final String wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reservationKey), "NONE");
 
             LOGGER.info("|+   Got a WSN instance URL, endpoint is: " + wsnEndpointURL);
             final WSN wsnService = WSNServiceHelper.getWSNService(wsnEndpointURL);
             final WSNAsyncWrapper wsn = WSNAsyncWrapper.of(wsnService);
 
-            final ProtobufControllerClient pcc = ProtobufControllerClient.create(pccHost, pccPort, BeanShellHelper.parseSecretReservationKeys(reskey));
+            final ProtobufControllerClient pcc = ProtobufControllerClient.create(pccHost, pccPort, BeanShellHelper.parseSecretReservationKeys(reservationKey));
             pcc.addListener(new ProtobufControllerClientListener() {
                 public void receive(final List msg) {
                     // nothing to do
@@ -228,7 +251,7 @@ public class Helper {
             List programs;
 
 
-            // flash isense nodes
+            // flash iSense nodes
             programIndices = new ArrayList();
             programs = new ArrayList();
             for (Object aNodeURNsToFlash : nodeURNsToFlash) {
@@ -236,13 +259,7 @@ public class Helper {
             }
 
 
-            programs.add(BeanShellHelper.readProgram(
-                    imagePath,
-                    "",
-                    "",
-                    "iSense",
-                    "1.0"
-            ));
+            programs.add(BeanShellHelper.readProgram(imagePath, "", "", "iSense", "1.0"));
 
 
             final Future flashFuture = wsn.flashPrograms(nodeURNsToFlash, programIndices, programs, 3, TimeUnit.MINUTES);
@@ -259,6 +276,14 @@ public class Helper {
             LOGGER.info("|+   Closing connection...");
             pcc.disconnect();
 
+        } catch (ExperimentNotRunningException_Exception e) {
+            LOGGER.error(e);
+        } catch (ExecutionException e) {
+            LOGGER.error(e);
+        } catch (UnknownReservationIdException_Exception e) {
+            LOGGER.error(e);
+        } catch (InterruptedException e) {
+            LOGGER.error(e);
         } catch (Exception e) {
             LOGGER.error(e);
         }

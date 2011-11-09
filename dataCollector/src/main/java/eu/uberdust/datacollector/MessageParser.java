@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Map;
 
 public class MessageParser implements Runnable {
@@ -30,7 +31,7 @@ public class MessageParser implements Runnable {
 
 
     /**
-     * extracts the nodeid from a received testbed message
+     * extracts the nodeid from a received testbed message.
      *
      * @param paramLine the message received from the testbed
      * @return the node id in hex
@@ -50,25 +51,25 @@ public class MessageParser implements Runnable {
     /**
      *
      */
-    public void run() {
+    public final void run() {
 
 
         //get the node id
-        final String node_id = extractNodeId(strLine);
+        final String nodeId = extractNodeId(strLine);
 
         //if there is a node id
-        if ("".equals(node_id)) {
+        if ("".equals(nodeId)) {
             return;
         }
 
-        LOGGER.debug("Node id is " + node_id);
+        LOGGER.debug("Node id is " + nodeId);
         //check for capability readings
-        boolean found_reading = false;
+        boolean foundReading = false;
         //check for all given capabilities
 
         for (String sensor : sensors.keySet()) {
             if (strLine.indexOf(sensor) > 0) {
-                found_reading = true;
+                foundReading = true;
                 final int start = strLine.indexOf(sensor) + sensor.length() + 1;
 
                 int end = strLine.indexOf(' ', start);
@@ -78,8 +79,8 @@ public class MessageParser implements Runnable {
                 int value;
                 try {
                     value = Integer.parseInt(strLine.substring(start, end));
-                    LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + node_id);
-                    commitNodeReading(node_id, sensors.get(sensor), value);
+                    LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
+                    commitNodeReading(nodeId, sensors.get(sensor), value);
 
                 } catch (Exception e) {
                     LOGGER.error("Cannot parse value for " + sensor + "'" + strLine.substring(start, end) + "'");
@@ -90,27 +91,27 @@ public class MessageParser implements Runnable {
         }
 
         //if not a node reading message
-        if (!found_reading) {
+        if (!foundReading) {
             // check for link down message
             if (strLine.contains("LINK_DOWN")) {
                 //get the target id
-                final int target_start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
-                final int target_end = strLine.indexOf(' ', target_start);
+                final int targetStart = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
+                final int targetEnd = strLine.indexOf(' ', targetStart);
 
-                commitLinkReading(node_id, strLine.substring(target_start, target_end), 0);
+                commitLinkReading(nodeId, strLine.substring(targetStart, targetEnd), 0);
 
             } else if (strLine.contains("LINK_UP")) {
                 //get the target id
-                final int target_start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
-                final int target_end = strLine.indexOf(' ', target_start);
+                final int targetStart = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
+                final int targetEnd = strLine.indexOf(' ', targetStart);
 
-                commitLinkReading(node_id, strLine.substring(target_start, target_end), 1);
+                commitLinkReading(nodeId, strLine.substring(targetStart, targetEnd), 1);
             }
         }
     }
 
     /**
-     * commits a nodeReading to the database using the REST interface
+     * Commits a nodeReading to the database using the REST interface.
      *
      * @param nodeId     the id of the node reporting the reading
      * @param capability the name of the capability
@@ -121,31 +122,34 @@ public class MessageParser implements Runnable {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
         final String testbedCapPrefix = "urn:wisebed:node:capability:";
         final String nodeUrn = testbedUrnPrefix + nodeId;
-        final String capabilityName = testbedCapPrefix.toLowerCase() + capability.toLowerCase();
-        final long milis = System.currentTimeMillis();
+        final String capabilityName = (testbedCapPrefix + capability).toLowerCase(Locale.US);
 
-        final String insertReadingUrl = "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milis + "/reading/" + value;
+        final long milliseconds = System.currentTimeMillis();
+
+        final String insertReadingUrl = "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milliseconds + "/reading/" + value;
 
         HttpURLConnection httpURLConnection = null;
+
+        URL url = null;
         try {
-            final URL url = new URL(insertReadingUrl);
+            url = new URL(insertReadingUrl);
+        } catch (MalformedURLException e) {
+            LOGGER.error(e);
+            return;
+        }
+
+        try {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
+
             if (httpURLConnection.getResponseCode() == 200) {
                 LOGGER.info("Added " + nodeUrn + "," + capabilityName + "," + value);
             } else {
                 LOGGER.error("Problem with " + nodeUrn + "," + capabilityName + "," + value + " Response: " + httpURLConnection.getResponseCode());
             }
-
-        } catch (final MalformedURLException exception) {
-            LOGGER.error(exception);
-        } catch (final IOException exception) {
-            LOGGER.error(exception);
-        } finally {
-            try {
-                httpURLConnection.disconnect();
-            } catch (NullPointerException ignore) {
-            }
+            httpURLConnection.disconnect();
+        } catch (IOException e) {
+            LOGGER.error(e);
         }
     }
 
