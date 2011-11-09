@@ -1,6 +1,7 @@
 package eu.uberdust.communication;
 
 import org.apache.log4j.Logger;
+import sun.rmi.runtime.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -67,6 +68,7 @@ public class RestClient {
                     throw new RuntimeException("Bad Response");
                 }
             }
+            LOGGER.info(inputLine.toString());
             return inputLine.toString();
         } catch (final Exception e) {
             LOGGER.error(e);
