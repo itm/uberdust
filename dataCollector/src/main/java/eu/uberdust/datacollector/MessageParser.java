@@ -132,7 +132,7 @@ public class MessageParser implements Runnable {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
             if (httpURLConnection.getResponseCode() == 200) {
-                LOGGER.info("Added " + nodeUrn + "," + capabilityName + "," + value);
+                LOGGER.debug("Added " + nodeUrn + "," + capabilityName + "," + value);
             } else {
                 LOGGER.error("Problem with " + nodeUrn + "," + capabilityName + "," + value + " Response: " + httpURLConnection.getResponseCode());
             }
@@ -170,7 +170,7 @@ public class MessageParser implements Runnable {
             LinkReadingController.getInstance().insertReading(sourceUrn, targetUrn, testbedCapPrefix, testbedUrnPrefix, status, 0,
                     new java.util.Date());
             transaction.commit();
-            LOGGER.info("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
+            LOGGER.debug("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         } catch (Exception e) {
             transaction.rollback();
             LOGGER.error("Problem Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);

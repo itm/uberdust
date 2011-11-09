@@ -42,9 +42,6 @@ public class DataCollector {
     public DataCollector() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
 
-        LOGGER.setLevel(Level.INFO);
-
-
         // Initialize hibernate
         HibernateUtil.connectEntityManagers();
 
@@ -52,7 +49,7 @@ public class DataCollector {
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream("dataCollector.properties"));
         } catch (IOException e) {
-            LOGGER.info("No properties file found! dataCollector.properties not found!");
+            LOGGER.error("No properties file found! dataCollector.properties not found!");
             return;
         }
 
@@ -96,14 +93,14 @@ public class DataCollector {
                 }
 
             } else {
-                LOGGER.info("got a message of type " + message.getMsgType());
+                LOGGER.error("got a message of type " + message.getMsgType());
             }
         }
 
         @Override
         public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {
             super.channelDisconnected(ctx, channelStateEvent);
-            LOGGER.info("channelDisconnected");
+            LOGGER.error("channelDisconnected");
             System.exit(1);
         }
 
