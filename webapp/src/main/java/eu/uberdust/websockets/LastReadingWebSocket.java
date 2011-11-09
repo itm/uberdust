@@ -1,7 +1,6 @@
 package eu.uberdust.websockets;
 
 import com.caucho.websocket.WebSocketServletRequest;
-
 import eu.wisebed.wisedb.listeners.LastNodeReadingConsumer;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
