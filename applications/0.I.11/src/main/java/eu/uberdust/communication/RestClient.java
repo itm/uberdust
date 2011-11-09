@@ -72,7 +72,7 @@ public class RestClient {
             LOGGER.error(e);
             callRestfulWebService(address);
         }
-        return "";
+        return "0\t0";
     }
 
     public static void main(String[] args) {
