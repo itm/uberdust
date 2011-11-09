@@ -1,7 +1,8 @@
 package eu.uberdust.websockets;
 
 import com.caucho.websocket.WebSocketServletRequest;
-import eu.wisebed.wisedb.listeners.LastNodeReadingObservable;
+
+import eu.wisebed.wisedb.listeners.LastNodeReadingConsumer;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -27,7 +28,7 @@ public class LastReadingWebSocket
      */
     private static final Logger LOGGER = Logger.getLogger(LastReadingWebSocket.class);
     private static final long serialVersionUID = -7328799291894688509L;
-
+    private static final String DELIMITER = "@";
 
     /**
      * A HashMap<CapabilityID:NodeID>.
@@ -73,11 +74,8 @@ public class LastReadingWebSocket
             thisListener = listeners.get(protocol);
         } else {
             thisListener = new CustomWebSocketListener(protocol);
-
-
-            LOGGER.info(LastNodeReadingObservable.getInstance().countObservers());
-            LastNodeReadingObservable.getInstance().addObserver(thisListener);
-            LOGGER.info(LastNodeReadingObservable.getInstance().countObservers());
+            LastNodeReadingConsumer.getInstance().registerListener(protocol.split(DELIMITER)[0],
+                    thisListener);
 
             listeners.put(protocol, thisListener);
             servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
