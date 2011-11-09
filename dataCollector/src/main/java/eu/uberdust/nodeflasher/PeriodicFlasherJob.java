@@ -9,6 +9,11 @@ public class PeriodicFlasherJob implements Job {
 
     private static final Logger LOGGER = Logger.getLogger(PeriodicFlasherJob.class);
 
+    /**
+     *
+     * @param jobExecutionCtx
+     * @throws JobExecutionException
+     */
     public void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
         LOGGER.info(" |=== Starting a new PeriodicFlasherJob");
 

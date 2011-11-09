@@ -154,7 +154,7 @@ public class MessageParser implements Runnable {                   // NOPMD
     }
 
     /**
-     * commits a nodeReading to the database using the Hibernate
+     * commits a nodeReading to the database using the Hibernate.
      *
      * @param sourceId the id of the source node of the link
      * @param targetId the id of the target node of the link

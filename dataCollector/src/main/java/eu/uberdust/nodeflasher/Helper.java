@@ -62,7 +62,7 @@ public class Helper {
     }
 
     /**
-     * Authenticates to the testbed authentication system
+     * Authenticates to the testbed authentication system.
      */
     void authenticate() {
 
@@ -182,7 +182,7 @@ public class Helper {
     }
 
     /**
-     * Rethrieves the list of testbed reservations from the TestbedRuntime RS
+     * Rethrieves the list of testbed reservations from the TestbedRuntime RS.
      *
      * @param timeFrom Starting time
      * @param timeTo   Ending time
@@ -194,7 +194,7 @@ public class Helper {
     }
 
     /**
-     * flashes the nodes with the default image defined by type
+     * flashes the nodes with the default image defined by type.
      *
      * @param nodes The nodes to flash
      * @param type  The type of the nodes, used to select the correct image

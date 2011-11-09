@@ -26,12 +26,12 @@ import static org.jboss.netty.channel.Channels.pipeline;
 
 
 /**
- * Opens a connection to a TestbedRuntime server and received debug messages from all nodes to collect data
+ * Opens a connection to a TestbedRuntime server and received debug messages from all nodes to collect data.
  */
 public class DataCollector {
 
     /**
-     * Logger
+     * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
@@ -44,19 +44,19 @@ public class DataCollector {
      */
     private transient String host;
     /**
-     * testbed port to connect to
+     * testbed port to connect to.
      */
     private transient int port;
     /**
-     * map of the names used in iSense application to capability names
+     * map of the names used in iSense application to capability names.
      */
     private transient final Map<String, String> sensors = new HashMap<String, String>();
     /**
-     * counts the messages received - stats
+     * counts the messages received - stats.
      */
     private transient int messageCounter;
     /**
-     * saves the last time 1000 messages were received - stats
+     * saves the last time 1000 messages were received - stats.
      */
     private transient long lastTime;
 
@@ -73,7 +73,7 @@ public class DataCollector {
     }
 
     /**
-     * Reads the property file
+     * Reads the property file.
      */
     private final void readProperties() {
         final Properties properties = new Properties();
@@ -106,7 +106,7 @@ public class DataCollector {
     }
 
     /**
-     * Chanel handler that receives the messages and Generates parser threads
+     * Chanel handler that receives the messages and Generates parser threads.
      */
     private transient final SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
@@ -143,7 +143,7 @@ public class DataCollector {
     };
 
     /**
-     * Channel factory with custom channelPipeline to parse the received messages
+     * Channel factory with custom channelPipeline to parse the received messages.
      */
     private transient final ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
@@ -167,7 +167,7 @@ public class DataCollector {
 
 
     /**
-     * Connects to testbedruntime overlay port to receive all incoming debug messages
+     * Connects to testbedruntime overlay port to receive all incoming debug messages.
      */
     public final void start() {
         final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());

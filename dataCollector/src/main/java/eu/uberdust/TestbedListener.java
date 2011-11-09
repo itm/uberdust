@@ -12,8 +12,8 @@ import eu.uberdust.nodeflasher.NodeFlasherController;
  */
 public class TestbedListener {
 
-    public static void main(String[] args) {
-        DataCollector dataCollector = new DataCollector();
+    public static void main(final String[] args) {
+        final DataCollector dataCollector = new DataCollector();
         dataCollector.start();
         TestbedController.getInstance();
         new NodeFlasherController();
