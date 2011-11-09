@@ -27,7 +27,7 @@ public class LastReadingWebSocket
      */
     private static final Logger LOGGER = Logger.getLogger(LastReadingWebSocket.class);
     private static final long serialVersionUID = -7328799291894688509L;
-    private static final String DELIMITER = "@";
+    public static final String DELIMITER = "@";
 
     /**
      * A HashMap<CapabilityID:NodeID>.

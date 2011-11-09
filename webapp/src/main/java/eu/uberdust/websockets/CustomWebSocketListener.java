@@ -88,7 +88,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     @Override
     public void update(final NodeReading lastReading) {
         LOGGER.info("Update");
-        if ((new StringBuilder().append(lastReading.getCapability().getName()).append(":").append(lastReading.getNode().getId()).toString())
+        if ((new StringBuilder().append(lastReading.getCapability().getName()).append(LastReadingWebSocket.DELIMITER).append(lastReading.getNode().getId()).toString())
                 .equals(thisProtocol)) {
             final String response = new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString();
             for (final WebSocketContext user : users) {
