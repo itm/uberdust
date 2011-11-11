@@ -53,6 +53,8 @@ public class LastReadingWebSocket
     @Override
     public ModelAndView handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
         LOGGER.info("handleRequest");
+
+        servletRequest.getSession().setMaxInactiveInterval(Integer.MAX_VALUE);
         /*
         * Process the handshake, selecting the protocol to be used.
         * The protocol is Defined by: NodeID:capabilityID
