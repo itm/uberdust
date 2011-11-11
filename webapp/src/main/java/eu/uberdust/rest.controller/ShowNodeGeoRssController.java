@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 public class ShowNodeGeoRssController extends AbstractRestController {
 
@@ -48,6 +49,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         this.nodeManager = nodeManager;
     }
 
+    @SuppressWarnings({"unchecked"})
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                   Object commandObj, BindException e) throws Exception {
@@ -96,11 +98,16 @@ public class ShowNodeGeoRssController extends AbstractRestController {
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
         final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
 
+                // retrieve deployment server host
+        final Properties properties = new Properties();
+        properties.load(ClassLoader.getSystemResourceAsStream("WEB-INF/classes/bundles/deployment.properties"));
+        final String deploymentHost = properties.getProperty("uberdust.deployment.host");
+
         // set entry's title,link and publishing date
         SyndEntry entry = new SyndEntryImpl();
         entry.setTitle(node.getId());
-        entry.setLink("http://150.140.5.11:8080" +     // TODO those constants should get out.They suck
-                "/uberdust/rest/testbed/" + testbed.getId() + "/node/" + node.getId());
+        entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/uberdust/rest/testbed/")
+                .append(testbed.getId()).append("/node/").append(node.getId()).toString());
         entry.setPublishedDate(new Date());
 
         // set entry's description (HTML list)
@@ -109,7 +116,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
         descriptionBuffer.append("<ul>");
         for (Capability capability : node.getCapabilities()) {
-            descriptionBuffer.append("<li><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
+            descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/uberdust/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                     .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
         }
@@ -144,7 +151,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
                     "and node [" + nodeId + "]."));
         }
 
-        return null;// TODO make this controller
+        return null;
     }
 
     @ExceptionHandler(Exception.class)
