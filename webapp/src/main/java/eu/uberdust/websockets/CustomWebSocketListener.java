@@ -58,6 +58,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         this.nodeID = nodeID;
         this.capabilityID = capabilityID;
         thisProtocol = new StringBuilder().append(nodeID).append(":").append(capabilityID).toString();
+
     }
 
     @Override
@@ -65,6 +66,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         super.onStart(context);
         users.add(context);
         LOGGER.info("onStart");
+        LOGGER.info(context.getTimeout());
     }
 
     @Override
@@ -79,14 +81,14 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
 
     @Override
     public void onClose(final WebSocketContext context) throws IOException {
-        super.onClose(context);
+        //super.onClose(context);
         LOGGER.info("onClose");
         users.remove(context);
     }
 
     @Override
     public void onDisconnect(final WebSocketContext context) throws IOException {
-        super.onDisconnect(context);
+       // super.onDisconnect(context);
         LOGGER.info("onDisconnect");
         users.remove(context);
     }
