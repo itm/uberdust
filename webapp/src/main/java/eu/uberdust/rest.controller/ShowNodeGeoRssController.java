@@ -99,7 +99,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         // set entry's title,link and publishing date
         SyndEntry entry = new SyndEntryImpl();
         entry.setTitle(node.getId());
-        entry.setLink("http://150.140.5.11:8080" +     // TODO those constants should get out.They suck
+        entry.setLink("http://gold.cti.gr" +     // TODO those constants should get out.They suck
                 "/uberdust/rest/testbed/" + testbed.getId() + "/node/" + node.getId());
         entry.setPublishedDate(new Date());
 
@@ -109,7 +109,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
         descriptionBuffer.append("<ul>");
         for (Capability capability : node.getCapabilities()) {
-            descriptionBuffer.append("<li><a href=\"http://150.140.5.11:8080" + "/uberdust/rest/testbed/")
+            descriptionBuffer.append("<li><a href=\"http://gold.cti.gr" + "/uberdust/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                     .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
         }

@@ -126,7 +126,7 @@ public class MessageParser implements Runnable {                   // NOPMD
 
         final long milliseconds = System.currentTimeMillis();
 
-        final String insertReadingUrl = "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milliseconds + "/reading/" + value;
+        final String insertReadingUrl = "http://gold.cti.gr/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milliseconds + "/reading/" + value;
 
         HttpURLConnection httpURLConnection = null;
 
