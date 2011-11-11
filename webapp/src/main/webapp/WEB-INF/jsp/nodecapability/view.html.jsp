@@ -7,6 +7,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
@@ -42,10 +43,10 @@
 <body>
 <%@include file="/header.jsp"%>
 <p>
-    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}">node</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}">node's
+    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/<a
+        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}">testbed</a>/<a
+        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}">node</a>/<a
+        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}">node's
     capability</a>
 </p>
 
@@ -100,26 +101,26 @@
                 <td>
                     <ul>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/html"/>HTML
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/html"/>HTML
                             format</a>
                         </li>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/tabdelimited"/>Tab
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/tabdelimited"/>Tab
                             Delimited format</a>
                         </li>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/wiseml"/>WiseML</a>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/wiseml"/>WiseML</a>
                             <span style="color : red">Not implemented</span>
                         </li>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/json"/>JSON</a>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/json"/>JSON</a>
                         </li>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/latestreading"/>Latest
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/latestreading"/>Latest
                             Reading</a>
                         </li>
                         <li>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/chart"/>Readings
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbedId}/node/${node.id}/capability/${capability.name}/chart"/>Readings
                             Chart</a>
                             <span style="color : red">Not implemented</span>
                         </li>

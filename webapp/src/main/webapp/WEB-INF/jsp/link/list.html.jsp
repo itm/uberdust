@@ -4,6 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
@@ -17,13 +18,13 @@
     <title>ÜberDust - List links</title>
 </head>
 <body>
-<%@include file="/header.jsp"%>
+<%@include file="/header.jsp" %>
 
 <p>
-    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link">testbed
-    links</a>
+    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/
+    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/
+    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/link">testbed
+        links</a>
 </p>
 <c:choose>
     <c:when test="${links != null || fn:length(links) != 0}">
@@ -40,7 +41,7 @@
             <c:forEach items="${links}" var="link">
                 <tr>
                     <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/link/${link.source}/${link.target}"><c:out
+                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/link/${link.source}/${link.target}"><c:out
                                 value="${link.source},${link.target}"/></a>
                     </td>
                 </tr>
@@ -52,7 +53,7 @@
         <p style="color : red">No links found for testbed <c:out value="${testbed.name}"/></p>
     </c:otherwise>
 </c:choose>
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>
 

@@ -21,6 +21,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             <list>
                 <value>bundles/version</value>
                 <value>bundles/hudson</value>
+                <value>bundles/deployment</value>
             </list>
         </property>
     </bean>

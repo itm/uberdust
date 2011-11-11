@@ -4,6 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
@@ -20,16 +21,16 @@
 <body>
 <%@include file="/header.jsp"%>
 <p>
-    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/
-    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/
-    <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}">capability</a>
+    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/
+    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/
+    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}">capability</a>
 </p>
 <table>
     <tbody>
     <tr>
         <td>Capability ID</td>
         <td>
-            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
                     value="${capability.name}"/></a>
         </td>
     </tr>
@@ -42,7 +43,7 @@
                     <c:forEach items="${nodes}" var="node">
                         <tr>
                             <td>
-                                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+                                <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
                                         value="${node.id}"/></a>
                             </td>
                             <td>
@@ -64,7 +65,7 @@
                     <c:forEach items="${links}" var="link">
                         <tr>
                             <td>
-                                <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}}"><c:out
+                                <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/link/${link.source}/${link.target}}"><c:out
                                         value="[${link.source},${link.target}]"/></a>
                             </td>
                             <td>
@@ -79,7 +80,7 @@
     </c:if>
     <tr>
         <td>
-            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}/tabdelimited">Tab
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}/tabdelimited">Tab
                 Delimited Format</a>
         </td>
     </tr>

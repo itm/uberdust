@@ -4,6 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="capabilities" scope="request" class="java.util.ArrayList"/>
@@ -18,10 +19,9 @@
 <body>
 <%@include file="/header.jsp"%>
 <p>
-    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability">testbed
-    capabilities</a>
+    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/
+    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/
+    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability">testbed capabilities</a>
 </p>
 <c:choose>
     <c:when test="${capabilities != null || fn:length(capabilities) != 0}">
@@ -35,7 +35,7 @@
             <c:forEach items="${capabilities}" var="capability">
                 <tr>
                     <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
                                 value="${capability.name}"/></a>
                     </td>
                 </tr>

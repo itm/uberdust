@@ -4,6 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
@@ -19,9 +20,9 @@
 <body>
 <%@include file="/header.jsp"%>
 <p>
-    /<a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed">testbeds</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}">node</a>
+    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/<a
+        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
+        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}">node</a>
 </p>
 
 <table>
@@ -29,7 +30,7 @@
     <tr>
         <td>Node ID</td>
         <td>
-            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
                     value="${node.id}"/></a></td>
     </tr>
     <tr>
@@ -44,7 +45,7 @@
                 <c:forEach items="${capabilities}" var="capability">
                     <tr>
                         <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
                                     value="${capability.name}"/></a>
                         </td>
                         <td>
@@ -59,15 +60,15 @@
     <tr>
         <td>GeoRSS Feed</td>
         <td>
-            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">GeoRSS Feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">View On Google Maps</a>)
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">GeoRSS Feed</a>
+            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">View On Google Maps</a>)
         </td>
     </tr>
     <tr>
         <td>KML Feed</td>
         <td>
-            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">KML feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">View On Google Maps</a>)
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">KML feed</a>
+            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">View On Google Maps</a>)
             <span style="color : red">not implemented yet</span>
         </td>
     </tr>

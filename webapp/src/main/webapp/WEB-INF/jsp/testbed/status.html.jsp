@@ -5,6 +5,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="/WEB-INF/tag/custom.tld" prefix="util" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="lastNodeReadings" scope="request" class="java.util.ArrayList"/>
@@ -36,10 +37,10 @@
                 <c:if test="${lnr != null}">
                     <tr>
                         <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${lnr.node.id}"><c:out value="${lnr.node.id}"/></a>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${lnr.node.id}"><c:out value="${lnr.node.id}"/></a>
                         </td>
                         <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${lnr.capability.name}"><c:out value="${lnr.capability.name}"/></a>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${lnr.capability.name}"><c:out value="${lnr.capability.name}"/></a>
                         </td>
                         <c:choose>
                             <c:when test="${util:checkIfDateIsToday(lnr.timestamp)}">
@@ -78,11 +79,11 @@
                 <c:if test="${llr != null}">
                     <tr>
                         <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/eu.uberdust/rest/testbed/${testbed.id}/link/${llr.link.source}/${llr.link.target}"><c:out
+                            <a href="http://${uberdustDeploymentHost}/eu.uberdust/rest/testbed/${testbed.id}/link/${llr.link.source}/${llr.link.target}"><c:out
                                     value="[${llr.link.source},${llr.link.target}]"/></a>
                         </td>
                         <td>
-                            <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/capability/${llr.capability.name}"><c:out value="${llr.capability.name}"/></a>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${llr.capability.name}"><c:out value="${llr.capability.name}"/></a>
                         </td>
                         <c:choose>
                             <c:when test="${util:checkIfDateIsToday(llr.timestamp)}">

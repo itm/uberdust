@@ -4,6 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbeds" scope="request" class="java.util.ArrayList"/>
 
@@ -31,7 +32,7 @@
                 <tr>
                     <td><c:out value="${testbed.id}"/></td>
                     <td>
-                        <a href="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}"><c:out
+                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}"><c:out
                                 value="${testbed.name}"/></a>
                     </td>
                     <td>Nodes (<c:out value="${fn:length(testbed.setup.nodes)}"/>)</td>

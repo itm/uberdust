@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
@@ -95,7 +96,7 @@
 
 
             $.ajax({
-                url: '<c:out value="http://${pageContext.request.serverName}:${pageContext.request.serverPort}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
+                url: '<c:out value="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
                 success: function(json) {
                     var series = chart.series[0];
 
