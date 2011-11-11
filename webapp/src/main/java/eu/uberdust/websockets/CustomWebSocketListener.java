@@ -84,7 +84,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         //super.onClose(context);
         LOGGER.info("onClose");
         users.remove(context);
-    }
+}
 
     @Override
     public void onDisconnect(final WebSocketContext context) throws IOException {
