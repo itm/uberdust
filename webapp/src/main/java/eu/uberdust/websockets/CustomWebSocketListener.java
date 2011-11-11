@@ -33,18 +33,31 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     private final List<WebSocketContext> users = new ArrayList<WebSocketContext>();
 
     /**
-     * The protocol which been handled from the specific listener.
+     * The protocol of the specific listener.
      */
     private final String thisProtocol;
 
     /**
+     * The Node id..
+     */
+    private final String nodeID;
+
+    /**
+     * The capaility id.
+     */
+    private final String capabilityID;
+
+    /**
      * Constructor.
      *
-     * @param protocol protocol ID.
+     * @param nodeID       the node ID.
+     * @param capabilityID the capability ID.
      */
-    public CustomWebSocketListener(final String protocol) {
+    public CustomWebSocketListener(final String nodeID, final String capabilityID) {
         super();
-        thisProtocol = protocol;
+        this.nodeID = nodeID;
+        this.capabilityID = capabilityID;
+        thisProtocol = new StringBuilder().append(nodeID).append(":").append(capabilityID).toString();
     }
 
     @Override
@@ -88,9 +101,8 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     @Override
     public void update(final NodeReading lastReading) {
         LOGGER.info("Update");
-        if ((new StringBuilder().append(lastReading.getCapability().getName()).append(LastReadingWebSocket.DELIMITER).append(lastReading.getNode().getId()).toString())
-                .equals(thisProtocol)) {
-            final String response = new StringBuilder().append(lastReading.getTimestamp()).append(":").append(lastReading.getReading()).toString();
+        if (lastReading.getNode().getId().equals(nodeID) && lastReading.getCapability().getName().equals(capabilityID)) {
+            final String response = new StringBuilder().append(lastReading.getTimestamp()).append("\t").append(lastReading.getReading()).toString();
             for (final WebSocketContext user : users) {
                 try {
                     final PrintWriter thisWriter = user.startTextMessage();

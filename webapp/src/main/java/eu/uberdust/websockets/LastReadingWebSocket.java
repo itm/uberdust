@@ -55,7 +55,7 @@ public class LastReadingWebSocket
         LOGGER.info("handleRequest");
         /*
         * Process the handshake, selecting the protocol to be used.
-        * The protocol is Defined by: capabilityID:NodeID
+        * The protocol is Defined by: NodeID:capabilityID
         */
         final String protocol = servletRequest.getHeader("Sec-WebSocket-Protocol");
 
@@ -72,8 +72,8 @@ public class LastReadingWebSocket
             servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
             thisListener = listeners.get(protocol);
         } else {
-            thisListener = new CustomWebSocketListener(protocol);
-            LastNodeReadingConsumer.getInstance().registerListener(protocol.split(DELIMITER)[0],
+            thisListener = new CustomWebSocketListener(protocol.split(DELIMITER)[0],protocol.split(DELIMITER)[1]);
+            LastNodeReadingConsumer.getInstance().registerListener(protocol.split(DELIMITER)[0],protocol.split(DELIMITER)[1],
                     thisListener);
 
             listeners.put(protocol, thisListener);
