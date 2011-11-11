@@ -66,6 +66,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         super.onStart(context);
         users.add(context);
         LOGGER.info("onStart");
+        context.setTimeout(-1);
         LOGGER.info(context.getTimeout());
     }
 
@@ -81,14 +82,14 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
 
     @Override
     public void onClose(final WebSocketContext context) throws IOException {
-        //super.onClose(context);
+        super.onClose(context);
         LOGGER.info("onClose");
         users.remove(context);
 }
 
     @Override
     public void onDisconnect(final WebSocketContext context) throws IOException {
-       // super.onDisconnect(context);
+        super.onDisconnect(context);
         LOGGER.info("onDisconnect");
         users.remove(context);
     }
