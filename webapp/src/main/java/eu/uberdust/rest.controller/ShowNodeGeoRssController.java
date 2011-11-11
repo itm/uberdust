@@ -98,7 +98,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
         final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
 
-                // retrieve deployment server host
+        // retrieve deployment server host
         final Properties properties = new Properties();
         properties.load(ClassLoader.getSystemResourceAsStream("WEB-INF/classes/bundles/deployment.properties"));
         final String deploymentHost = properties.getProperty("uberdust.deployment.host");

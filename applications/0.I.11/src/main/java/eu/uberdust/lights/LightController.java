@@ -20,16 +20,16 @@ public class LightController {
     private final static Logger LOGGER = Logger.getLogger(LightController.class);
 
     private final String REST_LINK =
-            "http://gold.cti.gr:8080/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
+            "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
 
     private final String READINGS_LINK =
-            "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
+            "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
 
 
     private final String ZONE_1_LINK =
-            "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light1/latestreading";
+            "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light1/latestreading";
     private final String ZONE_2_LINK =
-            "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light2/latestreading";
+            "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light2/latestreading";
     private boolean zone1;
 
     private boolean zone2;

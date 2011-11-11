@@ -1,6 +1,7 @@
 package eu.uberdust.communication;
 
 import org.apache.log4j.Logger;
+import sun.rmi.runtime.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -67,15 +68,16 @@ public class RestClient {
                     throw new RuntimeException("Bad Response");
                 }
             }
+            LOGGER.info(inputLine.toString());
             return inputLine.toString();
         } catch (final Exception e) {
             LOGGER.error(e);
             callRestfulWebService(address);
         }
-        return "";
+        return "0\t0";
     }
 
     public static void main(String[] args) {
-        RestClient.getInstance().callRestfulWebService("http://gold.cti.gr:8080/eu.uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
+        RestClient.getInstance().callRestfulWebService("http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
     }
 }

@@ -14,10 +14,10 @@ public class PeriodicFlasherJob implements Job {
      * @param jobExecutionCtx
      * @throws JobExecutionException
      */
-    public void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
+    public final void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
         LOGGER.info(" |=== Starting a new PeriodicFlasherJob");
 
-        Helper helper = new Helper();
+        final Helper helper = new Helper();
         helper.authenticate();
         try {
             helper.flash(helper.getNodes("nodes.telosb"), "telosb");

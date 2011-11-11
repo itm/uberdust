@@ -21,17 +21,22 @@ public class NodeFlasherJob implements Job {
     private static final int MINUTES_AFTER = 60;
 
     private static final Logger LOGGER = Logger.getLogger(NodeFlasherJob.class);
-    private transient final Helper helper;
+    private final transient Helper helper;
+    private static final int MILLIS_2_MINUTES = 60 * 1000;
 
     public NodeFlasherJob() {
         helper = new Helper();
     }
 
-    public void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
+    /**
+     * @param jobExecutionCtx
+     * @throws JobExecutionException
+     */
+    public final void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
         checkAndFlash();
     }
 
-    public void checkAndFlash() {
+    private void checkAndFlash() {
         LOGGER.info(" |=== Starting a new nodeFlasher");
 
         helper.authenticate();
@@ -40,6 +45,12 @@ public class NodeFlasherJob implements Job {
         checkReservations(helper.getNodes("nodes.telosb"), "telosb");
     }
 
+    /**
+     * Checks and flashes the nodes if needed.
+     *
+     * @param nodes the nodes to check for reservations
+     * @param type  the type of the nodes
+     */
     private void checkReservations(final String[] nodes, final String type) {
 
 
@@ -60,9 +71,15 @@ public class NodeFlasherJob implements Job {
 
     }
 
+    /**
+     * Checks the previous MINUTES_BEFORE for reservations that include the nodes.
+     *
+     * @param nodes The nodes to check for reservations
+     * @return True if there were reservations in the last MINUTES_BEFORE
+     */
     private boolean existedPreviousList(final String[] nodes) {
-        GregorianCalendar cal = new GregorianCalendar();
-        long from = (new Date()).getTime() - MINUTES_BEFORE * 60 * 1000;
+        final GregorianCalendar cal = new GregorianCalendar();
+        long from = (new Date()).getTime() - MINUTES_BEFORE * MILLIS_2_MINUTES;
         cal.setTimeInMillis(from);
         XMLGregorianCalendar timeFrom;
 
@@ -108,9 +125,15 @@ public class NodeFlasherJob implements Job {
         return !previousResList.isEmpty();
     }
 
+    /**
+     * Checks the next MINUTES_AFTER for reservations that include the nodes.
+     *
+     * @param nodes The nodes to check for reservations
+     * @return True if no reservations in the next MINUTES_AFTER
+     */
     private boolean emptyFutureList(final String[] nodes) {
 
-        GregorianCalendar cal = new GregorianCalendar();
+        final GregorianCalendar cal = new GregorianCalendar();
         long from = (new Date()).getTime();
         cal.setTimeInMillis(from);
         XMLGregorianCalendar timeFrom;
@@ -122,7 +145,7 @@ public class NodeFlasherJob implements Job {
             return false;
         }
 
-        from = (new Date()).getTime() + MINUTES_AFTER * 60 * 1000;
+        from = (new Date()).getTime() + MINUTES_AFTER * MILLIS_2_MINUTES;
         cal.setTimeInMillis(from);
         XMLGregorianCalendar timeTo;
         try {

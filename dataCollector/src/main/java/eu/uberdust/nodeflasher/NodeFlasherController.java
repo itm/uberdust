@@ -1,7 +1,11 @@
 package eu.uberdust.nodeflasher;
 
 import org.apache.log4j.Logger;
-import org.quartz.*;
+import org.quartz.Trigger;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerFactory;
+import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
@@ -10,15 +14,22 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-/**
- * Created by IntelliJ IDEA.
- * User: amaxilatis
- * Date: 10/6/11
- * Time: 3:18 PM
- */
+
 public class NodeFlasherController {
 
+    /**
+     * LOGGER.
+     */
     private static final Logger LOGGER = Logger.getLogger(NodeFlasherController.class);
+    /**
+     * Timer offset to start the first flashing check
+     */
+    private static final int TIME_OFFSET = 10000;
+    /**
+     * Timer offset to start the second flashing check
+     */
+    private static final int TIME_OFFSET2 = 20000;
+    private static final int HOURS_OF_DAY = 24;
 
     public NodeFlasherController() {
 
@@ -45,9 +56,9 @@ public class NodeFlasherController {
             // Trigger the job to run on the next round minute
             final Trigger nodeFlasherTg = newTrigger()
                     .withIdentity("nodeFlasherTg", "group1")
-                    .startAt(new Date(System.currentTimeMillis() + 10000))
+                    .startAt(new Date(System.currentTimeMillis() + TIME_OFFSET))
                     .withSchedule(simpleSchedule()
-                            .withIntervalInMinutes(60)
+                            .withIntervalInHours(1)
                             .repeatForever()).build();
 
             LOGGER.info("Created nodeFlasherTg");
@@ -56,9 +67,9 @@ public class NodeFlasherController {
             // Trigger the job to run on the next round minute
             final Trigger telosReFlasherTg = newTrigger()
                     .withIdentity("telosReFlasherTg", "group2")
-                    .startAt(new Date(System.currentTimeMillis() + 20000))
+                    .startAt(new Date(System.currentTimeMillis() + TIME_OFFSET2))
                     .withSchedule(simpleSchedule()
-                            .withIntervalInHours(24)
+                            .withIntervalInHours(HOURS_OF_DAY)
                             .repeatForever()).build();
 
             LOGGER.info("Created telosReFlasherTg");

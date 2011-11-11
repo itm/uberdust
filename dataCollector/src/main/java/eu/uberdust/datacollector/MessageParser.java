@@ -14,10 +14,19 @@ import java.util.Map;
 
 public class MessageParser implements Runnable {                   // NOPMD
 
+    /**
+     * LOGGER.
+     */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
-    private transient final String strLine;
-    private transient final Map<String, String> sensors;
+    /**
+     * Text line of the message received.
+     */
+    private final transient String strLine;
+    /**
+     * Map of all the codeNames-capabilities.
+     */
+    private final transient Map<String, String> sensors;
 
     /**
      * @param msg    the message received from the testbed
@@ -126,7 +135,7 @@ public class MessageParser implements Runnable {                   // NOPMD
 
         final long milliseconds = System.currentTimeMillis();
 
-        final String insertReadingUrl = "http://gold.cti.gr:8080/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milliseconds + "/reading/" + value;
+        final String insertReadingUrl = "http://gold.cti.gr/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milliseconds + "/reading/" + value;
 
         HttpURLConnection httpURLConnection = null;
 
@@ -142,7 +151,7 @@ public class MessageParser implements Runnable {                   // NOPMD
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.connect();
 
-            if (httpURLConnection.getResponseCode() == 200) {
+            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 LOGGER.debug("Added " + nodeUrn + "," + capabilityName + "," + value);
             } else {
                 LOGGER.error("Problem with " + nodeUrn + "," + capabilityName + "," + value + " Response: " + httpURLConnection.getResponseCode());
