@@ -99,9 +99,12 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
 
         // retrieve deployment server host
-        final Properties properties = new Properties();
+        final String deploymentHost;
+        final Properties properties;
+        properties = new Properties();
         properties.load(ClassLoader.getSystemResourceAsStream("WEB-INF/classes/bundles/deployment.properties"));
-        final String deploymentHost = properties.getProperty("uberdust.deployment.host");
+        deploymentHost = properties.getProperty("uberdust.deployment.host");
+
 
         // set entry's title,link and publishing date
         SyndEntry entry = new SyndEntryImpl();
@@ -157,6 +160,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        LOGGER.fatal(exception);
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

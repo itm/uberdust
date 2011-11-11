@@ -82,7 +82,6 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         properties.load(ClassLoader.getSystemResourceAsStream("WEB-INF/classes/bundles/deployment.properties"));
         final String deploymentHost = properties.getProperty("uberdust.deployment.host");
 
-
         // convert testbed origin from long/lat position to xyz
         final Origin origin = testbed.getSetup().getOrigin();
         Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
@@ -149,6 +148,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        LOGGER.fatal(exception);
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }
