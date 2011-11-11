@@ -5,7 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-
     <!-- Set view resolver -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -26,7 +25,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         </property>
     </bean>
 
-    <!-- Method/URL mapping to controller -->
+    <!-- Deployment Host -->
+    <bean id="deploymentHost" class="java.lang.String">
+        <constructor-arg value="${uberdust.deployment.host}"/>
+    </bean>
+
+    <!-- REST Servlet Mappings -->
     <bean class="org.springframework.web.servlet.handler.MethodUrlHandlerMapping">
         <property name="mappings">
             <props>
@@ -83,6 +87,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         </property>
     </bean>
 
+    <!-- WebSocket Servlet Mappings -->
     <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <props>
@@ -91,6 +96,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         </property>
     </bean>
 
+    <!-- Last Reading Controller WebSocket -->
     <bean id="lastReadingController" class="eu.uberdust.websockets.LastReadingWebSocket">
     </bean>
 
@@ -153,6 +159,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <!-- Show Testbed GeoRss Controller -->
     <bean name="showTestbedGeoRssController" class="eu.uberdust.rest.controller.ShowTestbedGeoRssController">
         <property name="commandClass" value="eu.uberdust.command.TestbedCommand"/>
+        <property name="deploymentHost" ref="deploymentHost"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/georss"/>
     </bean>
@@ -210,6 +217,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <!-- Show Node GeoRss Controller -->
     <bean name="showNodeGeoRssController" class="eu.uberdust.rest.controller.ShowNodeGeoRssController">
         <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
+        <property name="deploymentHost" ref="deploymentHost"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/georss"/>

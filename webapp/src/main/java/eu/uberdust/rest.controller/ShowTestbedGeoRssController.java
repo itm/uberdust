@@ -3,7 +3,12 @@ package eu.uberdust.rest.controller;
 import com.sun.syndication.feed.module.georss.GeoRSSModule;
 import com.sun.syndication.feed.module.georss.SimpleModuleImpl;
 import com.sun.syndication.feed.module.georss.geometries.Position;
-import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.command.TestbedCommand;
@@ -25,12 +30,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 public class ShowTestbedGeoRssController extends AbstractRestController {
 
     private TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
+    private String deploymentHost;
 
     public ShowTestbedGeoRssController() {
         super();
@@ -43,14 +48,17 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
+    public void setDeploymentHost(String deploymentHost) {
+        this.deploymentHost = deploymentHost;
+    }
+
     @SuppressWarnings({"unchecked"})
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                   Object commandObj, BindException e) throws Exception {
 
         // set command object
-        TestbedCommand command = (TestbedCommand) commandObj;
-        LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
+        final TestbedCommand command = (TestbedCommand) commandObj;
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -77,10 +85,6 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         feed.setDescription(testbed.getDescription());
         List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
-        // retrieve deployment server host
-        final Properties properties = new Properties();
-        properties.load(ClassLoader.getSystemResourceAsStream("WEB-INF/classes/bundles/deployment.properties"));
-        final String deploymentHost = properties.getProperty("uberdust.deployment.host");
 
         // convert testbed origin from long/lat position to xyz
         final Origin origin = testbed.getSetup().getOrigin();
@@ -147,8 +151,9 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
-        LOGGER.fatal(exception);
+        String formattedErrorForFrontEnd =
+                exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
+        LOGGER.error(exception,exception.fillInStackTrace());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

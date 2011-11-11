@@ -335,10 +335,6 @@
                             <token>@@HUDSONURL@@</token>
                             <value>${HUDSON_URL}</value>
                         </replacement>
-                        <replacement>
-                            <token>@@DEPLOYMENTHOST@@</token>
-                            <value>${uberdust.deployment.host}</value>
-                        </replacement>
                     </replacements>
                 </configuration>
             </plugin>

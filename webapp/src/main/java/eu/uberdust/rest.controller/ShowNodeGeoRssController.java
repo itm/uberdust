@@ -3,7 +3,12 @@ package eu.uberdust.rest.controller;
 import com.sun.syndication.feed.module.georss.GeoRSSModule;
 import com.sun.syndication.feed.module.georss.SimpleModuleImpl;
 import com.sun.syndication.feed.module.georss.geometries.Position;
-import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.command.NodeCommand;
@@ -26,13 +31,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 public class ShowNodeGeoRssController extends AbstractRestController {
 
     private TestbedController testbedManager;
     private NodeController nodeManager;
     private static final Logger LOGGER = Logger.getLogger(ShowNodeGeoRssController.class);
+    private String deploymentHost;
 
     public ShowNodeGeoRssController() {
         super();
@@ -49,15 +54,17 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         this.nodeManager = nodeManager;
     }
 
+    public void setDeploymentHost(String deploymentHost) {
+        this.deploymentHost = deploymentHost;
+    }
+
     @SuppressWarnings({"unchecked"})
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                   Object commandObj, BindException e) throws Exception {
 
         // set command object
-        NodeCommand command = (NodeCommand) commandObj;
-        LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
-        LOGGER.info("commandObj.getNodeId() : " + command.getNodeId());
+        final NodeCommand command = (NodeCommand) commandObj;
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -97,14 +104,6 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
         final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
-
-        // retrieve deployment server host
-        final String deploymentHost;
-        final Properties properties;
-        properties = new Properties();
-        properties.load(ClassLoader.getSystemResourceAsStream("WEB-INF/classes/bundles/deployment.properties"));
-        deploymentHost = properties.getProperty("uberdust.deployment.host");
-
 
         // set entry's title,link and publishing date
         SyndEntry entry = new SyndEntryImpl();
@@ -159,8 +158,9 @@ public class ShowNodeGeoRssController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
-        LOGGER.fatal(exception);
+        String formattedErrorForFrontEnd =
+                exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
+        LOGGER.error(exception, exception.fillInStackTrace());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }
