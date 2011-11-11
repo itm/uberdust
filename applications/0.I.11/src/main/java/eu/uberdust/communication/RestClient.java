@@ -1,7 +1,6 @@
 package eu.uberdust.communication;
 
 import org.apache.log4j.Logger;
-import sun.rmi.runtime.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
