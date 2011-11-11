@@ -3,6 +3,7 @@ package eu.uberdust.websockets;
 import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
 import eu.wisebed.wisedb.listeners.AbstractNodeReadingListener;
+import eu.wisebed.wisedb.listeners.LastNodeReadingConsumer;
 import eu.wisebed.wisedb.model.NodeReading;
 import org.apache.log4j.Logger;
 
@@ -84,14 +85,20 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     public void onClose(final WebSocketContext context) throws IOException {
         super.onClose(context);
         LOGGER.info("onClose");
-        users.remove(context);
-}
+        if (users.contains(this)) {
+            users.remove(context);
+            LastNodeReadingConsumer.getInstance().removeListener(nodeID, capabilityID, this);
+        }
+    }
 
     @Override
     public void onDisconnect(final WebSocketContext context) throws IOException {
         super.onDisconnect(context);
         LOGGER.info("onDisconnect");
-        users.remove(context);
+        if (users.contains(this)) {
+            users.remove(context);
+            LastNodeReadingConsumer.getInstance().removeListener(nodeID, capabilityID, this);
+        }
     }
 
     @Override
