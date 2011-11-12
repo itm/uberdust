@@ -23,6 +23,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
@@ -138,6 +139,9 @@ public class DataCollector {
                 if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
                     LOGGER.info("MessageRate : " + messageCounter / (milliseconds / (double) 1000) + " messages/sec");
+                    final ThreadPoolExecutor pool = (ThreadPoolExecutor) executorService;
+                    LOGGER.info("PoolSize : " + pool.getPoolSize() + " Active :" + pool.getActiveCount() + " Peal : " + pool.getLargestPoolSize());
+
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
@@ -157,6 +161,7 @@ public class DataCollector {
 
         private void parse(final String toString) {
             executorService.submit(new MessageParser(toString, sensors));
+
         }
     };
 
