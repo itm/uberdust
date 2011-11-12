@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,11 +67,10 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     @Override
     public void onStart(final WebSocketContext context) throws IOException {
         super.onStart(context);
-        users.add(context);
         LOGGER.info("onStart");
+        users.add(context);
         LOGGER.info(users.size());
         context.setTimeout(-1);
-        LOGGER.info(context.getTimeout());
     }
 
     @Override
@@ -87,7 +88,10 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         super.onClose(context);
         LOGGER.info("onClose");
         users.remove(context);
-
+        LOGGER.info(users.size());
+        if (users.size() == 0) {
+            LastNodeReadingConsumer.getInstance().removeListener(nodeID, capabilityID);
+        }
     }
 
     @Override
@@ -95,6 +99,10 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         super.onDisconnect(context);
         LOGGER.info("onDisconnect");
         users.remove(context);
+        LOGGER.info(users.size());
+        if (users.size() == 0) {
+            LastNodeReadingConsumer.getInstance().removeListener(nodeID, capabilityID);
+        }
 
     }
 
@@ -102,7 +110,6 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     public void onTimeout(final WebSocketContext context) throws IOException {
         super.onTimeout(context);
         LOGGER.info("onTimeout");
-        users.remove(context);
     }
 
     @Override
