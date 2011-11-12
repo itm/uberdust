@@ -22,13 +22,16 @@ public class NodeFlasherController {
      */
     private static final Logger LOGGER = Logger.getLogger(NodeFlasherController.class);
     /**
-     * Timer offset to start the first flashing check
+     * Timer offset to start the first flashing check.
      */
     private static final int TIME_OFFSET = 10000;
     /**
-     * Timer offset to start the second flashing check
+     * Timer offset to start the second flashing check.
      */
     private static final int TIME_OFFSET2 = 20000;
+    /**
+     * Hours in a day.
+     */
     private static final int HOURS_OF_DAY = 24;
 
     public NodeFlasherController() {
@@ -91,9 +94,6 @@ public class NodeFlasherController {
         } catch (SchedulerException e) {
             LOGGER.error(e);  //To change body of catch statement use File | Settings | File Templates.
         }
-
         LOGGER.info("Started NodeFlasherController");
     }
-
-
 }

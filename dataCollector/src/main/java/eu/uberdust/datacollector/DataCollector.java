@@ -20,7 +20,9 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
@@ -34,6 +36,14 @@ public class DataCollector {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
+    /**
+     * Application property file name.
+     */
+    private static final String PROPERTY_FILE = "dataCollector.properties";
+    /**
+     *
+     */
+    private static final int THREAD_COUNT = 10;
 
     /**
      *
@@ -59,6 +69,8 @@ public class DataCollector {
      * saves the last time 1000 messages were received - stats.
      */
     private transient long lastTime;
+    private ExecutorService executorService;
+
 
     /**
      * Default Constructor.
@@ -73,6 +85,9 @@ public class DataCollector {
 
         messageCounter = 0;
         lastTime = System.currentTimeMillis();
+
+        executorService = Executors.newCachedThreadPool();
+
     }
 
     /**
@@ -81,7 +96,7 @@ public class DataCollector {
     private void readProperties() {
         final Properties properties = new Properties();
         try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("dataCollector.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTY_FILE));
         } catch (IOException e) {
             LOGGER.error("No properties file found! dataCollector.properties not found!");
             return;
@@ -122,7 +137,7 @@ public class DataCollector {
                 messageCounter++;
                 if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info("MessageRate : " + messageCounter / (double) (milliseconds / 1000) + " messages/sec");
+                    LOGGER.info("MessageRate : " + messageCounter / (milliseconds / (double) 1000) + " messages/sec");
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
                 }
@@ -141,7 +156,7 @@ public class DataCollector {
 
 
         private void parse(final String toString) {
-            (new Thread(new MessageParser(toString, sensors))).start(); //NOPMD
+            executorService.submit(new MessageParser(toString, sensors));
         }
     };
 

@@ -40,7 +40,14 @@ import java.util.concurrent.TimeUnit;
 
 public class Helper {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(Helper.class);
+    /**
+     * Application property file name.
+     */
+    private static final String PROPERTY_FILE = "nodeFlasher.properties";
 
     private transient Properties properties;
     private transient RS reservationSystem;
@@ -53,16 +60,19 @@ public class Helper {
 
     Helper() {
         PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
+        parseProperties();
+    }
 
+    private void parseProperties() {
         properties = new Properties();
         try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("nodeFlasher.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTY_FILE));
         } catch (Exception e) {
             LOGGER.error("|*** No properties file found! nodeFlasher.properties not found!");
             return;
         }
-
     }
+
 
     /**
      * Authenticates to the testbed authentication system.
@@ -189,7 +199,8 @@ public class Helper {
      * @return list of the Reservations
      * @throws RSExceptionException an exception when unable to get reservations
      */
-    public final List getReservations(final XMLGregorianCalendar timeFrom, final XMLGregorianCalendar timeTo) throws RSExceptionException {
+    public final List getReservations(final XMLGregorianCalendar timeFrom, final XMLGregorianCalendar timeTo)
+            throws RSExceptionException {
         return reservationSystem.getReservations(timeFrom, timeTo);
     }
 
@@ -225,7 +236,8 @@ public class Helper {
         final WSN wsnService = WSNServiceHelper.getWSNService(wsnEndpointURL);
         final WSNAsyncWrapper wsn = WSNAsyncWrapper.of(wsnService);
 
-        final ProtobufControllerClient pcc = ProtobufControllerClient.create(pccHost, pccPort, BeanShellHelper.parseSecretReservationKeys(reservationKey));
+        final ProtobufControllerClient pcc = ProtobufControllerClient.create(pccHost, pccPort,
+                BeanShellHelper.parseSecretReservationKeys(reservationKey));
         pcc.addListener(new TestbedClient(wsn));
         pcc.connect();
 
@@ -235,8 +247,8 @@ public class Helper {
         LOGGER.info("|+   Flashing nodes...");
 
         // flash iSense nodes
-        List programIndices = new ArrayList();
-        List programs = new ArrayList();
+        final List programIndices = new ArrayList();
+        final List programs = new ArrayList();
         for (Object aNodeURNsToFlash : nodeURNsToFlash) {
             programIndices.add(0);
         }
