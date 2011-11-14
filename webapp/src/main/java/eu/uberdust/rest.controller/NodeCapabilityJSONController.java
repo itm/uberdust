@@ -68,7 +68,7 @@ public class NodeCapabilityJSONController extends AbstractRestController {
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
         // set commandNode object
-        NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
+        final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
         LOGGER.info("command.getNodeId() : " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());

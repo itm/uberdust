@@ -86,15 +86,8 @@ public class Coordinate implements Serializable {
 
     @Override
     public String toString() {
-        String s = "x=" + x + ", y=" + y + ", z=" + z;
-        if (phi != null) {
-            s.concat(", phi=" + phi);
-        }
-        if (theta != null) {
-            s.concat(", theta=" + theta);
-        }
-
-        return s;
+        return "x=" + x + ", y=" + y + ", z=" + z +
+                ((phi !=null)?(", phi=" + phi):(""))+((theta != null)?(", theta=" + theta):("")); // bazinga!
     }
 
     private static final double WGS84_CONST = 298.257222101;

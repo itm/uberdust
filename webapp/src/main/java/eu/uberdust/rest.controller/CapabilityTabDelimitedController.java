@@ -93,10 +93,10 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
         final Writer textOutput = (response.getWriter());
 
         // get latest node readings
-        List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByCapability(testbed, capability);
+        final List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByCapability(testbed, capability);
         if (lastNodeReadings == null || lastNodeReadings.isEmpty()) {
             // if not last node readings are found for this capability and testbed check for last link readings
-            List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByCapability(testbed, capability);
+            final List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByCapability(testbed, capability);
             if (lastLinkReadings == null || lastLinkReadings.isEmpty()) {
                 // if not found return nothing
                 textOutput.flush();

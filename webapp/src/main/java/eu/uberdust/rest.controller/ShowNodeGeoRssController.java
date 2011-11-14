@@ -157,7 +157,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
+        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         LOGGER.error(exception, exception.fillInStackTrace());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

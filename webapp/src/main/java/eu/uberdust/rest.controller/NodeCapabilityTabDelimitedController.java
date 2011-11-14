@@ -108,7 +108,7 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
         // retrieve readings based on node/capability
-        List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
 
         // write on the HTTP response
         httpServletResponse.setContentType("text/plain");
