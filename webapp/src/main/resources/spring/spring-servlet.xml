@@ -60,7 +60,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/capability/*/tabdelimited">capabilityTabDelimitedController</prop>
 
                 <!-- Node/Capability Controllers for readings -->
-                <prop key="GET /testbed/*/node/*/capability/*">nodeCapabilityController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/tabdelimited">nodeCapabilityTabDelimitedController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/json">nodeCapabilityJsonController</prop>
@@ -314,27 +313,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
         <property name="lastLinkReadingManager" ref="lastLinkReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/capability/{capabilityName}/tabdelimited"/>
-    </bean>
-
-
-    <!-- Node-Capability Controller -->
-    <bean name="nodeCapabilityController" class="eu.uberdust.rest.controller.NodeCapabilityController">
-        <property name="commandClass" value="eu.uberdust.command.NodeCapabilityCommand"/>
-        <property name="testbedManager" ref="testbedManager"/>
-        <property name="nodeManager" ref="nodeManager"/>
-        <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}"/>
-        <property name="viewNameSelector">
-            <bean class="org.springframework.web.servlet.RestViewNameSelector">
-                <property name="defaultViewName" value="capability/view.html"/>
-                <property name="views">
-                    <map>
-                        <entry key="text/html" value="capability/view.html"/>
-                    </map>
-                </property>
-            </bean>
-        </property>
     </bean>
 
     <!-- Node-Capability Controller for HTML Format -->

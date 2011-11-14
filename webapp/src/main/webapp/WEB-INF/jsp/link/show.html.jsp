@@ -62,7 +62,7 @@
                                         value="${capability.name}"/></a>
                             </td>
                             <td>
-                                <!-- add stuff in future here -->
+                                <!-- TODO add stuff from next page -->
                             </td>
                         </tr>
                     </c:forEach>

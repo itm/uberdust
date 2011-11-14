@@ -15,10 +15,11 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
     <title>ÜberDust - Show Node : <c:out value="${node.id}"/></title>
 </head>
 <body>
-<%@include file="/header.jsp"%>
+<%@include file="/header.jsp" %>
 <p>
     /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/<a
         href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
@@ -40,7 +41,7 @@
     <tr>
         <td>Capabilities(<c:out value="${fn:length(capabilities)}"/>)</td>
         <td>
-            <table>
+            <table class="readings">
                 <tbody>
                 <c:forEach items="${capabilities}" var="capability">
                     <tr>
@@ -49,7 +50,25 @@
                                     value="${capability.name}"/></a>
                         </td>
                         <td>
-                            <!-- add stuff from next page -->
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/html">HTML</a>
+                        </td>
+                        <td>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited">Tab
+                                Delimited</a>
+                        </td>
+                        <td>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json">JSON</a>
+                        </td>
+                        <td>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/wiseml">WiseML</a>
+                            <span style="color : red">Not implemented yet</span>
+                        </td>
+                        <td>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading">Latest
+                                Reading</a>
+                        </td>
+                        <td>
+                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart">Chart</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -60,20 +79,24 @@
     <tr>
         <td>GeoRSS Feed</td>
         <td>
-            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">GeoRSS Feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">View On Google Maps</a>)
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">GeoRSS
+                Feed</a>
+            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">View
+            On Google Maps</a>)
         </td>
     </tr>
     <tr>
         <td>KML Feed</td>
         <td>
-            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">KML feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">View On Google Maps</a>)
-            <span style="color : red">not implemented yet</span>
+            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">KML
+                feed</a>
+            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">View
+            On Google Maps</a>)
+            <span style="color : red">Not implemented yet</span>
         </td>
     </tr>
     </tbody>
 </table>
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>

@@ -26,7 +26,7 @@
         <hsqldb.version>2.0.0</hsqldb.version>
         <mysql.connector.version>5.1.10</mysql.connector.version>
         <hibernate.version>3.5.6-Final</hibernate.version>
-        <uberdust.deployment.host>gold.cti.gr</uberdust.deployment.host>
+        <uberdust.deployment.host>gold.cti.gr</uberdust.deployment.host> <!-- TODO Hudson must pass this, so I can declare local testing host -->
     </properties>
 
     <repositories>
@@ -396,7 +396,7 @@
                     <server>tomcat6</server>
                     <warFile>${project.build.directory}/${project.groupId}.war</warFile>
                     <path>/uberdust</path>
-                    <url>${carrot.tomcat.manager.url}</url>
+                    <url>${local.tomcat.manager.url}</url>
                 </configuration>
             </plugin>
 

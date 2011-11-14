@@ -69,7 +69,7 @@
                                         value="[${link.source},${link.target}]"/></a>
                             </td>
                             <td>
-                                <!-- add stuff here ! -->
+                                <!-- TODO add stuff from next page -->
                             </td>
                         </tr>
                     </c:forEach>
