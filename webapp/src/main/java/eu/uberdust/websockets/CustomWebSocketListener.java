@@ -89,9 +89,9 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         LOGGER.info("onClose");
         users.remove(context);
         LOGGER.info(users.size());
-        if (users.size() == 0) {
+        /*if (users.size() == 0) {
             LastNodeReadingConsumer.getInstance().removeListener(nodeID, capabilityID);
-        }
+        }*/
     }
 
     @Override
@@ -100,9 +100,9 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         LOGGER.info("onDisconnect");
         users.remove(context);
         LOGGER.info(users.size());
-        if (users.size() == 0) {
+     /*   if (users.size() == 0) {
             LastNodeReadingConsumer.getInstance().removeListener(nodeID, capabilityID);
-        }
+        }*/
 
     }
 
