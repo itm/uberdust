@@ -72,12 +72,12 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
-            throw new InvalidNodeIdException(new Throwable("Must provide node id"));
+            throw new InvalidNodeIdException("Must provide node id");
         }
 
         // check capability name
         if (command.getCapabilityId() == null || command.getCapabilityId().isEmpty()) {
-            throw new InvalidCapabilityNameException(new Throwable("Must provide capability name"));
+            throw new InvalidCapabilityNameException("Must provide capability name");
         }
 
         // a specific testbed is requested by testbed Id
@@ -86,26 +86,26 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException("Testbed IDs have number format.");
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // retrieve node
         Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
-            throw new NodeNotFoundException(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
+            throw new NodeNotFoundException("Cannot find node [" + command.getNodeId() + "]");
         }
 
         // retrieve capability
         Capability capability = capabilityManager.getByID(command.getCapabilityId());
         if (capability == null) {
-            throw new CapabilityNotFoundException(new Throwable("Cannot find capability [" + command.getCapabilityId() + "]"));
+            throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
         // retrieve readings based on node/capability
         List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);

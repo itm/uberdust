@@ -47,7 +47,7 @@ public class SendCommandController extends AbstractRestController {
         // look for destination node
         Node destinationNode = nodeManager.getByID(command.getDestination());
         if (destinationNode == null) {
-            throw new NodeNotFoundException(new Throwable("Destination Node [" + command.getDestination() + "] is not stored."));
+            throw new NodeNotFoundException("Destination Node [" + command.getDestination() + "] is not stored.");
         }
 
         // prepare socket for connection and writer

@@ -71,22 +71,21 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException(new Throwable("Invalid Testbed ID."));
+            throw new InvalidTestbedIdException("Invalid Testbed ID.");
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // look up capability
         Capability capability = capabilityManager.getByID(command.getCapabilityName());
         if (capability == null) {
             // if no capability is found throw exception
-            throw new CapabilityNotFoundException(new Throwable("Cannot find capability [" +
-                    command.getCapabilityName() + "]."));
+            throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityName() + "].");
         }
 
         // write on the HTTP response

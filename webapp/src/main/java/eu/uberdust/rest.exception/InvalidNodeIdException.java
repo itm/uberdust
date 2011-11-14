@@ -11,4 +11,8 @@ public class InvalidNodeIdException extends Exception{
     public InvalidNodeIdException(final Throwable throwable){
         super(throwable);
     }
+
+    public InvalidNodeIdException(final String message){
+        super(message);
+    }
 }

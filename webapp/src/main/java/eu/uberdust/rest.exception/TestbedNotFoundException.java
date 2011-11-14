@@ -11,4 +11,8 @@ public class TestbedNotFoundException extends Exception {
     public TestbedNotFoundException(final Throwable throwable){
         super(throwable);
     }
+
+    public TestbedNotFoundException(final String message){
+        super(message);
+    }
 }

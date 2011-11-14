@@ -59,14 +59,14 @@ public class ListLinksController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException("Testbed IDs have number format.");
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
         List<Link> links = linkManager.list(testbed);
 
