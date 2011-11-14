@@ -117,6 +117,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         LOGGER.info("Update");
         if (lastReading.getNode().getId().equals(nodeID) && lastReading.getCapability().getName().equals(capabilityID)) {
             final String response = new StringBuilder().append(lastReading.getTimestamp()).append("\t").append(lastReading.getReading()).toString();
+            LOGGER.info(response);
             for (final WebSocketContext user : users) {
                 try {
                     final PrintWriter thisWriter = user.startTextMessage();
