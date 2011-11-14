@@ -2,6 +2,7 @@ package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.DestinationPayloadCommand;
 import eu.uberdust.controller.protobuf.CommandProtocol;
+import eu.uberdust.rest.exception.NodeNotFoundException;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ public class SendCommandController extends AbstractRestController {
 
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws Exception {
+                                  Object commandObj, BindException e) throws NodeNotFoundException, IOException {
 
         // set commandNode object
         DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
@@ -46,40 +47,34 @@ public class SendCommandController extends AbstractRestController {
         // look for destination node
         Node destinationNode = nodeManager.getByID(command.getDestination());
         if (destinationNode == null) {
-            throw new Exception("Destination Node [" + command.getDestination() + "] is not stored.");
+            throw new NodeNotFoundException(new Throwable("Destination Node [" + command.getDestination() + "] is not stored."));
         }
 
-        try {
-            // prepare socket for connection and writer
-            final Socket kkSocket = new Socket("gold.cti.gr", 4444);
-            final PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+        // prepare socket for connection and writer
+        final Socket kkSocket = new Socket("gold.cti.gr", 4444);
+        final PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
 
-            // build command and send it through the socket stream
-            final CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
-                    .setDestination(command.getDestination())
-                    .setPayload(command.getPayload())
-                    .build();
-            cmd.writeTo(kkSocket.getOutputStream());
+        // build command and send it through the socket stream
+        final CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
+                .setDestination(command.getDestination())
+                .setPayload(command.getPayload())
+                .build();
+        cmd.writeTo(kkSocket.getOutputStream());
 
-            // close stream after command execution
-            out.close();
-            kkSocket.close();
+        // close stream after command execution
+        out.close();
+        kkSocket.close();
 
-            httpServletResponse.setContentType("text/plain");
-            final Writer textOutput = (httpServletResponse.getWriter());
-            textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
-
-            return null;
-        } catch (Exception ex) {
-            LOGGER.fatal(ex);
-            throw new Exception(ex.getMessage());
-        }
+        httpServletResponse.setContentType("text/plain");
+        final Writer textOutput = (httpServletResponse.getWriter());
+        textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
+        return null;
 
     }
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

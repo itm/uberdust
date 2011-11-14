@@ -12,6 +12,9 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.command.NodeCommand;
+import eu.uberdust.rest.exception.InvalidTestbedIdException;
+import eu.uberdust.rest.exception.NodeNotFoundException;
+import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.uberdust.util.Coordinate;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
@@ -61,7 +64,9 @@ public class ShowNodeGeoRssController extends AbstractRestController {
     @SuppressWarnings({"unchecked"})
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws Exception {
+                                  Object commandObj, BindException e)
+            throws IOException, FeedException, NodeNotFoundException, TestbedNotFoundException,
+            InvalidTestbedIdException {
 
         // set command object
         final NodeCommand command = (NodeCommand) commandObj;
@@ -72,22 +77,21 @@ public class ShowNodeGeoRssController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new Exception(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
         // look up node
-        String nodeId = command.getNodeId();
         Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
             // if no node is found throw exception
-            throw new Exception(new Throwable("Cannot find testbed [" + command.getNodeId() + "]."));
+            throw new NodeNotFoundException(new Throwable("Cannot find testbed [" + command.getNodeId() + "]."));
         }
 
         // set up feed and entries
@@ -146,20 +150,14 @@ public class ShowNodeGeoRssController extends AbstractRestController {
 
         // the feed output goes to response
         SyndFeedOutput output = new SyndFeedOutput();
-        try {
-            output.output(feed, httpServletResponse.getWriter());
-        } catch (FeedException ex) {
-            throw new Exception(new Throwable("Error occur while making GeoRSS for testbed [" + testbedId + "] " +
-                    "and node [" + nodeId + "]."));
-        }
+        output.output(feed, httpServletResponse.getWriter());
 
         return null;
     }
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd =
-                exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
+        String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         LOGGER.error(exception, exception.fillInStackTrace());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

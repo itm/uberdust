@@ -12,6 +12,8 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.command.TestbedCommand;
+import eu.uberdust.rest.exception.InvalidTestbedIdException;
+import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.uberdust.util.Coordinate;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
@@ -55,7 +57,8 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
     @SuppressWarnings({"unchecked"})
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws Exception {
+                                  Object commandObj, BindException e)
+            throws TestbedNotFoundException, InvalidTestbedIdException, IOException, FeedException {
 
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
@@ -66,14 +69,14 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new Exception(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
         // set up feed and entries
@@ -140,20 +143,15 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
         // the feed output goes to response
         SyndFeedOutput output = new SyndFeedOutput();
-        try {
-            output.output(feed, httpServletResponse.getWriter());
-        } catch (FeedException ex) {
-            throw new Exception(new Throwable("Error occur while making GeoRSS for testbed [" + testbedId + "]."));
-        }
+        output.output(feed, httpServletResponse.getWriter());
 
         return null;
     }
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd =
-                exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        LOGGER.error(exception,exception.fillInStackTrace());
+        String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
+        LOGGER.error(exception, exception.fillInStackTrace());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

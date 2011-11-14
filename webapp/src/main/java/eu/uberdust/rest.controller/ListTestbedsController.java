@@ -2,13 +2,11 @@ package eu.uberdust.rest.controller;
 
 import eu.wisebed.wisedb.model.Testbed;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +28,7 @@ public class ListTestbedsController extends AbstractRestController {
 
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws Exception {
+                                  Object commandObj, BindException e) {
 
         // testbed list
         List<Testbed> testbeds = testbedManager.list();
@@ -40,11 +38,5 @@ public class ListTestbedsController extends AbstractRestController {
 
         refData.put("testbeds", testbeds);
         return new ModelAndView("testbed/list.html", refData);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

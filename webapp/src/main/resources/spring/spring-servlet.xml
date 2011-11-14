@@ -167,14 +167,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <!-- Show Testbed KML Controller -->
     <bean name="showTestbedKmlController" class="eu.uberdust.rest.controller.ShowTestbedKmlController">
         <property name="commandClass" value="eu.uberdust.command.TestbedCommand"/>
-        <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/kml"/>
     </bean>
 
     <!-- Show Testbed WiseML Controller -->
     <bean name="showTestbedWiseMlController" class="eu.uberdust.rest.controller.ShowTestbedWiseMlController">
         <property name="commandClass" value="eu.uberdust.command.TestbedCommand"/>
-        <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/wiseml"/>
     </bean>
 
@@ -226,8 +224,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <!-- Show Node KML Controller -->
     <bean name="showNodeKmlController" class="eu.uberdust.rest.controller.ShowNodeKmlController">
         <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
-        <property name="testbedManager" ref="testbedManager"/>
-        <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/kml"/>
     </bean>
 
@@ -362,7 +358,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/chart"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -382,7 +377,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/wiseml"/>
     </bean>
 
@@ -402,8 +396,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
           class="eu.uberdust.rest.controller.NodeCapabilityInsertReadingController">
         <property name="commandClass" value="eu.uberdust.command.NodeCapabilityInsertReadingCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
-        <property name="nodeManager" ref="nodeManager"/>
-        <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern"
                   value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}"/>

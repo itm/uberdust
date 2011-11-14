@@ -1,6 +1,12 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.NodeCapabilityCommand;
+import eu.uberdust.rest.exception.CapabilityNotFoundException;
+import eu.uberdust.rest.exception.InvalidCapabilityNameException;
+import eu.uberdust.rest.exception.InvalidNodeIdException;
+import eu.uberdust.rest.exception.InvalidTestbedIdException;
+import eu.uberdust.rest.exception.NodeNotFoundException;
+import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
@@ -54,7 +60,9 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
 
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws Exception {
+                                  Object commandObj, BindException e)
+            throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
+            TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
 
         // set commandNode object
         NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
@@ -62,10 +70,14 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
-        // check input
-        if (command.getNodeId() == null || command.getNodeId().isEmpty() || command.getCapabilityId() == null ||
-                command.getCapabilityId().isEmpty()) {
-            throw new Exception(new Throwable("Must provide node/link id and capability id"));
+        // check node id
+        if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
+            throw new InvalidNodeIdException(new Throwable("Must provide node id"));
+        }
+
+        // check capability name
+        if (command.getCapabilityId() == null || command.getCapabilityId().isEmpty()) {
+            throw new InvalidCapabilityNameException(new Throwable("Must provide capability name"));
         }
 
         // a specific testbed is requested by testbed Id
@@ -74,28 +86,27 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new Exception(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
         // retrieve node
         Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
-            throw new Exception(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
+            throw new NodeNotFoundException(new Throwable("Cannot find node [" + command.getNodeId() + "]"));
         }
 
         // retrieve capability
         Capability capability = capabilityManager.getByID(command.getCapabilityId());
         if (capability == null) {
-            throw new Exception(new Throwable("Cannot find capability [" + command.getCapabilityId() + "]"));
+            throw new CapabilityNotFoundException(new Throwable("Cannot find capability [" + command.getCapabilityId() + "]"));
         }
-
         // retrieve readings based on node/capability
         List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
 
@@ -113,7 +124,7 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

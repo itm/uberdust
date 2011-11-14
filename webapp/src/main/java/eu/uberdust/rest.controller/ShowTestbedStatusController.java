@@ -1,8 +1,14 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.TestbedCommand;
-import eu.wisebed.wisedb.controller.*;
-import eu.wisebed.wisedb.model.*;
+import eu.uberdust.rest.exception.InvalidTestbedIdException;
+import eu.uberdust.rest.exception.TestbedNotFoundException;
+import eu.wisebed.wisedb.controller.LastLinkReadingController;
+import eu.wisebed.wisedb.controller.LastNodeReadingController;
+import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.LastLinkReading;
+import eu.wisebed.wisedb.model.LastNodeReading;
+import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,8 +18,6 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +51,8 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
     @Override
     protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws Exception {
+                                  Object commandObj, BindException e)
+            throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // set command object
         TestbedCommand command = (TestbedCommand) commandObj;
@@ -59,14 +64,14 @@ public class ShowTestbedStatusController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new Exception(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
 
         // get a list of node last readings from testbed
@@ -93,7 +98,7 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

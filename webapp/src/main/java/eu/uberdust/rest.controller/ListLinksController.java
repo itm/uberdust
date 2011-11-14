@@ -1,6 +1,8 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.LinkCommand;
+import eu.uberdust.rest.exception.InvalidTestbedIdException;
+import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
@@ -45,7 +47,7 @@ public class ListLinksController extends AbstractRestController {
     @Override
     protected ModelAndView handle(HttpServletRequest request,
                                   HttpServletResponse response, Object commandObj, BindException errors)
-            throws Exception {
+            throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command
         LinkCommand command = (LinkCommand) commandObj;
@@ -57,14 +59,14 @@ public class ListLinksController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new Exception(new Throwable("Testbed IDs have number format."));
+            throw new InvalidTestbedIdException(new Throwable("Testbed IDs have number format."));
         }
 
         // look up testbed
         Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
-            throw new Exception(new Throwable("Cannot find testbed [" + testbedId + "]."));
+            throw new TestbedNotFoundException(new Throwable("Cannot find testbed [" + testbedId + "]."));
         }
         List<Link> links = linkManager.list(testbed);
 
@@ -78,7 +80,7 @@ public class ListLinksController extends AbstractRestController {
 
     @ExceptionHandler(Exception.class)
     public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage();
+        String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }
