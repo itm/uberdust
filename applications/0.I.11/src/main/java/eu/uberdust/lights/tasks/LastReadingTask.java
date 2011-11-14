@@ -1,4 +1,4 @@
-package eu.uberdust.lights.timers;
+package eu.uberdust.lights.tasks;
 
 import eu.uberdust.lights.LightController;
 import org.apache.log4j.Logger;
