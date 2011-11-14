@@ -8,7 +8,7 @@ public class CapabilityCommand extends TestbedCommand {
         return capabilityName;
     }
 
-    public void setCapabilityName(String capabilityName) {
+    public void setCapabilityName(final String capabilityName) {
         this.capabilityName = capabilityName;
     }
 }

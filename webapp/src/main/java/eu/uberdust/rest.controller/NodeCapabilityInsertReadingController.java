@@ -43,12 +43,12 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final  BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException, UnknownTestbedException, IOException {
 
         // set commandNode object
-        NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
+        final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
         LOGGER.info("command.getNodeId() : " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
@@ -65,7 +65,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
@@ -91,7 +91,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final  HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

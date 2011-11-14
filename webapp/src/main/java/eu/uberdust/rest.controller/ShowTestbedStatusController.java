@@ -41,21 +41,21 @@ public class ShowTestbedStatusController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setLastNodeReadingManager(LastNodeReadingController lastNodeReadingManager) {
+    public void setLastNodeReadingManager(final LastNodeReadingController lastNodeReadingManager) {
         this.lastNodeReadingManager = lastNodeReadingManager;
     }
 
-    public void setLastLinkReadingManager(LastLinkReadingController lastLinkReadingManager) {
+    public void setLastLinkReadingManager(final LastLinkReadingController lastLinkReadingManager) {
         this.lastLinkReadingManager = lastLinkReadingManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // set command object
-        TestbedCommand command = (TestbedCommand) commandObj;
+        final TestbedCommand command = (TestbedCommand) commandObj;
         LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
@@ -68,7 +68,7 @@ public class ShowTestbedStatusController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
@@ -76,13 +76,13 @@ public class ShowTestbedStatusController extends AbstractRestController {
 
         // get a list of node last readings from testbed
         long before = System.currentTimeMillis();
-        List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByTestbed(testbed);
+        final List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByTestbed(testbed);
         long after = System.currentTimeMillis();
         LOGGER.info("lastNodeReadingManager.getByTestbed(testbed) took " + (after-before) + " millis");
 
         // get a list of link statistics from testbed
         before = System.currentTimeMillis();
-        List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByTestbed(testbed);
+        final List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByTestbed(testbed);
         after = System.currentTimeMillis();
         LOGGER.info("lastLinkReadingManager.getByTestbed(testbed) took " + (after-before) + " millis");
 
@@ -97,7 +97,7 @@ public class ShowTestbedStatusController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

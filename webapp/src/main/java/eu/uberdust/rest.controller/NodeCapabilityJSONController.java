@@ -28,7 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class NodeCapabilityJSONController extends AbstractRestController {
 
@@ -57,13 +58,13 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         this.nodeReadingManager = nodeReadingManager;
     }
 
-    public void setTestbedManager(TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
         // set commandNode object
@@ -93,20 +94,20 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // retrieve node
-        Node node = nodeManager.getByID(command.getNodeId());
+        final Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
             throw new NodeNotFoundException("Cannot find node [" + command.getNodeId() + "]");
         }
 
         // retrieve capability
-        Capability capability = capabilityManager.getByID(command.getCapabilityId());
+        final Capability capability = capabilityManager.getByID(command.getCapabilityId());
         if (capability == null) {
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
@@ -114,17 +115,25 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         // create list of readings and node , capability ids
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
-        NodeReadingJson nodeReadingInJson = new NodeReadingJson(nodeId, capabilityId, new ArrayList<ReadingJson>());
-        for (NodeReading nodeReading : nodeReadingManager.listNodeReadings(node, capability)) {
-            nodeReadingInJson.getReadings().add(new ReadingJson(nodeReading.getTimestamp().getTime(), nodeReading.getReading()));
+        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+
+        final ReadingJson[] readingJsons = new ReadingJson[nodeReadings.size()];
+        int index = 0;
+        for (NodeReading nodeReading : nodeReadings) {
+            readingJsons[index].setTimestamp(nodeReading.getTimestamp().getTime());
+            readingJsons[index].setReading(nodeReading.getReading());
+            index++;
         }
+        final NodeReadingJson nodeReadingInJson =
+                new NodeReadingJson(nodeId, capabilityId, Arrays.asList(readingJsons));
+
 
         // write on the HTTP response
         httpServletResponse.setContentType("text/json");
         final Writer jsonOutput = (httpServletResponse.getWriter());
 
         // init GSON
-        Gson gson = new Gson();
+        final Gson gson = new Gson();
         gson.toJson(nodeReadingInJson, nodeReadingInJson.getClass(), jsonOutput);
 
 
@@ -135,7 +144,7 @@ public class NodeCapabilityJSONController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

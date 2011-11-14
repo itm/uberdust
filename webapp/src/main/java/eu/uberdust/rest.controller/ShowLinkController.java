@@ -30,21 +30,21 @@ public class ShowLinkController extends AbstractRestController {
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 
 
-    public void setLinkManager(LinkController linkManager) {
+    public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
-    public void setTestbedManager(TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest request,
-                                  HttpServletResponse response, Object commandObj, BindException errors)
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final  Object commandObj,final  BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, LinkNotFoundException {
 
         // set command object
-        LinkCommand command = (LinkCommand) commandObj;
+        final LinkCommand command = (LinkCommand) commandObj;
         LOGGER.info("command.getNodeId() : " + command.getSourceId());
         LOGGER.info("command.getTargetId() : " + command.getTargetId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
@@ -57,22 +57,18 @@ public class ShowLinkController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new InvalidTestbedIdException("Testbed IDs have number format.");
         }
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
-        // a link instance  and link list
-        Link link = null;
-        Link linkInv = null;
-        Map<Link,List<Capability>> linkCapabilityMap = new HashMap<Link,List<Capability>>();
-
-        // Retrieve the link and it's inverse
-        if (command.getSourceId() != null && command.getTargetId() != null) {
-            link = linkManager.getByID(command.getSourceId(), command.getTargetId());
-            linkInv = linkManager.getByID(command.getTargetId(), command.getSourceId());
-        }
+        // a link instance  and it' inverse
+        final Link link = (command.getSourceId() == null || command.getTargetId() == null) ? null :
+                linkManager.getByID(command.getSourceId(),command.getTargetId());
+        final Link linkInv = (command.getSourceId() == null || command.getTargetId() == null) ? null :
+                linkManager.getByID(command.getTargetId(), command.getSourceId());
+        final Map<Link,List<Capability>> linkCapabilityMap = new HashMap<Link,List<Capability>>();
 
         // if no link or inverse link found return error view
         if (link == null && linkInv == null) {
@@ -97,7 +93,7 @@ public class ShowLinkController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

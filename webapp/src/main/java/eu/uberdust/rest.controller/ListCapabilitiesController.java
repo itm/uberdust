@@ -33,20 +33,21 @@ public class ListCapabilitiesController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setTestbedManager(TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    public void setCapabilityManager(CapabilityController capabilityManager) {
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws InvalidTestbedIdException, TestbedNotFoundException {
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final  BindException e)
+            throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // get command
-        CapabilityCommand command = (CapabilityCommand) commandObj;
+        final CapabilityCommand command = (CapabilityCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
@@ -59,13 +60,13 @@ public class ListCapabilitiesController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
         // get testbed's capabilities
-        List<Capability> capabilities = capabilityManager.list(testbed);
+        final List<Capability> capabilities = capabilityManager.list(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -75,7 +76,7 @@ public class ListCapabilitiesController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final  HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

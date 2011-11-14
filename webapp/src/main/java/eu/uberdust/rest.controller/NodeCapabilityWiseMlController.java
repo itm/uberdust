@@ -51,13 +51,13 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final  BindException e)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
 
         // set commandNode object
-        NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
+        final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
         LOGGER.info("command.getNodeId() : " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
@@ -82,20 +82,20 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // retrieve node
-        Node node = nodeManager.getByID(command.getNodeId());
+        final Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
             throw new NodeNotFoundException("Cannot find node [" + command.getNodeId() + "]");
         }
 
         // retrieve capability
-        Capability capability = capabilityManager.getByID(command.getCapabilityId());
+        final Capability capability = capabilityManager.getByID(command.getCapabilityId());
         if (capability == null) {
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
@@ -104,7 +104,7 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

@@ -37,28 +37,28 @@ public class ShowCapabilityController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setCapabilityManager(CapabilityController capabilityManager) {
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
-    public void setTestbedManager(TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    public void setNodeManager(NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    public void setLinkManager(LinkController linkManager) {
+    public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException, CapabilityNotFoundException {
         // set command object
-        CapabilityCommand command = (CapabilityCommand) commandObj;
+        final CapabilityCommand command = (CapabilityCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
         LOGGER.info("command.getCapabilityName() : " + command.getCapabilityName());
 
@@ -70,22 +70,22 @@ public class ShowCapabilityController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new InvalidTestbedIdException("Testbed IDs have number format.");
         }
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // look up capability
-        Capability capability = capabilityManager.getByID(command.getCapabilityName());
+        final Capability capability = capabilityManager.getByID(command.getCapabilityName());
         if(capability == null){
             // if no capability is found throw exception
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityName() + "].");
         }
 
         // get testbed nodes only
-        List<Node> nodes = nodeManager.listCapabilityNodes(capability,testbed);
-        List<Link> links = linkManager.listCapabilityLinks(capability,testbed);
+        final List<Node> nodes = nodeManager.listCapabilityNodes(capability,testbed);
+        final List<Link> links = linkManager.listCapabilityLinks(capability,testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -97,7 +97,7 @@ public class ShowCapabilityController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

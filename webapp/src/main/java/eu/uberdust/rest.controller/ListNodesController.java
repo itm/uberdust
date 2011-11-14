@@ -40,17 +40,17 @@ public class ListNodesController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setNodeManager(NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest request,
-                                  HttpServletResponse response, Object commandObj, BindException errors)
+    protected ModelAndView handle(final HttpServletRequest request,
+                                  final HttpServletResponse response,final  Object commandObj,final  BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command object
-        NodeCommand command = (NodeCommand) commandObj;
+        final NodeCommand command = (NodeCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
@@ -61,14 +61,14 @@ public class ListNodesController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new InvalidTestbedIdException("Testbed IDs have number format.");
         }
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // get testbed's nodes
-        List<Node> nodes = nodeManager.list(testbed);
+        final List<Node> nodes = nodeManager.list(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -80,7 +80,7 @@ public class ListNodesController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

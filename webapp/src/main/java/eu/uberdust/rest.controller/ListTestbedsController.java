@@ -1,5 +1,6 @@
 package eu.uberdust.rest.controller;
 
+import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,16 +23,16 @@ public class ListTestbedsController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setTestbedManager(final eu.wisebed.wisedb.controller.TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) {
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final  BindException e) {
 
         // testbed list
-        List<Testbed> testbeds = testbedManager.list();
+        final List<Testbed> testbeds = testbedManager.list();
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

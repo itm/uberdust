@@ -40,17 +40,17 @@ public class ListLinksController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setLinkManager(LinkController linkManager) {
+    public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest request,
-                                  HttpServletResponse response, Object commandObj, BindException errors)
+    protected ModelAndView handle(final HttpServletRequest request,
+                                  final HttpServletResponse response,final  Object commandObj,final  BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command
-        LinkCommand command = (LinkCommand) commandObj;
+        final LinkCommand command = (LinkCommand) commandObj;
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
@@ -63,12 +63,12 @@ public class ListLinksController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
-        List<Link> links = linkManager.list(testbed);
+        final List<Link> links = linkManager.list(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -79,7 +79,7 @@ public class ListLinksController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

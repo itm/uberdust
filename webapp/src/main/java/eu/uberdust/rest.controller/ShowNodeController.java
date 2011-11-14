@@ -34,21 +34,21 @@ public class ShowNodeController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setNodeManager(NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    public void setTestbedManager(TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException, NodeNotFoundException {
 
         // set command object
-        NodeCommand command = (NodeCommand) commandObj;
+        final NodeCommand command = (NodeCommand) commandObj;
         LOGGER.info("command.getNodeId() : " + command.getNodeId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
@@ -60,14 +60,14 @@ public class ShowNodeController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new InvalidTestbedIdException("Testbed IDs have number format.");
         }
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // look up node
-        Node node = nodeManager.getByID(command.getNodeId());
+        final Node node = nodeManager.getByID(command.getNodeId());
         if (node == null) {
             // if no testbed is found throw exception
             throw new NodeNotFoundException("Cannot find testbed [" + command.getNodeId() + "].");
@@ -84,7 +84,7 @@ public class ShowNodeController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

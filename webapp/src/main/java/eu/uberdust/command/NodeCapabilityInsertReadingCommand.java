@@ -8,7 +8,7 @@ public class NodeCapabilityInsertReadingCommand extends NodeCapabilityCommand {
         return reading;
     }
 
-    public void setReading(String reading) {
+    public void setReading(final String reading) {
         this.reading = reading;
     }
 
@@ -16,7 +16,7 @@ public class NodeCapabilityInsertReadingCommand extends NodeCapabilityCommand {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(final String timestamp) {
         this.timestamp = timestamp;
     }
 

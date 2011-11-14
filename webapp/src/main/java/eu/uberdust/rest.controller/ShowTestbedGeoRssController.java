@@ -50,14 +50,14 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setDeploymentHost(String deploymentHost) {
+    public void setDeploymentHost(final String deploymentHost) {
         this.deploymentHost = deploymentHost;
     }
 
     @SuppressWarnings({"unchecked"})
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final BindException e)
             throws TestbedNotFoundException, InvalidTestbedIdException, IOException, FeedException {
 
         // set command object
@@ -73,7 +73,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
@@ -81,17 +81,17 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
         // set up feed and entries
         httpServletResponse.setContentType("application/xml; charset=UTF-8");
-        SyndFeed feed = new SyndFeedImpl();
+        final SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
         feed.setTitle(testbed.getName() + " GeoRSS");
         feed.setLink(httpServletRequest.getRequestURL().toString());
         feed.setDescription(testbed.getDescription());
-        List<SyndEntry> entries = new ArrayList<SyndEntry>();
+        final List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
 
         // convert testbed origin from long/lat position to xyz
         final Origin origin = testbed.getSetup().getOrigin();
-        Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
+        final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
         final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
 
@@ -106,7 +106,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             entry.setPublishedDate(new Date());
 
             // set entry's description (HTML list)
-            SyndContent description = new SyndContentImpl();
+            final SyndContent description = new SyndContentImpl();
             StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
             descriptionBuffer.append("<p><a href=\"http://").append(deploymentHost).append("/uberdust/rest/testbed/")
@@ -132,7 +132,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
 
             // set the GeoRSS module and add it
-            GeoRSSModule geoRSSModule = new SimpleModuleImpl();
+            final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
             geoRSSModule.setPosition(new Position(nodePosition.getX(), nodePosition.getY()));
             entry.getModules().add(geoRSSModule);
             entries.add(entry);
@@ -142,15 +142,15 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         feed.setEntries(entries);
 
         // the feed output goes to response
-        SyndFeedOutput output = new SyndFeedOutput();
+        final SyndFeedOutput output = new SyndFeedOutput();
         output.output(feed, httpServletResponse.getWriter());
 
         return null;
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
+    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
+        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         LOGGER.error(exception, exception.fillInStackTrace());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

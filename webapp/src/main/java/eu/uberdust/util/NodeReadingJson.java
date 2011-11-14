@@ -11,7 +11,7 @@ public class NodeReadingJson {
     private List<ReadingJson> readings;
 
     public NodeReadingJson() {
-
+        //empty constructor
     }
 
     public NodeReadingJson(final String nodeId, final String capabilityId, final List<ReadingJson> readings) {
@@ -24,7 +24,7 @@ public class NodeReadingJson {
         return nodeId;
     }
 
-    public void setNodeId(String nodeId) {
+    public void setNodeId(final String nodeId) {
         this.nodeId = nodeId;
     }
 
@@ -32,7 +32,7 @@ public class NodeReadingJson {
         return capabilityId;
     }
 
-    public void setCapabilityId(String capabilityId) {
+    public void setCapabilityId(final String capabilityId) {
         this.capabilityId = capabilityId;
     }
 
@@ -40,7 +40,7 @@ public class NodeReadingJson {
         return readings;
     }
 
-    public void setReadings(List<ReadingJson> readings) {
+    public void setReadings(final List<ReadingJson> readings) {
         this.readings = readings;
     }
 }

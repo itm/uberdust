@@ -31,21 +31,21 @@ public class SendCommandController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setNodeManager(NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws NodeNotFoundException, IOException {
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final  BindException e) throws NodeNotFoundException, IOException {
 
         // set commandNode object
-        DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
+        final DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
         LOGGER.info("command.getDestination() : " + command.getDestination());
         LOGGER.info("command.getPayload() : " + command.getPayload());
 
         // look for destination node
-        Node destinationNode = nodeManager.getByID(command.getDestination());
+        final Node destinationNode = nodeManager.getByID(command.getDestination());
         if (destinationNode == null) {
             throw new NodeNotFoundException("Destination Node [" + command.getDestination() + "] is not stored.");
         }
@@ -73,7 +73,7 @@ public class SendCommandController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception,final  HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

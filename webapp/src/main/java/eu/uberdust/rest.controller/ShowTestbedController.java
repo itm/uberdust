@@ -42,24 +42,24 @@ public class ShowTestbedController extends AbstractRestController {
         this.testbedManager = testbedManager;
     }
 
-    public void setCapabilityManager(CapabilityController capabilityManager) {
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
-    public void setLinkManager(LinkController linkManager) {
+    public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
-    public void setNodeManager(NodeController nodeManager) {
+    public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
     @Override
-    protected ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                  Object commandObj, BindException e) throws TestbedNotFoundException, InvalidTestbedIdException {
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
+                                  final Object commandObj,final  BindException e) throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // set command object
-        TestbedCommand command = (TestbedCommand) commandObj;
+        final TestbedCommand command = (TestbedCommand) commandObj;
         LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
 
 
@@ -73,20 +73,20 @@ public class ShowTestbedController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // get testbed nodes
-        List<Node> nodes = nodeManager.list(testbed);
+        final List<Node> nodes = nodeManager.list(testbed);
 
         // get testbed links
-        List<Link> links = linkManager.list(testbed);
+        final List<Link> links = linkManager.list(testbed);
 
         // get testbed capabilities
-        List<Capability> capabilities = capabilityManager.list(testbed);
+        final List<Capability> capabilities = capabilityManager.list(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
@@ -100,7 +100,7 @@ public class ShowTestbedController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
         final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }

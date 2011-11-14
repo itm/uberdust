@@ -39,29 +39,29 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setTestbedManager(TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    public void setCapabilityManager(CapabilityController capabilityManager) {
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
-    public void setLastNodeReadingManager(LastNodeReadingController lastNodeReading) {
+    public void setLastNodeReadingManager(final LastNodeReadingController lastNodeReading) {
         this.lastNodeReadingManager = lastNodeReading;
     }
 
-    public void setLastLinkReadingManager(LastLinkReadingController lastLinkReading) {
+    public void setLastLinkReadingManager(final LastLinkReadingController lastLinkReading) {
         this.lastLinkReadingManager = lastLinkReading;
     }
 
 
     @Override
-    protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object commandObj,
-                                  BindException errors)
+    protected ModelAndView handle(final HttpServletRequest request,final  HttpServletResponse response,final  Object commandObj,
+                                  final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, IOException, CapabilityNotFoundException {
         // set command object
-        CapabilityCommand command = (CapabilityCommand) commandObj;
+        final CapabilityCommand command = (CapabilityCommand) commandObj;
         LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
         LOGGER.info("commandObj.getCapabilityId() : " + command.getCapabilityName());
 
@@ -75,14 +75,14 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
         }
 
         // look up testbed
-        Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
+        final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
         // look up capability
-        Capability capability = capabilityManager.getByID(command.getCapabilityName());
+        final Capability capability = capabilityManager.getByID(command.getCapabilityName());
         if (capability == null) {
             // if no capability is found throw exception
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityName() + "].");
@@ -125,8 +125,8 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(Throwable exception, HttpServletResponse response) throws IOException {
-        String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
+        final String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

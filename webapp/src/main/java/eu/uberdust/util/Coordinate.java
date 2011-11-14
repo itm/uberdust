@@ -33,6 +33,7 @@ public class Coordinate implements Serializable {
     private Double theta;
 
     public Coordinate() {
+        // empty constructor
     }
 
     public Coordinate(final Double x, final Double y, final Double z, final Double phi, final Double theta) {
@@ -41,14 +42,6 @@ public class Coordinate implements Serializable {
         this.z = z;
         this.phi = phi;
         this.theta = theta;
-    }
-
-    public Coordinate(final Coordinate coordinate) {
-        x = coordinate.getX();
-        y = coordinate.getY();
-        z = coordinate.getZ();
-        phi = coordinate.getPhi();
-        theta = coordinate.getTheta();
     }
 
     public Double getX() {
@@ -93,11 +86,13 @@ public class Coordinate implements Serializable {
 
     @Override
     public String toString() {
-        String s = "x=" + x
-                + ", y=" + y
-                + ", z=" + z;
-        if (phi != null) s += ", phi=" + phi;
-        if (theta != null) s += ", theta=" + theta;
+        String s = "x=" + x + ", y=" + y + ", z=" + z;
+        if (phi != null) {
+            s.concat(", phi=" + phi);
+        }
+        if (theta != null) {
+            s.concat(", theta=" + theta);
+        }
 
         return s;
     }
@@ -112,6 +107,12 @@ public class Coordinate implements Serializable {
 
     private static final double WGS84_C = WGS84_A * WGS84_A / WGS84_B;
 
+    /**
+     * Rotate coordinates using phi angle
+     * @param coordinate , coordinate instance.
+     * @param phi , phi angle.
+     * @return rotated coordinates
+     */
     public static Coordinate rotate(final Coordinate coordinate, final Double phi) {
         final Double rad = Math.toRadians(phi);
         final Double cos = Math.cos(rad);
@@ -121,25 +122,16 @@ public class Coordinate implements Serializable {
         return new Coordinate(x, y, coordinate.getZ(), coordinate.getPhi(), coordinate.getTheta());
     }
 
+    /**
+     * Absolute coordinates based on an origin coordinate.
+     * @param origin , origin coordinate.
+     * @param coordinate , relative coordinate.
+     * @return absolute cooordinates.
+     */
     public static Coordinate absolute(final Coordinate origin, final Coordinate coordinate) {
         final Double y = coordinate.getY() + origin.getY();
         final Double x = coordinate.getX() + origin.getX();
         return new Coordinate(x, y, origin.getZ(), origin.getPhi(), origin.getTheta());
-    }
-
-    public static Coordinate difference(final Coordinate source, final Coordinate vector) {
-        return new Coordinate(vector.getX() - source.getX(), vector.getY() - source.getY(), 0.0, 0.0, 0.0);
-    }
-
-    public static double angle(final Coordinate source, final Coordinate vector) {
-        return Math.atan2(vector.getY(), vector.getX()) - Math.atan2(source.getY(), source.getX());
-    }
-
-    public static double location(final Coordinate point, final Coordinate linePoint1, final Coordinate linePoint2) {
-        return (linePoint2.getX() - linePoint1.getX())
-                * (point.getY() - linePoint1.getY())
-                - (point.getX() - linePoint1.getX())
-                * (linePoint2.getY() - linePoint1.getY());
     }
 
     /**
