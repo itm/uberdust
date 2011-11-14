@@ -2,7 +2,7 @@ package eu.uberdust.lights;
 
 
 import eu.uberdust.communication.RestClient;
-import eu.uberdust.lights.timers.LastReadingTask;
+import eu.uberdust.lights.tasks.LastReadingTask;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -24,7 +24,6 @@ public class LightController {
 
     private final String READINGS_LINK =
             "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
-
 
     private final String ZONE_1_LINK =
             "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light1/latestreading";
