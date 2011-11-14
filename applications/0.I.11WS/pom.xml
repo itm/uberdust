@@ -18,6 +18,7 @@
 
     <properties>
         <jetty-version>8.0.4.v20111024</jetty-version>
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
 
