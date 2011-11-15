@@ -14,9 +14,9 @@ import java.net.ServerSocket;
  */
 public class SocketServer extends Thread {
 
-    private final static Logger LOGGER = org.apache.log4j.Logger.getLogger(SocketServer.class);
+    private static final Logger LOGGER = org.apache.log4j.Logger.getLogger(SocketServer.class);
 
-    private final static int SERVER_PORT = 4444;
+    private static final int SERVER_PORT = 4444;
 
     private boolean isEnabled;
 
@@ -70,11 +70,11 @@ public class SocketServer extends Thread {
      *
      * @param enabled boolean
      */
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         isEnabled = enabled;
     }
 
-    public static void main(String[] Args) {
+    public static void main(final String[] args) {
         SocketServer srv = new SocketServer();
         srv.start();
     }

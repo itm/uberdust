@@ -14,16 +14,17 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     /**
      * Static Logger.
      */
-    private final static Logger LOGGER = Logger.getLogger(WebSocketIMPL.class);
+    private static final Logger LOGGER = Logger.getLogger(WebSocketIMPL.class);
 
     /**
      * Called with a complete text message when all fragments have been received.
-     * The maximum size of text message that may be aggregated from multiple frames is set with {@link Connection#setMaxTextMessageSize(int)}.
+     * The maximum size of text message that may be aggregated from multiple
+     * frames is set with {@link Connection#setMaxTextMessageSize(int)}.
      *
      * @param data The message
      */
     @Override
-    public void onMessage(final String data) {
+    public final void onMessage(final String data) {
         LOGGER.info(new StringBuilder().append("-- onMessage: ").append(data).append(new Date()).toString());
         LightController.getInstance().setLastReading(System.currentTimeMillis());
         //LightController.getInstance().setLastReading(Long.parseLong(data.split("\t")[0]));
@@ -36,18 +37,18 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
      * @param connection The Connection object to use to send messages.
      */
     @Override
-    public void onOpen(final Connection connection) {
+    public final void onOpen(final Connection connection) {
         LOGGER.info("onOpen");
     }
 
     /**
-     * Called when an established websocket connection closes
+     * Called when an established websocket connection closes.
      *
      * @param closeCode the Close Code
      * @param message   the Message
      */
     @Override
-    public void onClose(final int closeCode, final String message) {
+    public final void onClose(final int closeCode, final String message) {
         LOGGER.info("onClose");
         WSocketClient.getInstance().connect();
     }

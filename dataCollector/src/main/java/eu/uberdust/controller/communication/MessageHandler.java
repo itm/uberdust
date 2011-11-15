@@ -16,7 +16,7 @@ import java.net.Socket;
  */
 public class MessageHandler extends Thread {
 
-    private final static Logger LOGGER = Logger.getLogger(MessageHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(MessageHandler.class);
 
     private final Socket thisSocket;
 

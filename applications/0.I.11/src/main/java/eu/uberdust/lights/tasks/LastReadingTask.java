@@ -16,19 +16,36 @@ import java.util.TimerTask;
  */
 public class LastReadingTask extends TimerTask {
 
-    private final static Logger LOGGER = Logger.getLogger(LastReadingTask.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LastReadingTask.class);
 
+    /**
+     * Timer Delay.
+     */
     public static final int DELAY = 500;
 
-    final Timer timer;
+    /**
+     * The timer.
+     */
+    private final Timer timer;
 
-    public LastReadingTask(final Timer timer) {
+    /**
+     * Default Constructor.
+     *
+     * @param thatTimer the timer
+     */
+    public LastReadingTask(final Timer thatTimer) {
         super();
-        this.timer = timer;
+        this.timer = thatTimer;
     }
 
+    /**
+     * Timer Run.
+     */
     @Override
-    public void run() {
+    public final void run() {
         final long start = System.currentTimeMillis();
         final long previousPirEvent = LightController.getInstance().getLastReading();
 

@@ -15,10 +15,12 @@ import java.net.URLConnection;
  * Time: 11:53 AM
  * To change this template use File | Settings | File Templates.
  */
-public class RestClient {
+public final class RestClient {
 
-    private final static Logger LOGGER = Logger.getLogger(RestClient.class);
-
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(RestClient.class);
 
     /**
      * static instance(ourInstance) initialized as null.
@@ -75,14 +77,15 @@ public class RestClient {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                LOGGER.error(e);
             }
             callRestfulWebService(address);
         }
         return "0\t0";
     }
 
-    public static void main(String[] args) {
-        RestClient.getInstance().callRestfulWebService("http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
+    public static void main(final String[] args) {
+        RestClient.getInstance().callRestfulWebService(
+                "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
     }
 }

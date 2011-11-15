@@ -15,19 +15,36 @@ import java.util.TimerTask;
  */
 public class LightTask extends TimerTask {
 
-    private final static Logger LOGGER = Logger.getLogger(LightTask.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LightTask.class);
 
+    /**
+     * Timer Delay.
+     */
     public static final long DELAY = 30000;
 
-    final Timer timer;
+    /**
+     * The Timer.
+     */
+    private final Timer timer;
 
-    public LightTask(final Timer timer) {
+    /**
+     * Default Constructor.
+     *
+     * @param thatTimer the timer
+     */
+    public LightTask(final Timer thatTimer) {
         super();
-        this.timer = timer;
+        this.timer = thatTimer;
     }
 
+    /**
+     * Timer run function.
+     */
     @Override
-    public void run() {
+    public final void run() {
         LOGGER.debug("Task to turn off Lights initialized");
         if (System.currentTimeMillis() - LightController.getInstance().getLastReading() > 30000) {
             if (LightController.getInstance().isZone2()) {
@@ -40,7 +57,8 @@ public class LightTask extends TimerTask {
                 //Re-schedule this timer to run in 15000ms to turn off
                 this.timer.schedule(new LightTask(timer), DELAY / 6);
 
-            } else if (LightController.getInstance().isZone1() && System.currentTimeMillis() - LightController.getInstance().getLastReading() > 30000) {
+            } else if (LightController.getInstance().isZone1()
+                    && System.currentTimeMillis() - LightController.getInstance().getLastReading() > 30000) {
                 //turn off zone 1
                 LightController.getInstance().controlLight(false, 1);
                 LOGGER.debug("Turn off zone 1");

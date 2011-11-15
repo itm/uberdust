@@ -20,9 +20,12 @@ import java.util.Timer;
  * Time: 4:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class WSocketClient {
+public final class WSocketClient {
 
-    private final static Logger LOGGER = Logger.getLogger(WSocketClient.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(WSocketClient.class);
 
     /**
      * static instance(ourInstance) initialized as null.
@@ -52,7 +55,7 @@ public class WSocketClient {
     /**
      * The protocol.
      */
-    private final static String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
+    private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
 
     /**
      * The timer.

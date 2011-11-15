@@ -1,11 +1,7 @@
 package eu.uberdust.nodeflasher;
 
 import org.apache.log4j.Logger;
-import org.quartz.Trigger;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerFactory;
-import org.quartz.SchedulerException;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;

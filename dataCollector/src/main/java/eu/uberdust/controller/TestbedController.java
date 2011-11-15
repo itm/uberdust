@@ -31,9 +31,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class TestbedController {
 
-    private final static Logger LOGGER = Logger.getLogger(TestbedController.class);
-    private final static byte PAYLOAD_PREFIX = 0xb;
-    private final static byte[] PAYLOAD_HEADERS = new byte[]{0x7f, 0x69, 0x70};
+    private static final Logger LOGGER = Logger.getLogger(TestbedController.class);
+    private static final byte PAYLOAD_PREFIX = 0xb;
+    private static final byte[] PAYLOAD_HEADERS = new byte[]{0x7f, 0x69, 0x70};
 
     private String secretReservationKeys;
     private String sessionManagementEndpointURL;
@@ -131,7 +131,8 @@ public class TestbedController {
         // Send a message to nodes via uart (to receive them enable RX_UART_MSGS in the fronts_config.h-file)
         final Message msg = new Message();
 
-        final String macAddress = protoCommand.getDestination().substring(protoCommand.getDestination().indexOf("0x") + 2);
+        final String macAddress = protoCommand.getDestination().
+                substring(protoCommand.getDestination().indexOf("0x") + 2);
         final byte[] macBytes = new byte[2];
         if (macAddress.length() == 4) {
             macBytes[0] = Integer.valueOf(macAddress.substring(0, 2), 16).byteValue();
@@ -157,14 +158,15 @@ public class TestbedController {
 
         LOGGER.info("Sending message - " + Arrays.toString(newPayload));
         try {
-            msg.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) GregorianCalendar.getInstance()));
+            msg.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(
+                    (GregorianCalendar) GregorianCalendar.getInstance()));
         } catch (final DatatypeConfigurationException e) {
             LOGGER.error(e);
         }
         wsn.send(nodeURNs, msg, 10, TimeUnit.SECONDS);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         TestbedController.getInstance();
     }
 

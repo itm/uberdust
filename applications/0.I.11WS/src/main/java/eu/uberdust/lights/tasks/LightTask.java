@@ -15,19 +15,22 @@ import java.util.TimerTask;
  */
 public class LightTask extends TimerTask {
 
-    private final static Logger LOGGER = Logger.getLogger(LightTask.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LightTask.class);
 
     public static final long DELAY = 30000;
 
-    final Timer timer;
+    private final Timer timer;
 
-    public LightTask(final Timer timer) {
+    public LightTask(final Timer thatTimer) {
         super();
-        this.timer = timer;
+        this.timer = thatTimer;
     }
 
     @Override
-    public void run() {
+    public final void run() {
         LOGGER.debug("Task to turn off Lights initialized");
         if (LightController.getInstance().isZone2()) {
             if (System.currentTimeMillis() - LightController.getInstance().getLastReading() > DELAY) {

@@ -18,7 +18,7 @@ import java.util.Arrays;
  */
 public class TestClient {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(final String[] args) throws IOException {
 
         Socket kkSocket = null;
         PrintWriter out = null;

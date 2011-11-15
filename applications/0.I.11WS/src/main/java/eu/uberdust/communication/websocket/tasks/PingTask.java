@@ -15,19 +15,22 @@ import java.util.TimerTask;
  */
 public class PingTask extends TimerTask {
 
-    private final static Logger LOGGER = Logger.getLogger(PingTask.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(PingTask.class);
 
     public static final long DELAY = 30000;
 
-    final Timer timer;
+    private final Timer timer;
 
-    public PingTask(final Timer timer) {
+    public PingTask(final Timer thatTimer) {
         super();
-        this.timer = timer;
+        this.timer = thatTimer;
     }
 
     @Override
-    public void run() {
+    public final void run() {
         WSocketClient.getInstance().ping();
     }
 }

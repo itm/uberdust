@@ -4,7 +4,6 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 class TestbedClient implements ProtobufControllerClientListener {
     private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(Helper.class);

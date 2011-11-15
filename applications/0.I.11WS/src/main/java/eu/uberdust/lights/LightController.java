@@ -15,9 +15,12 @@ import java.util.Timer;
  * Time: 2:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class LightController {
+public final class LightController {
 
-    private final static Logger LOGGER = Logger.getLogger(LightController.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LightController.class);
 
     private final String REST_LINK =
             "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
@@ -74,17 +77,17 @@ public class LightController {
         return lastReading;
     }
 
-    public void setLastReading(final long lastReading) {
-        this.lastReading = lastReading;
+    public void setLastReading(final long thatReading) {
+        this.lastReading = thatReading;
         if (!zone1) {
             controlLight(true, 1);
-            zone1TurnedOnTimestamp = lastReading;
+            zone1TurnedOnTimestamp = thatReading;
             timer.schedule(new LightTask(timer), LightTask.DELAY);
         } else if (!zone2) {
             controlLight(true, 1);
-            if (lastReading - zone1TurnedOnTimestamp > 15000) {
+            if (thatReading - zone1TurnedOnTimestamp > 15000) {
                 controlLight(true, 2);
-                zone2TurnedOnTimestamp = lastReading;
+                zone2TurnedOnTimestamp = thatReading;
             }
         } else {
             controlLight(true, 2);
@@ -101,16 +104,6 @@ public class LightController {
         final String link = new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString();
         LOGGER.info(link);
         RestClient.getInstance().callRestfulWebService(link);
-        /*if (value) {
-            final String link = new StringBuilder(REST_LINK).append(zone == 1 ? 2 : "FF").append(",").append(1).toString();
-            LOGGER.info(link);
-            RestClient.getInstance().callRestfulWebService(link);
-        } else {
-            final String link = new StringBuilder(REST_LINK).append(zone).append(",").append(0).toString();
-            LOGGER.info(link);
-            RestClient.getInstance().callRestfulWebService(link);
-        }*/
-
     }
 
     public boolean isZone1() {
@@ -121,7 +114,7 @@ public class LightController {
         return zone2;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         LightController.getInstance();
     }
 }

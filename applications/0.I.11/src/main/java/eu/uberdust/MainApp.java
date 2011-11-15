@@ -3,9 +3,17 @@ package eu.uberdust;
 
 import eu.uberdust.lights.LightController;
 
+/**
+ * Main App.
+ */
 public class MainApp {
 
-    public static void main(String[] args) {
+    /**
+     * Main Function.
+     *
+     * @param args String Arguments
+     */
+    public static void main(final String[] args) {
         LightController.getInstance();
     }
 }

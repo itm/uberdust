@@ -15,24 +15,27 @@ import java.util.Timer;
  * Time: 2:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public class LightController {
+public final class LightController {
 
-    private final static Logger LOGGER = Logger.getLogger(LightController.class);
+    /**
+     * Static Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LightController.class);
 
-    private final String REST_LINK =
+    /**
+     * Rest interface link.
+     */
+    private static final String REST_LINK =
             "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
 
-    private final String READINGS_LINK =
+    /**
+     * Last Reading link.
+     */
+    private static final String READINGS_LINK =
             "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
 
-    private final String ZONE_1_LINK =
-            "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light1/latestreading";
-    private final String ZONE_2_LINK =
-            "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x494/capability/urn:wisebed:node:capability:light2/latestreading";
     private boolean zone1;
-
     private boolean zone2;
-
     private long lastReading;
     private long lastZone1Reading;
     private long lastZone2Reading;
@@ -79,8 +82,8 @@ public class LightController {
         return lastReading;
     }
 
-    public void setLastReading(final long lastReading) {
-        this.lastReading = lastReading;
+    public void setLastReading(final long thatReading) {
+        this.lastReading = thatReading;
     }
 
 
@@ -94,32 +97,32 @@ public class LightController {
         return zone1;
     }
 
-    public void setZone1(boolean zone1) {
-        this.zone1 = zone1;
+    public void setZone1(final boolean thatZone) {
+        this.zone1 = thatZone;
     }
 
     public boolean isZone2() {
         return zone2;
     }
 
-    public void setZone2(boolean zone2) {
-        this.zone2 = zone2;
+    public void setZone2(final boolean thatZone) {
+        this.zone2 = thatZone;
     }
 
     public long getLastZone1Reading() {
         return lastZone1Reading;
     }
 
-    public void setLastZone1Reading(final long lastZone1Reading) {
-        this.lastZone1Reading = lastZone1Reading;
+    public void setLastZone1Reading(final long thatZoneReading) {
+        this.lastZone1Reading = thatZoneReading;
     }
 
     public long getLastZone2Reading() {
         return lastZone2Reading;
     }
 
-    public void setLastZone2Reading(final long lastZone2Reading) {
-        this.lastZone2Reading = lastZone2Reading;
+    public void setLastZone2Reading(final long thatZoneReadin) {
+        this.lastZone2Reading = thatZoneReadin;
     }
 
     public long lastPirEvent() {
@@ -127,9 +130,7 @@ public class LightController {
         return Long.parseLong(str.split("\t")[0]);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         LightController.getInstance();
-        //LightController.getInstance();
-
     }
 }
