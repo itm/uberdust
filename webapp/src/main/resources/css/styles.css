@@ -15,3 +15,7 @@ table.readings th{
     border: medium outset gray;
     padding: 5px;
 }
+
+.error {
+    color:  #ff6666;
+}

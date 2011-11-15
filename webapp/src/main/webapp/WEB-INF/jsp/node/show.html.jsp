@@ -15,8 +15,8 @@
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
     <title>ÜberDust - Show Node : <c:out value="${node.id}"/></title>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
 <%@include file="/header.jsp" %>

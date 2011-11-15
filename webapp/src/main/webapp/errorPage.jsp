@@ -8,28 +8,28 @@
 <head>
     <META NAME="Description" CONTENT="ÜberDust"/>
     <META http-equiv="Content-Language" content="en"/>
-    <title>ÜberDust - Error</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+    <title>ÜberDust - ${pageContext.errorData.statusCode}</title>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
-<%@include file="/header.jsp"%>
-<table id="error" style="color:#ff6666">
-    <thead>
-    <th>Error Occured</th>
-    </thead>
+
+<%@include file="/header.jsp" %>
+<table class="error">
     <tbody>
     <tr>
         <td>Status</td>
-        <td><%=request.getAttribute("javax.servlet.error.status_code") %>
-        </td>
+        <td>${pageContext.errorData.statusCode}</td>
     </tr>
     <tr>
-        <td>Reason</td>
-        <td><%=request.getAttribute("javax.servlet.error.message") %>
-        </td>
+        <td>URI</td>
+        <td>${pageContext.errorData.requestURI}</td>
+    </tr>
+    <tr>
+        <td>Servlet Name</td>
+        <td>${pageContext.errorData.servletName}</td>
     </tr>
     </tbody>
 </table>
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>

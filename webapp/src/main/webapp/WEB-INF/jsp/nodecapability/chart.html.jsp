@@ -124,6 +124,7 @@
 
     <title>ÜberDust - Readings Chart Testbed: <c:out value="${testbed.name}"/> <c:out value="${node.id}"/> , Capability
         : <c:out value="${capability.name}"/></title>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
 <div id="container" style="width: 100%; height: 400px"></div>
