@@ -4,20 +4,21 @@ import eu.uberdust.command.CapabilityCommand;
 import eu.uberdust.rest.exception.CapabilityNotFoundException;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
-import eu.wisebed.wisedb.controller.*;
+import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.LinkController;
+import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,11 +95,5 @@ public class ShowCapabilityController extends AbstractRestController {
         refData.put("nodes", nodes);
         refData.put("links", links);
         return new ModelAndView("capability/show.html", refData);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

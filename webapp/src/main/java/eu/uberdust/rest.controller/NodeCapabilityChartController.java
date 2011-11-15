@@ -15,13 +15,11 @@ import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,11 +109,5 @@ public class NodeCapabilityChartController extends AbstractRestController {
 
         // check type of view requested
         return new ModelAndView("nodecapability/chart.html", refData);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final  HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

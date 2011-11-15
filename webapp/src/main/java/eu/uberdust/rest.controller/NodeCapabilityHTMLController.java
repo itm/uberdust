@@ -124,10 +124,4 @@ public class NodeCapabilityHTMLController extends AbstractRestController {
         // check type of view requested
         return new ModelAndView("nodecapability/readings.html", refData);
     }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception, final  HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
-    }
 }

@@ -14,7 +14,6 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
@@ -122,11 +121,5 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
         textOutput.close();
 
         return null;
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

@@ -24,7 +24,6 @@ import eu.wisebed.wiseml.model.setup.Node;
 import eu.wisebed.wiseml.model.setup.Origin;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
@@ -153,12 +152,5 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         output.output(feed, httpServletResponse.getWriter());
 
         return null;
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        LOGGER.error(exception, exception.fillInStackTrace());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

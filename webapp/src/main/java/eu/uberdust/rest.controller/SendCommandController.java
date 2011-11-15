@@ -7,7 +7,6 @@ import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
@@ -70,11 +69,5 @@ public class SendCommandController extends AbstractRestController {
         textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
         return null;
 
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final  HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

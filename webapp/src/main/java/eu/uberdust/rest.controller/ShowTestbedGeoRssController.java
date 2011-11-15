@@ -147,11 +147,4 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
         return null;
     }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        LOGGER.error(exception, exception.fillInStackTrace());
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
-    }
 }

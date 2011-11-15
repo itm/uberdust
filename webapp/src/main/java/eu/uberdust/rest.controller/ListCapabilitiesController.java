@@ -9,13 +9,11 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +40,8 @@ public class ListCapabilitiesController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // get command
@@ -73,11 +71,5 @@ public class ListCapabilitiesController extends AbstractRestController {
         refData.put("testbed", testbed);
         refData.put("capabilities", capabilities);
         return new ModelAndView("capability/list.html", refData);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception, final  HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() +"\n"+ exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
     }
 }

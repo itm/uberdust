@@ -80,11 +80,4 @@
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
-
-
-    <!--<servlet-mapping>
-        <servlet-name>lastreading</servlet-name>
-        <url-pattern>*.ws</url-pattern>
-    </servlet-mapping>
--->
 </web-app>

@@ -50,8 +50,8 @@ public class ShowTestbedStatusController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // set command object
@@ -78,13 +78,13 @@ public class ShowTestbedStatusController extends AbstractRestController {
         long before = System.currentTimeMillis();
         final List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByTestbed(testbed);
         long after = System.currentTimeMillis();
-        LOGGER.info("lastNodeReadingManager.getByTestbed(testbed) took " + (after-before) + " millis");
+        LOGGER.info("lastNodeReadingManager.getByTestbed(testbed) took " + (after - before) + " millis");
 
         // get a list of link statistics from testbed
         before = System.currentTimeMillis();
         final List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByTestbed(testbed);
         after = System.currentTimeMillis();
-        LOGGER.info("lastLinkReadingManager.getByTestbed(testbed) took " + (after-before) + " millis");
+        LOGGER.info("lastLinkReadingManager.getByTestbed(testbed) took " + (after - before) + " millis");
 
 
         // Prepare data to pass to jsp
@@ -97,8 +97,8 @@ public class ShowTestbedStatusController extends AbstractRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final HttpServletResponse response) throws IOException {
-        final String formattedErrorForFrontEnd = exception.getCause().getMessage() + "\n" + exception.fillInStackTrace().getMessage();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, formattedErrorForFrontEnd);
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
+        LOGGER.fatal(exception);
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 }
