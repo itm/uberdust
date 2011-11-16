@@ -63,7 +63,7 @@
                 <version>2.6</version>
                 <configuration>
                     <configLocation>${main.basedir}/sun_checks.xml</configLocation>
-                    <suppressionsFile>${main.basedir}/suppresions.xml</suppressionsFile>
+                    <suppressionsLocation>${main.basedir}/suppresions.xml</suppressionsLocation>
                 </configuration>
             </plugin>
             <plugin>
