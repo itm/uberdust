@@ -102,11 +102,15 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         feed.setDescription(testbed.getDescription());
         final List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
-        // convert testbed origin from long/lat position to xyz
-        final Origin origin = testbed.getSetup().getOrigin();
-        final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
+        // convert testbed origin from long/lat position to xyz if needed
+        Coordinate properOrigin = null;
+        if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+            final Origin origin = testbed.getSetup().getOrigin();
+            final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
-        final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
+            final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
+        }
+
 
         // set entry's title,link and publishing date
         final SyndEntry entry = new SyndEntryImpl();
@@ -130,17 +134,16 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         description.setValue(descriptionBuffer.toString());
         entry.setDescription(description);
 
-        // convert node position from xyz to long/lat
-        final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
-        final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),
-                (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
-        final Coordinate rotated = Coordinate.rotate(nodeCoordinate, originCoordinate.getPhi());
-        final Coordinate absolute = Coordinate.absolute(cartesian, rotated);
-        final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
-
         // set the GeoRSS module and add it
         final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
         if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+            // convert node position from xyz to long/lat
+            final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
+            final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),
+                    (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
+            final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
+            final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
+            final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
             geoRSSModule.setPosition(new Position(nodePosition.getX(), nodePosition.getY()));
         } else {
             geoRSSModule.setPosition(new Position(node.getPosition().getX(), node.getPosition().getY()));
