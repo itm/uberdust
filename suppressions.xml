@@ -38,7 +38,7 @@
     <!-- suppressions to remove over time -->
     <suppress checks="FinalLocalVariable" files=".*[\\/]src[\\/]tests[\\/]"/>
     <suppress checks="LineLength" files=".*[\\/]src[\\/]tests[\\/]"/>
-    <suppress checks="Name" files=".*[\\/]src[\\/]tests[\\/]"/>    
+    <suppress checks="Name" files=".*[\\/]src[\\/]tests[\\/]"/>
 
     <!--
       Turn off all checks for Generated and Test code. Fixes issues with using
@@ -47,4 +47,7 @@
     <suppress checks="." files=".*[\\/]grammars[\\/]Generated[a-zA-Z]*\.java"/>
     <suppress checks="." files=".*[\\/]grammars[\\/]Generated[a-zA-Z]*\.java"/>
     <suppress checks="." files=".*[\\/]checkstyle[\\/]gui[\\/]"/>
+
+    <suppress checks="." files="eu[\\/]uberdust[\\/]controller[\\/]protobuf[\\/]"/>
+
 </suppressions>
