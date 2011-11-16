@@ -21,9 +21,9 @@
 <body>
 <%@include file="/header.jsp" %>
 <p>
-    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/<a
-        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}">node</a>
+    /<a href="<c:url value="/rest/testbed"/>">testbeds</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}"/>">testbed</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}"/>">node</a>
 </p>
 
 <table>
@@ -31,8 +31,8 @@
     <tr>
         <td>Node ID</td>
         <td>
-            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
-                    value="${node.id}"/></a></td>
+            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}"/>"><c:out value="${node.id}"/></a>
+        </td>
     </tr>
     <tr>
         <td>Node Description</td>
@@ -46,29 +46,29 @@
                 <c:forEach items="${capabilities}" var="capability">
                     <tr>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability.name}"/>"><c:out
                                     value="${capability.name}"/></a>
                         </td>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/html">HTML</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/html"/>">HTML</a>
                         </td>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited">Tab
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited"/>">Tab
                                 Delimited</a>
                         </td>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json">JSON</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>">JSON</a>
                         </td>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/wiseml">WiseML</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/wiseml"/>">WiseML</a>
                             <span style="color : red">Not implemented yet</span>
                         </td>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading">Latest
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading"/>">Latest
                                 Reading</a>
                         </td>
                         <td>
-                            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart">Chart</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart"/>">Chart</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -79,18 +79,16 @@
     <tr>
         <td>GeoRSS Feed</td>
         <td>
-            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">GeoRSS
-                Feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/georss">View
+            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/georss"/>">GeoRSS Feed</a>
+            (<a href="http://maps.google.com/maps?q=<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/georss"/>">View
             On Google Maps</a>)
         </td>
     </tr>
     <tr>
         <td>KML Feed</td>
         <td>
-            <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">KML
-                feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/kml">View
+            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/kml"/>">KML feed</a>
+            (<a href="http://maps.google.com/maps?q=<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/kml"/>">View
             On Google Maps</a>)
             <span style="color : red">Not implemented yet</span>
         </td>

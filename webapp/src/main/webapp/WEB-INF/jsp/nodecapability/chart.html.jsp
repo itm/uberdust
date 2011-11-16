@@ -96,7 +96,7 @@
 
 
             $.ajax({
-                url: '<c:out value="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
+                url: <c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>,
                 success: function(json) {
                     var series = chart.series[0];
 

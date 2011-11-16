@@ -19,35 +19,35 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
-<%@include file="/header.jsp"%>
+<%@include file="/header.jsp" %>
 <table>
     <tbody>
 
     <c:forEach items="${linkCapabilityMap}" var="link">
         <tr>
             <td>
-                /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/<a
-                    href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-                    href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}">link</a>
+                /<a href="<c:url value="/rest/testbed"/>">testbeds</a>/
+                <a href="<c:url value="/rest/testbed/${testbed.id}"/>">testbed</a>/
+                <a href="<c:url value="/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}"/>">link</a>
             </td>
         </tr>
         <tr>
             <td>
-                <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}"><c:out
+                <a href="<c:url value="/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}"/>"><c:out
                         value="${link.key.source},${link.key.target}"/></a>
             </td>
         </tr>
         <tr>
             <td>Source ID</td>
             <td>
-                <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${link.key.source}"><c:out
+                <a href="<c:url value="/rest/testbed/${testbed.id}/node/${link.key.source}"/>"><c:out
                         value="${link.key.source}"/></a>
             </td>
         </tr>
         <tr>
             <td>Target ID</td>
             <td>
-                <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${link.key.target}"><c:out
+                <a href="<c:url value="/rest/testbed/${testbed.id}/node/${link.key.target}"/>"><c:out
                         value="${link.key.target}"/></a>
             </td>
         </tr>
@@ -59,7 +59,7 @@
                     <c:forEach items="${link.value}" var="capability">
                         <tr>
                             <td>
-                                <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/link/${link.key.source}/${link.key.target}/capability/${capability.name}"><c:out
+                                <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability.name}"/>"><c:out
                                         value="${capability.name}"/></a>
                             </td>
                             <td>
@@ -74,6 +74,6 @@
     </c:forEach>
     </tbody>
 </table>
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>

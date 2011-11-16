@@ -22,10 +22,9 @@
 <%@include file="/header.jsp" %>
 
 <p>
-    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/
-    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/
-    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/link">testbed
-        links</a>
+    /<a href="<c:url value="/rest/testbed"/>">testbeds</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}"/>">testbed</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}/link"/>">testbed links</a>
 </p>
 <c:choose>
     <c:when test="${links != null || fn:length(links) != 0}">
@@ -42,7 +41,7 @@
             <c:forEach items="${links}" var="link">
                 <tr>
                     <td>
-                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/link/${link.source}/${link.target}"><c:out
+                        <a href="<c:url value="/rest/testbed/${testbed.id}/link/${link.source}/${link.target}"/>"><c:out
                                 value="${link.source},${link.target}"/></a>
                     </td>
                 </tr>

@@ -19,13 +19,12 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
-<%@include file="/header.jsp"%>
+<%@include file="/header.jsp" %>
 
 <p>
-    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/<a
-        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/<a
-        href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node">testbed
-    nodes</a>
+    /<a href="<c:url value="/rest/testbed"/>">testbeds</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}"/>">testbed</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}/node"/>">testbed nodes</a>
 </p>
 
 
@@ -44,12 +43,11 @@
             <c:forEach items="${nodes}" var="node">
                 <tr>
                     <td>
-                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/node/${node.id}"><c:out
+                        <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}"/>"><c:out
                                 value="${node.id}"/></a>
                     </td>
                 </tr>
             </c:forEach>
-
             </tbody>
         </table>
     </c:when>
@@ -58,6 +56,6 @@
     </c:otherwise>
 </c:choose>
 
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>

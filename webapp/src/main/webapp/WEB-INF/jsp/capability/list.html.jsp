@@ -18,11 +18,11 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
-<%@include file="/header.jsp"%>
+<%@include file="/header.jsp" %>
 <p>
-    /<a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed">testbeds</a>/
-    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}">testbed</a>/
-    <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability">testbed capabilities</a>
+    /<a href="<c:url value="/rest/testbed"/>">testbeds</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}"/>">testbed</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}/capability"/>">testbed capabilities</a>
 </p>
 <c:choose>
     <c:when test="${capabilities != null || fn:length(capabilities) != 0}">
@@ -36,7 +36,7 @@
             <c:forEach items="${capabilities}" var="capability">
                 <tr>
                     <td>
-                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}/capability/${capability.name}"><c:out
+                        <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability.name}"/>"><c:out
                                 value="${capability.name}"/></a>
                     </td>
                 </tr>
@@ -47,6 +47,6 @@
         <p style="color : red">No capabilities found for testbed <c:out value="${testbed.name}"/></p>
     </c:otherwise>
 </c:choose>
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>

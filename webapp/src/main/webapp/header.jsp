@@ -5,7 +5,6 @@
 <spring:message code="uberdust.hudson.build" var="hudsonBuild" scope="application" text=""/>
 <spring:message code="uberdust.hudson.jobname" var="hudsonJobName" scope="application" text=""/>
 <spring:message code="uberdust.webapp.version" var="uberdustWebappVersion" scope="application" text=""/>
-<spring:message code="uberdust.deployment.host" var="uberdustDeploymentHost" scope="application" text="localhost:8080"/>
 
 <c:if test="${fn:length(hudsonUrl) !=0 && fn:length(hudsonBuild) !=0 && fn:length(hudsonJobName) !=0 && fn:length(uberdustWebappVersion) !=0}">
     <p style="font-size:small">

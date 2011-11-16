@@ -33,8 +33,7 @@
                 <tr>
                     <td><c:out value="${testbed.id}"/></td>
                     <td>
-                        <a href="http://${uberdustDeploymentHost}/uberdust/rest/testbed/${testbed.id}"><c:out
-                                value="${testbed.name}"/></a>
+                        <a href="<c:url value="/rest/testbed/${testbed.id}"/>"><c:out value="${testbed.name}"/></a>
                     </td>
                     <td>Nodes (<c:out value="${fn:length(testbed.setup.nodes)}"/>)</td>
                     <td>Links (<c:out value="${fn:length(testbed.setup.link)}"/>)</td>
