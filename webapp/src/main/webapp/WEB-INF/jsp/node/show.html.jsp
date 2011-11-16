@@ -1,10 +1,12 @@
-<%@page contentType="text/html;charset=UTF-8" %>
-<%@page pageEncoding="UTF-8" %>
-<%@page session="false" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" %>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+
+<spring:message code="uberdust.deployment.host" var="uberdustDeploymentHost" />
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
@@ -80,7 +82,7 @@
         <td>GeoRSS Feed</td>
         <td>
             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/georss"/>">GeoRSS Feed</a>
-            (<a href="http://maps.google.com/maps?q=<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/georss"/>">View
+            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/georss"/>">View
             On Google Maps</a>)
         </td>
     </tr>
@@ -88,7 +90,7 @@
         <td>KML Feed</td>
         <td>
             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/kml"/>">KML feed</a>
-            (<a href="http://maps.google.com/maps?q=<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/kml"/>">View
+            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/kml"/>">View
             On Google Maps</a>)
             <span style="color : red">Not implemented yet</span>
         </td>

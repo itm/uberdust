@@ -20,7 +20,6 @@ import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
@@ -28,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NodeCapabilityJSONController extends AbstractRestController {
@@ -115,18 +114,15 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         // create list of readings and node , capability ids
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
-        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+        final int LIMIT = 100; // TODO maybe the user should pass it
+        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability,LIMIT);
 
-        final ReadingJson[] readingJsons = new ReadingJson[nodeReadings.size()];
-        int index = 0;
+        final List<ReadingJson> readingJsons = new ArrayList<ReadingJson>();
         for (NodeReading nodeReading : nodeReadings) {
-            readingJsons[index].setTimestamp(nodeReading.getTimestamp().getTime());
-            readingJsons[index].setReading(nodeReading.getReading());
-            index++;
+            readingJsons.add(new ReadingJson(nodeReading.getTimestamp().getTime(),nodeReading.getReading()));
         }
         final NodeReadingJson nodeReadingInJson =
-                new NodeReadingJson(nodeId, capabilityId, Arrays.asList(readingJsons));
-
+                new NodeReadingJson(nodeId, capabilityId, readingJsons);
 
         // write on the HTTP response
         httpServletResponse.setContentType("text/json");
@@ -135,7 +131,6 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         // init GSON
         final Gson gson = new Gson();
         gson.toJson(nodeReadingInJson, nodeReadingInJson.getClass(), jsonOutput);
-
 
         jsonOutput.flush();
         jsonOutput.close();

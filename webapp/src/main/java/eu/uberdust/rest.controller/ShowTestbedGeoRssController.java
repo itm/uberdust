@@ -22,7 +22,6 @@ import eu.wisebed.wiseml.model.setup.Node;
 import eu.wisebed.wiseml.model.setup.Origin;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
@@ -89,11 +88,13 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         final List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
 
-        // convert testbed origin from long/lat position to xyz
+        // determine testbed origin by the type of coordinates given
         final Origin origin = testbed.getSetup().getOrigin();
         final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
-        final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
+        final Coordinate properOrigin = ((testbed.getSetup().getCoordinateType().equals("Cartesian")))
+                ?Coordinate.blh2xyz(originCoordinate)
+                :originCoordinate;
 
         // make an entry and it
         for (Node node : testbed.getSetup().getNodes()) {
@@ -127,8 +128,8 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
             final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),
                     (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
-            final Coordinate rotated = Coordinate.rotate(nodeCoordinate, originCoordinate.getPhi());
-            final Coordinate absolute = Coordinate.absolute(cartesian, rotated);
+            final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
+            final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
             final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
 
             // set the GeoRSS module and add it

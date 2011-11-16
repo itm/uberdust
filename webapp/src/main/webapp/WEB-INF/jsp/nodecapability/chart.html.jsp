@@ -4,7 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+
+<spring:message code="uberdust.deployment.host" var="uberdustDeploymentHost" />
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
@@ -15,8 +17,8 @@
 <%@include file="/header.jsp"%>
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src=<c:url value="/js/highcharts.js"/>></script>
-    <script type="text/javascript" src=<c:url value="/js/themes/gray.js"/>></script>
+    <script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/js/themes/gray.js"/>"></script>
     <script type="text/javascript">
         var chart;
         $(document).ready(function() {
@@ -96,7 +98,7 @@
 
 
             $.ajax({
-                url: <c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>,
+                url: 'http://${uberdustDeploymentHost}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
                 success: function(json) {
                     var series = chart.series[0];
 
