@@ -64,6 +64,7 @@
                 <configuration>
                     <configLocation>${main.basedir}/sun_checks.xml</configLocation>
                     <suppressionsLocation>${main.basedir}/suppresions.xml</suppressionsLocation>
+                    <excludes>**/controller/protobuf/**/*</excludes>
                 </configuration>
             </plugin>
             <plugin>

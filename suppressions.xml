@@ -48,6 +48,4 @@
     <suppress checks="." files=".*[\\/]grammars[\\/]Generated[a-zA-Z]*\.java"/>
     <suppress checks="." files=".*[\\/]checkstyle[\\/]gui[\\/]"/>
 
-    <suppress checks="." files=".*[\\/][a-z]*[\\/]controller[\\/]protobuf[\\/]"/>
-
 </suppressions>
