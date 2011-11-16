@@ -44,7 +44,7 @@ public class ListLinksController extends AbstractRestController {
 
     @Override
     protected ModelAndView handle(final HttpServletRequest request,
-                                  final HttpServletResponse response,final  Object commandObj,final  BindException errors)
+                                  final HttpServletResponse response, final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command

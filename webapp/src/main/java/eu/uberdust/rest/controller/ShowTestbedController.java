@@ -53,8 +53,8 @@ public class ShowTestbedController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e) throws TestbedNotFoundException, InvalidTestbedIdException {
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e) throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;

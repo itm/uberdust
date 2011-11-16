@@ -59,8 +59,8 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
 
@@ -112,10 +112,10 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
 
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());
-        if(lnr != null){
+        if (lnr != null) {
             // if a last node reading row is found
             textOutput.write(lnr.getTimestamp().getTime() + "\t" + lnr.getReading() + "\n");
-        }else{
+        } else {
             // if no rows found
             textOutput.write("error");
         }

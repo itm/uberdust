@@ -31,8 +31,8 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
     private LastLinkReadingController lastLinkReadingManager;
     private static final Logger LOGGER = Logger.getLogger(CapabilityTabDelimitedController.class);
 
-    public CapabilityTabDelimitedController(){
-                super();
+    public CapabilityTabDelimitedController() {
+        super();
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
@@ -56,7 +56,7 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
 
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest request,final  HttpServletResponse response,final  Object commandObj,
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response, final Object commandObj,
                                   final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, IOException, CapabilityNotFoundException {
         // set command object

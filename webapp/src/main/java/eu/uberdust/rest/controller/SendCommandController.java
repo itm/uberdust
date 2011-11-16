@@ -35,8 +35,8 @@ public class SendCommandController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e) throws NodeNotFoundException, IOException {
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e) throws NodeNotFoundException, IOException {
 
         // set commandNode object
         final DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;

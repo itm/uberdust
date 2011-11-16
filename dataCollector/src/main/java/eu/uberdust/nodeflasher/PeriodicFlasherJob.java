@@ -10,7 +10,6 @@ public class PeriodicFlasherJob implements Job {
     private static final Logger LOGGER = Logger.getLogger(PeriodicFlasherJob.class);
 
     /**
-     *
      * @param jobExecutionCtx
      * @throws JobExecutionException
      */

@@ -49,8 +49,8 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
 
@@ -60,7 +60,7 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
-       // check node id
+        // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
             throw new InvalidNodeIdException("Must provide node id");
         }

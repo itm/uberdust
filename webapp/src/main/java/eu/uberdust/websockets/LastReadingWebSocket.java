@@ -74,8 +74,8 @@ public class LastReadingWebSocket
             servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
             thisListener = listeners.get(protocol);
         } else {
-            thisListener = new CustomWebSocketListener(protocol.split(DELIMITER)[0],protocol.split(DELIMITER)[1]);
-            LastNodeReadingConsumer.getInstance().registerListener(protocol.split(DELIMITER)[0],protocol.split(DELIMITER)[1],
+            thisListener = new CustomWebSocketListener(protocol.split(DELIMITER)[0], protocol.split(DELIMITER)[1]);
+            LastNodeReadingConsumer.getInstance().registerListener(protocol.split(DELIMITER)[0], protocol.split(DELIMITER)[1],
                     thisListener);
 
             listeners.put(protocol, thisListener);

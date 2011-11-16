@@ -55,8 +55,8 @@ public class ShowCapabilityController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException, CapabilityNotFoundException {
         // set command object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
@@ -79,14 +79,14 @@ public class ShowCapabilityController extends AbstractRestController {
 
         // look up capability
         final Capability capability = capabilityManager.getByID(command.getCapabilityName());
-        if(capability == null){
+        if (capability == null) {
             // if no capability is found throw exception
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityName() + "].");
         }
 
         // get testbed nodes only
-        final List<Node> nodes = nodeManager.listCapabilityNodes(capability,testbed);
-        final List<Link> links = linkManager.listCapabilityLinks(capability,testbed);
+        final List<Node> nodes = nodeManager.listCapabilityNodes(capability, testbed);
+        final List<Link> links = linkManager.listCapabilityLinks(capability, testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

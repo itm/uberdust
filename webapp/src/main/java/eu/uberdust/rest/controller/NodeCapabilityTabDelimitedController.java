@@ -59,8 +59,8 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final  HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
 
@@ -123,7 +123,7 @@ public class NodeCapabilityTabDelimitedController extends AbstractRestController
     }
 
     @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception,final  HttpServletResponse response) throws IOException {
+    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
         LOGGER.fatal(exception);
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }

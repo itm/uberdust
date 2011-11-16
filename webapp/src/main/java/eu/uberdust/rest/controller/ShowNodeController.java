@@ -41,8 +41,8 @@ public class ShowNodeController extends AbstractRestController {
     }
 
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws InvalidTestbedIdException, TestbedNotFoundException, NodeNotFoundException {
 
         // set command object

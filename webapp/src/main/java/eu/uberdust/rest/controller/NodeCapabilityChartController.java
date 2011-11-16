@@ -51,7 +51,7 @@ public class NodeCapabilityChartController extends AbstractRestController {
 
     @Override
     protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final  BindException e)
+                                  final Object commandObj, final BindException e)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
 

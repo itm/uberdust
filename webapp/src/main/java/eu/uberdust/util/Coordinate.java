@@ -87,7 +87,7 @@ public class Coordinate implements Serializable {
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", z=" + z +
-                ((phi !=null)?(", phi=" + phi):(""))+((theta != null)?(", theta=" + theta):("")); // bazinga!
+                ((phi != null) ? (", phi=" + phi) : ("")) + ((theta != null) ? (", theta=" + theta) : ("")); // bazinga!
     }
 
     private static final double WGS84_CONST = 298.257222101;
@@ -102,8 +102,9 @@ public class Coordinate implements Serializable {
 
     /**
      * Rotate coordinates using phi angle
+     *
      * @param coordinate , coordinate instance.
-     * @param phi , phi angle.
+     * @param phi        , phi angle.
      * @return rotated coordinates
      */
     public static Coordinate rotate(final Coordinate coordinate, final Double phi) {
@@ -117,7 +118,8 @@ public class Coordinate implements Serializable {
 
     /**
      * Absolute coordinates based on an origin coordinate.
-     * @param origin , origin coordinate.
+     *
+     * @param origin     , origin coordinate.
      * @param coordinate , relative coordinate.
      * @return absolute cooordinates.
      */

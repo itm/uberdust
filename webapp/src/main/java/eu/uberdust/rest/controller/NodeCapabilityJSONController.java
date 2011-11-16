@@ -115,11 +115,11 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
         final int LIMIT = 100; // TODO maybe the user should pass it
-        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability,LIMIT);
+        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability, LIMIT);
 
         final List<ReadingJson> readingJsons = new ArrayList<ReadingJson>();
         for (NodeReading nodeReading : nodeReadings) {
-            readingJsons.add(new ReadingJson(nodeReading.getTimestamp().getTime(),nodeReading.getReading()));
+            readingJsons.add(new ReadingJson(nodeReading.getTimestamp().getTime(), nodeReading.getReading()));
         }
         final NodeReadingJson nodeReadingInJson =
                 new NodeReadingJson(nodeId, capabilityId, readingJsons);
