@@ -4,15 +4,15 @@ public class TestbedNotFoundException extends Exception {
 
     private static final long serialVersionUID = 6579875530260581480L;
 
-    public TestbedNotFoundException(){
+    public TestbedNotFoundException() {
         // empty constructor
     }
 
-    public TestbedNotFoundException(final Throwable throwable){
+    public TestbedNotFoundException(final Throwable throwable) {
         super(throwable);
     }
 
-    public TestbedNotFoundException(final String message){
+    public TestbedNotFoundException(final String message) {
         super(message);
     }
 }
