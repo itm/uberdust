@@ -3,12 +3,7 @@ package eu.uberdust.rest.controller;
 import com.sun.syndication.feed.module.georss.GeoRSSModule;
 import com.sun.syndication.feed.module.georss.SimpleModuleImpl;
 import com.sun.syndication.feed.module.georss.geometries.Position;
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.feed.synd.*;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
 import eu.uberdust.command.TestbedCommand;
@@ -55,8 +50,8 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
     @SuppressWarnings({"unchecked"})
     @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest,final HttpServletResponse httpServletResponse,
-                                  final Object commandObj,final BindException e)
+    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+                                  final Object commandObj, final BindException e)
             throws TestbedNotFoundException, InvalidTestbedIdException, IOException, FeedException {
 
         // set command object
@@ -93,8 +88,8 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
                 (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
         final Coordinate properOrigin = ((testbed.getSetup().getCoordinateType().equals("Cartesian")))
-                ?Coordinate.blh2xyz(originCoordinate)
-                :originCoordinate;
+                ? Coordinate.blh2xyz(originCoordinate)
+                : originCoordinate;
 
         // make an entry and it
         for (Node node : testbed.getSetup().getNodes()) {
@@ -134,7 +129,11 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
             // set the GeoRSS module and add it
             final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-            geoRSSModule.setPosition(new Position(nodePosition.getX(), nodePosition.getY()));
+            if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+                geoRSSModule.setPosition(new Position(nodePosition.getX(), nodePosition.getY()));
+            } else {
+                geoRSSModule.setPosition(new Position(node.getPosition().getX(), node.getPosition().getY()));
+            }
             entry.getModules().add(geoRSSModule);
             entries.add(entry);
         }
