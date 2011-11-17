@@ -107,16 +107,14 @@
                     var node = json['nodeId'];
                     var readings = json['readings'];
                     var data = [];
-                    var j = 0;
                     for (var i in readings) {
+                        ${'percent'}.print("<p>" + i + "%</p>");
                         data.push({
                             x : readings[i].timestamp,
                             y : readings[i].reading
                         })
-                        if (j == 500) break;
                     }
                     chart.series[0].data = data;
-                    chart.redraw();
                 },
                 cache: false
             });
@@ -129,6 +127,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
+<div id="percent"></div>
 <div id="container" style="width: 100%; height: 400px"></div>
 <%@include file="/footer.jsp"%>
 </body>
