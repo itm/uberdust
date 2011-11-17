@@ -13,6 +13,7 @@ import eu.wisebed.api.rs.RS;
 import eu.wisebed.api.rs.RSExceptionException;
 import eu.wisebed.api.rs.ReservervationConflictExceptionException;
 import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
+import eu.wisebed.api.sm.SecretReservationKey;
 import eu.wisebed.api.sm.SessionManagement;
 import eu.wisebed.api.sm.UnknownReservationIdException_Exception;
 import eu.wisebed.api.snaa.AuthenticationExceptionException;
@@ -37,7 +38,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Helper class for authenticating, reserving and flashing testbedruntime.
+ */
 public class Helper {
 
     /**
@@ -49,20 +52,54 @@ public class Helper {
      */
     private static final String PROPERTY_FILE = "nodeFlasher.properties";
 
+    /**
+     * property file.
+     */
     private transient Properties properties;
+    /**
+     * TR res system.
+     */
     private transient RS reservationSystem;
+    /**
+     * TR sm system.
+     */
     private transient SessionManagement sessionManagement;
+    /**
+     * TR usernames.
+     */
     private transient List usernames;
+    /**
+     * TR prefixes.
+     */
     private transient List urnPrefixes;
+    /**
+     * TR authentication keys.
+     */
     private transient List secretAuthKeys;
+    /**
+     * TR server protobuf host.
+     */
     private transient String pccHost;
+    /**
+     * TR server protobuf port.
+     */
     private transient int pccPort;
+    /**
+     * Flashing success percentage.
+     */
+    private static final int SUCCESS = 100;
 
+    /**
+     * Default Constructor.
+     */
     Helper() {
         PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
         parseProperties();
     }
 
+    /**
+     * Parses the property file.
+     */
     private void parseProperties() {
         properties = new Properties();
         try {
@@ -132,9 +169,10 @@ public class Helper {
 
         // build argument types
         final List credentialsList = new ArrayList();
+        AuthenticationTriple credentials = null;
         for (int i = 0; i < urnPrefixes.size(); i++) {
 
-            final AuthenticationTriple credentials = new AuthenticationTriple();
+            credentials = new AuthenticationTriple();
 
             credentials.setUrnPrefix((String) urnPrefixes.get(i));
             credentials.setUsername((String) usernames.get(i));
@@ -223,7 +261,8 @@ public class Helper {
 
         final String wsnEndpointURL;
         try {
-            wsnEndpointURL = sessionManagement.getInstance(BeanShellHelper.parseSecretReservationKeys(reservationKey), "NONE");
+            final List<SecretReservationKey> keys = BeanShellHelper.parseSecretReservationKeys(reservationKey);
+            wsnEndpointURL = sessionManagement.getInstance(keys, "NONE");
         } catch (ExperimentNotRunningException_Exception e) {
             LOGGER.error(e.toString());
             return;
@@ -274,7 +313,7 @@ public class Helper {
         }
 
         LOGGER.info(flashJobResult);
-        if (flashJobResult.getSuccessPercent() < 100) {
+        if (flashJobResult.getSuccessPercent() < SUCCESS) {
             LOGGER.info("|*   Not all nodes could be flashed. Exiting");
         }
 
@@ -289,5 +328,12 @@ public class Helper {
     public final String[] getNodes(final String nodeType) {
         LOGGER.info("| gotNodes " + nodeType);
         return properties.getProperty(nodeType).split(",");
+    }
+
+    /**
+     * @return the first username registered
+     */
+    public final String getUsername() {
+        return (String) usernames.get(0);
     }
 }

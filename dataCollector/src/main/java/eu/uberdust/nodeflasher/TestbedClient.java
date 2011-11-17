@@ -5,16 +5,24 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
 
 import java.util.List;
 
+/**
+ * Client to connect to TR.
+ */
 class TestbedClient implements ProtobufControllerClientListener {
+    /**
+     * Logger.
+     */
     private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(Helper.class);
-
-    final transient WSNAsyncWrapper wsn;
+    /**
+     * TR wsn connection.
+     */
+    private final transient WSNAsyncWrapper wsn;
 
     /**
-     * @param wsn the wsn service wrapper
+     * @param wsnAsyncWrapper the wsn service wrapper
      */
-    public TestbedClient(final WSNAsyncWrapper wsn) {
-        this.wsn = wsn;
+    public TestbedClient(final WSNAsyncWrapper wsnAsyncWrapper) {
+        this.wsn = wsnAsyncWrapper;
     }
 
     /**
@@ -38,14 +46,23 @@ class TestbedClient implements ProtobufControllerClientListener {
         LOGGER.debug("receiveNotification");
     }
 
+    /**
+     * Experiment ended.
+     */
     public void experimentEnded() {
         LOGGER.debug("experimentEnded");
     }
 
+    /**
+     * Connection established.
+     */
     public void onConnectionEstablished() {
         LOGGER.debug("onConnectionEstablished");
     }
 
+    /**
+     * Connection closed.
+     */
     public void onConnectionClosed() {
         LOGGER.debug("onConnectionClosed");
     }

@@ -5,13 +5,20 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+/**
+ * Flashes every Time executed the devices.
+ */
 public class PeriodicFlasherJob implements Job {
-
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(PeriodicFlasherJob.class);
 
     /**
-     * @param jobExecutionCtx
-     * @throws JobExecutionException
+     * execute flashing.
+     *
+     * @param jobExecutionCtx the job executing in.
+     * @throws JobExecutionException something went wrong.
      */
     public final void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
         LOGGER.info(" |=== Starting a new PeriodicFlasherJob");
