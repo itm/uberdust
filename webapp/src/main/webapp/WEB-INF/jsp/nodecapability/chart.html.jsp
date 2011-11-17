@@ -6,7 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
-<spring:message code="uberdust.deployment.host" var="uberdustDeploymentHost" />
+<spring:message code="uberdust.deployment.host" var="uberdustDeploymentHost"/>
 
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
@@ -14,20 +14,46 @@
 
 
 <html>
-<%@include file="/header.jsp"%>
+<%@include file="/header.jsp" %>
 <head>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
     <script type="text/javascript" src="<c:url value="/js/highcharts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/themes/gray.js"/>"></script>
     <script type="text/javascript">
+
         var chart;
+
+        function requestData() {
+            $.ajax({
+                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',                success: function(json, textStatus, xhr) {
+                    console.log('requestData().ajax().success ' + textStatus);
+                    var readings = json['readings'];
+                    console.log('received ' + readings.length + ' readings');
+                    for (var i in readings) {
+                        var point = [readings[i].timestamp,readings[i].reading];
+                        chart.series[0].addPoint(point);
+                    }
+                },
+                complete: function(json, textStatus, xhr) {
+                    console.log('requestData().ajax().complete ' + textStatus);
+                    chart.redraw();
+                }
+            });
+        }
+
         $(document).ready(function() {
             chart = new Highcharts.Chart({
                 chart: {
                     renderTo: 'container',
                     defaultSeriesType: 'spline',
                     zoomType: 'x',
-                    spacingRight: 20
+                    spacingRight: 20,
+                    events: {
+                        load: function(event) {
+                            console.log('chart loaded requesting data');
+                            requestData();
+                        }
+                    }
                 },
                 title: {
                     text: 'Readings Chart Testbed : '
@@ -88,6 +114,7 @@
                         }
                     }
                 },
+
                 series: [
                     {
                         name: 'Reading value (<c:out value="${capability.unit}"/>,<c:out value="${capability.datatype}"/>)',
@@ -95,30 +122,6 @@
                     }
                 ]
             });
-
-
-            $.ajax({
-                url: 'http://${uberdustDeploymentHost}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
-                success: function(json) {
-                    var series = chart.series[0];
-
-                    //get readings
-                    var capability = json['capabilityId'];
-                    var node = json['nodeId'];
-                    var readings = json['readings'];
-                    var data = [];
-                    for (var i in readings) {
-                        ${'span#percent'}.text('<p>' + i + '%</p>');
-                        data.push({
-                            x : readings[i].timestamp,
-                            y : readings[i].reading
-                        })
-                    }
-                    chart.series[0].data = data;
-                },
-                cache: false
-            });
-
         });
     </script>
 
@@ -127,8 +130,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
-<span id="percent">&nbsp;</span>
 <div id="container" style="width: 100%; height: 400px"></div>
-<%@include file="/footer.jsp"%>
+<%@include file="/footer.jsp" %>
 </body>
 </html>
