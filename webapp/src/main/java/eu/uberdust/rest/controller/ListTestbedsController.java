@@ -2,7 +2,6 @@ package eu.uberdust.rest.controller;
 
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -15,9 +14,7 @@ import java.util.Map;
 
 public class ListTestbedsController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ListTestbedsController.class);
-
+    private transient TestbedController testbedManager;
 
     public ListTestbedsController() {
         super();

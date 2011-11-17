@@ -1,5 +1,6 @@
 package eu.uberdust.rest.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ShowTestbedKmlController extends AbstractRestController {
+
+    private static final Logger LOGGER = Logger.getLogger(ShowTestbedKmlController.class);
 
     public ShowTestbedKmlController() {
         super();

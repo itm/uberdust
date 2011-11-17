@@ -25,10 +25,10 @@ import java.util.List;
 
 public class CapabilityTabDelimitedController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private CapabilityController capabilityManager;
-    private LastNodeReadingController lastNodeReadingManager;
-    private LastLinkReadingController lastLinkReadingManager;
+    private transient TestbedController testbedManager;
+    private transient CapabilityController capabilityManager;
+    private transient LastNodeReadingController lastNodeReadingManager;
+    private transient LastLinkReadingController lastLinkReadingManager;
     private static final Logger LOGGER = Logger.getLogger(CapabilityTabDelimitedController.class);
 
     public CapabilityTabDelimitedController() {
@@ -70,7 +70,7 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Invalid Testbed ID.");
+            throw new InvalidTestbedIdException("Invalid Testbed ID.",nfe);
         }
 
         // look up testbed

@@ -6,6 +6,7 @@ import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
@@ -23,11 +24,11 @@ import java.util.Map;
 
 public class ShowTestbedController extends AbstractRestController {
 
-    private eu.wisebed.wisedb.controller.TestbedController testbedManager;
+    private transient TestbedController testbedManager;
+    private transient CapabilityController capabilityManager;
+    private transient LinkController linkManager;
+    private transient NodeController nodeManager;
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
-    private CapabilityController capabilityManager;
-    private LinkController linkManager;
-    private NodeController nodeManager;
 
     public ShowTestbedController() {
         super();
@@ -36,7 +37,7 @@ public class ShowTestbedController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    public void setTestbedManager(final eu.wisebed.wisedb.controller.TestbedController testbedManager) {
+    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
@@ -67,7 +68,7 @@ public class ShowTestbedController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
 
         // look up testbed

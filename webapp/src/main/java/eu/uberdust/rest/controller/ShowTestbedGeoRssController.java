@@ -20,7 +20,6 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import eu.wisebed.wiseml.model.setup.Origin;
-import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -34,9 +33,8 @@ import java.util.List;
 
 public class ShowTestbedGeoRssController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
-    private String deploymentHost;
+    private transient TestbedController testbedManager;
+    private transient String deploymentHost;
 
     public ShowTestbedGeoRssController() {
         super();
@@ -68,7 +66,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
 
         // look up testbed
@@ -99,7 +97,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
         // make an entry and it
         for (Node node : testbed.getSetup().getNodes()) {
-            SyndEntry entry = new SyndEntryImpl();
+            final SyndEntry entry = new SyndEntryImpl();
 
             // set entry's title,link and publishing date
             entry.setTitle(node.getId());
@@ -109,7 +107,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
             // set entry's description (HTML list)
             final SyndContent description = new SyndContentImpl();
-            StringBuilder descriptionBuffer = new StringBuilder();
+            final StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
             descriptionBuffer.append("<p><a href=\"http://").append(deploymentHost).append("/uberdust/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/georss").append("\">")

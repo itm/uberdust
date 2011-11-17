@@ -27,11 +27,10 @@ import java.io.Writer;
 
 public class NodeCapabilityLatestReadingController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private NodeController nodeManager;
-    private CapabilityController capabilityManager;
-    private LastNodeReadingController lastNodeReadingManager;
-
+    private transient TestbedController testbedManager;
+    private transient NodeController nodeManager;
+    private transient CapabilityController capabilityManager;
+    private transient LastNodeReadingController lastNodeReadingManager;
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityLatestReadingController.class);
 
 
@@ -112,12 +111,12 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
 
         httpServletResponse.setContentType("text/plain");
         final Writer textOutput = (httpServletResponse.getWriter());
-        if (lnr != null) {
-            // if a last node reading row is found
-            textOutput.write(lnr.getTimestamp().getTime() + "\t" + lnr.getReading() + "\n");
-        } else {
+        if (lnr == null) {
             // if no rows found
             textOutput.write("error");
+        } else {
+            // if a last node reading row is found
+            textOutput.write(lnr.getTimestamp().getTime() + "\t" + lnr.getReading() + "\n");
         }
         textOutput.flush();
         textOutput.close();

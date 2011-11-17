@@ -36,10 +36,9 @@ import java.util.List;
 
 public class ShowNodeGeoRssController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private NodeController nodeManager;
-    private static final Logger LOGGER = Logger.getLogger(ShowNodeGeoRssController.class);
-    private String deploymentHost;
+    private transient TestbedController testbedManager;
+    private transient NodeController nodeManager;
+    private transient String deploymentHost;
 
     public ShowNodeGeoRssController() {
         super();
@@ -76,7 +75,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed
@@ -101,16 +100,6 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         feed.setLink(httpServletRequest.getRequestURL().toString());
         feed.setDescription(testbed.getDescription());
         final List<SyndEntry> entries = new ArrayList<SyndEntry>();
-
-        // convert testbed origin from long/lat position to xyz if needed
-        Coordinate properOrigin = null;
-        if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
-            final Origin origin = testbed.getSetup().getOrigin();
-            final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
-                (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
-            final Coordinate cartesian = Coordinate.blh2xyz(originCoordinate);
-        }
-
 
         // set entry's title,link and publishing date
         final SyndEntry entry = new SyndEntryImpl();
@@ -137,6 +126,13 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         // set the GeoRSS module and add it
         final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
         if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+
+            // convert testbed origin from long/lat position to xyz if needed
+            final Origin origin = testbed.getSetup().getOrigin();
+            final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
+                    (double) origin.getZ(), (double) origin.getPhi(), (double) origin.getTheta());
+            final Coordinate properOrigin = Coordinate.blh2xyz(originCoordinate);
+
             // convert node position from xyz to long/lat
             final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
             final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),

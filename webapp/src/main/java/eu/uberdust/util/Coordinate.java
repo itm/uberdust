@@ -87,7 +87,7 @@ public class Coordinate implements Serializable {
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", z=" + z +
-                ((phi != null) ? (", phi=" + phi) : ("")) + ((theta != null) ? (", theta=" + theta) : ("")); // bazinga!
+                ((phi == null) ? ("") : (", phi=" + phi)) + ((theta == null) ?  ("") : (", theta=" + theta));
     }
 
     private static final double WGS84_CONST = 298.257222101;

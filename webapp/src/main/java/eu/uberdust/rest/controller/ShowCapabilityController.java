@@ -25,11 +25,11 @@ import java.util.Map;
 
 public class ShowCapabilityController extends AbstractRestController {
 
+    private transient TestbedController testbedManager;
+    private transient CapabilityController capabilityManager;
+    private transient NodeController nodeManager;
+    private transient LinkController linkManager;
     private static final Logger LOGGER = Logger.getLogger(ShowCapabilityController.class);
-    private TestbedController testbedManager;
-    private CapabilityController capabilityManager;
-    private NodeController nodeManager;
-    private LinkController linkManager;
 
     public ShowCapabilityController() {
         super();
@@ -69,7 +69,7 @@ public class ShowCapabilityController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
         final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {

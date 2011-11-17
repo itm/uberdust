@@ -15,4 +15,8 @@ public class InvalidCapabilityNameException extends Exception {
     public InvalidCapabilityNameException(final String message) {
         super(message);
     }
+
+    public InvalidCapabilityNameException(final String message, final Throwable throwable) {
+        super(message,throwable);
+    }
 }

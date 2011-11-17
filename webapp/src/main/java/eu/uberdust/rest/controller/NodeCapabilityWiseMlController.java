@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class NodeCapabilityWiseMlController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private NodeController nodeManager;
-    private CapabilityController capabilityManager;
+    private transient TestbedController testbedManager;
+    private transient NodeController nodeManager;
+    private transient CapabilityController capabilityManager;
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityWiseMlController.class);
 
     public NodeCapabilityWiseMlController() {
@@ -76,7 +76,7 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
 
         // look up testbed
