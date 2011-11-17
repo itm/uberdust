@@ -85,34 +85,6 @@
                 legend: {
                     enabled: false
                 },
-                plotOptions: {
-                    area: {
-                        fillColor: {
-                            linearGradient: [0, 0, 0, 300],
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, 'rgba(2,0,0,0)']
-                            ]
-                        },
-                        lineWidth: 1,
-                        marker: {
-                            enabled: false,
-                            states: {
-                                hover: {
-                                    enabled: true,
-                                    radius: 5
-                                }
-                            }
-                        },
-                        shadow: false,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        }
-                    }
-                },
-
                 series: [
                     {
                         name: 'Reading value (<c:out value="${capability.unit}"/>,<c:out value="${capability.datatype}"/>)',
