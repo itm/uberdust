@@ -144,7 +144,8 @@ public class DataCollector {
                 messageCounter++;
                 if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info("MessageRate : " + messageCounter / (milliseconds / (double) REPORT_LIMIT) + " messages/sec");
+                    final double stat = messageCounter / (milliseconds / (double) REPORT_LIMIT);
+                    LOGGER.info("MessageRate : " + stat + " messages/sec");
                     final ThreadPoolExecutor pool = (ThreadPoolExecutor) executorService;
                     LOGGER.info("PoolSize : " + pool.getPoolSize() + " Active :" + pool.getActiveCount());
                     LOGGER.info("Peak : " + pool.getLargestPoolSize());
@@ -185,12 +186,21 @@ public class DataCollector {
      */
     private final transient ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
+        /**
+         * a decoder size limit.
+         */
+        public static final int DECODER_LIMIT = 1048576;
+        /**
+         * constant parameter.
+         */
+        public static final int PARAM = 4;
+
         @Override
         public ChannelPipeline getPipeline() {
 
             final ChannelPipeline channelPipeline = pipeline();
 
-            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
+            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(DECODER_LIMIT, 0, PARAM, 0, PARAM));
             channelPipeline.addLast("pbfEnvelopeMessageDec", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
 
             channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
