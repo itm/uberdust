@@ -25,7 +25,8 @@
 
         function requestData() {
             $.ajax({
-                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',                success: function(json, textStatus, xhr) {
+                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
+                success: function(json, textStatus, xhr) {
                     console.log('requestData().ajax().success ' + textStatus);
                     var readings = json['readings'];
                     console.log('received ' + readings.length + ' readings');
@@ -36,8 +37,8 @@
                 },
                 complete: function(json, textStatus, xhr) {
                     console.log('requestData().ajax().complete ' + textStatus);
-                    chart.redraw();
-                }
+                },
+                cache : false
             });
         }
 
