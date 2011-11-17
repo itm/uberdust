@@ -108,7 +108,7 @@
                     var readings = json['readings'];
                     var data = [];
                     for (var i in readings) {
-                        ${'percent'}.print("<p>" + i + "%</p>");
+                        ${'span#percent'}.text('<p>' + i + '%</p>');
                         data.push({
                             x : readings[i].timestamp,
                             y : readings[i].reading
@@ -127,7 +127,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/styles.css"/>"/>
 </head>
 <body>
-<div id="percent"></div>
+<span id="percent">&nbsp;</span>
 <div id="container" style="width: 100%; height: 400px"></div>
 <%@include file="/footer.jsp"%>
 </body>
