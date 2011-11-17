@@ -14,18 +14,42 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+/**
+ * Checks for reservations during the past minutes and flashes the devices with the default application.
+ */
 public class NodeFlasherJob implements Job {
 
+    /**
+     * Interval for executing.
+     */
     public static final int INTERVAL = 60;
-    private static final int MINUTES_BEFORE = 40;
+    /**
+     * Time before to check for reservations.
+     */
+    private static final int MINUTES_BEFORE = 60;
+    /**
+     * Time after to check for reservations.
+     */
     private static final int MINUTES_AFTER = 60;
-
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(NodeFlasherJob.class);
+    /**
+     * Helper class to connect to TR.
+     */
     private final transient Helper helper;
+    /**
+     * Minutes to Milliseconds converter.
+     */
     private static final int MILLIS_2_MINUTES = 60 * 1000;
 
+    /**
+     * Default Constructor.
+     */
     public NodeFlasherJob() {
         helper = new Helper();
+        helper.authenticate();
     }
 
     /**
@@ -36,10 +60,11 @@ public class NodeFlasherJob implements Job {
         checkAndFlash();
     }
 
+    /**
+     * Checks for reservations about the various node types.
+     */
     private void checkAndFlash() {
         LOGGER.info(" |=== Starting a new nodeFlasher");
-
-        helper.authenticate();
 
         checkReservations(helper.getNodes("nodes.isense"), "isense");
         checkReservations(helper.getNodes("nodes.telosb"), "telosb");
@@ -53,9 +78,7 @@ public class NodeFlasherJob implements Job {
      */
     private void checkReservations(final String[] nodes, final String type) {
 
-
         LOGGER.info("|==  Checking for " + type + " nodes");
-
 
         if (emptyFutureList(nodes)) {
             if (existedPreviousList(nodes)) {
@@ -67,8 +90,6 @@ public class NodeFlasherJob implements Job {
         } else {
             LOGGER.info("|=  Pending Reservation, Cannot reFlash the " + type + " nodes now.");
         }
-
-
     }
 
     /**
@@ -77,7 +98,7 @@ public class NodeFlasherJob implements Job {
      * @param nodes The nodes to check for reservations
      * @return True if there were reservations in the last MINUTES_BEFORE
      */
-    private boolean existedPreviousList(final String[] nodes) {
+    public final boolean existedPreviousList(final String[] nodes) {
         final GregorianCalendar cal = new GregorianCalendar();
         long from = (new Date()).getTime() - MINUTES_BEFORE * MILLIS_2_MINUTES;
         cal.setTimeInMillis(from);
@@ -111,9 +132,11 @@ public class NodeFlasherJob implements Job {
         for (int i = 0; i < previousResList.size(); i++) {
             final PublicReservationData pubData = (PublicReservationData) previousResList.get(i);
             boolean isRelevant = false;
-            for (String nodeUrn : nodes) {
-                if (pubData.getNodeURNs().toString().contains(nodeUrn)) {
-                    isRelevant = true;
+            if (!helper.getUsername().equals(pubData.getUserData())) {
+                for (String nodeUrn : nodes) {
+                    if (pubData.getNodeURNs().toString().contains(nodeUrn)) {
+                        isRelevant = true;
+                    }
                 }
             }
             if (!isRelevant) {
@@ -131,7 +154,7 @@ public class NodeFlasherJob implements Job {
      * @param nodes The nodes to check for reservations
      * @return True if no reservations in the next MINUTES_AFTER
      */
-    private boolean emptyFutureList(final String[] nodes) {
+    public final boolean emptyFutureList(final String[] nodes) {
 
         final GregorianCalendar cal = new GregorianCalendar();
         long from = (new Date()).getTime();
@@ -166,8 +189,8 @@ public class NodeFlasherJob implements Job {
 
 
         for (int i = 0; i < futureResList.size(); i++) {
-            final PublicReservationData pubData = (PublicReservationData) futureResList.get(i);
 
+            final PublicReservationData pubData = (PublicReservationData) futureResList.get(i);
             boolean isRelevant = false;
             for (String nodeUrn : nodes) {
                 if (pubData.getNodeURNs().toString().contains(nodeUrn)) {

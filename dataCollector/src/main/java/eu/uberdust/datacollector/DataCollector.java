@@ -47,10 +47,6 @@ public class DataCollector {
      * Application property file name.
      */
     private static final String PROPERTY_FILE = "dataCollector.properties";
-    /**
-     *
-     */
-    private static final int THREAD_COUNT = 10;
 
     /**
      *
@@ -76,7 +72,10 @@ public class DataCollector {
      * saves the last time 1000 messages were received - stats.
      */
     private transient long lastTime;
-    private ExecutorService executorService;
+    /**
+     * executors for handling incoming messages.
+     */
+    private final transient ExecutorService executorService;
 
 
     /**
@@ -136,7 +135,8 @@ public class DataCollector {
     private final transient SimpleChannelUpstreamHandler upstreamHandler = new SimpleChannelUpstreamHandler() {
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent) throws InvalidProtocolBufferException {
+        public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent)
+                throws InvalidProtocolBufferException {
             final Messages.Msg message = (Messages.Msg) messageEvent.getMessage();
             if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
                 final WSNAppMessages.Message wsnAppMessage = WSNAppMessages.Message.parseFrom(message.getPayload());
@@ -144,9 +144,10 @@ public class DataCollector {
                 messageCounter++;
                 if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info("MessageRate : " + messageCounter / (milliseconds / (double) 1000) + " messages/sec");
+                    LOGGER.info("MessageRate : " + messageCounter / (milliseconds / (double) REPORT_LIMIT) + " messages/sec");
                     final ThreadPoolExecutor pool = (ThreadPoolExecutor) executorService;
-                    LOGGER.info("PoolSize : " + pool.getPoolSize() + " Active :" + pool.getActiveCount() + " Peal : " + pool.getLargestPoolSize());
+                    LOGGER.info("PoolSize : " + pool.getPoolSize() + " Active :" + pool.getActiveCount());
+                    LOGGER.info("Peak : " + pool.getLargestPoolSize());
 
                     lastTime = System.currentTimeMillis();
                     messageCounter = 0;
@@ -157,17 +158,25 @@ public class DataCollector {
             }
         }
 
+        /**
+         *
+         * @param ctx
+         * @param channelStateEvent
+         * @throws Exception
+         */
         @Override
-        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {    // NOPMD
+        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {     //NOPMD
             super.channelDisconnected(ctx, channelStateEvent);
             LOGGER.error("channelDisconnected");
             System.exit(1);
         }
 
-
+        /**
+         *
+         * @param toString
+         */
         private void parse(final String toString) {
             executorService.submit(new MessageParser(toString, sensors));
-
         }
     };
 
@@ -182,7 +191,7 @@ public class DataCollector {
             final ChannelPipeline channelPipeline = pipeline();
 
             channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
-            channelPipeline.addLast("protobufEnvelopeMessageDecoder", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
+            channelPipeline.addLast("pbfEnvelopeMessageDec", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
 
             channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
             channelPipeline.addLast("protobufEncoder", new ProtobufEncoder());
@@ -199,7 +208,8 @@ public class DataCollector {
      * Connects to testbedruntime overlay port to receive all incoming debug messages.
      */
     public final void start() {
-        final NioClientSocketChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+        NioClientSocketChannelFactory factory = null;
+        factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
         final ClientBootstrap bootstrap = new ClientBootstrap(factory);
 

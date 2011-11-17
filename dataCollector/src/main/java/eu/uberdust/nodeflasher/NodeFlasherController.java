@@ -14,7 +14,9 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-
+/**
+ * Controls the Quartz scheduling of Node flashing.
+ */
 public class NodeFlasherController {
 
     /**
@@ -34,6 +36,9 @@ public class NodeFlasherController {
      */
     private static final int HOURS_OF_DAY = 24;
 
+    /**
+     * Default Constructor.
+     */
     public NodeFlasherController() {
 
         final SchedulerFactory schedulerFactory = new StdSchedulerFactory();
