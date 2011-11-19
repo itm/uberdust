@@ -166,7 +166,8 @@ public class DataCollector {
          * @throws Exception
          */
         @Override
-        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {     //NOPMD
+        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent)
+                throws Exception {     //NOPMD
             super.channelDisconnected(ctx, channelStateEvent);
             LOGGER.error("channelDisconnected");
             System.exit(1);
@@ -189,21 +190,25 @@ public class DataCollector {
         /**
          * a decoder size limit.
          */
-        public static final int DECODER_LIMIT = 1048576;
+        public static final int MAX_LEN = 1048576;
         /**
          * constant parameter.
          */
-        public static final int PARAM = 4;
+        public static final int FLD_LEN = 4;
+        /**
+         * constant parameter.
+         */
+        public static final int STRIP = 4;
 
         @Override
         public ChannelPipeline getPipeline() {
 
             final ChannelPipeline channelPipeline = pipeline();
 
-            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(DECODER_LIMIT, 0, PARAM, 0, PARAM));
+            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(MAX_LEN, 0, FLD_LEN, 0, STRIP));
             channelPipeline.addLast("pbfEnvelopeMessageDec", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
 
-            channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+            channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(FLD_LEN));
             channelPipeline.addLast("protobufEncoder", new ProtobufEncoder());
 
             channelPipeline.addLast("handler", upstreamHandler);
@@ -218,7 +223,7 @@ public class DataCollector {
      * Connects to testbedruntime overlay port to receive all incoming debug messages.
      */
     public final void start() {
-        NioClientSocketChannelFactory factory = null;
+        NioClientSocketChannelFactory factory;
         factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
         final ClientBootstrap bootstrap = new ClientBootstrap(factory);
