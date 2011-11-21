@@ -20,9 +20,9 @@ import java.util.Map;
 
 public class ListCapabilitiesController extends AbstractRestController {
 
+    private transient TestbedController testbedManager;
+    private transient CapabilityController capabilityManager;
     private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
-    private TestbedController testbedManager;
-    private CapabilityController capabilityManager;
 
     public ListCapabilitiesController() {
         super();
@@ -54,7 +54,7 @@ public class ListCapabilitiesController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
 
         // look up testbed

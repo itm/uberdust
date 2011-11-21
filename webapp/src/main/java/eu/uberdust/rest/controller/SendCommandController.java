@@ -20,8 +20,8 @@ import java.net.Socket;
 
 public class SendCommandController extends AbstractRestController {
 
+    private transient NodeController nodeManager;
     private static final Logger LOGGER = Logger.getLogger(SendCommandController.class);
-    private NodeController nodeManager;
 
     public SendCommandController() {
         super();

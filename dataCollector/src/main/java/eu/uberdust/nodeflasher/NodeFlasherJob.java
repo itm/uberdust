@@ -53,8 +53,8 @@ public class NodeFlasherJob implements Job {
     }
 
     /**
-     * @param jobExecutionCtx
-     * @throws JobExecutionException
+     * @param jobExecutionCtx describes the running job.
+     * @throws JobExecutionException something went wrong.
      */
     public final void execute(final JobExecutionContext jobExecutionCtx) throws JobExecutionException {
         checkAndFlash();

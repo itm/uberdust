@@ -16,4 +16,8 @@ public class InvalidTestbedIdException extends Exception {
     public InvalidTestbedIdException(final String message) {
         super(message);
     }
+
+    public InvalidTestbedIdException(final String message, final Throwable throwable) {
+        super(message,throwable);
+    }
 }

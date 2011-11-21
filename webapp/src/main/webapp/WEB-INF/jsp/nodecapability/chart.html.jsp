@@ -25,19 +25,17 @@
 
         function requestData() {
             $.ajax({
-                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',                success: function(json, textStatus, xhr) {
-                    console.log('requestData().ajax().success ' + textStatus);
+                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
+                success: function(json, textStatus, xhr) {
                     var readings = json['readings'];
-                    console.log('received ' + readings.length + ' readings');
                     for (var i in readings) {
                         var point = [readings[i].timestamp,readings[i].reading];
                         chart.series[0].addPoint(point);
                     }
                 },
                 complete: function(json, textStatus, xhr) {
-                    console.log('requestData().ajax().complete ' + textStatus);
-                    chart.redraw();
-                }
+                },
+                cache : false
             });
         }
 
@@ -87,34 +85,6 @@
                 legend: {
                     enabled: false
                 },
-                plotOptions: {
-                    area: {
-                        fillColor: {
-                            linearGradient: [0, 0, 0, 300],
-                            stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, 'rgba(2,0,0,0)']
-                            ]
-                        },
-                        lineWidth: 1,
-                        marker: {
-                            enabled: false,
-                            states: {
-                                hover: {
-                                    enabled: true,
-                                    radius: 5
-                                }
-                            }
-                        },
-                        shadow: false,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        }
-                    }
-                },
-
                 series: [
                     {
                         name: 'Reading value (<c:out value="${capability.unit}"/>,<c:out value="${capability.datatype}"/>)',

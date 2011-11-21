@@ -25,9 +25,9 @@ import java.util.Map;
 
 public class NodeCapabilityChartController extends AbstractRestController {
 
-    private NodeController nodeManager;
-    private CapabilityController capabilityManager;
-    private TestbedController testbedManager;
+    private transient NodeController nodeManager;
+    private transient CapabilityController capabilityManager;
+    private transient TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityJSONController.class);
 
     public NodeCapabilityChartController() {
@@ -77,7 +77,7 @@ public class NodeCapabilityChartController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
 
         // look up testbed

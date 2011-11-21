@@ -12,6 +12,9 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Parses a message received and adds data to a wisedb database.
+ */
 public class MessageParser implements Runnable {                   // NOPMD
 
     /**
@@ -135,7 +138,13 @@ public class MessageParser implements Runnable {                   // NOPMD
 
         final long milliseconds = System.currentTimeMillis();
 
-        final String insertReadingUrl = "http://gold.cti.gr/uberdust/rest/testbed/1/node/" + nodeUrn + "/capability/" + capabilityName + "/insert/timestamp/" + milliseconds + "/reading/" + value;
+        final StringBuilder urlBuilder = new StringBuilder("http:/");
+        urlBuilder.append("/gold.cti.gr/uberdust/rest/testbed/1");
+        urlBuilder.append("/node/").append(nodeUrn);
+        urlBuilder.append("/capability/").append(capabilityName);
+        urlBuilder.append("/insert/timestamp/").append(milliseconds);
+        urlBuilder.append("/reading/").append(value);
+        final String insertReadingUrl = urlBuilder.toString();
 
         HttpURLConnection httpURLConnection = null;
 
@@ -154,7 +163,12 @@ public class MessageParser implements Runnable {                   // NOPMD
             if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 LOGGER.debug("Added " + nodeUrn + "," + capabilityName + "," + value);
             } else {
-                LOGGER.error("Problem with " + nodeUrn + "," + capabilityName + "," + value + " Response: " + httpURLConnection.getResponseCode());
+                final StringBuilder errorBuilder = new StringBuilder("Problem ");
+                errorBuilder.append("with ").append(nodeUrn);
+                errorBuilder.append(",").append(capabilityName);
+                errorBuilder.append(",").append(value);
+                errorBuilder.append(" Response: ").append(httpURLConnection.getResponseCode());
+                LOGGER.error(errorBuilder.toString());
             }
             httpURLConnection.disconnect();
         } catch (IOException e) {
@@ -180,8 +194,8 @@ public class MessageParser implements Runnable {                   // NOPMD
         final Transaction transaction = HibernateUtil.getInstance().getSession().beginTransaction();
         try {
             // insert reading
-            LinkReadingController.getInstance().insertReading(sourceUrn, targetUrn, testbedCapPrefix, testbedUrnPrefix, status, 0,
-                    new java.util.Date());
+            LinkReadingController.getInstance().insertReading(sourceUrn, targetUrn,
+                    testbedCapPrefix, testbedUrnPrefix, status, 0, new java.util.Date());
             transaction.commit();
             LOGGER.debug("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         } catch (Exception e) {

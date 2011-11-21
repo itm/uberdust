@@ -21,9 +21,9 @@ import java.util.Date;
 
 public class NodeCapabilityInsertReadingController extends AbstractRestController {
 
+    private transient NodeReadingController nodeReadingManager;
+    private transient TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
-    private NodeReadingController nodeReadingManager;
-    private TestbedController testbedManager;
 
 
     public NodeCapabilityInsertReadingController() {
@@ -60,7 +60,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
 
         // look up testbed

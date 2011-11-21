@@ -15,4 +15,8 @@ public class CapabilityNotFoundException extends Exception {
     public CapabilityNotFoundException(final String message) {
         super(message);
     }
+
+    public CapabilityNotFoundException(final String message, final Throwable throwable) {
+        super(message,throwable);
+    }
 }

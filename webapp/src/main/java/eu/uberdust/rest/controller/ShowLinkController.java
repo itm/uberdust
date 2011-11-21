@@ -22,9 +22,8 @@ import java.util.Map;
 
 public class ShowLinkController extends AbstractRestController {
 
-    private LinkController linkManager;
-    private TestbedController testbedManager;
-
+    private transient LinkController linkManager;
+    private transient TestbedController testbedManager;
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 
 
@@ -53,7 +52,7 @@ public class ShowLinkController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
         final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {

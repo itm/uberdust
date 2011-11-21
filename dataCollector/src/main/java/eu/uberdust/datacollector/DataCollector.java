@@ -144,7 +144,8 @@ public class DataCollector {
                 messageCounter++;
                 if (messageCounter == REPORT_LIMIT) {
                     final long milliseconds = System.currentTimeMillis() - lastTime;
-                    LOGGER.info("MessageRate : " + messageCounter / (milliseconds / (double) REPORT_LIMIT) + " messages/sec");
+                    final double stat = messageCounter / (milliseconds / (double) REPORT_LIMIT);
+                    LOGGER.info("MessageRate : " + stat + " messages/sec");
                     final ThreadPoolExecutor pool = (ThreadPoolExecutor) executorService;
                     LOGGER.info("PoolSize : " + pool.getPoolSize() + " Active :" + pool.getActiveCount());
                     LOGGER.info("Peak : " + pool.getLargestPoolSize());
@@ -165,7 +166,8 @@ public class DataCollector {
          * @throws Exception
          */
         @Override
-        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent) throws Exception {     //NOPMD
+        public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent)
+                throws Exception {     //NOPMD
             super.channelDisconnected(ctx, channelStateEvent);
             LOGGER.error("channelDisconnected");
             System.exit(1);
@@ -185,15 +187,28 @@ public class DataCollector {
      */
     private final transient ChannelPipelineFactory chPipelineFactory = new ChannelPipelineFactory() {
 
+        /**
+         * a decoder size limit.
+         */
+        public static final int MAX_LEN = 1048576;
+        /**
+         * constant parameter.
+         */
+        public static final int FLD_LEN = 4;
+        /**
+         * constant parameter.
+         */
+        public static final int STRIP = 4;
+
         @Override
         public ChannelPipeline getPipeline() {
 
             final ChannelPipeline channelPipeline = pipeline();
 
-            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(1048576, 0, 4, 0, 4));
+            channelPipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(MAX_LEN, 0, FLD_LEN, 0, STRIP));
             channelPipeline.addLast("pbfEnvelopeMessageDec", new ProtobufDecoder(Messages.Msg.getDefaultInstance()));
 
-            channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+            channelPipeline.addLast("frameEncoder", new LengthFieldPrepender(FLD_LEN));
             channelPipeline.addLast("protobufEncoder", new ProtobufEncoder());
 
             channelPipeline.addLast("handler", upstreamHandler);
@@ -208,7 +223,7 @@ public class DataCollector {
      * Connects to testbedruntime overlay port to receive all incoming debug messages.
      */
     public final void start() {
-        NioClientSocketChannelFactory factory = null;
+        NioClientSocketChannelFactory factory;
         factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
         final ClientBootstrap bootstrap = new ClientBootstrap(factory);

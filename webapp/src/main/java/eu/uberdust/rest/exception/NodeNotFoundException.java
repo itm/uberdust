@@ -14,4 +14,8 @@ public class NodeNotFoundException extends Exception {
     public NodeNotFoundException(final String message) {
         super(message);
     }
+
+    public NodeNotFoundException(final String message, final Throwable throwable) {
+        super(message,throwable);
+    }
 }

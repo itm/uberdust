@@ -15,4 +15,8 @@ public class LinkNotFoundException extends Exception {
     public LinkNotFoundException(final String message) {
         super(message);
     }
+
+    public LinkNotFoundException(final String message, final Throwable throwable) {
+        super(message,throwable);
+    }
 }

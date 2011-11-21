@@ -1,0 +1,33 @@
+function addReading {
+
+	if [ $# == 2 ]
+	then
+		UBERDUST_URL="http://host.name/uberdust/rest/testbed/1/node/"
+		UBERDUST_PREFIX="urn:network:"
+	
+		time=$(date +%s)
+	
+		sensor=$1
+		value=$2
+
+		#create url
+		URL=$UBERDUST_URL$UBERDUST_PREFIX$HOSTNAME"/capability/urn:wisebed:node:capability:"$sensor"/insert/timestamp/"$time"000/reading/"$value
+		#echo $URL
+		#execute
+		wget $URL -O wget.tmp
+
+		#cleanup
+		rm wget.tmp
+	fi
+}
+
+
+
+
+
+
+
+
+
+
+

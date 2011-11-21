@@ -23,8 +23,8 @@ import java.util.Map;
  */
 public class ListNodesController extends AbstractRestController {
 
-    private TestbedController testbedManager;
-    private NodeController nodeManager;
+    private transient TestbedController testbedManager;
+    private transient NodeController nodeManager;
     private static final Logger LOGGER = Logger.getLogger(ListNodesController.class);
 
     public ListNodesController() {
@@ -57,7 +57,7 @@ public class ListNodesController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.");
+            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
         }
         final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
