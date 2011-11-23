@@ -22,7 +22,6 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import eu.wisebed.wiseml.model.setup.Origin;
-import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -34,12 +33,29 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ShowNodeGeoRssController extends AbstractRestController {
+/**
+ * Controller class that returns the position of a node in GeoRSS format.
+ */
+public final class ShowNodeGeoRssController extends AbstractRestController {
 
+    /**
+     * Tested persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Deployment host.
+     */
     private transient String deploymentHost;
 
+    /**
+     * Constructor.
+     */
     public ShowNodeGeoRssController() {
         super();
 
@@ -47,22 +63,50 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
+    /**
+     * Sets deployment host.
+     *
+     * @param deploymentHost deployment host.
+     */
     public void setDeploymentHost(final String deploymentHost) {
         this.deploymentHost = deploymentHost;
     }
 
-    @SuppressWarnings({"unchecked"})
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return http servlet response.
+     * @throws IOException               an IOException exception.
+     * @throws FeedException             a FeedException exception.
+     * @throws NodeNotFoundException     NodeNotFoundException exception.
+     * @throws TestbedNotFoundException  TestbedNotFoundException exception.
+     * @throws InvalidTestbedIdException InvalidTestbedIdException exception.
+     */
+    @SuppressWarnings("unchecked")
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws IOException, FeedException, NodeNotFoundException, TestbedNotFoundException,
             InvalidTestbedIdException {
 
@@ -93,18 +137,18 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         }
 
         // set up feed and entries
-        httpServletResponse.setContentType("application/xml; charset=UTF-8");
+        response.setContentType("application/xml; charset=UTF-8");
         final SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
         feed.setTitle(node.getId() + " GeoRSS feed");
-        feed.setLink(httpServletRequest.getRequestURL().toString());
+        feed.setLink(request.getRequestURL().toString());
         feed.setDescription(testbed.getDescription());
         final List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
         // set entry's title,link and publishing date
         final SyndEntry entry = new SyndEntryImpl();
         entry.setTitle(node.getId());
-        entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/uberdust/rest/testbed/")
+        entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/rest/testbed/")
                 .append(testbed.getId()).append("/node/").append(node.getId()).toString());
         entry.setPublishedDate(new Date());
 
@@ -114,7 +158,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
         descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
         descriptionBuffer.append("<ul>");
         for (Capability capability : node.getCapabilities()) {
-            descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/uberdust/rest/testbed/")
+            descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                     .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
         }
@@ -152,7 +196,7 @@ public class ShowNodeGeoRssController extends AbstractRestController {
 
         // the feed output goes to response
         final SyndFeedOutput output = new SyndFeedOutput();
-        output.output(feed, httpServletResponse.getWriter());
+        output.output(feed, response.getWriter());
 
         return null;
     }

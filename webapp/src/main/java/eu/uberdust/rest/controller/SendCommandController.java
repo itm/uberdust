@@ -17,12 +17,24 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 
+/**
+ * Controller class for sending a message with certain payload to a destination.
+ */
+public final class SendCommandController extends AbstractRestController {
 
-public class SendCommandController extends AbstractRestController {
-
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(SendCommandController.class);
 
+    /**
+     * Constructor.
+     */
     public SendCommandController() {
         super();
 
@@ -30,13 +42,29 @@ public class SendCommandController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e) throws NodeNotFoundException, IOException {
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return http servlet response.
+     * @throws NodeNotFoundException NodeNotFoundException exception.
+     * @throws IOException           IOException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
+            throws NodeNotFoundException, IOException {
 
         // set commandNode object
         final DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
@@ -64,8 +92,8 @@ public class SendCommandController extends AbstractRestController {
         out.close();
         kkSocket.close();
 
-        httpServletResponse.setContentType("text/plain");
-        final Writer textOutput = (httpServletResponse.getWriter());
+        response.setContentType("text/plain");
+        final Writer textOutput = (response.getWriter());
         textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
         return null;
 

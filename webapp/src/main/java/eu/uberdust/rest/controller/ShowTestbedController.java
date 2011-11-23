@@ -22,14 +22,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShowTestbedController extends AbstractRestController {
+/**
+ * Controller class that returns the a web page for a testbed.
+ */
+public final class ShowTestbedController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * Link persistence manager.
+     */
     private transient LinkController linkManager;
+
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
 
+    /**
+     * Constructor.
+     */
     public ShowTestbedController() {
         super();
 
@@ -37,25 +62,56 @@ public class ShowTestbedController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
+    /**
+     * Sets link persistence manager.
+     *
+     * @param linkManager link persistence manager.
+     */
     public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e) throws TestbedNotFoundException, InvalidTestbedIdException {
+    /**
+     * Handle request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     a BindException exception.
+     * @return http servlet response
+     * @throws TestbedNotFoundException  a TestbedNotFoundException exception.
+     * @throws InvalidTestbedIdException a InvalidTestbedException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
+            throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
@@ -68,7 +124,7 @@ public class ShowTestbedController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed

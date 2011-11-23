@@ -18,12 +18,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListCapabilitiesController extends AbstractRestController {
+/**
+ * Controller class that returns a list of capabilities for a given testbed.
+ */
+public final class ListCapabilitiesController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
 
+    /**
+     * Constructor.
+     */
     public ListCapabilitiesController() {
         super();
 
@@ -31,17 +48,37 @@ public class ListCapabilitiesController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed peristence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets capability peristence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return response http servlet response.
+     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // get command
@@ -54,7 +91,7 @@ public class ListCapabilitiesController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed

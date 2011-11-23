@@ -23,14 +23,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShowCapabilityController extends AbstractRestController {
+/**
+ * Controller class that returns the a web page for a capability.
+ */
+public final class ShowCapabilityController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Link persistence manager.
+     */
     private transient LinkController linkManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ShowCapabilityController.class);
 
+    /**
+     * Constructor.
+     */
     public ShowCapabilityController() {
         super();
 
@@ -38,25 +63,56 @@ public class ShowCapabilityController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
+    /**
+     * Sets link persistence manager.
+     *
+     * @param linkManager link persistence manager.
+     */
     public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException excetion.
+     * @return http servlet response
+     * @throws InvalidTestbedIdException   InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException    TestbedNotFoundException exception.
+     * @throws CapabilityNotFoundException CapabilityNotFoundExcetion.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, CapabilityNotFoundException {
         // set command object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
@@ -69,7 +125,7 @@ public class ShowCapabilityController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
         final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {

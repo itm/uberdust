@@ -18,14 +18,29 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
+/**
+ * Controller class for inserting readings for a node capability pair.
+ */
+public final class NodeCapabilityInsertReadingController extends AbstractRestController {
 
-public class NodeCapabilityInsertReadingController extends AbstractRestController {
-
+    /**
+     * NodeReading persistence manager.
+     */
     private transient NodeReadingController nodeReadingManager;
+
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Looger.
+     */
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
 
-
+    /**
+     * Constructor.
+     */
     public NodeCapabilityInsertReadingController() {
         super();
 
@@ -33,17 +48,39 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets NodeReading persistence manager.
+     *
+     * @param nodeReadingManager NodeReading persistence manager.
+     */
     public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
         this.nodeReadingManager = nodeReadingManager;
     }
 
+    /**
+     * Sets Testbed persistence manager.
+     *
+     * @param testbedManager Testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return response http servlet response.
+     * @throws InvalidTestbedIdException invalid testbed id exception.
+     * @throws TestbedNotFoundException  testbed not found exception.
+     * @throws UnknownTestbedException   unknown testbed exception.
+     * @throws IOException               IO exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, UnknownTestbedException, IOException {
 
         // set commandNode object
@@ -60,7 +97,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed
@@ -80,8 +117,8 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getUrnPrefix(),
                 reading, timestamp);
 
-        httpServletResponse.setContentType("text/plain");
-        final Writer textOutput = (httpServletResponse.getWriter());
+        response.setContentType("text/plain");
+        final Writer textOutput = (response.getWriter());
         textOutput.write("Inserted for Node(" + command.getNodeId() + ") Capability(" + command.getCapabilityId()
                 + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
         textOutput.flush();

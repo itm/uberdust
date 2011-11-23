@@ -21,13 +21,34 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class NodeCapabilityWiseMlController extends AbstractRestController {
+/**
+ * Controller class that returns the readings of a node capability pair in WiseML format.
+ */
+public final class NodeCapabilityWiseMlController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityWiseMlController.class);
 
+    /**
+     * Constructor.
+     */
     public NodeCapabilityWiseMlController() {
 
         super();
@@ -36,21 +57,50 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object
+     * @param errors     a BindException exception.
+     * @return http servlet response.
+     * @throws InvalidNodeIdException         a InvalidNodeIdException exception.
+     * @throws InvalidCapabilityNameException a InvalidCapabilityNameException exception.
+     * @throws InvalidTestbedIdException      a InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException       a TestbedNotFoundException exception.
+     * @throws NodeNotFoundException          a NodeNotFoundExeption exception.
+     * @throws CapabilityNotFoundException    a CapabilityNotFoundException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
 
@@ -76,7 +126,7 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed
@@ -98,6 +148,7 @@ public class NodeCapabilityWiseMlController extends AbstractRestController {
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
 
-        return null;// TODO make this controller
+        return null; // TODO make this controller
     }
 }
+

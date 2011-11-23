@@ -8,10 +8,19 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowTestbedKmlController extends AbstractRestController {
+/**
+ * Controller class that returns the setup of a testbed in KML format.
+ */
+public final class ShowTestbedKmlController extends AbstractRestController {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedKmlController.class);
 
+    /**
+     * Constructor.
+     */
     public ShowTestbedKmlController() {
         super();
 
@@ -19,9 +28,17 @@ public class ShowTestbedKmlController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e) {
+    /**
+     * Handle request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     a BindException exception.
+     * @return http servlet response
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors) {
         return null;// TODO make this controller
     }
 }

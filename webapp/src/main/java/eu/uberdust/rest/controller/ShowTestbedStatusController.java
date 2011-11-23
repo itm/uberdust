@@ -11,25 +11,43 @@ import eu.wisebed.wisedb.model.LastNodeReading;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShowTestbedStatusController extends AbstractRestController {
+/**
+ * Controller class that returns the status page for the nodes and links of a testbed.
+ */
+public final class ShowTestbedStatusController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Last node reading persistence manager.
+     */
     private transient LastNodeReadingController lastNodeReadingManager;
+
+    /**
+     * Last link reading persistence manager.
+     */
     private transient LastLinkReadingController lastLinkReadingManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedStatusController.class);
 
-
+    /**
+     * Constructor.
+     */
     public ShowTestbedStatusController() {
         super();
 
@@ -37,21 +55,46 @@ public class ShowTestbedStatusController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets last node reading persistence manager.
+     *
+     * @param lastNodeReadingManager last node reading persistence manager.
+     */
     public void setLastNodeReadingManager(final LastNodeReadingController lastNodeReadingManager) {
         this.lastNodeReadingManager = lastNodeReadingManager;
     }
 
+    /**
+     * Sets last link reading persistence manager.
+     *
+     * @param lastLinkReadingManager last link reading persistence manager.
+     */
     public void setLastLinkReadingManager(final LastLinkReadingController lastLinkReadingManager) {
         this.lastLinkReadingManager = lastLinkReadingManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     a BindException exception.
+     * @return http servlet response.
+     * @throws InvalidTestbedIdException a InvalidTestbedIDException exception.
+     * @throws TestbedNotFoundException  a TestbedNotFoundException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // set command object
@@ -64,7 +107,7 @@ public class ShowTestbedStatusController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed
@@ -94,11 +137,5 @@ public class ShowTestbedStatusController extends AbstractRestController {
         refData.put("lastLinkReadings", lastLinkReadings);
 
         return new ModelAndView("testbed/status.html", refData);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleApplicationExceptions(final Throwable exception, final HttpServletResponse response) throws IOException {
-        LOGGER.fatal(exception);
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 }
