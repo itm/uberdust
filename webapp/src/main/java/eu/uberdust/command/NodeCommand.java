@@ -1,9 +1,9 @@
 package eu.uberdust.command;
 
 /**
- * POJO object for holding parameters for node related command.
+ * POJO class for holding parameters for node related command.
  */
-public class NodeCommand extends TestbedCommand {
+public final class NodeCommand extends TestbedCommand {
 
     /**
      * The Node ID.

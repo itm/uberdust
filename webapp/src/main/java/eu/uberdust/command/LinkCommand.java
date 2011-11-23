@@ -1,9 +1,9 @@
 package eu.uberdust.command;
 
 /**
- * POJO object for holding parameters for link related command.
+ * POJO class for holding parameters for link related command.
  */
-public class LinkCommand extends TestbedCommand {
+public final class LinkCommand extends TestbedCommand {
 
     /**
      * The Source Node ID.
@@ -35,7 +35,7 @@ public class LinkCommand extends TestbedCommand {
     }
 
     /**
-     * Set the source ID of the node
+     * Set the source ID of the node.
      *
      * @param thisId the ID of the source node
      */

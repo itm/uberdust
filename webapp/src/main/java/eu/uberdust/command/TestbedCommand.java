@@ -1,7 +1,7 @@
 package eu.uberdust.command;
 
 /**
- * POJO object for holding parameters for testbed related command.
+ * POJO class for holding parameters for testbed related command.
  */
 public class TestbedCommand {
 
@@ -20,9 +20,9 @@ public class TestbedCommand {
     }
 
     /**
-     * Sets testbedID .
+     * Sets testbedID.
      *
-     * @param testbedId , a testbed id.
+     * @param testbedId a testbed id.
      */
     public void setTestbedId(final String testbedId) {
         this.testbedId = testbedId;

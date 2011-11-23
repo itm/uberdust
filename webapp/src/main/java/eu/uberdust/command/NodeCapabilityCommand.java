@@ -1,5 +1,8 @@
 package eu.uberdust.command;
 
+/**
+ * POJO class for holding parameters for a node-capability related command.
+ */
 public class NodeCapabilityCommand extends TestbedCommand {
 
     /**
@@ -22,7 +25,7 @@ public class NodeCapabilityCommand extends TestbedCommand {
     }
 
     /**
-     * Set the ID of the Node Or Link.
+     * Sets the ID of the Node Or Link.
      *
      * @param nodeId the ID of the node.
      */
@@ -31,9 +34,9 @@ public class NodeCapabilityCommand extends TestbedCommand {
     }
 
     /**
-     * Get the Id of capability.
+     * Returns the Id of capability.
      *
-     * @return
+     * @return the Id of capability.
      */
     public String getCapabilityId() {
         return capabilityId;

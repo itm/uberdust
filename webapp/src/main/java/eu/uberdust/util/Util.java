@@ -4,15 +4,35 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Utility abstract class.
+ */
+public abstract class Util {
 
-public class Util {
+    /**
+     * Milliseconds per minute.
+     */
+    private static final long MILLISECS_PER_MINUTE = 60 * 1000;
+
+    /**
+     * Milliseconds per hour.
+     */
+    private static final long MILLISECS_PER_HOUR = 60 * MILLISECS_PER_MINUTE;
+
+    /**
+     * Milliseconds per day.
+     */
+    private static final long MILLISECS_PER_DAY = 24 * MILLISECS_PER_HOUR;
 
 
+    /**
+     * Returns check if the date provided references today.
+     *
+     * @param date date
+     * @return true or false.
+     */
     public static boolean checkIfDateIsToday(final Date date) {
 
-        final long MILLISECS_PER_MINUTE = 60 * 1000;
-        final long MILLISECS_PER_HOUR = 60 * MILLISECS_PER_MINUTE;
-        final long MILLISECS_PER_DAY = 24 * MILLISECS_PER_HOUR;
 
         final Calendar now = new GregorianCalendar();
         now.setTime(new Date());
