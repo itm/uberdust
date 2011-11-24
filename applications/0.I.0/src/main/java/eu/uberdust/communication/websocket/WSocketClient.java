@@ -59,7 +59,7 @@ public final class WSocketClient {
      * The protocol.
      */
     public static final String PROTOCOL_LIGHT_OUT = "urn:wisebed:ctitestbed:0xca3@urn:wisebed:node:capability:light";
-    public static final String PROTOCOL_LIGHT_IN = "urn:wisebed:ctitestbed:0x1cde@urn:wisebed:node:capability:light";
+    //public static final String PROTOCOL_LIGHT_IN = "urn:wisebed:ctitestbed:0x1cde@urn:wisebed:node:capability:light";
     public static final String PROTOCOL_LOCK_SCREEN = "urn:ctinetwork:black@urn:ctinetwork:node:capability:lockScreen";
 
     /**
@@ -92,15 +92,15 @@ public final class WSocketClient {
         clients = new ArrayList<WebSocketClient>();
         connections = new ArrayList<WebSocket.Connection>();
         try {
-            WS_URI = new URI("ws://gold.cti.gr:80/uberdust/lastreading.ws");
+            WS_URI = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
             factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
 
-            final WebSocketClient clientLightIn = factory.newWebSocketClient();
+            /*final WebSocketClient clientLightIn = factory.newWebSocketClient();
             clientLightIn.setMaxIdleTime(-1);
             clientLightIn.setProtocol(PROTOCOL_LIGHT_IN);
-            clients.add(clientLightIn);
+            clients.add(clientLightIn);*/
 
             final WebSocketClient clientLightOut = factory.newWebSocketClient();
             clientLightOut.setMaxIdleTime(-1);
@@ -113,8 +113,6 @@ public final class WSocketClient {
             clients.add(clientLockScreen);
 
             connect();
-            timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
-
         } catch (final URISyntaxException e) {
             LOGGER.error(e);
         } catch (final Exception e) {
@@ -133,6 +131,7 @@ public final class WSocketClient {
                 final WebSocket.Connection connection = client.open(WS_URI, new WebSocketIMPL(client.getProtocol())).get();
                 connections.add(connection);
             }
+            timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
         } catch (final Exception e) {
             LOGGER.error(e);
             try {

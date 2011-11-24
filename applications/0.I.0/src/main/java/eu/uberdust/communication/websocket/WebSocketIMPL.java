@@ -1,5 +1,6 @@
 package eu.uberdust.communication.websocket;
 
+import eu.uberdust.lights.LightController;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.WebSocket;
 
@@ -34,16 +35,24 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     @Override
     public final void onMessage(final String data) {
         LOGGER.info(data.split("\t")[1]);
-        if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_IN)) {
+        /*if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_IN)) {
             LOGGER.info(data.split("\t")[1]);
-        } else if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_OUT)) {
-            LOGGER.info(data.split("\t")[1]);
-        }else if(PROTOCOL.equals(WSocketClient.PROTOCOL_LOCK_SCREEN)){
-            LOGGER.info(data.split("\t")[1]);
+        } else */
+        if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_OUT)) {
+            final Double value = Double.parseDouble(data.split("\t")[1]);
+            LOGGER.info("Lum: " + value);
+
+            LightController.getInstance().setLastReading(value);
+
+        } else if (PROTOCOL.equals(WSocketClient.PROTOCOL_LOCK_SCREEN)) {
+            final Double value = Double.parseDouble(data.split("\t")[1]);
+            final boolean isScreenLocked = value == 1;
+            LOGGER.info(new StringBuilder().append("isScreenLocked: ")
+                    .append(value).append(" -- ").append(isScreenLocked).toString());
+
+            LightController.getInstance().setScreenLocked(isScreenLocked);
         }
 
-        //LightController.getInstance().setLastReading(System.currentTimeMillis());
-        //LightController.getInstance().setLastReading(Long.parseLong(data.split("\t")[0]));
     }
 
     /**
@@ -54,7 +63,6 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     @Override
     public final void onOpen(final Connection connection) {
         LOGGER.info(new StringBuilder().append("onOpen -- ").append(PROTOCOL).toString());
-
     }
 
     /**

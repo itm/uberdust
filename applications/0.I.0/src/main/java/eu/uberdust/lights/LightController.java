@@ -2,7 +2,8 @@ package eu.uberdust.lights;
 
 import eu.uberdust.communication.rest.RestClient;
 import eu.uberdust.communication.websocket.WSocketClient;
-import eu.uberdust.lights.tasks.LightTask;
+import eu.uberdust.lights.tasks.KeepLightsOnTask;
+import eu.uberdust.lights.tasks.TurnOffTask;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -23,19 +24,13 @@ public final class LightController {
     private static final Logger LOGGER = Logger.getLogger(LightController.class);
 
     private final String REST_LINK =
-            "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
+            "http://uberdust.cti.gr/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x99c/payload/1,";
 
     private boolean zone1;
 
     private boolean zone2;
 
-    private long lastReading;
-
-    private long zone1TurnedOnTimestamp;
-
-    private long zone2TurnedOnTimestamp;
-
-    private boolean byPassEnabled;
+    private boolean isScreenLocked;
 
     /**
      * Pir timer.
@@ -46,6 +41,10 @@ public final class LightController {
      * static instance(ourInstance) initialized as null.
      */
     private static LightController ourInstance = null;
+
+    private static final double LUM_THRESHOLD = 200;
+
+    private double lastLumReading;
 
 
     /**
@@ -69,36 +68,59 @@ public final class LightController {
     private LightController() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("Light Controller initialized");
+        lastLumReading = 0;
+        isScreenLocked = true;
         zone1 = false;
         zone2 = false;
-        byPassEnabled = false;
         timer = new Timer();
         WSocketClient.getInstance();
+        timer.schedule(new KeepLightsOnTask(timer), KeepLightsOnTask.DELAY);
     }
 
-    public long getLastReading() {
-        return lastReading;
+
+    public void setLastReading(final double thatReading) {
+        this.lastLumReading = thatReading;
+        updateLightsState();
+
     }
 
-    public void setLastReading(final long thatReading) {
-        this.lastReading = thatReading;
-        if (!zone1) {
-            controlLight(true, 1);
-            zone1TurnedOnTimestamp = thatReading;
-            timer.schedule(new LightTask(timer), LightTask.DELAY);
-        } else if (!zone2) {
-            controlLight(true, 1);
-            if (thatReading - zone1TurnedOnTimestamp > 15000) {
-                controlLight(true, 2);
-                zone2TurnedOnTimestamp = thatReading;
-            }
+    public void setScreenLocked(final boolean screenLocked) {
+        isScreenLocked = screenLocked;
+        updateLightsState();
+    }
+
+    public synchronized void updateLightsState() {
+        if (isScreenLocked) {
+            //turn off lights
+            turnOffLights();
         } else {
-            controlLight(true, 2);
+            if (lastLumReading > LUM_THRESHOLD) {
+                //turn off lights
+                turnOffLights();
+            } else {
+                //turn on lights
+                turnOnLights();
+            }
         }
     }
 
+    private void turnOnLights() {
+        controlLight(true, 1);
+        controlLight(true, 2);
+    }
 
-    public void controlLight(final boolean value, final int zone) {
+    private void turnOffLights() {
+        if (!zone1 || !zone2) {
+            controlLight(false, 1);
+            timer.schedule(new TurnOffTask(), TurnOffTask.DELAY);
+        }
+    }
+
+    public boolean isScreenLocked() {
+        return isScreenLocked;
+    }
+
+    public synchronized void controlLight(final boolean value, final int zone) {
         if (zone == 1) {
             zone1 = value;
         } else {
@@ -106,15 +128,9 @@ public final class LightController {
         }
         final String link = new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString();
         LOGGER.info(link);
+
         RestClient.getInstance().callRestfulWebService(link);
-    }
 
-    public boolean isZone1() {
-        return zone1;
-    }
-
-    public boolean isZone2() {
-        return zone2;
     }
 
     public static void main(final String[] args) {
