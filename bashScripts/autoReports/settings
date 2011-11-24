@@ -2,7 +2,8 @@ function addReading {
 
 	if [ $# == 2 ]
 	then
-		UBERDUST_URL="http://host.name/uberdust/rest/testbed/1/node/"
+		#host.name/uberdust/rest/testbed/1
+		UBERDUST_URL="http://host.name/rest/testbed/testbed.id"
 		UBERDUST_PREFIX="urn:network:"
 	
 		time=$(date +%s)
@@ -11,7 +12,7 @@ function addReading {
 		value=$2
 
 		#create url
-		URL=$UBERDUST_URL$UBERDUST_PREFIX$HOSTNAME"/capability/urn:wisebed:node:capability:"$sensor"/insert/timestamp/"$time"000/reading/"$value
+		URL=$UBERDUST_URL"/node/"$UBERDUST_PREFIX$HOSTNAME"/capability/urn:wisebed:node:capability:"$sensor"/insert/timestamp/"$time"000/reading/"$value
 		#echo $URL
 		#execute
 		wget $URL -O wget.tmp
