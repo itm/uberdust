@@ -23,14 +23,39 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class CapabilityTabDelimitedController extends AbstractRestController {
+/**
+ * Controller class that returns readings of a specific capability in a tab delimited format.
+ */
+public final class CapabilityTabDelimitedController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * Last node reading persistence manager.
+     */
     private transient LastNodeReadingController lastNodeReadingManager;
+
+    /**
+     * Last link reading persistence manager.
+     */
     private transient LastLinkReadingController lastLinkReadingManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(CapabilityTabDelimitedController.class);
 
+    /**
+     * Constructor.
+     */
     public CapabilityTabDelimitedController() {
         super();
 
@@ -38,31 +63,61 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
+    /**
+     * Sets last node reading persistence manager.
+     *
+     * @param lastNodeReading last node reading persistence manager.
+     */
     public void setLastNodeReadingManager(final LastNodeReadingController lastNodeReading) {
         this.lastNodeReadingManager = lastNodeReading;
     }
 
+    /**
+     * Sets last link reading persistence manager.
+     *
+     * @param lastLinkReading last link reading persistence manager.
+     */
     public void setLastLinkReadingManager(final LastLinkReadingController lastLinkReading) {
         this.lastLinkReadingManager = lastLinkReading;
     }
 
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response, final Object commandObj,
-                                  final BindException errors)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return response http servlet response.
+     * @throws InvalidTestbedIdException   a InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException    a TestbedNotFoundException exception.
+     * @throws IOException                 an IOException exception.
+     * @throws CapabilityNotFoundException a CapabilityNotFoundException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, IOException, CapabilityNotFoundException {
         // set command object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
-        LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
-        LOGGER.info("commandObj.getCapabilityId() : " + command.getCapabilityName());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -70,7 +125,7 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Invalid Testbed ID.",nfe);
+            throw new InvalidTestbedIdException("Invalid Testbed ID.", nfe);
         }
 
         // look up testbed
@@ -111,8 +166,8 @@ public class CapabilityTabDelimitedController extends AbstractRestController {
         } else {
             // get lastest node readings
             for (LastNodeReading lnr : lastNodeReadings) {
-                textOutput.write(lnr.getNode().getId() + "\t" +
-                        lnr.getTimestamp().getTime() + "\t" + lnr.getReading() + "\n");
+                textOutput.write(lnr.getNode().getId() + "\t" + lnr.getTimestamp().getTime()
+                        + "\t" + lnr.getReading() + "\n");
             }
         }
 

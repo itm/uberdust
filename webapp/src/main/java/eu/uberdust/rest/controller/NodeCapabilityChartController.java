@@ -23,13 +23,34 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NodeCapabilityChartController extends AbstractRestController {
+/**
+ * Controller class that returns a graphical chart of the readings for a node/capability.
+ */
+public final class NodeCapabilityChartController extends AbstractRestController {
 
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityJSONController.class);
 
+    /**
+     * Constructor.
+     */
     public NodeCapabilityChartController() {
         super();
 
@@ -37,29 +58,55 @@ public class NodeCapabilityChartController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return response http servlet response.
+     * @throws InvalidNodeIdException         invalid node id exception.
+     * @throws InvalidCapabilityNameException invalid capability name exception.
+     * @throws InvalidTestbedIdException      invalid testbed id exception.
+     * @throws TestbedNotFoundException       testbed not found exception.
+     * @throws NodeNotFoundException          node not found exception.
+     * @throws CapabilityNotFoundException    capability not found exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
 
         // set command object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
@@ -77,7 +124,7 @@ public class NodeCapabilityChartController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed

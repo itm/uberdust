@@ -20,31 +20,62 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShowLinkController extends AbstractRestController {
+/**
+ * Controller class that returns the a web page for a node.
+ */
+public final class ShowLinkController extends AbstractRestController {
 
+    /**
+     * Link persistence manager.
+     */
     private transient LinkController linkManager;
+
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ShowLinkController.class);
 
-
+    /**
+     * Sets link persistence manager.
+     *
+     * @param linkManager link persistence manager.
+     */
     public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
-    @Override
+    /**
+     * Handle request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object
+     * @param errors     BindException exception.
+     * @return http servlet response.
+     * @throws InvalidTestbedIdException InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException  TestbedNotFoundException exception.
+     * @throws LinkNotFoundException     LinkNotFoundException exception.
+     */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, LinkNotFoundException {
 
         // set command object
         final LinkCommand command = (LinkCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getSourceId());
-        LOGGER.info("command.getTargetId() : " + command.getTargetId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -52,7 +83,7 @@ public class ShowLinkController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
         final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
@@ -61,16 +92,18 @@ public class ShowLinkController extends AbstractRestController {
         }
 
         // a link instance  and it' inverse
-        final Link link = (command.getSourceId() == null || command.getTargetId() == null) ? null :
-                linkManager.getByID(command.getSourceId(), command.getTargetId());
-        final Link linkInv = (command.getSourceId() == null || command.getTargetId() == null) ? null :
-                linkManager.getByID(command.getTargetId(), command.getSourceId());
+        final Link link = (command.getSourceId() == null || command.getTargetId() == null)
+                ? null
+                : linkManager.getByID(command.getSourceId(), command.getTargetId());
+        final Link linkInv = (command.getSourceId() == null || command.getTargetId() == null)
+                ? null
+                : linkManager.getByID(command.getTargetId(), command.getSourceId());
         final Map<Link, List<Capability>> linkCapabilityMap = new HashMap<Link, List<Capability>>();
 
         // if no link or inverse link found return error view
         if (link == null && linkInv == null) {
-            throw new LinkNotFoundException("Cannot find link [" + command.getSourceId() + "," + command.getTargetId() +
-                    "] or the inverse link [" + command.getTargetId() + "," + command.getSourceId() + "]");
+            throw new LinkNotFoundException("Cannot find link [" + command.getSourceId() + "," + command.getTargetId()
+                    + "] or the inverse link [" + command.getTargetId() + "," + command.getSourceId() + "]");
         }
 
         // if at least link or linkInv was found

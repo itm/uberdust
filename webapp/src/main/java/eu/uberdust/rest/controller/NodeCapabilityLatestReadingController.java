@@ -25,15 +25,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 
-public class NodeCapabilityLatestReadingController extends AbstractRestController {
+/**
+ * Controller class for returning the latest reading for a node/capability.
+ */
+public final class NodeCapabilityLatestReadingController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Node persistence manager.
+     */
     private transient NodeController nodeManager;
+
+    /**
+     * Capability persistence manager.
+     */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * LastNodeReading persistence manager.
+     */
     private transient LastNodeReadingController lastNodeReadingManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(NodeCapabilityLatestReadingController.class);
 
-
+    /**
+     * Constructor.
+     */
     public NodeCapabilityLatestReadingController() {
         super();
 
@@ -41,33 +65,65 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets node persistence manager.
+     *
+     * @param nodeManager node persistence manager.
+     */
     public void setNodeManager(final NodeController nodeManager) {
         this.nodeManager = nodeManager;
     }
 
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
     public void setCapabilityManager(final CapabilityController capabilityManager) {
         this.capabilityManager = capabilityManager;
     }
 
+    /**
+     * Sets last node reading peristence manager.
+     *
+     * @param lastNodeReadingManager last node reading peristence manager.
+     */
     public void setLastNodeReadingManager(final LastNodeReadingController lastNodeReadingManager) {
         this.lastNodeReadingManager = lastNodeReadingManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return http servlet response.
+     * @throws InvalidNodeIdException         InvalidNodeIdException exception.
+     * @throws InvalidCapabilityNameException InvalidNodeCapability exception.
+     * @throws InvalidTestbedIdException      InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException       TestbedNotFoundException exception.
+     * @throws NodeNotFoundException          NodeNotFoundException exception.
+     * @throws CapabilityNotFoundException    CapabilityNotFoundException exception.
+     * @throws IOException                    IOException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
 
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
@@ -109,8 +165,8 @@ public class NodeCapabilityLatestReadingController extends AbstractRestControlle
         // retrieve last node rading for this node/capability
         final LastNodeReading lnr = lastNodeReadingManager.getByID(node, capability);
 
-        httpServletResponse.setContentType("text/plain");
-        final Writer textOutput = (httpServletResponse.getWriter());
+        response.setContentType("text/plain");
+        final Writer textOutput = (response.getWriter());
         if (lnr == null) {
             // if no rows found
             textOutput.write("error");

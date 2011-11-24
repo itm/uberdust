@@ -23,19 +23,47 @@ import java.io.Serializable;
  *
  * @author Malte Legenhausen
  */
-public class Coordinate implements Serializable {
-
+public final class Coordinate implements Serializable {
+    /**
+     * Serial Version Unique ID.
+     */
     private static final long serialVersionUID = 4172459795364749105L;
+
+    /**
+     * X cartesian axis.
+     */
     private Double x;
+
+    /**
+     * Y cartesian axis.
+     */
     private Double y;
+
+    /**
+     * Z cartesian axis.
+     */
     private Double z;
+
+    /**
+     * Phi angle.
+     */
     private Double phi;
+
+    /**
+     * Theta angle.
+     */
     private Double theta;
 
+    /**
+     * Constructor.
+     */
     public Coordinate() {
         // empty constructor
     }
 
+    /**
+     * Constructor.
+     */
     public Coordinate(final Double x, final Double y, final Double z, final Double phi, final Double theta) {
         this.x = x;
         this.y = y;
@@ -44,64 +72,133 @@ public class Coordinate implements Serializable {
         this.theta = theta;
     }
 
+    /**
+     * Returns x.
+     *
+     * @return x
+     */
     public Double getX() {
         return x;
     }
 
+    /**
+     * Sets x.
+     *
+     * @param x x
+     */
     public void setX(final Double x) {
         this.x = x;
     }
 
+    /**
+     * Returns y.
+     *
+     * @return y.
+     */
     public Double getY() {
         return y;
     }
 
+    /**
+     * Sets y.
+     *
+     * @param y y.
+     */
     public void setY(final Double y) {
         this.y = y;
     }
 
+    /**
+     * Returns z.
+     *
+     * @return z.
+     */
     public Double getZ() {
         return z;
     }
 
+    /**
+     * Sets z.
+     *
+     * @param z z.
+     */
     public void setZ(final Double z) {
         this.z = z;
     }
 
+    /**
+     * Returns phi.
+     *
+     * @return phi.
+     */
     public Double getPhi() {
         return phi;
     }
 
+    /**
+     * Sets phi.
+     *
+     * @param phi phi.
+     */
     public void setPhi(final Double phi) {
         this.phi = phi;
     }
 
+    /**
+     * Returns theta.
+     *
+     * @return theta.
+     */
     public Double getTheta() {
         return theta;
     }
 
+    /**
+     * Sets theta.
+     *
+     * @param theta theta.
+     */
     public void setTheta(final Double theta) {
         this.theta = theta;
     }
 
-    @Override
+    /**
+     * Returns string representation of coordinate.
+     *
+     * @return string representation of coordinate.
+     */
     public String toString() {
-        return "x=" + x + ", y=" + y + ", z=" + z +
-                ((phi == null) ? ("") : (", phi=" + phi)) + ((theta == null) ?  ("") : (", theta=" + theta));
+        return "x=" + x + ", y=" + y + ", z=" + z + ((phi == null) ? ("") : (", phi=" + phi))
+                + ((theta == null) ? ("") : (", theta=" + theta));
     }
 
+    /**
+     * WGS84 constant.
+     */
     private static final double WGS84_CONST = 298.257222101;
 
+    /**
+     * WGS84_ALPHA constant.
+     */
     private static final double WGS84_ALPHA = 1.0 / WGS84_CONST;
 
+    /**
+     * WGS84_A constant.
+     */
     private static final double WGS84_A = 6378137.0;
 
+    /**
+     * WGS84_B constant.
+     */
     private static final double WGS84_B = WGS84_A * (1.0 - WGS84_ALPHA);
 
+    /**
+     * WGS84_C constant.
+     */
     private static final double WGS84_C = WGS84_A * WGS84_A / WGS84_B;
 
     /**
-     * Rotate coordinates using phi angle
+     * Rotate coordinates using phi angle.
      *
      * @param coordinate , coordinate instance.
      * @param phi        , phi angle.

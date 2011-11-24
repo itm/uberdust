@@ -20,6 +20,7 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import eu.wisebed.wiseml.model.setup.Origin;
+import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -31,11 +32,29 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ShowTestbedGeoRssController extends AbstractRestController {
+/**
+ * Controller class that returns the setup of a testbed in GeoRSS format.
+ */
+public final class ShowTestbedGeoRssController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Deployment host.
+     */
     private transient String deploymentHost;
 
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
+
+    /**
+     * Constructor.
+     */
     public ShowTestbedGeoRssController() {
         super();
 
@@ -43,18 +62,41 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets deployment host.
+     *
+     * @param deploymentHost deployment host.
+     */
     public void setDeploymentHost(final String deploymentHost) {
         this.deploymentHost = deploymentHost;
     }
 
-    @SuppressWarnings({"unchecked"})
-    @Override
-    protected ModelAndView handle(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-                                  final Object commandObj, final BindException e)
+
+    /**
+     * Handle request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     a BindException exception.
+     * @return http servlet response.
+     * @throws TestbedNotFoundException  a TestbedNotFoundException exception.
+     * @throws InvalidTestbedIdException a InvalidTestbedIdException exception.
+     * @throws IOException               a IOException exception.
+     * @throws FeedException             a FeedException exception.
+     */
+    @SuppressWarnings("unchecked")
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException, IOException, FeedException {
 
         // set command object
@@ -66,7 +108,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed
@@ -77,17 +119,17 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
         }
 
         // set up feed and entries
-        httpServletResponse.setContentType("application/xml; charset=UTF-8");
+        response.setContentType("application/xml; charset=UTF-8");
         final SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
         feed.setTitle(testbed.getName() + " GeoRSS");
-        feed.setLink(httpServletRequest.getRequestURL().toString());
+        feed.setLink(request.getRequestURL().toString());
         feed.setDescription(testbed.getDescription());
         final List<SyndEntry> entries = new ArrayList<SyndEntry>();
 
         // convert testbed origin from long/lat position to xyz if needed
         Coordinate properOrigin = null;
-        if((testbed.getSetup().getCoordinateType().equals("Cartesian"))){
+        if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
             // determine testbed origin by the type of coordinates given
             final Origin origin = testbed.getSetup().getOrigin();
             final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
@@ -101,7 +143,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
             // set entry's title,link and publishing date
             entry.setTitle(node.getId());
-            entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/uberdust/rest/testbed/")
+            entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).toString());
             entry.setPublishedDate(new Date());
 
@@ -109,12 +151,12 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
             final SyndContent description = new SyndContentImpl();
             final StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
-            descriptionBuffer.append("<p><a href=\"http://").append(deploymentHost).append("/uberdust/rest/testbed/")
+            descriptionBuffer.append("<p><a href=\"http://").append(deploymentHost).append("/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/georss").append("\">")
                     .append("GeoRSS feed").append("</a></p>");
             descriptionBuffer.append("<ul>");
             for (Capability capability : node.getCapabilities()) {
-                descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/uberdust/rest/testbed/")
+                descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/rest/testbed/")
                         .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                         .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
             }
@@ -147,7 +189,7 @@ public class ShowTestbedGeoRssController extends AbstractRestController {
 
         // the feed output goes to response
         final SyndFeedOutput output = new SyndFeedOutput();
-        output.output(feed, httpServletResponse.getWriter());
+        output.output(feed, response.getWriter());
 
         return null;
     }

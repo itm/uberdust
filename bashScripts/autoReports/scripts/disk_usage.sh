@@ -3,7 +3,7 @@ source /var/autoReports/settings
 
 FILE=temp
 
-df -T | grep -e "tmp" -v -e "Filesystem" -v> $FILE
+df -T | grep -e "tmpfs" -v -e "Filesystem" -v -e "debugfs" -v > $FILE
 awk '{print $1" "$6;}' $FILE > $FILE.1
 
 

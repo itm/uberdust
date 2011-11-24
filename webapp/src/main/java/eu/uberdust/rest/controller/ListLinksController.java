@@ -19,14 +19,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * REST Controller for displaying link information.
+ * Controller class that returns a list of links for a given testbed.
  */
-public class ListLinksController extends AbstractRestController {
+public final class ListLinksController extends AbstractRestController {
 
+    /**
+     * Testbed persistence manager.
+     */
     private transient TestbedController testbedManager;
+
+    /**
+     * Link persistence manager.
+     */
     private transient LinkController linkManager;
+
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(ListLinksController.class);
 
+    /**
+     * Constructor.
+     */
     public ListLinksController() {
         super();
 
@@ -34,22 +48,41 @@ public class ListLinksController extends AbstractRestController {
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
+    /**
+     * Sets link persistence manager.
+     *
+     * @param linkManager link persistence manager.
+     */
     public void setLinkManager(final LinkController linkManager) {
         this.linkManager = linkManager;
     }
 
-    @Override
-    protected ModelAndView handle(final HttpServletRequest request,
-                                  final HttpServletResponse response, final Object commandObj, final BindException errors)
+    /**
+     * Handle Request and return the appropriate response.
+     *
+     * @param request    http servlet request.
+     * @param response   http servlet response.
+     * @param commandObj command object.
+     * @param errors     BindException exception.
+     * @return response http servlet response.
+     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
+     */
+    protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
+                                  final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command
         final LinkCommand command = (LinkCommand) commandObj;
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -57,7 +90,7 @@ public class ListLinksController extends AbstractRestController {
             testbedId = Integer.parseInt(command.getTestbedId());
 
         } catch (NumberFormatException nfe) {
-            throw new InvalidTestbedIdException("Testbed IDs have number format.",nfe);
+            throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
 
         // look up testbed
