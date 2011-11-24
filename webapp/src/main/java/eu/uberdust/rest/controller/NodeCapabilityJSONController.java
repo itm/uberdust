@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import eu.uberdust.command.NodeCapabilityCommand;
 import eu.uberdust.rest.exception.CapabilityNotFoundException;
 import eu.uberdust.rest.exception.InvalidCapabilityNameException;
+import eu.uberdust.rest.exception.InvalidLimitException;
 import eu.uberdust.rest.exception.InvalidNodeIdException;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.NodeNotFoundException;
@@ -122,17 +123,18 @@ public final class NodeCapabilityJSONController extends AbstractRestController {
      * @throws InvalidCapabilityNameException invalid capability name exception.
      * @throws CapabilityNotFoundException    capability not found exception.
      * @throws IOException                    IO exception.
+     * @throws InvalidLimitException          invalid limit exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
-            TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
+            TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException, InvalidLimitException {
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
         LOGGER.info("command.getNodeId() : " + command.getNodeId());
         LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
         LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
-
+        LOGGER.info("command.getReadingLimit() : " + command.getReadingsLimit());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
@@ -161,23 +163,35 @@ public final class NodeCapabilityJSONController extends AbstractRestController {
         }
 
         // retrieve node
-        final Node node = nodeManager.getByID(command.getNodeId());
+        final String nodeId = command.getNodeId();
+        final Node node = nodeManager.getByID(nodeId);
         if (node == null) {
             throw new NodeNotFoundException("Cannot find node [" + command.getNodeId() + "]");
         }
 
         // retrieve capability
-        final Capability capability = capabilityManager.getByID(command.getCapabilityId());
+        final String capabilityId = command.getCapabilityId();
+        final Capability capability = capabilityManager.getByID(capabilityId);
         if (capability == null) {
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
 
-        // create list of readings and node , capability ids
-        final String nodeId = command.getNodeId();
-        final String capabilityId = command.getCapabilityId();
-        final int limit = 2000; // TODO maybe the user should pass it
-        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability, limit);
+        // retrieve readings based on node/capability
+        final List<NodeReading> nodeReadings;
+        if (command.getReadingsLimit() == null) {
+            // no limit is provided
+            nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+        } else {
+            int limit;
+            try {
+                limit = Integer.parseInt(command.getReadingsLimit());
+            } catch (NumberFormatException nfe) {
+                throw new InvalidLimitException("Limit must have have number format.", nfe);
+            }
+            nodeReadings = nodeReadingManager.listNodeReadings(node, capability, limit);
+        }
 
+        // convert results to JSON format
         final List<ReadingJson> readingJsons = new ArrayList<ReadingJson>();
         for (NodeReading nodeReading : nodeReadings) {
             readingJsons.add(new ReadingJson(nodeReading.getTimestamp().getTime(), nodeReading.getReading()));

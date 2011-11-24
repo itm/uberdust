@@ -83,8 +83,6 @@ public final class ShowNodeController extends AbstractRestController {
 
         // set command object
         final NodeCommand command = (NodeCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

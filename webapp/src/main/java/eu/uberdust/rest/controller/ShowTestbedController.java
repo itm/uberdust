@@ -115,8 +115,6 @@ public final class ShowTestbedController extends AbstractRestController {
 
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
-        LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
-
 
         // a specific testbed is requested by testbed Id
         int testbedId;

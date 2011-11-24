@@ -3,6 +3,7 @@ package eu.uberdust.rest.controller;
 import eu.uberdust.command.NodeCapabilityCommand;
 import eu.uberdust.rest.exception.CapabilityNotFoundException;
 import eu.uberdust.rest.exception.InvalidCapabilityNameException;
+import eu.uberdust.rest.exception.InvalidLimitException;
 import eu.uberdust.rest.exception.InvalidNodeIdException;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.NodeNotFoundException;
@@ -116,18 +117,15 @@ public final class NodeCapabilityHTMLController extends AbstractRestController {
      * @throws TestbedNotFoundException       testbed not found exception.
      * @throws NodeNotFoundException          node not found exception.
      * @throws CapabilityNotFoundException    capability not found exception.
+     * @throws InvalidLimitException          invalid limit exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
             throws CapabilityNotFoundException, NodeNotFoundException, TestbedNotFoundException,
-            InvalidTestbedIdException, InvalidCapabilityNameException, InvalidNodeIdException {
+            InvalidTestbedIdException, InvalidCapabilityNameException, InvalidNodeIdException, InvalidLimitException {
 
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
-
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
@@ -168,7 +166,19 @@ public final class NodeCapabilityHTMLController extends AbstractRestController {
         }
 
         // retrieve readings based on node/capability
-        final List<NodeReading> nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+        final List<NodeReading> nodeReadings;
+        if (command.getReadingsLimit() == null) {
+            // no limit is provided
+            nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+        } else {
+            int limit;
+            try {
+                limit = Integer.parseInt(command.getReadingsLimit());
+            } catch (NumberFormatException nfe) {
+                throw new InvalidLimitException("Limit must have have number format.", nfe);
+            }
+            nodeReadings = nodeReadingManager.listNodeReadings(node, capability, limit);
+        }
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

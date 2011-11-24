@@ -83,7 +83,6 @@ public final class ListLinksController extends AbstractRestController {
 
         // get command
         final LinkCommand command = (LinkCommand) commandObj;
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

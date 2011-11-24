@@ -99,7 +99,6 @@ public final class ShowTestbedStatusController extends AbstractRestController {
 
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
-        LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -118,17 +117,10 @@ public final class ShowTestbedStatusController extends AbstractRestController {
         }
 
         // get a list of node last readings from testbed
-        long before = System.currentTimeMillis();
         final List<LastNodeReading> lastNodeReadings = lastNodeReadingManager.getByTestbed(testbed);
-        long after = System.currentTimeMillis();
-        LOGGER.info("lastNodeReadingManager.getByTestbed(testbed) took " + (after - before) + " millis");
 
         // get a list of link statistics from testbed
-        before = System.currentTimeMillis();
         final List<LastLinkReading> lastLinkReadings = lastLinkReadingManager.getByTestbed(testbed);
-        after = System.currentTimeMillis();
-        LOGGER.info("lastLinkReadingManager.getByTestbed(testbed) took " + (after - before) + " millis");
-
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

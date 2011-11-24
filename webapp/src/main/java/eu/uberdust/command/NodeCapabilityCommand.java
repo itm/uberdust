@@ -11,9 +11,15 @@ public class NodeCapabilityCommand extends TestbedCommand {
     private String nodeId = null;
 
     /**
-     * Capability ID
+     * Capability ID.
      */
     private String capabilityId = null;
+
+    /**
+     * returned Reading's limit for this node/capability.
+     */
+    private String readingsLimit = null;
+
 
     /**
      * Get the ID of the Node or Link.
@@ -45,9 +51,26 @@ public class NodeCapabilityCommand extends TestbedCommand {
     /**
      * Set the Id of capability.
      *
-     * @param capabilityId
+     * @param capabilityId the ID of capability.
      */
     public void setCapabilityId(final String capabilityId) {
         this.capabilityId = capabilityId;
+    }
+
+    /**
+     * Returns the readingsLimit of readings.
+     *
+     * @return the readingsLimit of readings.
+     */
+    public String getReadingsLimit() {
+        return readingsLimit;
+    }
+
+    /**
+     * Sets the readingsLimit.
+     * @param readingsLimit the readingsLimit of readings
+     */
+    public void setReadingsLimit(final String readingsLimit) {
+        this.readingsLimit = readingsLimit;
     }
 }
