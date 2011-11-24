@@ -60,6 +60,7 @@ public class LastReadingWebSocket
         * The protocol is Defined by: NodeID:capabilityID
         */
         final String protocol = servletRequest.getHeader("Sec-WebSocket-Protocol");
+        LOGGER.info(protocol);
 
         /**
          * TODO: FIX this check.
@@ -73,11 +74,12 @@ public class LastReadingWebSocket
         if (listeners.containsKey(protocol)) {
             servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
             thisListener = listeners.get(protocol);
+            LOGGER.info("registered listener");
         } else {
             thisListener = new CustomWebSocketListener(protocol.split(DELIMITER)[0], protocol.split(DELIMITER)[1]);
             LastNodeReadingConsumer.getInstance().registerListener(protocol.split(DELIMITER)[0], protocol.split(DELIMITER)[1],
                     thisListener);
-
+            LOGGER.info("new listener");
             listeners.put(protocol, thisListener);
             servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
         }
