@@ -121,8 +121,7 @@ public class NodeCapabilityJSONController extends AbstractRestController {
         for (NodeReading nodeReading : nodeReadings) {
             readingJsons.add(new ReadingJson(nodeReading.getTimestamp().getTime(), nodeReading.getReading()));
         }
-        final NodeReadingJson nodeReadingInJson =
-                new NodeReadingJson(nodeId, capabilityId, readingJsons);
+        final NodeReadingJson nodeReadingInJson = new NodeReadingJson(nodeId, capabilityId, readingJsons);
 
         // write on the HTTP response
         httpServletResponse.setContentType("text/json");
