@@ -124,9 +124,6 @@ public final class NodeCapabilityLatestReadingController extends AbstractRestCon
 
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {

@@ -20,6 +20,7 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
 import eu.wisebed.wiseml.model.setup.Origin;
+import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -45,6 +46,11 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
      * Deployment host.
      */
     private transient String deploymentHost;
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
 
     /**
      * Constructor.

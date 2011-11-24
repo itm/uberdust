@@ -1,0 +1,4 @@
+#!/bin/bash
+mytime=`date +%s`
+mstime=`echo $mytime*1000 | bc`
+wget -q http://uberdust.cti.gr/rest/testbed/3/node/urn:ctinetwork:black/capability/urn:ctinetwork:node:capability:lockScreen/insert/timestamp/$mstime/reading/0 -O /dev/null

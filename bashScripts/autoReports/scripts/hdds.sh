@@ -8,10 +8,10 @@ sudo hddtemp /dev/sd?>$FILE
 awk '{
 
 if (NF==4){
-print $3,$4;
+print $2,$4;
 }
 else if (NF==3){
-print $2,$3;
+print $1,$3;
 }
 
 }' $FILE > $FILE.2
@@ -24,8 +24,9 @@ do
     name=$(cut -d " " -f 1 $FILE)
     value=$(cut -d " " -f 2 $FILE)
     name=${name%":"*}
+    name=${name#"/dev/"*}
     value=${value%"°C"*}
-	#echo $name"=="$value
+	echo $namea"=="$value
 
     addReading "$name:temperature" $value
 

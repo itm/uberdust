@@ -11,10 +11,12 @@ then
 	echo -n "Changing permissions..."
 	chmod u+x $INSTALL_DIR/autoReports/scripts/*
 	echo "done"
-	read -p "Please provide the server hostname:port (no htt://) : " servername
-	read -p "Please provide the nerwork prefix: " netprefix
+	read -p "Please provide the server hostname:port (ie uberdust.cti.gr ) : " servername
+	read -p "Please provide the testbed id (ie 1 ) : " testbedid
+	read -p "Please provide the nerwork prefix (ie urn:ctinetwork: ): " netprefix
 	sed "s/host.name/$servername/g" $INSTALL_DIR/autoReports/settings > /tmp/file
-	sed "s/urn:network:/$netprefix/g" /tmp/file > $INSTALL_DIR/autoReports/settings
+	sed "s/testbed.id/$testbedid/g" /tmp/file > /tmp/file2
+	sed "s/urn:network:/$netprefix/g" /tmp/file2 > $INSTALL_DIR/autoReports/settings
 
 	echo "10,40 * * * * $INSTALL_DIR/autoReports/execute" >> /var/spool/cron/crontabs/root
 

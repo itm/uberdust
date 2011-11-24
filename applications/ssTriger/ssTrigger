@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+from gobject import MainLoop
+from dbus import SessionBus
+from dbus.mainloop.glib import DBusGMainLoop
+from subprocess import Popen
+
+class SSTrigger:
+    def __init__(self):
+        DBusGMainLoop(set_as_default=True)
+        self.mem='ActiveChanged'
+        self.dest='org.gnome.ScreenSaver'
+        self.bus=SessionBus()
+        self.loop=MainLoop()
+        self.bus.add_signal_receiver(self.catch,self.mem,self.dest)
+    def catch(self,ssOn):
+        if ssOn == 1: #Screensaver turned on
+            Popen(["/opt/ssTrigger/ssStart"])
+        else: #Screensaver turned off
+            Popen(["/opt/ssTrigger/ssStop"])
+
+SSTrigger().loop.run()

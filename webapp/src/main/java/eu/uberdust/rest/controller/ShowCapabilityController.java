@@ -116,8 +116,6 @@ public final class ShowCapabilityController extends AbstractRestController {
             throws InvalidTestbedIdException, TestbedNotFoundException, CapabilityNotFoundException {
         // set command object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
-        LOGGER.info("command.getCapabilityName() : " + command.getCapabilityName());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

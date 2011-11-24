@@ -83,7 +83,6 @@ public final class ListNodesController extends AbstractRestController {
 
         // get command object
         final NodeCommand command = (NodeCommand) commandObj;
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

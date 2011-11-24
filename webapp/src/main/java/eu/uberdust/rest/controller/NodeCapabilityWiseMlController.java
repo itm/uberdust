@@ -3,13 +3,16 @@ package eu.uberdust.rest.controller;
 import eu.uberdust.command.NodeCapabilityCommand;
 import eu.uberdust.rest.exception.CapabilityNotFoundException;
 import eu.uberdust.rest.exception.InvalidCapabilityNameException;
+import eu.uberdust.rest.exception.InvalidLimitException;
 import eu.uberdust.rest.exception.InvalidNodeIdException;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.NodeNotFoundException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.NodeReading;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Node;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Controller class that returns the readings of a node capability pair in WiseML format.
@@ -40,6 +44,11 @@ public final class NodeCapabilityWiseMlController extends AbstractRestController
      * Capability persistence manager.
      */
     private transient CapabilityController capabilityManager;
+
+    /**
+     * NodeReading persistence manager.
+     */
+    private transient NodeReadingController nodeReadingManager;
 
     /**
      * Logger.
@@ -85,6 +94,16 @@ public final class NodeCapabilityWiseMlController extends AbstractRestController
     }
 
     /**
+     * Sets NodeReading persistence manager.
+     *
+     * @param nodeReadingManager NodeReading persistence manager.
+     */
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
+
+    /**
      * Handle Request and return the appropriate response.
      *
      * @param request    http servlet request.
@@ -98,17 +117,15 @@ public final class NodeCapabilityWiseMlController extends AbstractRestController
      * @throws TestbedNotFoundException       a TestbedNotFoundException exception.
      * @throws NodeNotFoundException          a NodeNotFoundExeption exception.
      * @throws CapabilityNotFoundException    a CapabilityNotFoundException exception.
+     * @throws InvalidLimitException          a InvalidLimitException exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
-            TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
+            TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, InvalidLimitException {
 
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
@@ -148,7 +165,25 @@ public final class NodeCapabilityWiseMlController extends AbstractRestController
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
 
-        return null; // TODO make this controller
+        // retrieve readings based on node/capability
+        final List<NodeReading> nodeReadings;
+        if (command.getReadingsLimit() == null) {
+            // no limit is provided
+            nodeReadings = nodeReadingManager.listNodeReadings(node, capability);
+        } else {
+            int limit;
+            try {
+                limit = Integer.parseInt(command.getReadingsLimit());
+            } catch (NumberFormatException nfe) {
+                throw new InvalidLimitException("Limit must have have number format.", nfe);
+            }
+            nodeReadings = nodeReadingManager.listNodeReadings(node, capability, limit);
+        }
+
+        // Results are here . TODO make this controller.
+        nodeReadings.size();
+
+        return null;
     }
 }
 

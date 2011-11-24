@@ -76,9 +76,6 @@ public final class ShowLinkController extends AbstractRestController {
 
         // set command object
         final LinkCommand command = (LinkCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getSourceId());
-        LOGGER.info("command.getTargetId() : " + command.getTargetId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -95,16 +92,18 @@ public final class ShowLinkController extends AbstractRestController {
         }
 
         // a link instance  and it' inverse
-        final Link link = (command.getSourceId() == null || command.getTargetId() == null) ? null :
-                linkManager.getByID(command.getSourceId(), command.getTargetId());
-        final Link linkInv = (command.getSourceId() == null || command.getTargetId() == null) ? null :
-                linkManager.getByID(command.getTargetId(), command.getSourceId());
+        final Link link = (command.getSourceId() == null || command.getTargetId() == null)
+                ? null
+                : linkManager.getByID(command.getSourceId(), command.getTargetId());
+        final Link linkInv = (command.getSourceId() == null || command.getTargetId() == null)
+                ? null
+                : linkManager.getByID(command.getTargetId(), command.getSourceId());
         final Map<Link, List<Capability>> linkCapabilityMap = new HashMap<Link, List<Capability>>();
 
         // if no link or inverse link found return error view
         if (link == null && linkInv == null) {
-            throw new LinkNotFoundException("Cannot find link [" + command.getSourceId() + "," + command.getTargetId() +
-                    "] or the inverse link [" + command.getTargetId() + "," + command.getSourceId() + "]");
+            throw new LinkNotFoundException("Cannot find link [" + command.getSourceId() + "," + command.getTargetId()
+                    + "] or the inverse link [" + command.getTargetId() + "," + command.getSourceId() + "]");
         }
 
         // if at least link or linkInv was found

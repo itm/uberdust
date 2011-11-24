@@ -107,9 +107,6 @@ public final class NodeCapabilityChartController extends AbstractRestController 
 
         // set command object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {

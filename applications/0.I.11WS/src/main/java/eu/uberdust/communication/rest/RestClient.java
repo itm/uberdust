@@ -86,6 +86,6 @@ public final class RestClient {
 
     public static void main(final String[] args) {
         RestClient.getInstance().callRestfulWebService(
-                "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
+                "http://uberdust.cti.gr/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
     }
 }

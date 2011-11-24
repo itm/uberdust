@@ -23,7 +23,7 @@ public final class LightController {
     private static final Logger LOGGER = Logger.getLogger(LightController.class);
 
     private final String REST_LINK =
-            "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
+            "http://uberdust.cti.gr/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
 
     private boolean zone1;
 

@@ -118,8 +118,6 @@ public final class CapabilityTabDelimitedController extends AbstractRestControll
             throws InvalidTestbedIdException, TestbedNotFoundException, IOException, CapabilityNotFoundException {
         // set command object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
-        LOGGER.info("commandObj.getTestbedId() : " + command.getTestbedId());
-        LOGGER.info("commandObj.getCapabilityId() : " + command.getCapabilityName());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

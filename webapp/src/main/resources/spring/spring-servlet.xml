@@ -61,10 +61,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
                 <!-- Node/Capability Controllers for readings -->
                 <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/html/limit/*">nodeCapabilityHTMLController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/tabdelimited">nodeCapabilityTabDelimitedController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/tabdelimited/limit/*">nodeCapabilityTabDelimitedController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/json">nodeCapabilityJsonController</prop>
-                <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/json/limit/*">nodeCapabilityJsonController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/wiseml">nodeCapabilityWiseMlController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/wiseml/limit/*">nodeCapabilityWiseMlController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading">nodeCapabilityLastReadingController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">
                     nodeCapabilityInsertReadingController
@@ -318,7 +322,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/html"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/html/limit/{readingsLimit}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="capability/readings.html"/>
@@ -339,7 +343,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/tabdelimited"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/tabdelimited/limit/{readingsLimit}"/>
     </bean>
 
     <!-- Node-Capability Controller for JSON format -->
@@ -349,7 +353,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/json"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/json/limit/{readingsLimit}"/>
     </bean>
 
     <!-- Node-Capability Controller Chart display -->
@@ -377,7 +381,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/wiseml"/>
+        <property name="nodeReadingManager" ref="nodeReadingManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/wiseml/limit/{readingsLimit}"/>
     </bean>
 
     <!-- Node-Capability Last Reading Controller -->

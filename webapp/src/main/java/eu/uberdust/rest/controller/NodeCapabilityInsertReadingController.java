@@ -85,11 +85,6 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
 
         // set commandNode object
         final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
-        LOGGER.info("command.getReading() : " + command.getReading());
-        LOGGER.info("command.getTimestamp() : " + command.getTimestamp());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

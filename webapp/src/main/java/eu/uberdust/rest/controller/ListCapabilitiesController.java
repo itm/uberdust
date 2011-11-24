@@ -83,7 +83,6 @@ public final class ListCapabilitiesController extends AbstractRestController {
 
         // get command
         final CapabilityCommand command = (CapabilityCommand) commandObj;
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
 
         // a specific testbed is requested by testbed Id
         int testbedId;

@@ -68,8 +68,6 @@ public final class SendCommandController extends AbstractRestController {
 
         // set commandNode object
         final DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
-        LOGGER.info("command.getDestination() : " + command.getDestination());
-        LOGGER.info("command.getPayload() : " + command.getPayload());
 
         // look for destination node
         final Node destinationNode = nodeManager.getByID(command.getDestination());
