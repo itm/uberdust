@@ -32,4 +32,10 @@ do
 done < $FILE.2
 
 
+for item in $(ls /dev/sd?)
+do
+        smartctl $item --health | grep result
+done
+
+
 rm $FILE.2 $FILE
