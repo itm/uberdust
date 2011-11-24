@@ -139,7 +139,7 @@ public class MessageParser implements Runnable {                   // NOPMD
         final long milliseconds = System.currentTimeMillis();
 
         final StringBuilder urlBuilder = new StringBuilder("http:/");
-        urlBuilder.append("/gold.cti.gr/uberdust/rest/testbed/1");
+        urlBuilder.append("/uberdust.cti.gr/rest/testbed/1");
         urlBuilder.append("/node/").append(nodeUrn);
         urlBuilder.append("/capability/").append(capabilityName);
         urlBuilder.append("/insert/timestamp/").append(milliseconds);

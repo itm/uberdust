@@ -26,13 +26,13 @@ public final class LightController {
      * Rest interface link.
      */
     private static final String REST_LINK =
-            "http://gold.cti.gr/uberdust/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
+            "http://uberdust.cti.gr/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,";
 
     /**
      * Last Reading link.
      */
     private static final String READINGS_LINK =
-            "http://gold.cti.gr/uberdust/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
+            "http://uberdust.cti.gr/rest/testbed/1/node/urn:wisebed:ctitestbed:0x1ccd/capability/urn:wisebed:node:capability:pir/latestreading";
 
     private boolean zone1;
     private boolean zone2;

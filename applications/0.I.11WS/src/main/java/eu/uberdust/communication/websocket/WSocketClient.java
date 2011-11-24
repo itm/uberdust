@@ -85,7 +85,7 @@ public final class WSocketClient {
         LOGGER.info("WSocketClient initialized");
         timer = new Timer();
         try {
-            WS_URI = new URI("ws://gold.cti.gr:80/uberdust/lastreading.ws");
+            WS_URI = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
             factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
