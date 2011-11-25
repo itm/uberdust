@@ -20,14 +20,14 @@ public final class InsertReadingWebSocket extends GenericServlet
         implements Controller {
 
     /**
-     * Serial Version Unique ID.
-     */
-    private static final long serialVersionUID = -7328299291894688509L;
-
-    /**
      * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(InsertReadingWebSocket.class);
+
+    /**
+     * Serial Version Unique ID.
+     */
+    private static final long serialVersionUID = -279704326229266519L;
 
 
     /**

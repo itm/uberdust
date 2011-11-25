@@ -27,7 +27,7 @@ public final class InsertReadingWSocketClient {
     /**
      * Static WebSocket URI.
      */
-    private URI WS_URI;
+    private URI webSocketUri;
 
     /**
      * The WebSocketClientFactory.
@@ -50,11 +50,6 @@ public final class InsertReadingWSocketClient {
     private static final String PROTOCOL = "INSERTREADING";
 
     /**
-     * The timer.
-     */
-    private final Timer timer;
-
-    /**
      * WSocketClient is loaded on the first execution of WSocketClient.getInstance()
      * or the first access to WSocketClient.ourInstance, not before.
      *
@@ -75,9 +70,9 @@ public final class InsertReadingWSocketClient {
     private InsertReadingWSocketClient() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("WSocketClient initialized");
-        timer = new Timer();
+        Timer timer = new Timer();
         try {
-            WS_URI = new URI("ws://uberdust.cti.gr:80/insertreading.ws");
+            webSocketUri = new URI("ws://uberdust.cti.gr:80/insertreading.ws");
             factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
@@ -100,7 +95,7 @@ public final class InsertReadingWSocketClient {
      */
     public void connect() {
         try {
-            connection = client.open(WS_URI, new WebSocketIMPL()).get();
+            connection = client.open(webSocketUri, new WebSocketIMPL()).get();
         } catch (final Exception e) {
             LOGGER.error(e);
             try {
