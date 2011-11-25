@@ -47,7 +47,7 @@ public final class InsertReadingWSocketClient {
     /**
      * The protocol.
      */
-    private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
+    private static final String PROTOCOL = "INSERTREADING";
 
     /**
      * The timer.
@@ -127,7 +127,7 @@ public final class InsertReadingWSocketClient {
      * Main.
      * @param args args
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
        InsertReadingWSocketClient.getInstance();
     }
 }

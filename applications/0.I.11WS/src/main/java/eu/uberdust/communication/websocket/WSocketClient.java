@@ -50,7 +50,7 @@ public final class WSocketClient {
     /**
      * The protocol.
      */
-    private static final String PROTOCOL = "INSERTREADING";
+    private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
 
     /**
      * Delimiter character.
