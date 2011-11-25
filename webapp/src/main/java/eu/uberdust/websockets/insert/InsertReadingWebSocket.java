@@ -14,14 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: akribopo
- * Date: 11/25/11
- * Time: 2:14 PM
- * To change this template use File | Settings | File Templates.
+ * Insert Reading Web Socket controller class.
  */
-public class InsertReadingWebSocket extends GenericServlet
+public final class InsertReadingWebSocket extends GenericServlet
         implements Controller {
+
+    /**
+     * Serial Version Unique ID.
+     */
+    private static final long serialVersionUID = -7328299291894688509L;
 
     /**
      * Static Logger.
@@ -29,15 +30,15 @@ public class InsertReadingWebSocket extends GenericServlet
     private static final Logger LOGGER = Logger.getLogger(InsertReadingWebSocket.class);
 
 
-    private static final long serialVersionUID = -7328299291894688509L;
-
-
     /**
-     * A HashMap<Protocol:NodeID>.
+     * Insert Reading Web Socket Listener.
      */
     private InsertReadingWebSocketListener listener;
 
-    private static final String PROTOCOL = "newReading";
+    /**
+     * Protocol definition.
+     */
+    private static final String PROTOCOL = "INSERTREADING";
 
     /**
      * Default Constructor.
@@ -48,22 +49,21 @@ public class InsertReadingWebSocket extends GenericServlet
     }
 
     /**
-     * Services the request.
+     * Handles the request.
      *
-     * @param servletRequest  the servletRequest
-     * @param servletResponse the servletResponse
-     * @throws javax.servlet.ServletException
-     * @throws java.io.IOException
+     * @param servletRequest  the servletRequest.
+     * @param servletResponse the servletResponse.
+     * @return servlet response.
+     * @throws javax.servlet.ServletException ServletException exception.
+     * @throws java.io.IOException            IOException exception.
      */
-    @Override
-    public ModelAndView handleRequest(final HttpServletRequest servletRequest, final HttpServletResponse servletResponse) throws Exception {
+    public ModelAndView handleRequest(final HttpServletRequest servletRequest,
+                                      final HttpServletResponse servletResponse) throws ServletException, IOException {
         LOGGER.info("handleRequest");
 
         servletRequest.getSession().setMaxInactiveInterval(Integer.MAX_VALUE);
-        /*
-        * Process the handshake, selecting the protocol to be used.
-        * The protocol is Defined by: NodeID:capabilityID
-        */
+
+        //Process the handshake, selecting the protocol to be used.
         final String protocol = servletRequest.getHeader("Sec-WebSocket-Protocol");
         LOGGER.info(protocol);
 
@@ -72,6 +72,7 @@ public class InsertReadingWebSocket extends GenericServlet
             return null;
         }
 
+        // if listener is not defined initialize it
         if (listener == null) {
             listener = new InsertReadingWebSocketListener();
         }
@@ -84,8 +85,16 @@ public class InsertReadingWebSocket extends GenericServlet
         return null;
     }
 
-    @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+    /**
+     * Service Generic method implementation.
+     *
+     * @param servletRequest servlet request.
+     * @param servletResponse servlet response
+     * @throws ServletException ServletException exception.
+     * @throws IOException IOException exception.
+     */
+    public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
+            throws ServletException, IOException {
         LOGGER.info("service");
         try {
             handleRequest((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);

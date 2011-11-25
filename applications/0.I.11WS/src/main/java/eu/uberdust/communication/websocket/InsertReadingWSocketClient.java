@@ -12,15 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Timer;
 
-
-/**
- * Created by IntelliJ IDEA.
- * User: akribopo
- * Date: 11/12/11
- * Time: 4:21 PM
- * To change this template use File | Settings | File Templates.
- */
-public final class WSocketClient {
+public final class InsertReadingWSocketClient {
 
     /**
      * Static Logger.
@@ -30,12 +22,17 @@ public final class WSocketClient {
     /**
      * static instance(ourInstance) initialized as null.
      */
-    private static WSocketClient ourInstance = null;
+    private static InsertReadingWSocketClient ourInstance = null;
 
     /**
      * Static WebSocket URI.
      */
-    private URI webSocketUri;
+    private URI WS_URI;
+
+    /**
+     * The WebSocketClientFactory.
+     */
+    private WebSocketClientFactory factory;
 
     /**
      * The WebSocketClient.
@@ -50,13 +47,7 @@ public final class WSocketClient {
     /**
      * The protocol.
      */
-    private static final String PROTOCOL = "INSERTREADING";
-
-    /**
-     * Delimiter character.
-     */
-    public static final String DELIMITER = "@";
-
+    private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
 
     /**
      * The timer.
@@ -69,10 +60,10 @@ public final class WSocketClient {
      *
      * @return ourInstance
      */
-    public static WSocketClient getInstance() {
-        synchronized (WSocketClient.class) {
+    public static InsertReadingWSocketClient getInstance() {
+        synchronized (InsertReadingWSocketClient.class) {
             if (ourInstance == null) {
-                ourInstance = new WSocketClient();
+                ourInstance = new InsertReadingWSocketClient();
             }
         }
         return ourInstance;
@@ -81,13 +72,13 @@ public final class WSocketClient {
     /**
      * Private constructor suppresses generation of a (public) default constructor.
      */
-    private WSocketClient() {
+    private InsertReadingWSocketClient() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("WSocketClient initialized");
         timer = new Timer();
         try {
-            webSocketUri = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
-            WebSocketClientFactory factory = new WebSocketClientFactory();
+            WS_URI = new URI("ws://uberdust.cti.gr:80/insertreading.ws");
+            factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
 
@@ -109,7 +100,7 @@ public final class WSocketClient {
      */
     public void connect() {
         try {
-            connection = client.open(webSocketUri, new WebSocketIMPL()).get();
+            connection = client.open(WS_URI, new WebSocketIMPL()).get();
         } catch (final Exception e) {
             LOGGER.error(e);
             try {
@@ -121,11 +112,22 @@ public final class WSocketClient {
         }
     }
 
+    /**
+     * Sending PING.
+     */
     public void ping() {
         try {
-            connection.sendMessage("ping");
+            connection.sendMessage("PING");
         } catch (final IOException e) {
             LOGGER.error(e);
         }
+    }
+
+    /**
+     * Main.
+     * @param args args
+     */
+    public static void main(String args[]) {
+       InsertReadingWSocketClient.getInstance();
     }
 }

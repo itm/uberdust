@@ -114,6 +114,7 @@
             </plugin>
         </plugins>
     </reporting>
+
     <dependencies>
         <dependency>
             <groupId>hudson.plugins.sloccount</groupId>
@@ -121,5 +122,6 @@
             <version>1.4</version>
         </dependency>
     </dependencies>
+
 </project>
 

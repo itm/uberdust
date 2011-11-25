@@ -2,57 +2,100 @@ package eu.uberdust.websockets.insert;
 
 import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 
 /**
- * Created by IntelliJ IDEA.
- * User: akribopo
- * Date: 11/25/11
- * Time: 2:16 PM
- * To change this template use File | Settings | File Templates.
+ * Insert Reading Web Socket Listener.
  */
-public class InsertReadingWebSocketListener extends AbstractWebSocketListener {
+public final class InsertReadingWebSocketListener extends AbstractWebSocketListener {
 
     /**
      * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(InsertReadingWebSocketListener.class);
 
+    /**
+     * Constructor.
+     */
     public InsertReadingWebSocketListener() {
-        super();    //To change body of overridden methods use File | Settings | File Templates.
+        super();
     }
 
-    @Override
-    public void onStart(WebSocketContext context) throws IOException {
-        super.onStart(context);    //To change body of overridden methods use File | Settings | File Templates.
+    /**
+     * On start of connection.
+     *
+     * @param context WebSocketContext instance.
+     * @throws IOException IOException exception.
+     */
+    public void onStart(final WebSocketContext context) throws IOException {
+        super.onStart(context);
+        LOGGER.info("onStart()");
     }
 
-    @Override
-    public void onReadBinary(WebSocketContext context, InputStream is) throws IOException {
-        super.onReadBinary(context, is);    //To change body of overridden methods use File | Settings | File Templates.
+    /**
+     * On read binary.
+     *
+     * @param context WebSocketContext instance.
+     * @param is InputStream instance.
+     * @throws IOException IOException exception.
+     */
+    public void onReadBinary(final WebSocketContext context, final  InputStream is) throws IOException {
+        super.onReadBinary(context, is);
+        LOGGER.info("onReadBinary()");
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(is, writer, "UTF-8");
+        LOGGER.info("onReadBinary(): " + writer.toString());
     }
 
-    @Override
-    public void onReadText(WebSocketContext context, Reader is) throws IOException {
-        super.onReadText(context, is);    //To change body of overridden methods use File | Settings | File Templates.
+    /**
+     * On read text.
+     *
+     * @param context WebSocketContext instance.
+     * @param is InputStream instance.
+     * @throws IOException IOException exception.
+     */
+    public void onReadText(final WebSocketContext context, final Reader is) throws IOException {
+        super.onReadText(context, is);
+        LOGGER.info("onReadText()");
     }
 
-    @Override
-    public void onClose(WebSocketContext context) throws IOException {
-        super.onClose(context);    //To change body of overridden methods use File | Settings | File Templates.
+    /**
+     * On close.
+     *
+     * @param context WebSocketContext instance.
+     * @throws IOException IOException exception.
+     */
+    public void onClose(final WebSocketContext context) throws IOException {
+        super.onClose(context);
+        LOGGER.info("onClose()");
     }
 
-    @Override
-    public void onDisconnect(WebSocketContext context) throws IOException {
-        super.onDisconnect(context);    //To change body of overridden methods use File | Settings | File Templates.
+    /**
+     * On disconnect.
+     *
+     * @param context WebSocketContext instance.
+     * @throws IOException IOException exception.
+     */
+    public void onDisconnect(final WebSocketContext context) throws IOException {
+        super.onDisconnect(context);
+        LOGGER.info("onDisconnect()");
+
     }
 
-    @Override
-    public void onTimeout(WebSocketContext context) throws IOException {
-        super.onTimeout(context);    //To change body of overridden methods use File | Settings | File Templates.
+    /**
+     * On timeout.
+     *
+     * @param context WebSocketContext instance.
+     * @throws IOException IOException exception.
+     */
+    public void onTimeout(final WebSocketContext context) throws IOException {
+        super.onTimeout(context);
+        LOGGER.info("onTimeout()");
     }
 }

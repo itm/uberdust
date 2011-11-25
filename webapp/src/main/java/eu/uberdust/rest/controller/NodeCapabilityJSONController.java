@@ -131,10 +131,6 @@ public final class NodeCapabilityJSONController extends AbstractRestController {
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException, InvalidLimitException {
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
-        LOGGER.info("command.getNodeId() : " + command.getNodeId());
-        LOGGER.info("command.getCapabilityId() : " + command.getCapabilityId());
-        LOGGER.info("command.getTestbedId() : " + command.getTestbedId());
-        LOGGER.info("command.getReadingLimit() : " + command.getReadingsLimit());
 
         // check node id
         if (command.getNodeId() == null || command.getNodeId().isEmpty()) {
