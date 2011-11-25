@@ -5,8 +5,16 @@
              servlet-class="eu.uberdust.websockets.LastReadingWebSocket"/>
 
     <!--WebSocket servlet mappings-->
-    <servlet-mapping url-pattern="*.ws"
+    <servlet-mapping url-pattern="lastreading.ws"
                      servlet-name="lastreading.ws"/>
+
+    <!-- WebSocket servlets-->
+    <servlet servlet-name="insertreading.ws"
+             servlet-class="eu.uberdust.websockets.insert.InsertReadingWebSocket"/>
+
+    <!--WebSocket servlet mappings-->
+    <servlet-mapping url-pattern="insertreading.ws"
+                     servlet-name="insertreading.ws"/>
 
 </web-app>
 
