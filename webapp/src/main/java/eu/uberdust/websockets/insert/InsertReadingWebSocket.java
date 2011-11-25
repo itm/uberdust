@@ -33,7 +33,7 @@ public final class InsertReadingWebSocket extends GenericServlet
     /**
      * Insert Reading Web Socket Listener.
      */
-    private InsertReadingWebSocketListener listener;
+    private InsertReadingWebSocketListener listener = null;
 
     /**
      * Protocol definition.
