@@ -14,7 +14,7 @@ do
     value=$(cut -d " " -f 2 $FILE)
     name=${name#"/dev/"*}
     value=${value%"%"*}
-    echo $name"=="$value
+    #echo $name"=="$value
 
 	#create url
 	addReading "$name:usage" $value

@@ -12,13 +12,42 @@ function addReading {
 		value=$2
 
 		#create url
-		URL=$UBERDUST_URL"/node/"$UBERDUST_PREFIX$HOSTNAME"/capability/urn:wisebed:node:capability:"$sensor"/insert/timestamp/"$time"000/reading/"$value
-		#echo $URL
+		URL=$UBERDUST_URL"/node/"$UBERDUST_PREFIX$HOSTNAME"/capability/urn:network:node:capability:"$sensor"/insert/timestamp/"$time"000/reading/"$value
+		echo $URL
 		#execute
-		wget $URL -O wget.tmp
+		wget $URL -O /dev/null
 
-		#cleanup
-		rm wget.tmp
+	fi
+}
+
+
+
+
+
+
+
+
+
+
+function addLinkReading {
+
+	if [ $# == 2 ]
+	then
+		#host.name/uberdust/rest/testbed/1
+		UBERDUST_URL="http://host.name/rest/testbed/testbed.id"
+		UBERDUST_PREFIX="urn:network:"
+	
+		time=$(date +%s)
+		target=$1
+		sensor=$2
+		value=$3
+
+		#create url
+		URL=$UBERDUST_URL"/source/"$UBERDUST_PREFIX$HOSTNAME"/target/urn:network:"$target"/capability/urn:network:node:capability:"$sensor"/insert/timestamp/"$time"000/reading/"$value
+		echo $URL
+		#execute
+		wget $URL -O /dev/null
+
 	fi
 }
 

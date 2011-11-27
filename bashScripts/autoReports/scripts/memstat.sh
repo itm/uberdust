@@ -10,5 +10,5 @@ cat /proc/meminfo | grep $PREFIX > $FILE
 #truncate data
 VAL=$(awk '{print $2;}' $FILE)
 
-echo "$PREFIX==$VAL"
+#echo "$PREFIX==$VAL"
 addReading $PREFIX $VAL
