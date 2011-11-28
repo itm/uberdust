@@ -77,7 +77,7 @@
                         <configuration>
                             <target>
                                 <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
-                                     todir="uberuser@lime.cti.gr:/home/uberuser/applications"
+                                     todir="uberuser@lime.cti.gr:/home/uberuser/applications/0.I.0"
                                      keyfile="${user.home}/.ssh/id_rsa"
                                      trust="true" verbose="true" port="22"
                                      passphrase=""/>
