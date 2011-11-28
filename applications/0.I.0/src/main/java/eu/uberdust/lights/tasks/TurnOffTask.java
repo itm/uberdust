@@ -1,10 +1,9 @@
 package eu.uberdust.lights.tasks;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import eu.uberdust.lights.LightController;
 import org.apache.log4j.Logger;
+
+import java.util.TimerTask;
 
 /**
  * Created by IntelliJ IDEA.

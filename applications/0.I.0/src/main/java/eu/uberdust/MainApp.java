@@ -10,7 +10,7 @@ import eu.uberdust.lights.LightController;
  * To change this template use File | Settings | File Templates.
  */
 public class MainApp {
-    public static void main(final String[] args){
+    public static void main(final String[] args) {
         LightController.getInstance();
     }
 }

@@ -9,7 +9,6 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Timer;
 
 
@@ -35,7 +34,12 @@ public final class WSocketClient {
     /**
      * Static WebSocket URI.
      */
-    private URI webSocketUri;
+    private URI WS_URI;
+
+    /**
+     * The WebSocketClientFactory.
+     */
+    private WebSocketClientFactory factory;
 
     /**
      * The WebSocketClient.
@@ -51,12 +55,6 @@ public final class WSocketClient {
      * The protocol.
      */
     private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
-
-    /**
-     * Delimiter character.
-     */
-    public static final String DELIMITER = "@";
-
 
     /**
      * The timer.
@@ -85,23 +83,9 @@ public final class WSocketClient {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("WSocketClient initialized");
         timer = new Timer();
-        try {
-            webSocketUri = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
-            WebSocketClientFactory factory = new WebSocketClientFactory();
-            factory.setBufferSize(4096);
-            factory.start();
+        connect();
+        timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
 
-            client = factory.newWebSocketClient();
-            client.setMaxIdleTime(-1);
-            client.setProtocol(PROTOCOL);
-            connect();
-            timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
-
-        } catch (final URISyntaxException e) {
-            LOGGER.error(e);
-        } catch (final Exception e) {
-            LOGGER.error(e);
-        }
     }
 
     /**
@@ -109,7 +93,16 @@ public final class WSocketClient {
      */
     public void connect() {
         try {
-            connection = client.open(webSocketUri, new WebSocketIMPL()).get();
+            WS_URI = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
+            factory = new WebSocketClientFactory();
+            factory.setBufferSize(4096);
+            factory.start();
+
+            client = factory.newWebSocketClient();
+            client.setMaxIdleTime(-1);
+            client.setProtocol(PROTOCOL);
+
+            connection = client.open(WS_URI, new WebSocketIMPL()).get();
         } catch (final Exception e) {
             LOGGER.error(e);
             try {
@@ -122,10 +115,26 @@ public final class WSocketClient {
     }
 
     public void ping() {
+        if (!connection.isOpen())
+            return;
+
         try {
             connection.sendMessage("ping");
         } catch (final IOException e) {
             LOGGER.error(e);
         }
     }
+
+    public void disconnect() {
+        try {
+            connection.disconnect();
+            if (factory.isRunning()) {
+                factory.destroy();
+            }
+        } catch (final Exception e) {
+            LOGGER.error(e);
+        }
+    }
+
+
 }

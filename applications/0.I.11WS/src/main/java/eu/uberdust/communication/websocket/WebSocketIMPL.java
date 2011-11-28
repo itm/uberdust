@@ -25,6 +25,9 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
      */
     @Override
     public final void onMessage(final String data) {
+        if (data.isEmpty()) {
+            return;
+        }
         LOGGER.info(new StringBuilder().append("-- onMessage: ").append(data).append(new Date()).toString());
         LightController.getInstance().setLastReading(System.currentTimeMillis());
         //LightController.getInstance().setLastReading(Long.parseLong(data.split("\t")[0]));
@@ -50,6 +53,7 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     @Override
     public final void onClose(final int closeCode, final String message) {
         LOGGER.info("onClose");
-        System.exit(0);
+        WSocketClient.getInstance().disconnect();
+        WSocketClient.getInstance().connect();
     }
 }

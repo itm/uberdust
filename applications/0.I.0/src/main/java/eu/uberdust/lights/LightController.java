@@ -68,7 +68,7 @@ public final class LightController {
     private LightController() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("Light Controller initialized");
-        lastLumReading = 0;
+        lastLumReading = 201;
         isScreenLocked = true;
         zone1 = false;
         zone2 = false;
@@ -110,7 +110,7 @@ public final class LightController {
     }
 
     private void turnOffLights() {
-        if (!zone1 || !zone2) {
+        if (zone1 || zone2) {
             controlLight(false, 1);
             timer.schedule(new TurnOffTask(), TurnOffTask.DELAY);
         }
