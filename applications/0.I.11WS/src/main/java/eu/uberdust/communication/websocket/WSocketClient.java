@@ -35,7 +35,12 @@ public final class WSocketClient {
     /**
      * Static WebSocket URI.
      */
-    private URI webSocketUri;
+    private URI WS_URI;
+
+    /**
+     * The WebSocketClientFactory.
+     */
+    private WebSocketClientFactory factory;
 
     /**
      * The WebSocketClient.
@@ -51,12 +56,6 @@ public final class WSocketClient {
      * The protocol.
      */
     private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
-
-    /**
-     * Delimiter character.
-     */
-    public static final String DELIMITER = "@";
-
 
     /**
      * The timer.
@@ -86,8 +85,8 @@ public final class WSocketClient {
         LOGGER.info("WSocketClient initialized");
         timer = new Timer();
         try {
-            webSocketUri = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
-            WebSocketClientFactory factory = new WebSocketClientFactory();
+            WS_URI = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
+            factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
 
@@ -102,6 +101,8 @@ public final class WSocketClient {
         } catch (final Exception e) {
             LOGGER.error(e);
         }
+
+
     }
 
     /**
@@ -109,7 +110,7 @@ public final class WSocketClient {
      */
     public void connect() {
         try {
-            connection = client.open(webSocketUri, new WebSocketIMPL()).get();
+            connection = client.open(WS_URI, new WebSocketIMPL()).get();
         } catch (final Exception e) {
             LOGGER.error(e);
             try {
