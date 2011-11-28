@@ -60,6 +60,9 @@ public final class WSocketClient {
     //public static final String PROTOCOL_LIGHT_IN = "urn:wisebed:ctitestbed:0x1cde@urn:wisebed:node:capability:light";
     public static final String PROTOCOL_LOCK_SCREEN = "urn:ctinetwork:black@urn:ctinetwork:node:capability:lockScreen";
 
+    final WebSocketIMPL lightOutIMPL = new WebSocketIMPL(PROTOCOL_LIGHT_OUT);
+    final WebSocketIMPL lockScreenIMPL = new WebSocketIMPL(PROTOCOL_LOCK_SCREEN);
+
     /**
      * The timer.
      */
@@ -106,18 +109,16 @@ public final class WSocketClient {
             final WebSocketClient clientLightOut = factory.newWebSocketClient();
             clientLightOut.setMaxIdleTime(-1);
             clientLightOut.setProtocol(PROTOCOL_LIGHT_OUT);
+            final WebSocket.Connection connLight = clientLightOut.open(WS_URI, lightOutIMPL).get();
+            connections.add(connLight);
             clients.add(clientLightOut);
 
             final WebSocketClient clientLockScreen = factory.newWebSocketClient();
             clientLockScreen.setMaxIdleTime(-1);
             clientLockScreen.setProtocol(PROTOCOL_LOCK_SCREEN);
+            final WebSocket.Connection connLock = clientLightOut.open(WS_URI, lockScreenIMPL).get();
+            connections.add(connLock);
             clients.add(clientLockScreen);
-
-
-            for (final WebSocketClient client : clients) {
-                final WebSocket.Connection connection = client.open(WS_URI, new WebSocketIMPL(client.getProtocol())).get();
-                connections.add(connection);
-            }
 
         } catch (final Exception e) {
             LOGGER.error(e);
@@ -152,14 +153,23 @@ public final class WSocketClient {
             for (final WebSocketClient client : clients) {
                 if (client.getFactory().isRunning()) {
                     client.getFactory().destroy();
+                    try {
+                        client.getFactory().stop();
+                    } catch (final Exception e) {
+                        LOGGER.error(e);
+                    }
                 }
             }
-            factory.destroy();
-            connections.clear();
-            clients.clear();
+            if (factory.isRunning()) {
+                factory.destroy();
+            }
+
+            factory.stop();
         } catch (final Exception e) {
             LOGGER.error(e);
         }
+        connections.clear();
+        clients.clear();
     }
 
     public static void main(final String[] args) {

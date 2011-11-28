@@ -56,6 +56,8 @@ public final class WSocketClient {
      */
     private static final String PROTOCOL = "urn:wisebed:ctitestbed:0x1ccd@urn:wisebed:node:capability:pir";
 
+
+    private final WebSocketIMPL webSocketIMPL = new WebSocketIMPL();
     /**
      * The timer.
      */
@@ -101,8 +103,8 @@ public final class WSocketClient {
             client = factory.newWebSocketClient();
             client.setMaxIdleTime(-1);
             client.setProtocol(PROTOCOL);
+            connection = client.open(WS_URI, webSocketIMPL).get();
 
-            connection = client.open(WS_URI, new WebSocketIMPL()).get();
         } catch (final Exception e) {
             LOGGER.error(e);
             try {
@@ -131,6 +133,7 @@ public final class WSocketClient {
             if (factory.isRunning()) {
                 factory.destroy();
             }
+            factory.stop();
         } catch (final Exception e) {
             LOGGER.error(e);
         }
