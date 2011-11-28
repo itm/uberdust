@@ -120,9 +120,10 @@ public final class InsertReadingWSocketClient {
 
     /**
      * Main.
+     *
      * @param args args
      */
     public static void main(final String args[]) {
-       InsertReadingWSocketClient.getInstance();
+        InsertReadingWSocketClient.getInstance();
     }
 }

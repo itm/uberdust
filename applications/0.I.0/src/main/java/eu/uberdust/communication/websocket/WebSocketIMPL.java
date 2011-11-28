@@ -34,10 +34,11 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
      */
     @Override
     public final void onMessage(final String data) {
+        if (data.isEmpty()) {
+            return;
+        }
         LOGGER.info(data.split("\t")[1]);
-        /*if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_IN)) {
-            LOGGER.info(data.split("\t")[1]);
-        } else */
+
         if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_OUT)) {
             final Double value = Double.parseDouble(data.split("\t")[1]);
             LOGGER.info("Lum: " + value);
@@ -74,6 +75,9 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     @Override
     public final void onClose(final int closeCode, final String message) {
         LOGGER.info("onClose");
-        System.exit(0);
+        if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_OUT)) {
+            WSocketClient.getInstance().disconnect();
+            WSocketClient.getInstance().connect();
+        }
     }
 }

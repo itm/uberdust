@@ -9,7 +9,6 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Timer;
 
 
@@ -84,6 +83,15 @@ public final class WSocketClient {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("WSocketClient initialized");
         timer = new Timer();
+        connect();
+        timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
+
+    }
+
+    /**
+     * Connects to the WebSocket.
+     */
+    public void connect() {
         try {
             WS_URI = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
             factory = new WebSocketClientFactory();
@@ -93,23 +101,7 @@ public final class WSocketClient {
             client = factory.newWebSocketClient();
             client.setMaxIdleTime(-1);
             client.setProtocol(PROTOCOL);
-            connect();
-            timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
 
-        } catch (final URISyntaxException e) {
-            LOGGER.error(e);
-        } catch (final Exception e) {
-            LOGGER.error(e);
-        }
-
-
-    }
-
-    /**
-     * Connects to the WebSocket.
-     */
-    public void connect() {
-        try {
             connection = client.open(WS_URI, new WebSocketIMPL()).get();
         } catch (final Exception e) {
             LOGGER.error(e);
@@ -123,10 +115,26 @@ public final class WSocketClient {
     }
 
     public void ping() {
+        if (!connection.isOpen())
+            return;
+
         try {
             connection.sendMessage("ping");
         } catch (final IOException e) {
             LOGGER.error(e);
         }
     }
+
+    public void disconnect() {
+        try {
+            connection.disconnect();
+            if (factory.isRunning()) {
+                factory.destroy();
+            }
+        } catch (final Exception e) {
+            LOGGER.error(e);
+        }
+    }
+
+
 }

@@ -1,7 +1,6 @@
 package eu.uberdust.communication.websocket;
 
 import eu.uberdust.communication.websocket.tasks.PingTask;
-import eu.uberdust.lights.LightController;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -10,7 +9,6 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -91,16 +89,19 @@ public final class WSocketClient {
         timer = new Timer();
         clients = new ArrayList<WebSocketClient>();
         connections = new ArrayList<WebSocket.Connection>();
+        connect();
+        timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
+    }
+
+    /**
+     * Connects to the WebSocket.
+     */
+    public void connect() {
         try {
             WS_URI = new URI("ws://uberdust.cti.gr:80/lastreading.ws");
             factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
-
-            /*final WebSocketClient clientLightIn = factory.newWebSocketClient();
-            clientLightIn.setMaxIdleTime(-1);
-            clientLightIn.setProtocol(PROTOCOL_LIGHT_IN);
-            clients.add(clientLightIn);*/
 
             final WebSocketClient clientLightOut = factory.newWebSocketClient();
             clientLightOut.setMaxIdleTime(-1);
@@ -112,26 +113,12 @@ public final class WSocketClient {
             clientLockScreen.setProtocol(PROTOCOL_LOCK_SCREEN);
             clients.add(clientLockScreen);
 
-            connect();
-        } catch (final URISyntaxException e) {
-            LOGGER.error(e);
-        } catch (final Exception e) {
-            LOGGER.error(e);
-        }
 
-
-    }
-
-    /**
-     * Connects to the WebSocket.
-     */
-    public void connect() {
-        try {
             for (final WebSocketClient client : clients) {
                 final WebSocket.Connection connection = client.open(WS_URI, new WebSocketIMPL(client.getProtocol())).get();
                 connections.add(connection);
             }
-            timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
+
         } catch (final Exception e) {
             LOGGER.error(e);
             try {
@@ -146,14 +133,36 @@ public final class WSocketClient {
     public void ping() {
         try {
             for (WebSocket.Connection connection : connections) {
-                connection.sendMessage("ping");
+                if (connection.isOpen()) {
+                    connection.sendMessage("ping");
+                }
             }
         } catch (final IOException e) {
             LOGGER.error(e);
         }
     }
 
-    public static void main(final String[] args){
+    public void disconnect() {
+        try {
+            for (final WebSocket.Connection connection : connections) {
+                if (connection.isOpen()) {
+                    connection.disconnect();
+                }
+            }
+            for (final WebSocketClient client : clients) {
+                if (client.getFactory().isRunning()) {
+                    client.getFactory().destroy();
+                }
+            }
+            factory.destroy();
+            connections.clear();
+            clients.clear();
+        } catch (final Exception e) {
+            LOGGER.error(e);
+        }
+    }
+
+    public static void main(final String[] args) {
         WSocketClient.getInstance();
     }
 }
