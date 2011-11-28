@@ -1,6 +1,5 @@
 package eu.uberdust.communication.websocket;
 
-import eu.uberdust.communication.websocket.tasks.PingTask;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -10,14 +9,16 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Timer;
 
+/**
+ * Insert New Reading Web Socket Client.
+ */
 public final class InsertReadingWSocketClient {
 
     /**
      * Static Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(WSocketClient.class);
+    private static final Logger LOGGER = Logger.getLogger(InsertReadingWSocketClient.class);
 
     /**
      * static instance(ourInstance) initialized as null.
@@ -28,11 +29,6 @@ public final class InsertReadingWSocketClient {
      * Static WebSocket URI.
      */
     private URI webSocketUri;
-
-    /**
-     * The WebSocketClientFactory.
-     */
-    private WebSocketClientFactory factory;
 
     /**
      * The WebSocketClient.
@@ -70,19 +66,16 @@ public final class InsertReadingWSocketClient {
     private InsertReadingWSocketClient() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("WSocketClient initialized");
-        Timer timer = new Timer();
         try {
             webSocketUri = new URI("ws://uberdust.cti.gr:80/insertreading.ws");
-            factory = new WebSocketClientFactory();
+            WebSocketClientFactory factory = new WebSocketClientFactory();
             factory.setBufferSize(4096);
             factory.start();
-
             client = factory.newWebSocketClient();
             client.setMaxIdleTime(-1);
             client.setProtocol(PROTOCOL);
             connect();
-            timer.scheduleAtFixedRate(new PingTask(timer), PingTask.DELAY, PingTask.DELAY);
-
+            connection.sendMessage("Connection");
         } catch (final URISyntaxException e) {
             LOGGER.error(e);
         } catch (final Exception e) {

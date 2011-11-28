@@ -63,6 +63,14 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     public void onReadText(final WebSocketContext context, final Reader is) throws IOException {
         super.onReadText(context, is);
         LOGGER.info("onReadText()");
+        StringBuilder stringBuilder = new StringBuilder();
+        char[] buf = new char[1024];
+        int numRead;
+        while((numRead=is.read(buf)) != -1) {
+            stringBuilder.append(buf, 0, numRead);
+        }
+        String data = stringBuilder.toString();
+        LOGGER.info("onReadText() : " + data);
     }
 
     /**
