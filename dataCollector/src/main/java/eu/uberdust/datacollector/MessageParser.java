@@ -185,6 +185,7 @@ public class MessageParser implements Runnable {                   // NOPMD
      */
     private void commitLinkReading(final String sourceId, final String targetId, final int status) {
         final String testbedUrnPrefix = "urn:wisebed:ctitestbed:";
+        final int testbedId = 1;
         final String testbedCapPrefix = "status";
         final String sourceUrn = testbedUrnPrefix + sourceId;
         final String targetUrn = testbedUrnPrefix + targetId;
@@ -195,7 +196,7 @@ public class MessageParser implements Runnable {                   // NOPMD
         try {
             // insert reading
             LinkReadingController.getInstance().insertReading(sourceUrn, targetUrn,
-                    testbedCapPrefix, testbedUrnPrefix, status, 0, new java.util.Date());
+                    testbedCapPrefix, testbedId, status, 0, new java.util.Date());
             transaction.commit();
             LOGGER.debug("Added Link " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         } catch (Exception e) {

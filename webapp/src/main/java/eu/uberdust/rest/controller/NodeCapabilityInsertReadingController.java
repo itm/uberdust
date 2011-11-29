@@ -109,7 +109,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         timestamp = new Date(Long.parseLong(command.getTimestamp()));
 
         // insert reading
-        nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getUrnPrefix(),
+        nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getId(),
                 reading, timestamp);
 
         response.setContentType("text/plain");

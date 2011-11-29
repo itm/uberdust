@@ -2,13 +2,18 @@ package eu.uberdust.websockets.insert;
 
 import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
+import eu.wisebed.wisedb.controller.LinkReadingController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
+import eu.wisebed.wisedb.exception.UnknownTestbedException;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.Date;
 
 /**
  * Insert Reading Web Socket Listener.
@@ -19,6 +24,11 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(InsertReadingWebSocketListener.class);
+
+    /**
+     *
+     */
+    private static final String DELIMITER = "@";
 
     /**
      * Constructor.
@@ -34,7 +44,6 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onStart(final WebSocketContext context) throws IOException {
-        super.onStart(context);
         LOGGER.info("onStart()");
     }
 
@@ -42,35 +51,78 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * On read binary.
      *
      * @param context WebSocketContext instance.
-     * @param is InputStream instance.
+     * @param is      InputStream instance.
      * @throws IOException IOException exception.
      */
-    public void onReadBinary(final WebSocketContext context, final  InputStream is) throws IOException {
-        super.onReadBinary(context, is);
+    public void onReadBinary(final WebSocketContext context, final InputStream is) throws IOException {
         LOGGER.info("onReadBinary()");
         StringWriter writer = new StringWriter();
         IOUtils.copy(is, writer, "UTF-8");
-        LOGGER.info("onReadBinary(): " + writer.toString());
+        final String receivedMessage = writer.toString();
+        LOGGER.info("onReadBinary(): " + receivedMessage);
+        String[] messageParts = receivedMessage.split(DELIMITER);
+        final String classOfReading = messageParts[0];
+
+        if (classOfReading.contains("NodeReading")) {
+            // node reading incoming
+
+            final int testbedId = Integer.parseInt(messageParts[1]);
+            final String nodeId = messageParts[2];
+            final String capabilityId = messageParts[3];
+            final long timestamp = Long.parseLong(messageParts[4]);
+            final double readingValue = Double.parseDouble(messageParts[5]);
+
+            try {
+                NodeReadingController.getInstance().insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
+                PrintWriter printWriter = context.startTextMessage();
+                printWriter.write("OK");
+                printWriter.close();
+            } catch (UnknownTestbedException e) {
+                PrintWriter printWriter = context.startTextMessage();
+                printWriter.write("Unknown Testbed Exception . Closing WebSocket");
+                printWriter.close();
+                context.close();
+            }
+        } else if (classOfReading.contains("LinkReading")) {
+            // link reading incoming
+
+            final int testbedId = Integer.parseInt(messageParts[1]);
+            final String sourceNodeId = messageParts[2];
+            final String targetNodeId = messageParts[3];
+            final String capabilityId = messageParts[4];
+            final long timestamp = Long.parseLong(messageParts[5]);
+            final double readingValue = Double.parseDouble(messageParts[6]);
+
+            try {
+                LinkReadingController.getInstance().insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
+                PrintWriter printWriter = context.startTextMessage();
+                printWriter.write("OK");
+                printWriter.close();
+            } catch (UnknownTestbedException e) {
+                PrintWriter printWriter = context.startTextMessage();
+                printWriter.write("Unknown Testbed Exception . Closing WebSocket");
+                printWriter.close();
+                context.close();
+            }
+
+        } else {
+            // unknown stuff incoming
+            PrintWriter printWriter = context.startTextMessage();
+            printWriter.write("Neither Node nor link reading. Closing WebSocket");
+            printWriter.close();
+            context.close();
+        }
     }
 
     /**
      * On read text.
      *
      * @param context WebSocketContext instance.
-     * @param is InputStream instance.
+     * @param is      InputStream instance.
      * @throws IOException IOException exception.
      */
     public void onReadText(final WebSocketContext context, final Reader is) throws IOException {
-        super.onReadText(context, is);
         LOGGER.info("onReadText()");
-        StringBuilder stringBuilder = new StringBuilder();
-        char[] buf = new char[1024];
-        int numRead;
-        while((numRead=is.read(buf)) != -1) {
-            stringBuilder.append(buf, 0, numRead);
-        }
-        String data = stringBuilder.toString();
-        LOGGER.info("onReadText() : " + data);
     }
 
     /**
@@ -80,7 +132,6 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onClose(final WebSocketContext context) throws IOException {
-        super.onClose(context);
         LOGGER.info("onClose()");
     }
 
@@ -103,7 +154,6 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onTimeout(final WebSocketContext context) throws IOException {
-        super.onTimeout(context);
         LOGGER.info("onTimeout()");
     }
 }

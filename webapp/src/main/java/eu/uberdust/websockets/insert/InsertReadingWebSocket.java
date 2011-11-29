@@ -59,7 +59,6 @@ public final class InsertReadingWebSocket extends GenericServlet
      */
     public ModelAndView handleRequest(final HttpServletRequest servletRequest,
                                       final HttpServletResponse servletResponse) throws ServletException, IOException {
-        LOGGER.info("handleRequest");
 
         servletRequest.getSession().setMaxInactiveInterval(Integer.MAX_VALUE);
 
@@ -95,7 +94,6 @@ public final class InsertReadingWebSocket extends GenericServlet
      */
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {
-        LOGGER.info("service");
         try {
             handleRequest((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
         } catch (Exception ex) {
