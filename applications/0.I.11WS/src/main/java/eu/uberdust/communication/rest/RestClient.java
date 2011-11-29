@@ -74,6 +74,9 @@ public final class RestClient {
             return inputLine.toString();
         } catch (final Exception e) {
             LOGGER.error(e);
+            if(e.getMessage().contains("406")){
+                return "0\t0";
+            }
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
@@ -86,6 +89,8 @@ public final class RestClient {
 
     public static void main(final String[] args) {
         RestClient.getInstance().callRestfulWebService(
-                "http://uberdust.cti.gr/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,1");
+                "http://uberdust.cti.gr/rest/sendCommand/destination/urn:wisebed:ctitestbed:0x494/payload/1,ff,0");
+
+        RestClient.getInstance().callRestfulWebService("http://uberdust.cti.gr/lastreading.ws");
     }
 }

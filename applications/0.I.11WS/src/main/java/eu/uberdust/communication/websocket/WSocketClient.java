@@ -1,5 +1,6 @@
 package eu.uberdust.communication.websocket;
 
+import eu.uberdust.communication.rest.RestClient;
 import eu.uberdust.communication.websocket.tasks.PingTask;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -140,4 +141,7 @@ public final class WSocketClient {
     }
 
 
+    public void restPing() {
+        RestClient.getInstance().callRestfulWebService("http://uberdust.cti.gr/lastreading.ws");
+    }
 }

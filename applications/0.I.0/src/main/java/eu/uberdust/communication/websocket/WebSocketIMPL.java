@@ -77,6 +77,7 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
         LOGGER.info("onClose");
         if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_OUT)) {
             WSocketClient.getInstance().disconnect();
+            WSocketClient.getInstance().restPing();
             WSocketClient.getInstance().connect();
         }
     }
