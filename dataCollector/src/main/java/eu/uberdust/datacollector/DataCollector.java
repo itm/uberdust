@@ -180,7 +180,6 @@ public class DataCollector {
          * @param toString
          */
         private void parse(final String toString) {
-            LOGGER.info(toString);
             executorService.submit(new MessageParser(toString, sensors, true));
         }
     };
