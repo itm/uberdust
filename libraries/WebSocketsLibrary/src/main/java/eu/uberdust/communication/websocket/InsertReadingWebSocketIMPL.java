@@ -4,6 +4,8 @@ package eu.uberdust.communication.websocket;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.WebSocket;
 
+import java.util.Arrays;
+
 
 /**
  * Implementation of InsertReading WebSocket.
@@ -24,7 +26,7 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
      */
     @Override
     public void onMessage(final byte[] data, final int offset, final int length) {
-        LOGGER.info("Data " + data.toString());
+        LOGGER.info("Data " + Arrays.toString(data));
         LOGGER.info("offset " + offset);
         LOGGER.info("length " + length);
     }
@@ -35,7 +37,7 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
      */
     @Override
     public void onMessage(final String data) {
-        LOGGER.info("Data " + data.toString());
+        LOGGER.info("Data " + data);
     }
 
     /**

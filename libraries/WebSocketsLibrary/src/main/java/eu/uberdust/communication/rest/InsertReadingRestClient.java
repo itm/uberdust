@@ -50,7 +50,7 @@ public final class InsertReadingRestClient {
      *
      * @param address , the address URL of service.
      * @return this call result.
-     * @throws IOException an IOException exception.
+     * @throws java.io.IOException an IOException exception.
      */
     public String callRestfulWebService(final String address) throws IOException {
 

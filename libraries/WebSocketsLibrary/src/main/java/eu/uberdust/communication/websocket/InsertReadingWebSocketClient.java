@@ -77,10 +77,10 @@ public final class InsertReadingWebSocketClient {
      * Connects to the WebSocket.
      *
      * @param webSocketUrl WebSocket URL.
-     * @throws IOException an IOException exception.
-     * @throws URISyntaxException  a URI SyntaxException.
+     * @throws java.io.IOException an IOException exception.
+     * @throws java.net.URISyntaxException  a URI SyntaxException.
      * @throws InterruptedException InterruptedException exception.
-     * @throws ExecutionException ExecutionException exception.
+     * @throws java.util.concurrent.ExecutionException ExecutionException exception.
      */
     public void connect(final String webSocketUrl) throws IOException, URISyntaxException,
             ExecutionException, InterruptedException {
@@ -91,7 +91,7 @@ public final class InsertReadingWebSocketClient {
      * Send Node Reading.
      *
      * @param nodeReading a NodeReading instance.
-     * @throws IOException an IOException exception.
+     * @throws java.io.IOException an IOException exception.
      */
     public void sendNodeReading(final NodeReading nodeReading) throws IOException {
         sendMessage(nodeReading.toString());
@@ -101,7 +101,7 @@ public final class InsertReadingWebSocketClient {
      * Send Link Reading.
      *
      * @param linkReading a NodeReading instance.
-     * @throws IOException an IOException exception.
+     * @throws java.io.IOException an IOException exception.
      */
     public void setLinkReading(final LinkReading linkReading) throws IOException {
         sendMessage(linkReading.toString());
@@ -110,7 +110,7 @@ public final class InsertReadingWebSocketClient {
     /**
      * Send message over the WebSocket.
      * @param message a string message.
-     * @throws IOException an IOException.
+     * @throws java.io.IOException an IOException.
      */
     private void sendMessage(final String message) throws IOException {
         byte[] bytes = message.getBytes();
