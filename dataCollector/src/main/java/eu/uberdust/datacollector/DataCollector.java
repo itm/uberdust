@@ -4,6 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
+import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
 import eu.wisebed.wisedb.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -43,6 +44,10 @@ public class DataCollector {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
+    /**
+     * WebSocket address
+     */
+    private static final String WS_URL = "ws://carrot.cti.gr:8080/uberdust/insertreading.ws";
     /**
      * Application property file name.
      */
@@ -93,7 +98,15 @@ public class DataCollector {
         lastTime = System.currentTimeMillis();
 
         executorService = Executors.newCachedThreadPool();
+//        connectWS();
+    }
 
+    private void connectWS() {
+        try {
+            InsertReadingWebSocketClient.getInstance().connect(WS_URL);
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     /**
@@ -178,7 +191,8 @@ public class DataCollector {
          * @param toString
          */
         private void parse(final String toString) {
-            executorService.submit(new MessageParser(toString, sensors));
+            LOGGER.info(toString);
+            executorService.submit(new MessageParser(toString, sensors, true));
         }
     };
 

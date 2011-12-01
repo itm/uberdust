@@ -15,8 +15,8 @@ public class TestbedListener {
     public static void main(final String[] args) {
         final DataCollector dataCollector = new DataCollector();
         dataCollector.start();
-        TestbedController.getInstance();
-        new NodeFlasherController();
+//        TestbedController.getInstance();
+        //new NodeFlasherController();
 
     }
 }

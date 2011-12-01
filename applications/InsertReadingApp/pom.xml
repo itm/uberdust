@@ -92,7 +92,7 @@
     </build>
 
 
-        <distributionManagement>
+    <distributionManagement>
         <!-- use the following if you're not using a snapshot version. -->
         <repository>
             <id>repository.ru1</id>
