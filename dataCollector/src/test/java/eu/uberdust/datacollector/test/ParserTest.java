@@ -59,21 +59,21 @@ public class ParserTest
         }
         long millis = System.currentTimeMillis();
         String eventString = "binaryData:h\\000id::0x1ccd EM_E 0 ";
-        MessageParser messageParser = new MessageParser(eventString, sensors, false);
+        MessageParser messageParser = new MessageParser(eventString, sensors);
         messageParser.setLevel(Level.ALL);
         messageParser.parse();
         LOGGER.debug("Parsing needs "+(System.currentTimeMillis()-millis)+" millis");
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c EM_L 165 ";
-        messageParser = new MessageParser(eventString, sensors, false);
+        messageParser = new MessageParser(eventString, sensors);
         messageParser.parse();
         LOGGER.debug("Parsing needs "+(System.currentTimeMillis()-millis)+" millis");
 
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c RL4 0 ";
-        messageParser = new MessageParser(eventString, sensors, false);
+        messageParser = new MessageParser(eventString, sensors);
         messageParser.parse();
         LOGGER.debug("Parsing needs "+(System.currentTimeMillis()-millis)+" millis");
 
