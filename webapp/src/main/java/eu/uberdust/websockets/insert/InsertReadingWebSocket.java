@@ -3,6 +3,7 @@ package eu.uberdust.websockets.insert;
 import com.caucho.websocket.WebSocketServletRequest;
 import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
+import eu.wisebed.wisedb.controller.TestbedController;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -43,9 +44,14 @@ public final class InsertReadingWebSocket extends GenericServlet
     private transient LinkReadingController linkReadingManager;
 
     /**
+     * Testbed persistence manager.
+     */
+    private transient TestbedController testbedManager;
+
+    /**
      * Insert Reading Web Socket Listener.
      */
-    private InsertReadingWebSocketListener listener = null;
+    private transient InsertReadingWebSocketListener listener;
 
 
     /**
@@ -62,6 +68,7 @@ public final class InsertReadingWebSocket extends GenericServlet
      */
     public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
         this.nodeReadingManager = nodeReadingManager;
+        LOGGER.info(this.nodeReadingManager.toString());
     }
 
     /**
@@ -71,24 +78,29 @@ public final class InsertReadingWebSocket extends GenericServlet
      */
     public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
         this.linkReadingManager = linkReadingManager;
+        LOGGER.info(this.linkReadingManager.toString());
     }
 
     /**
-     * Returns Web Socket listener.
+     * Sets testbed persistence manager.
      *
-     * @return listener web socket listener.
+     * @param testbedManager testbed persistence manager.
      */
-    public InsertReadingWebSocketListener getListener() {
-        return listener;
+    public void setTestbedManager(final TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
+        LOGGER.info(this.testbedManager.list().size());
     }
 
     /**
      * Sets web socket listener.
+     *
      * @param listener web socket listener.
      */
     public void setListener(final InsertReadingWebSocketListener listener) {
         this.listener = listener;
+        LOGGER.info(this.listener.toString());
     }
+
 
     /**
      * Handles the request.
@@ -101,7 +113,7 @@ public final class InsertReadingWebSocket extends GenericServlet
      */
     public ModelAndView handleRequest(final HttpServletRequest servletRequest,
                                       final HttpServletResponse servletResponse) throws ServletException, IOException {
-
+        LOGGER.info("handleRequest()");
         /**
          * Protocol definition.
          */
@@ -118,20 +130,13 @@ public final class InsertReadingWebSocket extends GenericServlet
             return null;
         }
 
-        // if listener is not defined initialize it
-        if (listener == null) {
-            listener = new InsertReadingWebSocketListener();
-
-            // also adding peristence managers for inserting readings
-            listener.setNodeReadingManager(nodeReadingManager);
-            listener.setLinkReadingManager(linkReadingManager);
-        }
-
         servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
 
+        LOGGER.info("handleRequest() -- 1");
         final WebSocketServletRequest wsRequest = (WebSocketServletRequest) servletRequest;
         wsRequest.startWebSocket(listener);
 
+        LOGGER.info("handleRequest() -- 2");
         return null;
     }
 
@@ -146,9 +151,11 @@ public final class InsertReadingWebSocket extends GenericServlet
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {
         try {
+            LOGGER.info("service()");
             handleRequest((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
         } catch (Exception ex) {
             LOGGER.fatal(ex);
+            ex.printStackTrace();
         }
     }
 }

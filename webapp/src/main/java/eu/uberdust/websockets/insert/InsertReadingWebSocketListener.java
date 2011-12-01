@@ -4,6 +4,7 @@ import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
 import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
+import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.exception.UnknownTestbedException;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -41,6 +42,11 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     private transient LinkReadingController linkReadingManager;
 
     /**
+     * Testbed persistence manage.
+     */
+    private transient TestbedController testbedManager;
+
+    /**
      * Constructor.
      */
     public InsertReadingWebSocketListener() {
@@ -54,6 +60,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      */
     public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
         this.nodeReadingManager = nodeReadingManager;
+        LOGGER.info(this.nodeReadingManager.toString());
     }
 
     /**
@@ -63,6 +70,17 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      */
     public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
         this.linkReadingManager = linkReadingManager;
+        LOGGER.info(this.linkReadingManager.toString());
+    }
+
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
+    public void setTestbedManager(final TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
+        LOGGER.info(this.testbedManager.list().size());
     }
 
     /**
@@ -72,7 +90,10 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onStart(final WebSocketContext context) throws IOException {
-        LOGGER.info("onStart()");
+        super.onStart(context);
+        LOGGER.info("onStart() ()");
+        int testbedsNumber = testbedManager.list().size();
+        LOGGER.info("onStart() (" + testbedsNumber + ")");
     }
 
     /**
@@ -102,10 +123,10 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
             try {
                 LOGGER.info("NodeReading");
-                LOGGER.info("adding");
+                LOGGER.info("adding insertReading(" + nodeId + "," + capabilityId + "," +  testbedId + "," + readingValue + "," + timestamp + ")");
                 nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
-                PrintWriter printWriter = context.startTextMessage();
                 LOGGER.info("added . Sent OK back");
+                PrintWriter printWriter = context.startTextMessage();
                 printWriter.write("OK");
                 printWriter.close();
             } catch (UnknownTestbedException e) {
@@ -125,8 +146,9 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
             try {
                 LOGGER.info("LinkReading");
-                LOGGER.info("adding");
+                LOGGER.info("adding insertReading(" + sourceNodeId + "," + targetNodeId + "," + capabilityId + "," +  testbedId + "," + readingValue + "," + timestamp + ")");
                 linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
+                LOGGER.info("added . Sent OK back");
                 PrintWriter printWriter = context.startTextMessage();
                 printWriter.write("OK");
                 printWriter.close();

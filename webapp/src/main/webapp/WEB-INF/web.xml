@@ -80,4 +80,10 @@
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>openSessionInViewFilter</filter-name>
+        <url-pattern>/*.ws</url-pattern>
+    </filter-mapping>
+
 </web-app>
