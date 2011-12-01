@@ -34,53 +34,23 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     /**
      * NodeReading peristence manager.
      */
-    private transient NodeReadingController nodeReadingManager;
+    private final NodeReadingController nodeReadingManager;
 
     /**
      * LinkReading peristence manager.
      */
-    private transient LinkReadingController linkReadingManager;
+    private final LinkReadingController linkReadingManager;
 
     /**
      * Testbed persistence manage.
      */
-    private transient TestbedController testbedManager;
+    private final TestbedController testbedManager;
 
-    /**
-     * Constructor.
-     */
-    public InsertReadingWebSocketListener() {
-        //empty constructor.
-    }
 
-    /**
-     * Sets node reading persistence manager.
-     *
-     * @param nodeReadingManager node reading persistence manager.
-     */
-    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
+    public InsertReadingWebSocketListener(NodeReadingController nodeReadingManager, LinkReadingController linkReadingManager, TestbedController testbedManager) {
         this.nodeReadingManager = nodeReadingManager;
-        LOGGER.info(this.nodeReadingManager.toString());
-    }
-
-    /**
-     * Sets link reading persistence manager.
-     *
-     * @param linkReadingManager link reading persistence manager.
-     */
-    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
         this.linkReadingManager = linkReadingManager;
-        LOGGER.info(this.linkReadingManager.toString());
-    }
-
-    /**
-     * Sets testbed persistence manager.
-     *
-     * @param testbedManager testbed persistence manager.
-     */
-    public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
-        LOGGER.info(this.testbedManager.list().size());
     }
 
     /**
@@ -123,7 +93,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
             try {
                 LOGGER.info("NodeReading");
-                LOGGER.info("adding insertReading(" + nodeId + "," + capabilityId + "," +  testbedId + "," + readingValue + "," + timestamp + ")");
+                LOGGER.info("adding insertReading(" + nodeId + "," + capabilityId + "," + testbedId + "," + readingValue + "," + timestamp + ")");
                 nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
                 LOGGER.info("added . Sent OK back");
                 PrintWriter printWriter = context.startTextMessage();
@@ -146,7 +116,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
             try {
                 LOGGER.info("LinkReading");
-                LOGGER.info("adding insertReading(" + sourceNodeId + "," + targetNodeId + "," + capabilityId + "," +  testbedId + "," + readingValue + "," + timestamp + ")");
+                LOGGER.info("adding insertReading(" + sourceNodeId + "," + targetNodeId + "," + capabilityId + "," + testbedId + "," + readingValue + "," + timestamp + ")");
                 linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
                 LOGGER.info("added . Sent OK back");
                 PrintWriter printWriter = context.startTextMessage();
@@ -161,7 +131,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
         } else {
             // unknown stuff incoming
-             LOGGER.info("UNKNOWN");
+            LOGGER.info("UNKNOWN");
             PrintWriter printWriter = context.startTextMessage();
             printWriter.write("Neither Node nor link reading. Closing WebSocket");
             printWriter.close();

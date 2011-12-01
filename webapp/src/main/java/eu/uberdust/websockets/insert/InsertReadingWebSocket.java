@@ -36,22 +36,22 @@ public final class InsertReadingWebSocket extends GenericServlet
     /**
      * NodeReading persistence manager.
      */
-    private transient NodeReadingController nodeReadingManager;
+    private NodeReadingController nodeReadingManager;
 
     /**
      * LinkReading persistence manager.
      */
-    private transient LinkReadingController linkReadingManager;
+    private LinkReadingController linkReadingManager;
 
     /**
      * Testbed persistence manager.
      */
-    private transient TestbedController testbedManager;
+    private TestbedController testbedManager;
 
     /**
      * Insert Reading Web Socket Listener.
      */
-    private transient InsertReadingWebSocketListener listener;
+    private InsertReadingWebSocketListener listener = null;
 
 
     /**
@@ -92,17 +92,6 @@ public final class InsertReadingWebSocket extends GenericServlet
     }
 
     /**
-     * Sets web socket listener.
-     *
-     * @param listener web socket listener.
-     */
-    public void setListener(final InsertReadingWebSocketListener listener) {
-        this.listener = listener;
-        LOGGER.info(this.listener.toString());
-    }
-
-
-    /**
      * Handles the request.
      *
      * @param servletRequest  the servletRequest.
@@ -132,6 +121,9 @@ public final class InsertReadingWebSocket extends GenericServlet
 
         servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
 
+        if (listener == null) {
+            listener = new InsertReadingWebSocketListener(nodeReadingManager, linkReadingManager, testbedManager);
+        }
         LOGGER.info("handleRequest() -- 1");
         final WebSocketServletRequest wsRequest = (WebSocketServletRequest) servletRequest;
         wsRequest.startWebSocket(listener);
