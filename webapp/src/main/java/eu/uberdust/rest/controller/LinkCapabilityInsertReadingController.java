@@ -36,7 +36,7 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
     /**
      * Looger.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(LinkCapabilityInsertReadingController.class);
 
     /**
      * Sets testbed persistence manager.

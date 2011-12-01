@@ -72,6 +72,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*/capability/*/wiseml/limit/*">nodeCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading">nodeCapabilityLastReadingController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/latestreading/json">nodeCapabilityJsonLastReadingController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">
                     nodeCapabilityInsertReadingController
                 </prop>
@@ -85,6 +86,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/link/*/*/capability/*/chart">linkCapabilityChartController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/wiseml">linkCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/lastreading">linkCapabilityLastReadingController</prop>
+                <prop key="GET /testbed/*/link/*/*/capability/*/latestreading/json">linkCapabilityJsonLastReadingController</prop>
                 -->
                 <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*">linkCapabilityInsertReadingController</prop>
 
@@ -408,6 +410,17 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="capabilityManager" ref="capabilityManager"/>
         <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/latestreading"/>
+    </bean>
+
+    <!-- Node-Capability JSON Last Reading Contorller -->
+    <bean name="nodeCapabilityJsonLastReadingController"
+            class="eu.uberdust.rest.controller.NodeCapabilityLatestJSONLatestReadingController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCapabilityCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/latestreading/json"/>
     </bean>
 
     <!-- Node-Capability Controller Insert Reading -->

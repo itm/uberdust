@@ -67,7 +67,7 @@
                         </td>
                         <td>
                             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading"/>">Latest
-                                Reading</a>
+                                Reading</a>(<a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading/json"/>">JSON</a>)
                         </td>
                         <td>
                             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart"/>">Chart</a>
