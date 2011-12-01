@@ -94,7 +94,6 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         LOGGER.info(classOfReading);
         if (classOfReading.contains("NodeReading")) {
             // node reading incoming
-           LOGGER.info("NodeReading");
             final int testbedId = Integer.parseInt(messageParts[1]);
             final String nodeId = messageParts[2];
             final String capabilityId = messageParts[3];
@@ -102,8 +101,11 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             final double readingValue = Double.parseDouble(messageParts[5]);
 
             try {
+                LOGGER.info("NodeReading");
+                LOGGER.info("adding");
                 nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
                 PrintWriter printWriter = context.startTextMessage();
+                LOGGER.info("added . Sent OK back");
                 printWriter.write("OK");
                 printWriter.close();
             } catch (UnknownTestbedException e) {
@@ -114,7 +116,6 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             }
         } else if (classOfReading.contains("LinkReading")) {
             // link reading incoming
-            LOGGER.info("LinkReading");
             final int testbedId = Integer.parseInt(messageParts[1]);
             final String sourceNodeId = messageParts[2];
             final String targetNodeId = messageParts[3];
@@ -123,6 +124,8 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             final double readingValue = Double.parseDouble(messageParts[6]);
 
             try {
+                LOGGER.info("LinkReading");
+                LOGGER.info("adding");
                 linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
                 PrintWriter printWriter = context.startTextMessage();
                 printWriter.write("OK");
