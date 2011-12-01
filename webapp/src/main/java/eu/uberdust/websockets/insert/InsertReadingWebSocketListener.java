@@ -26,15 +26,43 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     private static final Logger LOGGER = Logger.getLogger(InsertReadingWebSocketListener.class);
 
     /**
-     *
+     * Delimiter.
      */
     private static final String DELIMITER = "@";
+
+    /**
+     * NodeReading peristence manager.
+     */
+    private transient NodeReadingController nodeReadingManager;
+
+    /**
+     * LinkReading peristence manager.
+     */
+    private transient LinkReadingController linkReadingManager;
 
     /**
      * Constructor.
      */
     public InsertReadingWebSocketListener() {
-        super();
+        //empty constructor.
+    }
+
+    /**
+     * Sets node reading persistence manager.
+     *
+     * @param nodeReadingManager node reading persistence manager.
+     */
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
+    /**
+     * Sets link reading persistence manager.
+     *
+     * @param linkReadingManager link reading persistence manager.
+     */
+    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
+        this.linkReadingManager = linkReadingManager;
     }
 
     /**
@@ -73,7 +101,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             final double readingValue = Double.parseDouble(messageParts[5]);
 
             try {
-                NodeReadingController.getInstance().insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
+                nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
                 PrintWriter printWriter = context.startTextMessage();
                 printWriter.write("OK");
                 printWriter.close();
@@ -94,7 +122,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             final double readingValue = Double.parseDouble(messageParts[6]);
 
             try {
-                LinkReadingController.getInstance().insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
+                linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
                 PrintWriter printWriter = context.startTextMessage();
                 printWriter.write("OK");
                 printWriter.close();

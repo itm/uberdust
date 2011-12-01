@@ -1,6 +1,8 @@
 package eu.uberdust.websockets.insert;
 
 import com.caucho.websocket.WebSocketServletRequest;
+import eu.wisebed.wisedb.controller.LinkReadingController;
+import eu.wisebed.wisedb.controller.NodeReadingController;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -31,21 +33,61 @@ public final class InsertReadingWebSocket extends GenericServlet
 
 
     /**
+     * NodeReading persistence manager.
+     */
+    private transient NodeReadingController nodeReadingManager;
+
+    /**
+     * LinkReading persistence manager.
+     */
+    private transient LinkReadingController linkReadingManager;
+
+    /**
      * Insert Reading Web Socket Listener.
      */
     private InsertReadingWebSocketListener listener = null;
 
-    /**
-     * Protocol definition.
-     */
-    private static final String PROTOCOL = "INSERTREADING";
 
     /**
      * Default Constructor.
      */
     public InsertReadingWebSocket() {
-        super();
-        listener = null;
+        // empty constructor.
+    }
+
+    /**
+     * Node Reading persistence manager.
+     *
+     * @param nodeReadingManager node reading persistence manager.
+     */
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
+        this.nodeReadingManager = nodeReadingManager;
+    }
+
+    /**
+     * Link Reading persistence manager.
+     *
+     * @param linkReadingManager persistence manager.
+     */
+    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
+        this.linkReadingManager = linkReadingManager;
+    }
+
+    /**
+     * Returns Web Socket listener.
+     *
+     * @return listener web socket listener.
+     */
+    public InsertReadingWebSocketListener getListener() {
+        return listener;
+    }
+
+    /**
+     * Sets web socket listener.
+     * @param listener web socket listener.
+     */
+    public void setListener(final InsertReadingWebSocketListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -59,6 +101,11 @@ public final class InsertReadingWebSocket extends GenericServlet
      */
     public ModelAndView handleRequest(final HttpServletRequest servletRequest,
                                       final HttpServletResponse servletResponse) throws ServletException, IOException {
+
+        /**
+         * Protocol definition.
+         */
+        final String PROTOCOL = "INSERTREADING";
 
         servletRequest.getSession().setMaxInactiveInterval(Integer.MAX_VALUE);
 
@@ -74,6 +121,10 @@ public final class InsertReadingWebSocket extends GenericServlet
         // if listener is not defined initialize it
         if (listener == null) {
             listener = new InsertReadingWebSocketListener();
+
+            // also adding peristence managers for inserting readings
+            listener.setNodeReadingManager(nodeReadingManager);
+            listener.setLinkReadingManager(linkReadingManager);
         }
 
         servletResponse.setHeader("Sec-WebSocket-Protocol", protocol);
@@ -87,10 +138,10 @@ public final class InsertReadingWebSocket extends GenericServlet
     /**
      * Service Generic method implementation.
      *
-     * @param servletRequest servlet request.
+     * @param servletRequest  servlet request.
      * @param servletResponse servlet response
      * @throws ServletException ServletException exception.
-     * @throws IOException IOException exception.
+     * @throws IOException      IOException exception.
      */
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {

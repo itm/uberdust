@@ -113,6 +113,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!-- Insert Reading Controller WebSocket -->
     <bean id="insertReadingController" class="eu.uberdust.websockets.insert.InsertReadingWebSocket">
+        <property name="nodeReadingManager"  ref="nodeReadingManager"/>
+        <property name="linkReadingManager"  ref="linkReadingManager"/>
     </bean>
 
 

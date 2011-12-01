@@ -33,11 +33,6 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     private final List<WebSocketContext> users = new ArrayList<WebSocketContext>();
 
     /**
-     * The protocol of the specific listener.
-     */
-    private final String thisProtocol;
-
-    /**
      * The Node id..
      */
     private final String nodeID;
@@ -57,7 +52,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
         super();
         this.nodeID = nodeID;
         this.capabilityID = capabilityID;
-        thisProtocol = new StringBuilder().append(nodeID).append(":").append(capabilityID).toString();
+        String thisProtocol = new StringBuilder().append(nodeID).append(":").append(capabilityID).toString();
 
     }
 
