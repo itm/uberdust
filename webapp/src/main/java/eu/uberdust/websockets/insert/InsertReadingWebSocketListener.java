@@ -63,9 +63,10 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         String[] messageParts = receivedMessage.split(DELIMITER);
         final String classOfReading = messageParts[0];
 
+        LOGGER.info(classOfReading);
         if (classOfReading.contains("NodeReading")) {
             // node reading incoming
-
+           LOGGER.info("NodeReading");
             final int testbedId = Integer.parseInt(messageParts[1]);
             final String nodeId = messageParts[2];
             final String capabilityId = messageParts[3];
@@ -85,7 +86,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             }
         } else if (classOfReading.contains("LinkReading")) {
             // link reading incoming
-
+            LOGGER.info("LinkReading");
             final int testbedId = Integer.parseInt(messageParts[1]);
             final String sourceNodeId = messageParts[2];
             final String targetNodeId = messageParts[3];
@@ -107,6 +108,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
         } else {
             // unknown stuff incoming
+             LOGGER.info("UNKNOWN");
             PrintWriter printWriter = context.startTextMessage();
             printWriter.write("Neither Node nor link reading. Closing WebSocket");
             printWriter.close();
