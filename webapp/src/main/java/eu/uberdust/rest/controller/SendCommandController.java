@@ -1,6 +1,5 @@
 package eu.uberdust.rest.controller;
 
-import com.google.protobuf.ByteString;
 import eu.uberdust.command.DestinationPayloadCommand;
 import eu.uberdust.controller.protobuf.CommandProtocol;
 import eu.uberdust.rest.exception.NodeNotFoundException;
@@ -83,7 +82,7 @@ public final class SendCommandController extends AbstractRestController {
         // build command and send it through the socket stream
         final CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
                 .setDestination(command.getDestination())
-                .setPayload(ByteString.copyFromUtf8(command.getPayload()))
+                .setPayload(command.getPayload())
                 .build();
         cmd.writeTo(kkSocket.getOutputStream());
 
