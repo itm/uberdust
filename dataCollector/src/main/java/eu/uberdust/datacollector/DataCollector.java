@@ -47,7 +47,7 @@ public class DataCollector {
     /**
      * WebSocket address
      */
-    private static final String WS_URL = "ws://carrot.cti.gr:8080/uberdust/insertreading.ws";
+    private static final String WS_URL = "ws://uberdust.cti.gr:80/insertreading.ws";
     /**
      * Application property file name.
      */
@@ -98,7 +98,7 @@ public class DataCollector {
         lastTime = System.currentTimeMillis();
 
         executorService = Executors.newCachedThreadPool();
-//        connectWS();
+        connectWS();
     }
 
     private void connectWS() {
