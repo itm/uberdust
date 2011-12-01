@@ -68,8 +68,8 @@ public final class LightController {
     private LightController() {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("Light Controller initialized");
-        lastLumReading = Double.valueOf(RestClient.getInstance().callRestfulWebService("http://uberdust.cti.gr/rest/testbed/1/node/urn:wisebed:ctitestbed:0xca3/capability/urn:wisebed:node:capability:light/latestreading").split("\t")[1]);
-        isScreenLocked = Double.valueOf(RestClient.getInstance().callRestfulWebService("http://uberdust.cti.gr/rest/testbed/3/node/urn:ctinetwork:black/capability/urn:ctinetwork:node:capability:lockScreen/latestreading").split("\t")[1]) == 1;
+        setLastReading(Double.valueOf(RestClient.getInstance().callRestfulWebService("http://uberdust.cti.gr/rest/testbed/1/node/urn:wisebed:ctitestbed:0xca3/capability/urn:wisebed:node:capability:light/latestreading").split("\t")[1]));
+        setScreenLocked(Double.valueOf(RestClient.getInstance().callRestfulWebService("http://uberdust.cti.gr/rest/testbed/3/node/urn:ctinetwork:black/capability/urn:ctinetwork:node:capability:lockScreen/latestreading").split("\t")[1]) == 1);
         LOGGER.info("lastLumReading -- " + lastLumReading);
         LOGGER.info("isScreenLocked -- " + isScreenLocked);
         zone1 = false;
