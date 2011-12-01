@@ -76,7 +76,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                     nodeCapabilityInsertReadingController
                 </prop>
 
-                <!-- Link/Capability Controllers for readings
+                <!-- Link/Capability Controllers for readings -->
+                <!--
                 <prop key="GET /testbed/*/link/*/*/capability/*">linkCapabilityController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/html">linkCapabilityHTMLController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/tabdelimited">linkCapabilityTabDelimitedController</prop>
@@ -84,8 +85,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/link/*/*/capability/*/chart">linkCapabilityChartController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/wiseml">linkCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/lastreading">linkCapabilityLastReadingController</prop>
-                <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*">linkCapabilityInsertReadingController</prop>
                 -->
+                <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*">linkCapabilityInsertReadingController</prop>
 
                 <!-- Send Command Controller -->
                 <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
@@ -417,6 +418,16 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern"
                   value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}"/>
+    </bean>
+
+    <!-- Link-Capability Controller InsertReading -->
+    <bean name="linkCapabilityInsertReadingController"
+            class="eu.uberdust.rest.controller.LinkCapabilityInsertReadingController">
+        <property name="commandClass" value="eu.uberdust.command.LinkCapabilityInsertReadingCommand"/>
+        <property name="testbedManager" ref="testbedManager" />
+        <property name="linkReadingManager" ref="linkReadingManager"/>
+        <property name="uriPattern"
+                  value="/testbed/{testbedId}/link/{sourceId}/{targetId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}"/>
     </bean>
 
     <!-- Send Commmand Controller -->
