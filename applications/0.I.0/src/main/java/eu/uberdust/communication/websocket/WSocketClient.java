@@ -137,6 +137,7 @@ public final class WSocketClient {
             for (WebSocket.Connection connection : connections) {
                 if (connection.isOpen()) {
                     connection.sendMessage("ping");
+                    LOGGER.info("ping()");
                 }
             }
         } catch (final IOException e) {
