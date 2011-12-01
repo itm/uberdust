@@ -1,6 +1,8 @@
 package eu.uberdust;
 
+import eu.uberdust.controller.TestbedController;
 import eu.uberdust.datacollector.DataCollector;
+import eu.uberdust.nodeflasher.NodeFlasherController;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,8 +16,8 @@ public class TestbedListener {
 
         final DataCollector dataCollector = new DataCollector();
         dataCollector.start();
-//        TestbedController.getInstance();
-        //new NodeFlasherController();
+        TestbedController.getInstance();
+        new NodeFlasherController();
 
     }
 }

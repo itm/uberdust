@@ -68,7 +68,7 @@ public final class InsertReadingMainApp {
          * WebSocket Call
          */
 
-        final String webSocketUrl = "ws://carrot.cti.gr:8080/uberdust/insertreading.ws";
+        final String webSocketUrl = "ws://uberdust.cti.gr:80/insertreading.ws";
 
         // insert node reading using WebSockets
         LOGGER.info("Calling WebSocket at (" + webSocketUrl + ") connecting");
