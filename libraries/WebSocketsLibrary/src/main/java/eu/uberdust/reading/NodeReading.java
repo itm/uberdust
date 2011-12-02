@@ -1,4 +1,4 @@
-package eu.uberdust.eu.uberdust.reading;
+package eu.uberdust.reading;
 
 import java.io.Serializable;
 
