@@ -45,7 +45,6 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     private LinkReadingController linkReadingManager;
 
 
-
     /**
      * Constructor.
      */
@@ -55,13 +54,17 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
 
     /**
      * Returns singleton instance.
+     *
      * @return singleton instance.
      */
     public static InsertReadingWebSocketListener getInstance() {
-        if (ourInstance == null) {
-            ourInstance = new InsertReadingWebSocketListener();
+        synchronized (InsertReadingWebSocketListener.class) {
+
+            if (ourInstance == null) {
+                ourInstance = new InsertReadingWebSocketListener();
+            }
+            return ourInstance;
         }
-        return ourInstance;
     }
 
     /**
@@ -154,6 +157,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      */
     public void onReadText(final WebSocketContext context, final Reader is) throws IOException {
         LOGGER.info("onReadText()");
+        super.onReadText(context, is);
     }
 
     /**

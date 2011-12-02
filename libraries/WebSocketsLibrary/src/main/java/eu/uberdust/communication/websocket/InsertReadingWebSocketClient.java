@@ -1,5 +1,6 @@
 package eu.uberdust.communication.websocket;
 
+import eu.uberdust.communication.websocket.task.PingTask;
 import eu.uberdust.reading.LinkReading;
 import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
@@ -10,6 +11,7 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -34,6 +36,11 @@ public final class InsertReadingWebSocketClient {
     private static final String PROTOCOL = "INSERTREADING";
 
     /**
+     * Timer
+     */
+    private Timer timer;
+
+    /**
      * The WebSocketClient.
      */
     private WebSocketClient client;
@@ -53,9 +60,8 @@ public final class InsertReadingWebSocketClient {
      * or the first access to WSocketClient.ourInstance, not before.
      *
      * @return ourInstance
-     * @throws Exception an Exception exception.
      */
-    public static InsertReadingWebSocketClient getInstance() throws Exception {
+    public static InsertReadingWebSocketClient getInstance() {
         synchronized (InsertReadingWebSocketClient.class) {
             if (ourInstance == null) {
                 ourInstance = new InsertReadingWebSocketClient();
@@ -66,16 +72,18 @@ public final class InsertReadingWebSocketClient {
 
     /**
      * Private constructor suppresses generation of a (public) default constructor.
-     *
-     * @throws Exception an Exception exception
      */
-    private InsertReadingWebSocketClient() throws Exception {
+    private InsertReadingWebSocketClient() {
         factory = new WebSocketClientFactory();
         factory.setBufferSize(4096);
-        factory.start();
-        client = factory.newWebSocketClient();
-        client.setMaxIdleTime(-1);
-        client.setProtocol(PROTOCOL);
+        try {
+            factory.start();
+            client = factory.newWebSocketClient();
+            client.setMaxIdleTime(-1);
+            client.setProtocol(PROTOCOL);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
     }
 
     /**
@@ -90,7 +98,20 @@ public final class InsertReadingWebSocketClient {
      */
     public void connect(final String webSocketUrl) throws IOException, URISyntaxException,
             ExecutionException, InterruptedException {
-        connection = client.open(new URI(webSocketUrl), new InsertReadingWebSocketIMPL()).get();
+        try {
+            // open connection
+            connection = client.open(new URI(webSocketUrl), new InsertReadingWebSocketIMPL()).get();
+            startPingingTask();
+        } catch (final Exception e) {
+            // in case of exception keep trying to make connection after 2 seconds
+            LOGGER.error(e);
+            try {
+                Thread.sleep(2000);
+            } catch (final InterruptedException e1) {
+                LOGGER.error(e1);
+            }
+            connect(webSocketUrl);
+        }
     }
 
     /**
@@ -114,14 +135,54 @@ public final class InsertReadingWebSocketClient {
     }
 
     /**
-     * Send message over the WebSocket.
+     * Send message over the WebSocket as binary data.
      *
      * @param message a string message.
      * @throws java.io.IOException an IOException.
      */
     private void sendMessage(final String message) throws IOException {
+
+        // if connection is not opened do nothing
+        if (!connection.isOpen()) {
+            return;
+        }
+
         byte[] bytes = message.getBytes();
         connection.sendMessage(bytes, 0, bytes.length);
+    }
+
+    /**
+     * Start pinging task.
+     */
+    private void startPingingTask() {
+        if (timer == null) {
+            timer = new Timer();
+        }
+        timer.scheduleAtFixedRate(new PingTask(), PingTask.DELAY, PingTask.DELAY);
+    }
+
+    /**
+     * Stop pinging task.
+     */
+    private void stopPingingTask() {
+        timer.cancel();
+    }
+
+    /**
+     * Send PING message as string data to keep connection alive.
+     */
+    public void ping() {
+
+        // if connection is not opened do nothing
+        if (!connection.isOpen()) {
+            return;
+        }
+
+        try {
+            connection.sendMessage("PING");
+        } catch (final IOException e) {
+            LOGGER.error(e);
+        }
     }
 
     /**
@@ -129,6 +190,7 @@ public final class InsertReadingWebSocketClient {
      */
     public void disconnect() {
         try {
+            stopPingingTask();
             connection.disconnect();
             if (factory.isRunning()) {
                 factory.stop();

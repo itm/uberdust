@@ -26,9 +26,9 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
      */
     @Override
     public void onMessage(final byte[] data, final int offset, final int length) {
-        LOGGER.info("BinaryMessage.Data (" + Arrays.toString(data) + ")");
-        LOGGER.info("BinaryMessage.Data.Offset (" + offset + ")");
-        LOGGER.info("BinaryMessage.Data.Length (" + length + ")");
+        LOGGER.info("Binary message arrived : data (" + Arrays.toString(data) + ")");
+        LOGGER.info("Binary message arrived : data.offset (" + offset + ")");
+        LOGGER.info("Binary message arrived : data.length (" + length + ")");
     }
 
     /**
@@ -37,7 +37,7 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
      */
     @Override
     public void onOpen(final Connection connection) {
-        LOGGER.info("onOpen");
+        LOGGER.info("Connection opened");
     }
 
     /**
@@ -47,7 +47,7 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
      */
     @Override
     public void onClose(final int closeCode, final String message) {
-        LOGGER.info("onClose");
+        LOGGER.info("Connection closed");
     }
 
     /**
@@ -56,6 +56,6 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
      */
     @Override
     public void onMessage(final String data) {
-        LOGGER.info("TextMessage.Data (" + data + ")");
+        LOGGER.info("Text message arrived : data (" + data + ")");
     }
 }
