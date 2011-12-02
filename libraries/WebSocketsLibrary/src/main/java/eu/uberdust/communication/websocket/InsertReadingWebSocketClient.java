@@ -1,7 +1,7 @@
 package eu.uberdust.communication.websocket;
 
-import eu.uberdust.eu.uberdust.reading.LinkReading;
-import eu.uberdust.eu.uberdust.reading.NodeReading;
+import eu.uberdust.reading.LinkReading;
+import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;

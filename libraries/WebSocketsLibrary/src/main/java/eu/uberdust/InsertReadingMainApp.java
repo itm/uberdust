@@ -1,7 +1,7 @@
 package eu.uberdust;
 
 import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
-import eu.uberdust.eu.uberdust.reading.NodeReading;
+import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
