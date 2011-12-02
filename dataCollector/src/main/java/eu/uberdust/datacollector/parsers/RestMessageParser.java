@@ -215,7 +215,7 @@ public class RestMessageParser implements Runnable {
             httpURLConnection.connect();
 
             if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                LOGGER.info("Added " + urlString);
+                LOGGER.debug("Added " + urlString);
             } else {
                 final StringBuilder errorBuilder = new StringBuilder("Problem ");
                 errorBuilder.append("with ").append(urlString);
