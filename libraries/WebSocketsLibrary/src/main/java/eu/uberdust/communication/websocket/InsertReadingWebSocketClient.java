@@ -44,6 +44,11 @@ public final class InsertReadingWebSocketClient {
     private WebSocket.Connection connection;
 
     /**
+     * WebSocketClientFactory,
+     */
+    private WebSocketClientFactory factory;
+
+    /**
      * WSocketClient is loaded on the first execution of WSocketClient.getInstance()
      * or the first access to WSocketClient.ourInstance, not before.
      *
@@ -65,7 +70,7 @@ public final class InsertReadingWebSocketClient {
      * @throws Exception an Exception exception
      */
     private InsertReadingWebSocketClient() throws Exception {
-        WebSocketClientFactory factory = new WebSocketClientFactory();
+        factory = new WebSocketClientFactory();
         factory.setBufferSize(4096);
         factory.start();
         client = factory.newWebSocketClient();
@@ -77,10 +82,11 @@ public final class InsertReadingWebSocketClient {
      * Connects to the WebSocket.
      *
      * @param webSocketUrl WebSocket URL.
-     * @throws java.io.IOException an IOException exception.
-     * @throws java.net.URISyntaxException  a URI SyntaxException.
-     * @throws InterruptedException InterruptedException exception.
-     * @throws java.util.concurrent.ExecutionException ExecutionException exception.
+     * @throws java.io.IOException         an IOException exception.
+     * @throws java.net.URISyntaxException a URI SyntaxException.
+     * @throws InterruptedException        InterruptedException exception.
+     * @throws java.util.concurrent.ExecutionException
+     *                                     ExecutionException exception.
      */
     public void connect(final String webSocketUrl) throws IOException, URISyntaxException,
             ExecutionException, InterruptedException {
@@ -109,11 +115,27 @@ public final class InsertReadingWebSocketClient {
 
     /**
      * Send message over the WebSocket.
+     *
      * @param message a string message.
      * @throws java.io.IOException an IOException.
      */
     private void sendMessage(final String message) throws IOException {
         byte[] bytes = message.getBytes();
         connection.sendMessage(bytes, 0, bytes.length);
+    }
+
+    /**
+     * Disconnect method.
+     */
+    public void disconnect() {
+        try {
+            connection.disconnect();
+            if (factory.isRunning()) {
+                factory.stop();
+            }
+            factory.destroy();
+        } catch (final Exception e) {
+            LOGGER.error(e);
+        }
     }
 }

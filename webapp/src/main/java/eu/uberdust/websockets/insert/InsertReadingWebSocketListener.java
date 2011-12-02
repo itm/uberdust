@@ -4,8 +4,6 @@ import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
 import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
-import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.exception.UnknownTestbedException;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -27,30 +25,61 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     private static final Logger LOGGER = Logger.getLogger(InsertReadingWebSocketListener.class);
 
     /**
+     * Singleton instance.
+     */
+    private static InsertReadingWebSocketListener ourInstance = null;
+
+    /**
      * Delimiter.
      */
     private static final String DELIMITER = "@";
 
     /**
-     * NodeReading peristence manager.
+     * NodeReading persistence manager.
      */
-    private final NodeReadingController nodeReadingManager;
+    private NodeReadingController nodeReadingManager;
 
     /**
-     * LinkReading peristence manager.
+     * LinkReading persistence manager.
      */
-    private final LinkReadingController linkReadingManager;
+    private LinkReadingController linkReadingManager;
+
+
 
     /**
-     * Testbed persistence manage.
+     * Constructor.
      */
-    private final TestbedController testbedManager;
+    private InsertReadingWebSocketListener() {
+        // empty constructor
+    }
 
+    /**
+     * Returns singleton instance.
+     * @return singleton instance.
+     */
+    public static InsertReadingWebSocketListener getInstance() {
+        if (ourInstance == null) {
+            ourInstance = new InsertReadingWebSocketListener();
+        }
+        return ourInstance;
+    }
 
-    public InsertReadingWebSocketListener(NodeReadingController nodeReadingManager, LinkReadingController linkReadingManager, TestbedController testbedManager) {
+    /**
+     * Sets node reading persistence manager.
+     *
+     * @param nodeReadingManager node reading persistence manager.
+     */
+    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
         this.nodeReadingManager = nodeReadingManager;
+    }
+
+    /**
+     * Sets link reading persistence manager.
+     *
+     * @param linkReadingManager link reading manager.
+     */
+    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
         this.linkReadingManager = linkReadingManager;
-        this.testbedManager = testbedManager;
     }
 
     /**
@@ -61,9 +90,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      */
     public void onStart(final WebSocketContext context) throws IOException {
         super.onStart(context);
-        LOGGER.info("onStart() ()");
-        int testbedsNumber = testbedManager.list().size();
-        LOGGER.info("onStart() (" + testbedsNumber + ")");
+        LOGGER.info("onStart()");
     }
 
     /**
@@ -74,69 +101,48 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onReadBinary(final WebSocketContext context, final InputStream is) throws IOException {
-        LOGGER.info("onReadBinary()");
         StringWriter writer = new StringWriter();
         IOUtils.copy(is, writer, "UTF-8");
         final String receivedMessage = writer.toString();
         LOGGER.info("onReadBinary(): " + receivedMessage);
         String[] messageParts = receivedMessage.split(DELIMITER);
         final String classOfReading = messageParts[0];
+        final int testbedId = Integer.parseInt(messageParts[1]);
+        String message = "Neither Node nor Link reading. ERROR";
 
-        LOGGER.info(classOfReading);
-        if (classOfReading.contains("NodeReading")) {
-            // node reading incoming
-            final int testbedId = Integer.parseInt(messageParts[1]);
-            final String nodeId = messageParts[2];
-            final String capabilityId = messageParts[3];
-            final long timestamp = Long.parseLong(messageParts[4]);
-            final double readingValue = Double.parseDouble(messageParts[5]);
-
-            try {
-                LOGGER.info("NodeReading");
-                LOGGER.info("adding insertReading(" + nodeId + "," + capabilityId + "," + testbedId + "," + readingValue + "," + timestamp + ")");
+        try {
+            if (classOfReading.contains("NodeReading")) {
+                // node reading incoming
+                final String nodeId = messageParts[2];
+                final String capabilityId = messageParts[3];
+                final long timestamp = Long.parseLong(messageParts[4]);
+                final double readingValue = Double.parseDouble(messageParts[5]);
                 nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
-                LOGGER.info("added . Sent OK back");
-                PrintWriter printWriter = context.startTextMessage();
-                printWriter.write("OK");
-                printWriter.close();
-            } catch (UnknownTestbedException e) {
-                PrintWriter printWriter = context.startTextMessage();
-                printWriter.write("Unknown Testbed Exception . Closing WebSocket");
-                printWriter.close();
-                context.close();
-            }
-        } else if (classOfReading.contains("LinkReading")) {
-            // link reading incoming
-            final int testbedId = Integer.parseInt(messageParts[1]);
-            final String sourceNodeId = messageParts[2];
-            final String targetNodeId = messageParts[3];
-            final String capabilityId = messageParts[4];
-            final long timestamp = Long.parseLong(messageParts[5]);
-            final double readingValue = Double.parseDouble(messageParts[6]);
+                message = "Inserted for Node(" + nodeId + ") Capability(" + capabilityId
+                        + ") Testbed(" + testbedId + ") : [" + timestamp + "," + readingValue + "]. OK";
 
-            try {
-                LOGGER.info("LinkReading");
-                LOGGER.info("adding insertReading(" + sourceNodeId + "," + targetNodeId + "," + capabilityId + "," + testbedId + "," + readingValue + "," + timestamp + ")");
+            } else if (classOfReading.contains("LinkReading")) {
+                // link reading incoming
+                final String sourceNodeId = messageParts[2];
+                final String targetNodeId = messageParts[3];
+                final String capabilityId = messageParts[4];
+                final long timestamp = Long.parseLong(messageParts[5]);
+                final double readingValue = Double.parseDouble(messageParts[6]);
                 linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
-                LOGGER.info("added . Sent OK back");
-                PrintWriter printWriter = context.startTextMessage();
-                printWriter.write("OK");
-                printWriter.close();
-            } catch (UnknownTestbedException e) {
-                PrintWriter printWriter = context.startTextMessage();
-                printWriter.write("Unknown Testbed Exception . Closing WebSocket");
-                printWriter.close();
-                context.close();
+                message = "Inserted for Link[" + sourceNodeId + "," + targetNodeId + "] Capability(" + capabilityId
+                        + ") Testbed(" + testbedId + ") : [" + timestamp + "," + readingValue + "]. OK";
             }
-
-        } else {
-            // unknown stuff incoming
-            LOGGER.info("UNKNOWN");
-            PrintWriter printWriter = context.startTextMessage();
-            printWriter.write("Neither Node nor link reading. Closing WebSocket");
-            printWriter.close();
-            context.close();
+        } catch (Exception e) {
+            message = "Exception OCCURED. ERROR";
+            LOGGER.error(e);
+        } finally {
+            LOGGER.info("Sending " + message);
+            // After message is set return it to client.
+            PrintWriter pw = context.startTextMessage();
+            pw.print(message);
+            pw.close();
         }
+
     }
 
     /**
