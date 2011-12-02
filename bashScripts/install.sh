@@ -30,7 +30,7 @@ then
 echo -e " \
 #!/bin/bash \n\
 ### BEGIN INIT INFO \n\
-# Provides:          wisebed-p1 virtual machine execution \n\
+# Provides:          autoReports periodic logging \n\
 # Required-Start:    $remote_fs $syslog \n\
 # Required-Stop:     $remote_fs $syslog \n\
 # Default-Start:     2 3 4 5 \n\
@@ -38,14 +38,17 @@ echo -e " \
 # Short-Description: Start daemon at boot time \n\
 # Description:       Enable service provided by daemon. \n\
 ### END INIT INFO \n\
-name="wisebed-p1" \n\
+name="autoReports" \n\
 case \$1 in \n\
 \"start\") \n" > $INIT_SCRIPT
 
 	#start the ssTrigger script
 	read -p "Please provide the username to use the screenlock : " userLock
-	echo "su -l $userLock -c '$INSTALL_DIR/autoReports/python/ssTriger/ssTrigger' >/dev/null& " >> $INIT_SCRIPT
-	chown $userLock $INSTALL_DIR/autoReports/python/ssTriger -R
+	if [ $userLock != "" ]
+	then
+		echo "su -l $userLock -c '$INSTALL_DIR/autoReports/python/ssTriger/ssTrigger' >/dev/null& " >> $INIT_SCRIPT
+		chown $userLock $INSTALL_DIR/autoReports/python/ssTriger -R
+	fi
 
 	echo "/var/autoReports/execute > /var/log/autoReports.log &" >> $INIT_SCRIPT
 echo -e " \n\
@@ -69,6 +72,10 @@ esac " >> $INIT_SCRIPT
 	echo "done" >> $INSTALL_DIR/autoReports/execute
 	chmod u+x $INSTALL_DIR/autoReports/execute
 
+
+	echo "======Completed======"
+	echo "To start reporting please run as root"
+	echo "/etc/init.d/autoReports start "
 else
 	echo "Need to execute as root"
 fi

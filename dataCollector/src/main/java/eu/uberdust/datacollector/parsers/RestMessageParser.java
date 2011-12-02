@@ -1,18 +1,21 @@
-package eu.uberdust.datacollector;
+package eu.uberdust.datacollector.parsers;
 
-import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
-import eu.uberdust.eu.uberdust.reading.LinkReading;
-import eu.uberdust.eu.uberdust.reading.NodeReading;
-import org.apache.log4j.Level;
+import eu.uberdust.datacollector.DataCollector;
+import eu.uberdust.reading.LinkReading;
+import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
 /**
  * Parses a message received and adds data to a wisedb database.
  */
-public class MessageParser implements Runnable {                   // NOPMD
+public class RestMessageParser implements Runnable {
 
     /**
      * LOGGER.
@@ -33,13 +36,14 @@ public class MessageParser implements Runnable {                   // NOPMD
     private static final String TESTBED_ID = "1";
     private static final String TESTBED_URN = "urn:wisebed:ctitestbed:";
     private static final String CAPABILITY_PREFIX = "urn:wisebed:node:capability:";
+    private static final String TESTBED_SERVER = "http://uberdust.cti.gr";
 
 
     /**
      * @param msg    the message received from the testbed
      * @param senses the Map containing the sensor codenames on testbed , capability names
      */
-    public MessageParser(final String msg, final Map<String, String> senses) {
+    public RestMessageParser(final String msg, final Map<String, String> senses) {
         strLine = msg.substring(msg.indexOf("binaryData:") + "binaryData:".length());
         sensors = senses;
     }
@@ -64,13 +68,16 @@ public class MessageParser implements Runnable {                   // NOPMD
     }
 
     /**
-     *
+     * Starts the parser thread.
      */
     public final void run() {
         parse();
     }
 
 
+    /**
+     * Parsers the message and create the event to report.
+     */
     public final void parse() {
 
         LOGGER.debug(strLine);
@@ -142,21 +149,18 @@ public class MessageParser implements Runnable {                   // NOPMD
         final String capabilityName = (CAPABILITY_PREFIX + capability).toLowerCase(Locale.US);
         final long milliseconds = System.currentTimeMillis();
 
-        final NodeReading nodeReading = new NodeReading();
+        NodeReading nodeReading = new NodeReading();
         nodeReading.setTestbedId(TESTBED_ID);
         nodeReading.setNodeId(nodeUrn);
         nodeReading.setCapabilityName(capabilityName);
-        nodeReading.setReading(String.valueOf(value));
         nodeReading.setTimestamp(String.valueOf(milliseconds));
-        LOGGER.debug(nodeReading);
+        nodeReading.setReading(String.valueOf(value));
 
-        try {
-            LOGGER.info("adding " + nodeReading);
-            InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading);
-            LOGGER.info("added " + nodeReading);
-        } catch (Exception e) {
-            LOGGER.error("InsertReadingWebSocketClient -node-" + e);
-        }
+        final StringBuilder urlBuilder = new StringBuilder(TESTBED_SERVER);
+        urlBuilder.append(nodeReading.toRestString());
+        final String insertReadingUrl = urlBuilder.toString();
+
+        callUrl(insertReadingUrl);
     }
 
     /**
@@ -173,31 +177,57 @@ public class MessageParser implements Runnable {                   // NOPMD
 
         LOGGER.debug("Fount a link down " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         final long milliseconds = System.currentTimeMillis();
+        LinkReading linkReading = new LinkReading();
 
-        final LinkReading linkReading = new LinkReading();
         linkReading.setTestbedId(TESTBED_ID);
         linkReading.setLinkSource(sourceUrn);
         linkReading.setLinkTarget(targetUrn);
         linkReading.setCapabilityName(testbedCap);
-        linkReading.setReading(String.valueOf(status));
         linkReading.setTimestamp(String.valueOf(milliseconds));
-        LOGGER.debug(linkReading.toString());
+        linkReading.setReading(String.valueOf(status));
 
-        try {
-            LOGGER.info("adding " + linkReading);
-            InsertReadingWebSocketClient.getInstance().setLinkReading(linkReading);
-            LOGGER.info("added " + linkReading);
-        } catch (Exception e) {
-            LOGGER.error("InsertReadingWebSocketClient -link- " + e);
-        }
+        final StringBuilder urlBuilder = new StringBuilder(TESTBED_SERVER);
+        urlBuilder.append(linkReading.toRestString());
+        final String insertReadingUrl = urlBuilder.toString();
+
+
+        //callUrl(insertReadingUrl);
     }
 
     /**
-     * Sets the logging level
+     * Opens a connection over the Rest Interfaces to the server and adds the event.
      *
-     * @param level the desired loggin level
+     * @param urlString the string url that describes the event
      */
-    public void setLevel(final Level level) {
-        LOGGER.setLevel(level);
+    private void callUrl(final String urlString) {
+        HttpURLConnection httpURLConnection = null;
+
+        URL url = null;
+        try {
+            url = new URL(urlString);
+        } catch (MalformedURLException e) {
+            LOGGER.error(e);
+            return;
+        }
+
+        try {
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
+            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                LOGGER.debug("Added " + urlString);
+            } else {
+                final StringBuilder errorBuilder = new StringBuilder("Problem ");
+                errorBuilder.append("with ").append(urlString);
+                errorBuilder.append(" Response: ").append(httpURLConnection.getResponseCode());
+                LOGGER.error(errorBuilder.toString());
+            }
+            httpURLConnection.disconnect();
+        } catch (IOException e) {
+            LOGGER.error(e);
+        }
+
+
     }
+
 }

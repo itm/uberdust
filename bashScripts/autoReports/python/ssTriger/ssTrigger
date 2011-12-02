@@ -14,8 +14,8 @@ class SSTrigger:
         self.bus.add_signal_receiver(self.catch,self.mem,self.dest)
     def catch(self,ssOn):
         if ssOn == 1: #Screensaver turned on
-            Popen(["/opt/ssTrigger/ssStart"])
+            Popen(["/var/autoReports/python/ssTriger/ssStart"])
         else: #Screensaver turned off
-            Popen(["/opt/ssTrigger/ssStop"])
+            Popen(["/var/autoReports/python/ssTriger/ssStop"])
 
 SSTrigger().loop.run()
