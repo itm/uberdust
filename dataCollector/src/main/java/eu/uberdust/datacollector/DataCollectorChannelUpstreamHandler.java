@@ -90,8 +90,13 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
     public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent)
             throws Exception {     //NOPMD
         super.channelDisconnected(ctx, channelStateEvent);
-        LOGGER.error("channelDisconnected");
+        shutdown();
 
+    }
+
+    private void shutdown() {
+        executorService.shutdown();
+        throw new RuntimeException();
     }
 
     /**
