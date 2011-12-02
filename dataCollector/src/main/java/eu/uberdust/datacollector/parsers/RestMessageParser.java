@@ -1,8 +1,8 @@
 package eu.uberdust.datacollector.parsers;
 
 import eu.uberdust.datacollector.DataCollector;
-import eu.uberdust.eu.uberdust.reading.LinkReading;
-import eu.uberdust.eu.uberdust.reading.NodeReading;
+import eu.uberdust.reading.LinkReading;
+import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

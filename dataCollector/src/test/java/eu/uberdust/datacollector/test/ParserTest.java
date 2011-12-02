@@ -1,6 +1,6 @@
 package eu.uberdust.datacollector.test;
 
-import eu.uberdust.datacollector.MessageParser;
+import eu.uberdust.datacollector.parsers.WsMessageParser;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -59,23 +59,23 @@ public class ParserTest
         }
         long millis = System.currentTimeMillis();
         String eventString = "binaryData:h\\000id::0x1ccd EM_E 0 ";
-        MessageParser messageParser = new MessageParser(eventString, sensors);
+        WsMessageParser messageParser = new WsMessageParser(eventString, sensors);
         messageParser.setLevel(Level.ALL);
         messageParser.parse();
-        LOGGER.debug("Parsing needs "+(System.currentTimeMillis()-millis)+" millis");
+        LOGGER.debug("Parsing and thread creation takes " + (System.currentTimeMillis() - millis) + " millis");
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c EM_L 165 ";
-        messageParser = new MessageParser(eventString, sensors);
+        messageParser = new WsMessageParser(eventString, sensors);
         messageParser.parse();
-        LOGGER.debug("Parsing needs "+(System.currentTimeMillis()-millis)+" millis");
+        LOGGER.debug("Parsing needs " + (System.currentTimeMillis() - millis) + " millis");
 
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c RL4 0 ";
-        messageParser = new MessageParser(eventString, sensors);
+        messageParser = new WsMessageParser(eventString, sensors);
         messageParser.parse();
-        LOGGER.debug("Parsing needs "+(System.currentTimeMillis()-millis)+" millis");
+        LOGGER.debug("Parsing needs " + (System.currentTimeMillis() - millis) + " millis");
 
         assertTrue(true);
     }

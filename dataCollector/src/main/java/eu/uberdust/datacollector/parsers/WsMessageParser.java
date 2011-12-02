@@ -2,8 +2,8 @@ package eu.uberdust.datacollector.parsers;
 
 import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
 import eu.uberdust.datacollector.DataCollector;
-import eu.uberdust.eu.uberdust.reading.LinkReading;
-import eu.uberdust.eu.uberdust.reading.NodeReading;
+import eu.uberdust.reading.LinkReading;
+import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Parses a message received and adds data to a wisedb database.
  */
-public class WsMessageParser implements Runnable {                   // NOPMD
+public class WsMessageParser implements Runnable {
 
     /**
      * LOGGER.
