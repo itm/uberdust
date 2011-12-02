@@ -151,29 +151,6 @@
             <artifactId>WebSocketsLibrary</artifactId>
             <version>1.0</version>
         </dependency>
-        <!--<dependency>
-            <groupId>ichatz</groupId>
-            <artifactId>wiseml</artifactId>
-            <version>1.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-jdk14</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
         <dependency>
             <groupId>de.uniluebeck.itm</groupId>
             <artifactId>tr.scripting-client</artifactId>
