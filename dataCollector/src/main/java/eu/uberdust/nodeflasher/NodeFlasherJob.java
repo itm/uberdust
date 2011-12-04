@@ -1,5 +1,6 @@
 package eu.uberdust.nodeflasher;
 
+import eu.uberdust.nodeflasher.helper.Helper;
 import eu.wisebed.api.rs.PublicReservationData;
 import eu.wisebed.api.rs.RSExceptionException;
 import org.apache.log4j.Logger;

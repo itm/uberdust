@@ -5,10 +5,6 @@ import eu.uberdust.reading.LinkReading;
 import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,7 +32,6 @@ public class MessageParser implements Runnable { //NOPMD
     private static final String TESTBED_ID = "1";
     private static final String TESTBED_URN = "urn:wisebed:ctitestbed:";
     private static final String CAPABILITY_PREFIX = "urn:wisebed:node:capability:";
-    private static final String TESTBED_SERVER = "http://uberdust.cti.gr/rest";
 
 
     /**
@@ -147,7 +142,7 @@ public class MessageParser implements Runnable { //NOPMD
      * @param value        the value of the reading
      * @param milliseconds
      */
-    private void commitNodeReading(final String nodeId, final String capability, final int value, String milliseconds) {
+    private void commitNodeReading(final String nodeId, final String capability, final int value, final String milliseconds) {
 
         final String nodeUrn = TESTBED_URN + nodeId;
         final String capabilityName = (CAPABILITY_PREFIX + capability).toLowerCase(Locale.US);
@@ -160,11 +155,8 @@ public class MessageParser implements Runnable { //NOPMD
         nodeReading.setTimestamp(milliseconds);
         nodeReading.setReading(String.valueOf(value));
 
-        final StringBuilder urlBuilder = new StringBuilder(TESTBED_SERVER);
-        urlBuilder.append(nodeReading.toRestString());
-        final String insertReadingUrl = urlBuilder.toString();
-
-        callUrl(insertReadingUrl);
+        new RestCommiter(nodeReading);
+        new WsCommiter(nodeReading);
     }
 
     /**
@@ -189,47 +181,8 @@ public class MessageParser implements Runnable { //NOPMD
         linkReading.setTimestamp(String.valueOf(milliseconds));
         linkReading.setReading(String.valueOf(status));
 
-        final StringBuilder urlBuilder = new StringBuilder(TESTBED_SERVER);
-        urlBuilder.append(linkReading.toRestString());
-        final String insertReadingUrl = urlBuilder.toString();
 
-        callUrl(insertReadingUrl);
+        new RestCommiter(linkReading);
+        new WsCommiter(linkReading);
     }
-
-    /**
-     * Opens a connection over the Rest Interfaces to the server and adds the event.
-     *
-     * @param urlString the string url that describes the event
-     */
-    private void callUrl(final String urlString) {
-        HttpURLConnection httpURLConnection = null;
-
-        URL url = null;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            LOGGER.error(e);
-            return;
-        }
-
-        try {
-            httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.connect();
-
-            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                LOGGER.debug("Added " + urlString);
-            } else {
-                final StringBuilder errorBuilder = new StringBuilder("Problem ");
-                errorBuilder.append("with ").append(urlString);
-                errorBuilder.append(" Response: ").append(httpURLConnection.getResponseCode());
-                LOGGER.error(errorBuilder.toString());
-            }
-            httpURLConnection.disconnect();
-        } catch (IOException e) {
-            LOGGER.error(e);
-        }
-
-
-    }
-
 }

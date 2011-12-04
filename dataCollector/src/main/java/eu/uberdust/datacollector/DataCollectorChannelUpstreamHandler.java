@@ -4,7 +4,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
-import eu.uberdust.datacollector.parsers.RestMessageParser;
+import eu.uberdust.datacollector.parsers.MessageParser;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -41,9 +41,9 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      */
     private final transient ExecutorService executorService;
     private transient Map<String, String> sensors;
-    private DataCollector dataCollector;
+    private final transient DataCollector dataCollector;
 
-    public DataCollectorChannelUpstreamHandler(DataCollector dataCollector) {
+    public DataCollectorChannelUpstreamHandler(final DataCollector dataCollector) {
         this.dataCollector = dataCollector;
         messageCounter = 0;
         lastTime = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
         }
     }
 
-    public void setSensors(Map<String, String> sensors) {
+    public void setSensors(final Map sensors) {
         this.sensors = sensors;
 
     }
@@ -108,7 +108,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * @param toString
      */
     private void parse(final String toString) {
-        executorService.submit(new RestMessageParser(toString, sensors));
+        executorService.submit(new MessageParser(toString, sensors));
     }
 
 }

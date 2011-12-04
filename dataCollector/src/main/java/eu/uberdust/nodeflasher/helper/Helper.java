@@ -3,25 +3,13 @@ package eu.uberdust.nodeflasher.helper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import de.uniluebeck.itm.wisebed.cmdlineclient.BeanShellHelper;
-import de.uniluebeck.itm.wisebed.cmdlineclient.jobs.JobResult;
-import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient;
-import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
-import eu.uberdust.nodeflasher.TestbedClient;
-import eu.wisebed.api.rs.AuthorizationExceptionException;
-import eu.wisebed.api.rs.ConfidentialReservationData;
 import eu.wisebed.api.rs.RS;
 import eu.wisebed.api.rs.RSExceptionException;
-import eu.wisebed.api.rs.ReservervationConflictExceptionException;
-import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
-import eu.wisebed.api.sm.SecretReservationKey;
 import eu.wisebed.api.sm.SessionManagement;
-import eu.wisebed.api.sm.UnknownReservationIdException_Exception;
 import eu.wisebed.api.snaa.AuthenticationExceptionException;
 import eu.wisebed.api.snaa.AuthenticationTriple;
 import eu.wisebed.api.snaa.SNAA;
 import eu.wisebed.api.snaa.SNAAExceptionException;
-import eu.wisebed.api.wsn.WSN;
 import eu.wisebed.testbed.api.rs.RSServiceHelper;
 import eu.wisebed.testbed.api.snaa.helpers.SNAAServiceHelper;
 import eu.wisebed.testbed.api.wsn.WSNServiceHelper;
@@ -32,12 +20,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Helper class for authenticating, reserving and flashing testbedruntime.
@@ -85,15 +69,78 @@ public class Helper {
      * TR server protobuf port.
      */
     private transient int pccPort;
+
     /**
-     * Flashing success percentage.
+     * returns the reservation system used.
+     *
+     * @return the RS object
      */
-    private static final int SUCCESS = 100;
+    public RS getReservationSystem() {
+        return reservationSystem;
+    }
+
+    /**
+     * returns the sm system used.
+     *
+     * @return the SM object
+     */
+    public SessionManagement getSessionManagement() {
+
+        return sessionManagement;
+    }
+
+    /**
+     * returns the usernames used for the testbeds
+     *
+     * @return a list of all declared usernames
+     */
+    public List getUsernames() {
+        return usernames;
+    }
+
+    /**
+     * returns the prefixes used for the testbeds
+     *
+     * @return a list of all declared urnPrefixes
+     */
+    public List getUrnPrefixes() {
+        return urnPrefixes;
+    }
+
+    /**
+     * @return the authentication keys
+     */
+    public List getSecretAuthKeys() {
+        return secretAuthKeys;
+    }
+
+    /**
+     * @return the port to connect to
+     */
+    public int getPccPort() {
+        return pccPort;
+    }
+
+    /**
+     * @return the hostname to connect to
+     */
+    public String getPccHost() {
+        return pccHost;
+    }
+
+
+    /**
+     * @return the property file to use
+     */
+    public Properties getProperties() {
+
+        return properties;
+    }
 
     /**
      * Default Constructor.
      */
-    Helper() {
+    public Helper() {
         PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
         parseProperties();
     }
@@ -197,35 +244,7 @@ public class Helper {
      * @return The resulting Res Key
      */
     public final String reserveNodes(final String[] nodes) {
-
-        LOGGER.info("|+   Trying to reserve " + nodes.length + " nodes");
-
-        final List nodeURNsToReserve = Lists.newArrayList(nodes);
-        // create reservation request data to reserve all iSense nodes for 10 minutes
-        final ConfidentialReservationData reservationData = BeanShellHelper.generateConfidentialReservationData(
-                nodeURNsToReserve, new Date(System.currentTimeMillis()), 4, TimeUnit.MINUTES,
-                urnPrefixes, usernames);
-
-        List secretResKeys = null;
-        try {
-            secretResKeys = reservationSystem.makeReservation(
-                    BeanShellHelper.copySnaaToRs(secretAuthKeys),
-                    reservationData
-            );
-        } catch (AuthorizationExceptionException e) {
-            LOGGER.error(e);
-            return "";
-        } catch (RSExceptionException e) {
-            LOGGER.error(e);
-            return "";
-        } catch (ReservervationConflictExceptionException e) {
-            LOGGER.error(e);
-            return "";
-        }
-        LOGGER.info("|+   Successfully reserved " + nodeURNsToReserve.size() + " nodes");
-        LOGGER.info("|+   Reservation Key(s): " + BeanShellHelper.toString(secretResKeys));
-
-        return BeanShellHelper.toString(secretResKeys);
+        return (new Reserver(this)).reserve(nodes);
     }
 
     /**
@@ -247,77 +266,8 @@ public class Helper {
      * @param nodes The nodes to flash
      * @param type  The type of the nodes, used to select the correct image
      */
-    public final void flash(final String[] nodes, final String type) {
-        LOGGER.info("|+   flashing nodes of type: " + type);
-        final String imagePath = properties.getProperty("image." + type);
-        LOGGER.info("|+   set image path to " + imagePath);
-
-        final String reservationKey = reserveNodes(nodes);
-        if ("".equals(reservationKey)) {
-            return;
-        }
-        LOGGER.info("|+   reservationKey=" + reservationKey);
-
-        final String wsnEndpointURL;
-        try {
-            final List<SecretReservationKey> keys = BeanShellHelper.parseSecretReservationKeys(reservationKey);
-            wsnEndpointURL = sessionManagement.getInstance(keys, "NONE");
-        } catch (ExperimentNotRunningException_Exception e) {
-            LOGGER.error(e.toString());
-            return;
-        } catch (UnknownReservationIdException_Exception e) {
-            LOGGER.error(e.toString());
-            return;
-        }
-
-        LOGGER.info("|+   Got a WSN instance URL, endpoint is: " + wsnEndpointURL);
-        final WSN wsnService = WSNServiceHelper.getWSNService(wsnEndpointURL);
-        final WSNAsyncWrapper wsn = WSNAsyncWrapper.of(wsnService);
-
-        final ProtobufControllerClient pcc = ProtobufControllerClient.create(pccHost, pccPort,
-                BeanShellHelper.parseSecretReservationKeys(reservationKey));
-        pcc.addListener(new TestbedClient(wsn));
-        pcc.connect();
-
-        // retrieve reserved node URNs from testbed
-        final List nodeURNsToFlash = Lists.newArrayList(nodes);
-
-        LOGGER.info("|+   Flashing nodes...");
-
-        // flash iSense nodes
-        final List programIndices = new ArrayList();
-        final List programs = new ArrayList();
-        for (Object aNodeURNsToFlash : nodeURNsToFlash) {
-            programIndices.add(0);
-        }
-
-        try {
-            programs.add(BeanShellHelper.readProgram(imagePath, "", "", "iSense", "1.0"));
-        } catch (Exception e) {
-            LOGGER.error(e.toString());
-            return;
-        }
-
-        final Future flashFuture = wsn.flashPrograms(nodeURNsToFlash, programIndices, programs, 3, TimeUnit.MINUTES);
-        JobResult flashJobResult;
-
-        try {
-            flashJobResult = (JobResult) flashFuture.get();
-        } catch (InterruptedException e) {
-            LOGGER.error(e.toString());
-            return;
-        } catch (ExecutionException e) {
-            LOGGER.error(e);
-            return;
-        }
-
-        LOGGER.info(flashJobResult);
-        if (flashJobResult.getSuccessPercent() < SUCCESS) {
-            LOGGER.info("|*   Not all nodes could be flashed. Exiting");
-        }
-
-        LOGGER.info("|+   Closing connection...");
-        pcc.disconnect();
+    public void flash(final String[] nodes, final String type) {
+        (new Flasher(this)).flash(nodes, type);
     }
 
     /**
@@ -336,3 +286,4 @@ public class Helper {
         return (String) usernames.get(0);
     }
 }
+

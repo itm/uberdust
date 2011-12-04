@@ -2,13 +2,14 @@ package eu.uberdust.nodeflasher;
 
 import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClientListener;
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
+import eu.uberdust.nodeflasher.helper.Helper;
 
 import java.util.List;
 
 /**
  * Client to connect to TR.
  */
-class TestbedClient implements ProtobufControllerClientListener {
+public class TestbedClient implements ProtobufControllerClientListener {
     /**
      * Logger.
      */

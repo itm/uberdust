@@ -47,7 +47,7 @@ public class DataCollector {
      * map of the names used in iSense application to capability names.
      */
     private final transient Map<String, String> sensors = new HashMap<String, String>();
-    private NioClientSocketChannelFactory factory;
+    private transient NioClientSocketChannelFactory factory;
 
     /**
      * Default Constructor.

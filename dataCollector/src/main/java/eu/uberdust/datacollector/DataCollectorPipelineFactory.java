@@ -21,10 +21,8 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      * Chanel handler that receives the messages and Generates parser threads.
      */
     private final transient DataCollectorChannelUpstreamHandler upstreamHandler;
-    private DataCollector dataCollector;
 
-    public DataCollectorPipelineFactory(DataCollector dataCollector) {
-        this.dataCollector = dataCollector;
+    public DataCollectorPipelineFactory(final DataCollector dataCollector) {
         upstreamHandler = new DataCollectorChannelUpstreamHandler(dataCollector);
     }
 
