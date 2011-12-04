@@ -1,4 +1,4 @@
-package eu.uberdust.nodeflasher;
+package eu.uberdust.nodeflasher.helper;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
@@ -7,6 +7,7 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.BeanShellHelper;
 import de.uniluebeck.itm.wisebed.cmdlineclient.jobs.JobResult;
 import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient;
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
+import eu.uberdust.nodeflasher.TestbedClient;
 import eu.wisebed.api.rs.AuthorizationExceptionException;
 import eu.wisebed.api.rs.ConfidentialReservationData;
 import eu.wisebed.api.rs.RS;

@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Parses a message received and adds data to a wisedb database.
  */
-public class RestMessageParser implements Runnable { //NOPMD
+public class MessageParser implements Runnable { //NOPMD
 
     /**
      * LOGGER.
@@ -43,7 +43,7 @@ public class RestMessageParser implements Runnable { //NOPMD
      * @param msg    the message received from the testbed
      * @param senses the Map containing the sensor codenames on testbed , capability names
      */
-    public RestMessageParser(final String msg, final Map<String, String> senses) {
+    public MessageParser(final String msg, final Map<String, String> senses) {
         strLine = msg.substring(msg.indexOf("binaryData:") + "binaryData:".length());
         sensors = senses;
     }
@@ -81,67 +81,61 @@ public class RestMessageParser implements Runnable { //NOPMD
     public final void parse() {
 
         LOGGER.debug(strLine);
+
         //get the node id
         final String nodeId = extractNodeId(strLine);
 
         //if there is a node id
-        if ("".equals(nodeId)) {
-            LOGGER.debug("no node id");
-            return;
-        }
+        if (!"".equals(nodeId)) {
 
-        LOGGER.debug("Node id is " + nodeId);
-        //check for capability readings
-        boolean foundReading = false;
-        //check for all given capabilities
+            LOGGER.debug("Node id is " + nodeId);
 
-        for (String sensor : sensors.keySet()) {
-            if (strLine.indexOf(sensor) > 0) {
-                foundReading = true;
-                final int start = strLine.indexOf(sensor) + sensor.length() + 1;
-
-                int end = strLine.indexOf(' ', start);
-                if (end == -1) {
-                    end = strLine.length() - 2;
-                }
-                int value;
-                try {
-                    value = Integer.parseInt(strLine.substring(start, end));
-                    LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
-                    String milliseconds = String.valueOf(System.currentTimeMillis());
-                    if (nodeId.contains("1ccd")) {
-                        if (sensors.get(sensor).equals("pir")) {
-                            milliseconds = strLine.split(" ")[4];
-                            LOGGER.info("setting event time to " + milliseconds + " message '" + strLine + "'");
+            //check for Link Readings
+            if (strLine.contains("LINK_")) {
+                checkLinkReading(nodeId);
+            } else {
+                //check for all given capabilities
+                for (String sensor : sensors.keySet()) {
+                    if (strLine.contains(sensor)) {
+                        final int start = strLine.indexOf(sensor) + sensor.length() + 1;
+                        int end = strLine.indexOf(' ', start);
+                        if (end == -1) {
+                            end = strLine.length() - 2;
                         }
+                        try {
+                            final int value = Integer.parseInt(strLine.substring(start, end));
+                            LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
+                            String milliseconds = String.valueOf(System.currentTimeMillis());
+                            if (nodeId.contains("1ccd")) {
+                                if (sensors.get(sensor).equals("pir")) {
+                                    milliseconds = strLine.split(" ")[4];
+                                    LOGGER.info("setting event time to " + milliseconds + " message '" + strLine + "'");
+                                }
+                            }
+                            commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
+                        } catch (Exception e) {
+                            LOGGER.error("Parse Error" + sensor + "'" + strLine.substring(start, end) + "'");
+                        }
+
+                        break;
                     }
-
-                    commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
-
-
-                } catch (Exception e) {
-                    LOGGER.error("Cannot parse value for " + sensor + "'" + strLine.substring(start, end) + "'");
                 }
-
-                break;
             }
         }
+    }
 
-        //if not a node reading message
-        if (!foundReading) {
-            // check for link down message
-            if (strLine.contains("LINK_DOWN")) {
-                //get the target id
-                final int targetStart = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
-                final int targetEnd = strLine.indexOf(' ', targetStart);
-                commitLinkReading(nodeId, strLine.substring(targetStart, targetEnd), 0);
+    private void checkLinkReading(String nodeId) {
+        if (strLine.contains("LINK_DOWN")) {
+            //get the target id
+            final int start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
+            final int end = strLine.indexOf(' ', start);
+            commitLinkReading(nodeId, strLine.substring(start, end), 0);
 
-            } else if (strLine.contains("LINK_UP")) {
-                //get the target id
-                final int targetStart = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
-                final int targetEnd = strLine.indexOf(' ', targetStart);
-                commitLinkReading(nodeId, strLine.substring(targetStart, targetEnd), 1);
-            }
+        } else if (strLine.contains("LINK_UP")) {
+            //get the target id
+            final int start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
+            final int end = strLine.indexOf(' ', start);
+            commitLinkReading(nodeId, strLine.substring(start, end), 1);
         }
     }
 
