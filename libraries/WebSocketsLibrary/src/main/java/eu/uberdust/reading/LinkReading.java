@@ -57,6 +57,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Returns Testbed Id.
+     *
      * @return testbed id.
      */
     public String getTestbedId() {
@@ -65,6 +66,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Sets testbed id.
+     *
      * @param testbedId testbed id.
      */
     public void setTestbedId(final String testbedId) {
@@ -73,6 +75,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Returns Link Source.
+     *
      * @return link's source.
      */
     public String getLinkSource() {
@@ -81,6 +84,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Sets link source.
+     *
      * @param linkSource link source.
      */
     public void setLinkSource(final String linkSource) {
@@ -89,6 +93,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Returns link target.
+     *
      * @return link target.
      */
     public String getLinkTarget() {
@@ -97,6 +102,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Sets link target.
+     *
      * @param linkTarget link target.
      */
     public void setLinkTarget(final String linkTarget) {
@@ -105,6 +111,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Returns capability name.
+     *
      * @return capability name.
      */
     public String getCapabilityName() {
@@ -113,6 +120,7 @@ public final class LinkReading implements Serializable {
 
     /**
      * Sets capability name.
+     *
      * @param capabilityName capability name.
      */
     public void setCapabilityName(final String capabilityName) {
@@ -157,9 +165,10 @@ public final class LinkReading implements Serializable {
 
     /**
      * Returns a string of the appropriate REST URL in order to insert this link reading.
+     *
      * @return a string of the appropriate REST URL in order to insert this link reading.
      */
-    public String toRestString(){
+    public String toRestString() {
         return "/testbed/" + testbedId
                 + "/link/" + linkSource + "/" + linkTarget
                 + "/capability/" + capabilityName
