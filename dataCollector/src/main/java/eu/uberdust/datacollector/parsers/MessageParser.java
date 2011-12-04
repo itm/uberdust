@@ -27,11 +27,21 @@ public class MessageParser implements Runnable { //NOPMD
      */
     private final transient Map<String, String> sensors;
     /**
-     * ID of the testbed Monitored
+     * ID of the testbed Monitored.
      */
     private static final String TESTBED_ID = "1";
+    /**
+     * URN of the testbed Monitored.
+     */
     private static final String TESTBED_URN = "urn:wisebed:ctitestbed:";
+    /**
+     * Testbed Capability prefix.
+     */
     private static final String CAPABILITY_PREFIX = "urn:wisebed:node:capability:";
+    /**
+     * Position of the timestamp in a node Reading .
+     */
+    private static final int TIMESTAMP_POS = 4;
 
 
     /**
@@ -91,35 +101,55 @@ public class MessageParser implements Runnable { //NOPMD
             } else {
                 //check for all given capabilities
                 for (String sensor : sensors.keySet()) {
-                    if (strLine.contains(sensor)) {
-                        final int start = strLine.indexOf(sensor) + sensor.length() + 1;
-                        int end = strLine.indexOf(' ', start);
-                        if (end == -1) {
-                            end = strLine.length() - 2;
-                        }
-                        try {
-                            final int value = Integer.parseInt(strLine.substring(start, end));
-                            LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
-                            String milliseconds = String.valueOf(System.currentTimeMillis());
-                            if (nodeId.contains("1ccd")) {
-                                if (sensors.get(sensor).equals("pir")) {
-                                    milliseconds = strLine.split(" ")[4];
-                                    LOGGER.info("setting event time to " + milliseconds + " message '" + strLine + "'");
-                                }
-                            }
-                            commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
-                        } catch (Exception e) {
-                            LOGGER.error("Parse Error" + sensor + "'" + strLine.substring(start, end) + "'");
-                        }
-
+                    if (checkSensor(sensor, nodeId)) {
                         break;
                     }
+
                 }
             }
         }
     }
 
-    private void checkLinkReading(String nodeId) {
+    /**
+     * checks for the a node reading
+     *
+     * @param sensor
+     * @param nodeId
+     * @return true if contains a NodeReading
+     */
+    private boolean checkSensor(final String sensor, final String nodeId) {
+        boolean retVal = false;
+        if (strLine.contains(sensor)) {
+            retVal = true;
+            final int start = strLine.indexOf(sensor) + sensor.length() + 1;
+            int end = strLine.indexOf(' ', start);
+            if (end == -1) {
+                end = strLine.length() - 2;
+            }
+            try {
+                final int value = Integer.parseInt(strLine.substring(start, end));
+                LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
+                String milliseconds = String.valueOf(System.currentTimeMillis());
+
+                if (nodeId.contains("1ccd") && sensors.get(sensor).equals("pir")) {
+                    milliseconds = strLine.split(" ")[TIMESTAMP_POS];
+                    LOGGER.info("setting event time to " + milliseconds + " message '" + strLine + "'");
+                }
+
+                commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
+            } catch (Exception e) {
+                LOGGER.error("Parse Error" + sensor + "'" + strLine.substring(start, end) + "'");
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * Checks the message received for a new node reading.
+     *
+     * @param nodeId the id of the node reporting the reading
+     */
+    private void checkLinkReading(final String nodeId) {
         if (strLine.contains("LINK_DOWN")) {
             //get the target id
             final int start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
@@ -137,12 +167,12 @@ public class MessageParser implements Runnable { //NOPMD
     /**
      * Commits a nodeReading to the database using the REST interface.
      *
-     * @param nodeId       the id of the node reporting the reading
-     * @param capability   the name of the capability
-     * @param value        the value of the reading
-     * @param milliseconds
+     * @param nodeId     the id of the node reporting the reading
+     * @param capability the name of the capability
+     * @param value      the value of the reading
+     * @param msec       timestamp in milliseconds
      */
-    private void commitNodeReading(final String nodeId, final String capability, final int value, final String milliseconds) {
+    private void commitNodeReading(final String nodeId, final String capability, final int value, final String msec) {
 
         final String nodeUrn = TESTBED_URN + nodeId;
         final String capabilityName = (CAPABILITY_PREFIX + capability).toLowerCase(Locale.US);
@@ -152,7 +182,7 @@ public class MessageParser implements Runnable { //NOPMD
         nodeReading.setTestbedId(TESTBED_ID);
         nodeReading.setNodeId(nodeUrn);
         nodeReading.setCapabilityName(capabilityName);
-        nodeReading.setTimestamp(milliseconds);
+        nodeReading.setTimestamp(msec);
         nodeReading.setReading(String.valueOf(value));
 
         new RestCommiter(nodeReading);

@@ -75,7 +75,7 @@ public class Helper {
      *
      * @return the RS object
      */
-    public RS getReservationSystem() {
+    public final RS getReservationSystem() {
         return reservationSystem;
     }
 
@@ -84,22 +84,22 @@ public class Helper {
      *
      * @return the SM object
      */
-    public SessionManagement getSessionManagement() {
+    public final SessionManagement getSessionManagement() {
 
         return sessionManagement;
     }
 
     /**
-     * returns the usernames used for the testbeds
+     * returns the usernames used for the testbeds.
      *
      * @return a list of all declared usernames
      */
-    public List getUsernames() {
+    public final List getUsernames() {
         return usernames;
     }
 
     /**
-     * returns the prefixes used for the testbeds
+     * returns the prefixes used for the testbeds.
      *
      * @return a list of all declared urnPrefixes
      */
@@ -110,21 +110,21 @@ public class Helper {
     /**
      * @return the authentication keys
      */
-    public List getSecretAuthKeys() {
+    public final List getSecretAuthKeys() {
         return secretAuthKeys;
     }
 
     /**
      * @return the port to connect to
      */
-    public int getPccPort() {
+    public final int getPccPort() {
         return pccPort;
     }
 
     /**
      * @return the hostname to connect to
      */
-    public String getPccHost() {
+    public final String getPccHost() {
         return pccHost;
     }
 
@@ -132,7 +132,7 @@ public class Helper {
     /**
      * @return the property file to use
      */
-    public Properties getProperties() {
+    public final Properties getProperties() {
 
         return properties;
     }

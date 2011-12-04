@@ -17,6 +17,11 @@ public class WsCommiter {
      */
     private static final Logger LOGGER = Logger.getLogger(WsCommiter.class);
 
+    /**
+     * Constructor using a NodeReading.
+     *
+     * @param nodeReading the NodeReading to commit
+     */
     public WsCommiter(final NodeReading nodeReading) {
         try {
             LOGGER.info("adding " + nodeReading);
@@ -27,6 +32,11 @@ public class WsCommiter {
         }
     }
 
+    /**
+     * Constructor using a LinkReading.
+     *
+     * @param linkReading the LinkReading to commit
+     */
     public WsCommiter(final LinkReading linkReading) {
         try {
             LOGGER.info("adding " + linkReading);

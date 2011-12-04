@@ -13,7 +13,10 @@ import java.util.Map;
 import static org.jboss.netty.channel.Channels.pipeline;
 
 /**
- * Custom
+ * Created by IntelliJ IDEA.
+ * User: amaxilatis
+ * Date: 12/1/11
+ * Time: 5:14 PM
  */
 public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
 
@@ -22,11 +25,19 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      */
     private final transient DataCollectorChannelUpstreamHandler upstreamHandler;
 
+    /**
+     * @param dataCollector a datacollector object
+     */
     public DataCollectorPipelineFactory(final DataCollector dataCollector) {
         upstreamHandler = new DataCollectorChannelUpstreamHandler(dataCollector);
     }
 
-    public void setSensors(final Map<String, String> sensors) {
+    /**
+     * set the sensor map.
+     *
+     * @param sensors a map that contains the sensors monitored
+     */
+    public final void setSensors(final Map<String, String> sensors) {
         upstreamHandler.setSensors(sensors);
     }
 
@@ -43,9 +54,8 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      */
     public static final int STRIP = 4;
 
-
     @Override
-    public ChannelPipeline getPipeline() {
+    public final ChannelPipeline getPipeline() {
 
         final ChannelPipeline channelPipeline = pipeline();
 
@@ -61,6 +71,4 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
         return channelPipeline;
 
     }
-
-
 }

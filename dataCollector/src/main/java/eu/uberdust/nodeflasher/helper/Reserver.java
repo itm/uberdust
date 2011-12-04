@@ -2,7 +2,10 @@ package eu.uberdust.nodeflasher.helper;
 
 import com.google.common.collect.Lists;
 import de.uniluebeck.itm.wisebed.cmdlineclient.BeanShellHelper;
-import eu.wisebed.api.rs.*;
+import eu.wisebed.api.rs.AuthorizationExceptionException;
+import eu.wisebed.api.rs.ConfidentialReservationData;
+import eu.wisebed.api.rs.RSExceptionException;
+import eu.wisebed.api.rs.ReservervationConflictExceptionException;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
@@ -29,7 +32,7 @@ public class Reserver {
      * @param nodes the nodes to reserve
      * @return the reservation key
      */
-    public String reserve(final String[] nodes) {
+    public final String reserve(final String[] nodes) {
 
         LOGGER.info("|+   Trying to reserve " + nodes.length + " nodes");
 

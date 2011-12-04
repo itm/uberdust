@@ -23,26 +23,44 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Time: 5:04 PM
  */
 public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHandler {
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(DataCollectorChannelUpstreamHandler.class);
+
     /**
      * counts the messages received - stats.
      */
     private transient int messageCounter;
+
     /**
-     *
+     * Stats counter.
      */
     private static final int REPORT_LIMIT = 1000;
+
     /**
      * saves the last time 1000 messages were received - stats.
      */
     private transient long lastTime;
+
     /**
      * executors for handling incoming messages.
      */
     private final transient ExecutorService executorService;
+
+    /**
+     * map that contains the sensors monitored.
+     */
     private transient Map<String, String> sensors;
+
+    /**
+     * reference to the class that created the handler.
+     */
     private final transient DataCollector dataCollector;
 
+    /**
+     * @param dataCollector a datacollector object
+     */
     public DataCollectorChannelUpstreamHandler(final DataCollector dataCollector) {
         this.dataCollector = dataCollector;
         messageCounter = 0;
@@ -52,7 +70,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
     }
 
     @Override
-    public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent)
+    public final void messageReceived(final ChannelHandlerContext ctx, final MessageEvent messageEvent)
             throws InvalidProtocolBufferException {
         final Messages.Msg message = (Messages.Msg) messageEvent.getMessage();
         if (WSNApp.MSG_TYPE_LISTENER_MESSAGE.equals(message.getMsgType())) {
@@ -76,19 +94,26 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
         }
     }
 
-    public void setSensors(final Map sensors) {
+    /**
+     * set the sensor map.
+     *
+     * @param sensors a map that contains the sensors monitored
+     */
+    public final void setSensors(final Map sensors) {
         this.sensors = sensors;
 
     }
 
 
     /**
-     * @param ctx
-     * @param channelStateEvent
-     * @throws Exception
+     * called upon disconnect from the server.
+     *
+     * @param ctx               the channel context
+     * @param channelStateEvent the channel disconnect event
+     * @throws Exception an exception
      */
     @Override
-    public void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent)
+    public final void channelDisconnected(final ChannelHandlerContext ctx, final ChannelStateEvent channelStateEvent)
             throws Exception {     //NOPMD
         super.channelDisconnected(ctx, channelStateEvent);
         shutdown();
@@ -105,7 +130,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
     }
 
     /**
-     * @param toString
+     * @param toString the string to parse
      */
     private void parse(final String toString) {
         executorService.submit(new MessageParser(toString, sensors));

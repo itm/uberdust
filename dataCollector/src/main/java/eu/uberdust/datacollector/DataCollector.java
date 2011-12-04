@@ -25,28 +25,34 @@ public class DataCollector {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
+
     /**
-     * WebSocket address
+     * WebSocket address.
      */
     private static final String WS_URL = "ws://uberdust.cti.gr:80/insertreading.ws";
+
     /**
      * Application property file name.
      */
     private static final String PROPERTY_FILE = "dataCollector.properties";
 
-
     /**
      * testbed hostname.
      */
     private transient String host;
+
     /**
      * testbed port to connect to.
      */
     private transient int port;
+
     /**
      * map of the names used in iSense application to capability names.
      */
     private final transient Map<String, String> sensors = new HashMap<String, String>();
+    /**
+     * pipeline factory.
+     */
     private transient NioClientSocketChannelFactory factory;
 
     /**
@@ -57,11 +63,13 @@ public class DataCollector {
 
         readProperties();
 
-
         connectWS();
-
     }
 
+    /**
+     * For WS implementation.
+     * Connects to the WS server.
+     */
     private void connectWS() {
         try {
             InsertReadingWebSocketClient.getInstance().connect(WS_URL);
@@ -112,8 +120,10 @@ public class DataCollector {
 
     /**
      * Connects to testbedruntime overlay port to receive all incoming debug messages.
+     *
+     * @return true when connection was success
      */
-    public final int start() {
+    public final boolean start() {
 
         factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
@@ -133,15 +143,18 @@ public class DataCollector {
         // Wait until the connection is made successfully.
         if (!connectFuture.isSuccess()) {
             LOGGER.error("client connect failed!", connectFuture.getCause());
-            return 0;
+            return false;
         }
-        return 1;
+        return true;
 
     }
 
+    /**
+     * Reconnects to testbedruntime when connection was lost.
+     */
     public final void restart() {
         factory.releaseExternalResources();
-        while (0 == start()) {
+        while (!start()) {
             LOGGER.error("could not start sleeping 5000");
             System.exit(1);
         }

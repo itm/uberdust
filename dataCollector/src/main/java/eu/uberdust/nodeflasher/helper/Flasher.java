@@ -37,14 +37,14 @@ public class Flasher extends Helper {
     /**
      * reference to helper class that contains properties.
      */
-    private final Helper helper;
+    private final transient Helper helper;
 
     /**
      * Constructor.
      *
      * @param helper the helper class
      */
-    public Flasher(Helper helper) {
+    public Flasher(final Helper helper) {
         this.helper = helper;
     }
 
@@ -54,7 +54,7 @@ public class Flasher extends Helper {
      * @param nodes The nodes to flash
      * @param type  The type of the nodes, used to select the correct image
      */
-    public void flash(final String[] nodes, final String type) {
+    public final void flash(final String[] nodes, final String type) {
 
         LOGGER.info("|+   flashing nodes of type: " + type);
         final String imagePath = helper.getProperties().getProperty("image." + type);

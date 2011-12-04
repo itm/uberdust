@@ -29,42 +29,42 @@ public class TestbedClient implements ProtobufControllerClientListener {
     /**
      * @param messages List of the messages received
      */
-    public void receive(final List messages) {
+    public final void receive(final List messages) {
         LOGGER.debug("receive");
     }
 
     /**
      * @param requestStatuses list of the status received
      */
-    public void receiveStatus(final List requestStatuses) {
+    public final void receiveStatus(final List requestStatuses) {
         wsn.receive(requestStatuses);
     }
 
     /**
      * @param messages list of the notifications received
      */
-    public void receiveNotification(final List messages) {
+    public final void receiveNotification(final List messages) {
         LOGGER.debug("receiveNotification");
     }
 
     /**
      * Experiment ended.
      */
-    public void experimentEnded() {
+    public final void experimentEnded() {
         LOGGER.debug("experimentEnded");
     }
 
     /**
      * Connection established.
      */
-    public void onConnectionEstablished() {
+    public final void onConnectionEstablished() {
         LOGGER.debug("onConnectionEstablished");
     }
 
     /**
      * Connection closed.
      */
-    public void onConnectionClosed() {
+    public final void onConnectionClosed() {
         LOGGER.debug("onConnectionClosed");
     }
 }
