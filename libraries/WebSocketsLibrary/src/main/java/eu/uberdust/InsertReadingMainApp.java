@@ -39,13 +39,21 @@ public final class InsertReadingMainApp {
         PropertyConfigurator.configure(InsertReadingMainApp.class.getClassLoader().getResource("log4j.properties"));
 
         // sample node reading
-        NodeReading nodeReading = new NodeReading();
-        nodeReading.setTestbedId("3");
-        nodeReading.setNodeId("urn:ctinetwork:carrot_delete_me");
-        nodeReading.setCapabilityName("urn:ctinetwork:node:capability:lockScreen");
-        nodeReading.setTimestamp(Long.toString(new Date().getTime()));
-        nodeReading.setReading("1.0");
-        LOGGER.info(nodeReading.toString());
+        NodeReading nodeReading1 = new NodeReading();
+        nodeReading1.setTestbedId("3");
+        nodeReading1.setNodeId("urn:ctinetwork:carrot_delete_me");
+        nodeReading1.setCapabilityName("urn:ctinetwork:node:capability:lockScreen");
+        nodeReading1.setTimestamp(Long.toString(new Date().getTime()));
+        nodeReading1.setReading("1.0");
+        LOGGER.info(nodeReading1.toString());
+
+        NodeReading nodeReading2 = new NodeReading();
+        nodeReading2.setTestbedId("3");
+        nodeReading2.setNodeId("urn:ctinetwork:carrot_delete_moi");
+        nodeReading2.setCapabilityName("urn:ctinetwork:node:capability:lockScreen");
+        nodeReading2.setTimestamp(Long.toString(new Date().getTime()));
+        nodeReading2.setReading("1.0");
+        LOGGER.info(nodeReading2.toString());
 
 //
 //        /**
@@ -57,8 +65,9 @@ public final class InsertReadingMainApp {
 //        // insert node reading using REST
 //        LOGGER.info("Calling REST at (" + restBaseUrl + nodeReading.toRestString() + ")");
 //        final String result =
-//                InsertReadingRestClient.getInstance().callRestfulWebService(restBaseUrl + nodeReading.toRestString());
-//
+//                InsertReadingRestClient.getInstance().callRestfulWebService(restBaseUrl + nodeReading1.toRestString());
+//        final String result =
+//                InsertReadingRestClient.getInstance().callRestfulWebService(restBaseUrl + nodeReading2.toRestString());
 //        if (!result.contains("OK")) {
 //            LOGGER.error("Could not insert reading");
 //            throw new RuntimeException("Could not insert reading");
@@ -67,14 +76,14 @@ public final class InsertReadingMainApp {
         /**
          * WebSocket Call
          */
-
         final String webSocketUrl = "ws://carrot.cti.gr:8080/uberdust/insertreading.ws";
 
         // insert node reading using WebSockets
         LOGGER.info("Calling WebSocket at (" + webSocketUrl + ") connecting");
         InsertReadingWebSocketClient.getInstance().connect(webSocketUrl);
-        LOGGER.info("Calling sendNodeReading()");
-        InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading);
-
+        LOGGER.info("Calling sendNodeReading(nodeReading1)");
+        InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading1);
+        LOGGER.info("Calling sendNodeReading(nodeReading2)");
+        InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading2);
     }
 }
