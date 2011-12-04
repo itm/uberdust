@@ -1,3 +1,5 @@
+iapps/*/bin/*
+*/*/nbproject/
 *.ipr
 *.iml
 **/*.iml
