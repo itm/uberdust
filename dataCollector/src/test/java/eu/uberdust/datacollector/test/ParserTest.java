@@ -1,6 +1,7 @@
 package eu.uberdust.datacollector.test;
 
-import eu.uberdust.datacollector.parsers.WsMessageParser;
+import eu.uberdust.datacollector.parsers.MessageParser;
+import eu.uberdust.reading.LinkReading;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -51,6 +52,15 @@ public class ParserTest
         BasicConfigurator.configure();
         LOGGER.setLevel(Level.ALL);
 
+        LinkReading linkReading = new LinkReading();
+        linkReading.setTestbedId("1");
+        linkReading.setLinkSource("urn:qopbot:kandalf");
+        linkReading.setLinkTarget("urn:qopbot:destiny");
+        linkReading.setCapabilityName("rtt");
+        linkReading.setTimestamp("1111");
+        linkReading.setReading("21");
+        LOGGER.info(linkReading.toRestString());
+
         final String[] sensorsNames = "temperature,humidity,ir,co2,co,ch4,light,batterycharge,barometricpressure,light1,light2,light3,light4,pir,pressure".split(",");
         final String[] sensorsPrefixes = "EM_T,EM_H,EM_I,SVal1:,SVal2:,SVal3:,EM_L,BA_C,EM_P,RL1,RL2,RL3,RL4,EM_E,CS".split(",");
 
@@ -59,21 +69,20 @@ public class ParserTest
         }
         long millis = System.currentTimeMillis();
         String eventString = "binaryData:h\\000id::0x1ccd EM_E 0 ";
-        WsMessageParser messageParser = new WsMessageParser(eventString, sensors);
-        messageParser.setLevel(Level.ALL);
+        MessageParser messageParser = new MessageParser(eventString, sensors);
         messageParser.parse();
         LOGGER.debug("Parsing and thread creation takes " + (System.currentTimeMillis() - millis) + " millis");
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c EM_L 165 ";
-        messageParser = new WsMessageParser(eventString, sensors);
+        messageParser = new MessageParser(eventString, sensors);
         messageParser.parse();
         LOGGER.debug("Parsing needs " + (System.currentTimeMillis() - millis) + " millis");
 
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c RL4 0 ";
-        messageParser = new WsMessageParser(eventString, sensors);
+        messageParser = new MessageParser(eventString, sensors);
         messageParser.parse();
         LOGGER.debug("Parsing needs " + (System.currentTimeMillis() - millis) + " millis");
 
