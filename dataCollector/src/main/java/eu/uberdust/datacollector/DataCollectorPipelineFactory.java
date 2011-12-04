@@ -16,19 +16,20 @@ import static org.jboss.netty.channel.Channels.pipeline;
  * Custom
  */
 public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
-    DataCollector dataCollector = null;
+
     /**
      * Chanel handler that receives the messages and Generates parser threads.
      */
-    private final transient DataCollectorChannelUpstreamHandler upstreamHandler = new DataCollectorChannelUpstreamHandler();
+    private final transient DataCollectorChannelUpstreamHandler upstreamHandler;
+    private DataCollector dataCollector;
 
     public DataCollectorPipelineFactory(DataCollector dataCollector) {
         this.dataCollector = dataCollector;
+        upstreamHandler = new DataCollectorChannelUpstreamHandler(dataCollector);
     }
 
-    public void setSensors(Map<String, String> sensors) {
+    public void setSensors(final Map<String, String> sensors) {
         upstreamHandler.setSensors(sensors);
-
     }
 
     /**

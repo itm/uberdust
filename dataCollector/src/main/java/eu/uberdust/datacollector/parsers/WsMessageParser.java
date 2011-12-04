@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Parses a message received and adds data to a wisedb database.
  */
-public class WsMessageParser implements Runnable {
+public class WsMessageParser implements Runnable { //NOPMD
 
     /**
      * LOGGER.

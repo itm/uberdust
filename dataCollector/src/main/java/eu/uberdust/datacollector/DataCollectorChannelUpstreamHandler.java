@@ -40,10 +40,11 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * executors for handling incoming messages.
      */
     private final transient ExecutorService executorService;
-    private Map<String, String> sensors = null;
+    private transient Map<String, String> sensors;
+    private DataCollector dataCollector;
 
-    public DataCollectorChannelUpstreamHandler() {
-
+    public DataCollectorChannelUpstreamHandler(DataCollector dataCollector) {
+        this.dataCollector = dataCollector;
         messageCounter = 0;
         lastTime = System.currentTimeMillis();
 
@@ -94,18 +95,20 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
 
     }
 
+    /**
+     * Shuts down the executorService
+     */
     private void shutdown() {
+        LOGGER.error("Shutting down!!!");
         executorService.shutdown();
-        throw new RuntimeException();
+        dataCollector.restart();
     }
 
     /**
      * @param toString
      */
     private void parse(final String toString) {
-
         executorService.submit(new RestMessageParser(toString, sensors));
-
     }
 
 }

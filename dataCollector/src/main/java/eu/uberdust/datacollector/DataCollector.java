@@ -47,11 +47,7 @@ public class DataCollector {
      * map of the names used in iSense application to capability names.
      */
     private final transient Map<String, String> sensors = new HashMap<String, String>();
-
-
-    private void exceptionCaught(Exception e) {
-        LOGGER.error("caught exception aaaaaa");
-    }
+    private NioClientSocketChannelFactory factory;
 
     /**
      * Default Constructor.
@@ -70,7 +66,7 @@ public class DataCollector {
         try {
             InsertReadingWebSocketClient.getInstance().connect(WS_URL);
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            LOGGER.fatal(e);
         }
     }
 
@@ -108,7 +104,6 @@ public class DataCollector {
     }
 
 
-
     /**
      * Channel factory with custom channelPipeline to parse the received messages.
      */
@@ -118,8 +113,8 @@ public class DataCollector {
     /**
      * Connects to testbedruntime overlay port to receive all incoming debug messages.
      */
-    public final void start() {
-        NioClientSocketChannelFactory factory;
+    public final int start() {
+
         factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
         final ClientBootstrap bootstrap = new ClientBootstrap(factory);
@@ -138,6 +133,18 @@ public class DataCollector {
         // Wait until the connection is made successfully.
         if (!connectFuture.isSuccess()) {
             LOGGER.error("client connect failed!", connectFuture.getCause());
+            return 0;
         }
+        return 1;
+
+    }
+
+    public final void restart() {
+        factory.releaseExternalResources();
+        while (0 == start()) {
+            LOGGER.error("could not start sleeping 5000");
+            System.exit(1);
+        }
+
     }
 }

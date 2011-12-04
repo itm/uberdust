@@ -169,7 +169,7 @@ public class Helper {
 
         // build argument types
         final List credentialsList = new ArrayList();
-        AuthenticationTriple credentials = new AuthenticationTriple();
+        final AuthenticationTriple credentials = new AuthenticationTriple();
         for (int i = 0; i < urnPrefixes.size(); i++) {
 
             credentials.setUrnPrefix((String) urnPrefixes.get(i));

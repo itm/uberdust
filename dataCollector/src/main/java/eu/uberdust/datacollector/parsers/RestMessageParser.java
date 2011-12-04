@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Parses a message received and adds data to a wisedb database.
  */
-public class RestMessageParser implements Runnable {
+public class RestMessageParser implements Runnable { //NOPMD
 
     /**
      * LOGGER.
@@ -36,7 +36,7 @@ public class RestMessageParser implements Runnable {
     private static final String TESTBED_ID = "1";
     private static final String TESTBED_URN = "urn:wisebed:ctitestbed:";
     private static final String CAPABILITY_PREFIX = "urn:wisebed:node:capability:";
-    private static final String TESTBED_SERVER = "http://uberdust.cti.gr";
+    private static final String TESTBED_SERVER = "http://uberdust.cti.gr/rest";
 
 
     /**
@@ -108,7 +108,16 @@ public class RestMessageParser implements Runnable {
                 try {
                     value = Integer.parseInt(strLine.substring(start, end));
                     LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
-                    commitNodeReading(nodeId, sensors.get(sensor), value);
+                    String milliseconds = String.valueOf(System.currentTimeMillis());
+                    if (nodeId.contains("1ccd")) {
+                        if (sensors.get(sensor).equals("pir")) {
+                            milliseconds = strLine.split(" ")[4];
+                            LOGGER.info("setting event time to " + milliseconds + " message '" + strLine + "'");
+                        }
+                    }
+
+                    commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
+
 
                 } catch (Exception e) {
                     LOGGER.error("Cannot parse value for " + sensor + "'" + strLine.substring(start, end) + "'");
@@ -139,21 +148,22 @@ public class RestMessageParser implements Runnable {
     /**
      * Commits a nodeReading to the database using the REST interface.
      *
-     * @param nodeId     the id of the node reporting the reading
-     * @param capability the name of the capability
-     * @param value      the value of the reading
+     * @param nodeId       the id of the node reporting the reading
+     * @param capability   the name of the capability
+     * @param value        the value of the reading
+     * @param milliseconds
      */
-    private void commitNodeReading(final String nodeId, final String capability, final int value) {
+    private void commitNodeReading(final String nodeId, final String capability, final int value, String milliseconds) {
 
         final String nodeUrn = TESTBED_URN + nodeId;
         final String capabilityName = (CAPABILITY_PREFIX + capability).toLowerCase(Locale.US);
-        final long milliseconds = System.currentTimeMillis();
 
-        NodeReading nodeReading = new NodeReading();
+
+        final NodeReading nodeReading = new NodeReading();
         nodeReading.setTestbedId(TESTBED_ID);
         nodeReading.setNodeId(nodeUrn);
         nodeReading.setCapabilityName(capabilityName);
-        nodeReading.setTimestamp(String.valueOf(milliseconds));
+        nodeReading.setTimestamp(milliseconds);
         nodeReading.setReading(String.valueOf(value));
 
         final StringBuilder urlBuilder = new StringBuilder(TESTBED_SERVER);
@@ -177,8 +187,7 @@ public class RestMessageParser implements Runnable {
 
         LOGGER.debug("Fount a link down " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
         final long milliseconds = System.currentTimeMillis();
-        LinkReading linkReading = new LinkReading();
-
+        final LinkReading linkReading = new LinkReading();
         linkReading.setTestbedId(TESTBED_ID);
         linkReading.setLinkSource(sourceUrn);
         linkReading.setLinkTarget(targetUrn);
@@ -190,8 +199,7 @@ public class RestMessageParser implements Runnable {
         urlBuilder.append(linkReading.toRestString());
         final String insertReadingUrl = urlBuilder.toString();
 
-
-        //callUrl(insertReadingUrl);
+        callUrl(insertReadingUrl);
     }
 
     /**
