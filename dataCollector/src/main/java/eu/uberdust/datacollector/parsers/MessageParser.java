@@ -111,10 +111,10 @@ public class MessageParser implements Runnable { //NOPMD
     }
 
     /**
-     * checks for the a node reading
+     * checks for the a node reading.
      *
-     * @param sensor
-     * @param nodeId
+     * @param sensor the sensor to check for
+     * @param nodeId the id of the reporting node
      * @return true if contains a NodeReading
      */
     private boolean checkSensor(final String sensor, final String nodeId) {
@@ -186,7 +186,7 @@ public class MessageParser implements Runnable { //NOPMD
         nodeReading.setReading(String.valueOf(value));
 
         new RestCommiter(nodeReading);
-        new WsCommiter(nodeReading);
+//        new WsCommiter(nodeReading);
     }
 
     /**
@@ -213,6 +213,6 @@ public class MessageParser implements Runnable { //NOPMD
 
 
         new RestCommiter(linkReading);
-        new WsCommiter(linkReading);
+//        new WsCommiter(linkReading);
     }
 }
