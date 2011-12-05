@@ -2,6 +2,7 @@ package eu.uberdust.websockets;
 
 import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
+import eu.uberdust.uberlogger.UberLogger;
 import eu.wisebed.wisedb.listeners.AbstractNodeReadingListener;
 import eu.wisebed.wisedb.model.NodeReading;
 import org.apache.log4j.Logger;
@@ -107,6 +108,7 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
     @Override
     public void update(final NodeReading lastReading) {
         LOGGER.info("Update");
+        UberLogger.getInstance().LOG(lastReading, "T51");
         if (lastReading.getNode().getId().equals(nodeID) && lastReading.getCapability().getName().equals(capabilityID)) {
             final String response = new StringBuilder().append(lastReading.getTimestamp()).append("\t").append(lastReading.getReading()).toString();
             LOGGER.info(response);
@@ -120,5 +122,6 @@ public class CustomWebSocketListener extends AbstractWebSocketListener implement
                 }
             }
         }
+        UberLogger.getInstance().LOG(lastReading, "T52");
     }
 }

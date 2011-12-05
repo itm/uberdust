@@ -119,6 +119,11 @@
             <artifactId>TestbedListener</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>uberdust</groupId>
+            <artifactId>UberLogger</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!--Module Dependencies-->
         <dependency>
