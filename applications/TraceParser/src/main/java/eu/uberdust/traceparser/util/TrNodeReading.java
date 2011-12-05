@@ -1,5 +1,8 @@
 package eu.uberdust.traceparser.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -15,6 +18,13 @@ public class TrNodeReading {
      * Node ID.
      */
     private final long thisId;
+
+    public static String START = "Start";
+    public static String END = "End";
+
+    private final static String[] KEYS = {START, END, "Τ21", "Τ22", "T23", "T24", "T25", "T3", "T4", "T41", "T51", "T52", "T6",
+            "T7a", "T7b", "T81", "T82", "T83", "T84", "T9", "T91", "T10", "T101"};
+
 
     private final HashMap<String, Long> timestamps = new HashMap<String, Long>();
 
@@ -57,9 +67,16 @@ public class TrNodeReading {
         sb.append("TrNodeReading");
         sb.append("{thisId=").append(thisId);
         sb.append(", timestamps=[ ");
-        for (String s : timestamps.keySet()) {
-            sb.append(s).append(":");
-            sb.append(timestamps.get(s)).append(", ");
+        if (isComplete()) {
+            for (String key : KEYS) {
+                sb.append(key).append(":");
+                sb.append(timestamps.get(key)).append(", ");
+            }
+        } else {
+            for (String s : timestamps.keySet()) {
+                sb.append(s).append(":");
+                sb.append(timestamps.get(s)).append(", ");
+            }
         }
         sb.append("]}");
         sb.append("\t");
@@ -68,4 +85,34 @@ public class TrNodeReading {
         }
         return sb.toString();
     }
+
+    public boolean isComplete() {
+        for (String key : KEYS) {
+            if (!timestamps.containsKey(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public long totalDuration() {
+        if (isComplete()) {
+            return timestamps.get("End") - timestamps.get("Start");
+        } else {
+            return 0;
+        }
+    }
+
+    public void printKeys() {
+        ArrayList<String> str = new ArrayList<String>(timestamps.keySet());
+
+
+        for (String s : timestamps.keySet()) {
+            System.out.println("final static String " + s + "= \"" + s + "\"");
+        }
+
+        Collections.sort(str);
+        System.out.println(str);
+    }
 }
+
