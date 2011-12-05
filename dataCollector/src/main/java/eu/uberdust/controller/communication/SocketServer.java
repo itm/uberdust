@@ -55,7 +55,6 @@ public class SocketServer extends Thread {
         super.run();
 
         while (isEnabled) {
-
             try {
                 (new MessageHandler(serverSocket.accept())).start();
                 LOGGER.info("New Connection established");

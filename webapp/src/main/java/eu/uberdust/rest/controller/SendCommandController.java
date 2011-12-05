@@ -3,6 +3,7 @@ package eu.uberdust.rest.controller;
 import eu.uberdust.command.DestinationPayloadCommand;
 import eu.uberdust.controller.protobuf.CommandProtocol;
 import eu.uberdust.rest.exception.NodeNotFoundException;
+import eu.uberdust.uberlogger.UberLogger;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
@@ -68,6 +69,11 @@ public final class SendCommandController extends AbstractRestController {
 
         // set commandNode object
         final DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
+        final String payload = command.getPayload().replaceAll(",", "");
+        final String nodeId = payload.substring(3);
+
+        UberLogger.getInstance().LOG(nodeId, "T81");
+
 
         // look for destination node
         final Node destinationNode = nodeManager.getByID(command.getDestination());
@@ -75,6 +81,7 @@ public final class SendCommandController extends AbstractRestController {
             throw new NodeNotFoundException("Destination Node [" + command.getDestination() + "] is not stored.");
         }
 
+        UberLogger.getInstance().LOG(nodeId, "T82");
         // prepare socket for connection and writer
         final Socket kkSocket = new Socket("gold.cti.gr", 4444);
         final PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
@@ -89,10 +96,11 @@ public final class SendCommandController extends AbstractRestController {
         // close stream after command execution
         out.close();
         kkSocket.close();
-
+        UberLogger.getInstance().LOG(nodeId, "T83");
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
+        UberLogger.getInstance().LOG(nodeId, "T84");
         return null;
 
     }

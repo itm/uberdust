@@ -6,6 +6,7 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
 import eu.uberdust.controller.communication.SocketServer;
 import eu.uberdust.controller.protobuf.CommandProtocol;
+import eu.uberdust.uberlogger.UberLogger;
 import eu.wisebed.api.common.Message;
 import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
 import eu.wisebed.api.sm.SessionManagement;
@@ -134,6 +135,9 @@ public class TestbedController {
 
         // Send a message to nodes via uart (to receive them enable RX_UART_MSGS in the fronts_config.h-file)
         final Message msg = new Message();
+        final String pl = protoCommand.getPayload().replaceAll(",", "");
+        final String nodeId = pl.substring(3);
+        UberLogger.getInstance().LOG(nodeId, "T91");
 
         final String macAddress = protoCommand.getDestination().
                 substring(protoCommand.getDestination().indexOf("0x") + 2);
@@ -167,7 +171,10 @@ public class TestbedController {
         } catch (final DatatypeConfigurationException e) {
             LOGGER.error(e);
         }
+
+        UberLogger.getInstance().LOG(nodeId, "T10");
         wsn.send(nodeURNs, msg, 10, TimeUnit.SECONDS);
+        UberLogger.getInstance().LOG(nodeId, "T101");
     }
 
     public static void main(final String[] args) {
