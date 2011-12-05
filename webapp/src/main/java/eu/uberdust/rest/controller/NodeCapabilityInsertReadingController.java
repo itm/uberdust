@@ -87,7 +87,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         // set commandNode object
         final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
 
-        UberLogger.getInstance().LOG(command.getTimestamp(), "T23");
+        UberLogger.getInstance().LOG(Long.parseLong(command.getTimestamp()), "T23");
         // a specific testbed is requested by testbed Id
         int testbedId;
         try {
@@ -110,7 +110,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         reading = Double.parseDouble(command.getReading());
         timestamp = new Date(Long.parseLong(command.getTimestamp()));
 
-        UberLogger.getInstance().LOG(command.getTimestamp(), "T24");
+        UberLogger.getInstance().LOG(timestamp.getTime(), "T24");
         // insert reading
         nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getId(),
                 reading, timestamp);
@@ -122,7 +122,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         textOutput.flush();
         textOutput.close();
 
-        UberLogger.getInstance().LOG(command.getTimestamp(), "T25");
+        UberLogger.getInstance().LOG(timestamp.getTime(), "T25");
         return null;
     }
 }
