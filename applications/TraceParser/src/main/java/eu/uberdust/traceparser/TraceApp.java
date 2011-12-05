@@ -63,7 +63,9 @@ public class TraceApp {
         for (TrNodeReading finalReading : finalReadings) {
             LOGGER.info(finalReading);
             LOGGER.info(finalReading.getStart());
-            totalSeries.addOrUpdate(new Millisecond(new Date(finalReading.getStart())), finalReading.totalDuration());
+            if (finalReading.totalDuration() < 100000) {
+                totalSeries.addOrUpdate(new Millisecond(new Date(finalReading.getStart())), finalReading.totalDuration());
+            }
         }
 
 
