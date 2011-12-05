@@ -1,8 +1,5 @@
 package eu.uberdust.traceparser.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -27,6 +24,7 @@ public class TrNodeReading {
 
 
     private final HashMap<String, Long> timestamps = new HashMap<String, Long>();
+    private long start;
 
 
     /**
@@ -101,6 +99,10 @@ public class TrNodeReading {
         } else {
             return 0;
         }
+    }
+
+    public long getStart() {
+        return timestamps.get("Start");
     }
 }
 

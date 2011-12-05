@@ -5,9 +5,18 @@ import eu.uberdust.traceparser.parsers.ThreadParser;
 import eu.uberdust.traceparser.parsers.UberParser;
 import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.time.Millisecond;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -49,10 +58,29 @@ public class TraceApp {
                 finalReadings.add(reading);
             }
         }
+        final TimeSeries totalSeries = new TimeSeries("Total Duration");
 
         for (TrNodeReading finalReading : finalReadings) {
             LOGGER.info(finalReading);
+            LOGGER.info(finalReading.getStart());
+            totalSeries.addOrUpdate(new Millisecond(new Date(finalReading.getStart())), finalReading.totalDuration());
         }
+
+
+        final TimeSeriesCollection totalCollection = new TimeSeriesCollection();
+        totalCollection.addSeries(totalSeries);
+        final JFreeChart messagesChart = ChartFactory.createTimeSeriesChart(
+                "Total Duration",
+                "time",
+                "Duration in Millis",
+                totalCollection, true, true, false);
+        messagesChart.getPlot().setBackgroundPaint(Color.white);
+        messagesChart.getXYPlot().setDomainGridlinePaint(Color.black);
+        messagesChart.getXYPlot().setRangeGridlinePaint(Color.black);
+        final JFrame messagesFrame = new JFrame();
+        messagesFrame.add(new ChartPanel(messagesChart));
+        messagesFrame.pack();
+        messagesFrame.setVisible(true);
 
         new ThreadParser(threadLogFile);
     }

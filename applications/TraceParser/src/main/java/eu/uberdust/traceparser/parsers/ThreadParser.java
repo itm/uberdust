@@ -1,5 +1,6 @@
 package eu.uberdust.traceparser.parsers;
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -22,6 +23,10 @@ import java.util.Locale;
  */
 public class ThreadParser {
 
+    /**
+     * Static Logger,
+     */
+    private static final Logger LOGGER = Logger.getLogger(ThreadParser.class);
     /**
      * Prefix that describes a thread pool statistic.
      */
@@ -49,6 +54,7 @@ public class ThreadParser {
 
     /**
      * Default Constructor.
+     *
      * @param threadLogFile
      */
     public ThreadParser(String threadLogFile) {
@@ -70,7 +76,7 @@ public class ThreadParser {
         final TimeSeries rateSeries = new TimeSeries("Message Rate");
         try {
             while ((strLine = reader.readLine()) != null) {
-                System.out.println(strLine);
+                LOGGER.debug(strLine);
 
                 if (strLine.contains(TEMPLATE_POOL)) {
                     final int poolStart = strLine.indexOf(POOL_SIZE_PX) + POOL_SIZE_PX.length();
