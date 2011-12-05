@@ -1,6 +1,7 @@
 package eu.uberdust.traceparser;
 
 import eu.uberdust.traceparser.parsers.TRParser;
+import eu.uberdust.traceparser.parsers.ThreadParser;
 import eu.uberdust.traceparser.parsers.UberParser;
 import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
@@ -32,6 +33,7 @@ public class TraceApp {
     private String[] runtimeLogFiles;
 
     private String[] uberLogFiles;
+    private String threadLogFile;
 
     public TraceApp() {
         readProperties();
@@ -52,6 +54,7 @@ public class TraceApp {
             LOGGER.info(finalReading);
         }
 
+        new ThreadParser(threadLogFile);
     }
 
 
@@ -69,6 +72,7 @@ public class TraceApp {
 
         runtimeLogFiles = properties.getProperty("runtime.log").split(",");
         uberLogFiles = properties.getProperty("uberdust.log").split(",");
+        threadLogFile = properties.getProperty("listener.log");
 
     }
 
