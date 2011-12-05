@@ -3,6 +3,7 @@ package eu.uberdust.lights;
 import eu.uberdust.communication.rest.RestClient;
 import eu.uberdust.communication.websocket.WSocketClient;
 import eu.uberdust.lights.tasks.LightTask;
+import eu.uberdust.uberlogger.UberLogger;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -101,9 +102,15 @@ public final class LightController {
         } else {
             zone2 = value;
         }
-        final String link = new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0).toString();
-        LOGGER.info(link);
-        RestClient.getInstance().callRestfulWebService(link);
+        final String reading = String.valueOf(lastReading);
+        final StringBuilder linkBuilder = new StringBuilder(REST_LINK).append(zone).append(",").append(value ? 1 : 0);
+        for (int i = 0; i < reading.length(); i++) {
+            linkBuilder.append(",").append(reading.charAt(i));
+        }
+        UberLogger.getInstance().LOG(reading, "T7a");
+        LOGGER.info(linkBuilder.toString());
+        RestClient.getInstance().callRestfulWebService(linkBuilder.toString());
+        UberLogger.getInstance().LOG(reading, "T7b");
     }
 
     public boolean isZone1() {

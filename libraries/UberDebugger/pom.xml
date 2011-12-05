@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>uberdust</groupId>
-    <artifactId>WebSocketsLibrary</artifactId>
+    <artifactId>UberLogger</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>WebSocketsLibrary</name>
+    <name>UberLogger</name>
 
     <properties>
         <jetty-version>8.0.4.v20111024</jetty-version>
@@ -40,21 +40,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-websocket</artifactId>
-            <version>${jetty-version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty-version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>ichatz</groupId>
+            <artifactId>wiseml</artifactId>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -72,9 +65,6 @@
                 <version>1.4.1</version>
                 <executions>
                     <execution>
-                        <configuration>
-                            <mainClass>eu.uberdust.InsertReadingMainApp</mainClass>
-                        </configuration>
                         <goals>
                             <goal>one-jar</goal>
                         </goals>
@@ -108,5 +98,5 @@
             <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
         </pluginRepository>
     </pluginRepositories>
+
 </project>
-    

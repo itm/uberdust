@@ -11,13 +11,15 @@
     <groupId>uberdust</groupId>
     <artifactId>libraries</artifactId>
     <version>1.0</version>
+    <name>Libraries</name>
     <packaging>pom</packaging>
 
     <modules>
         <module>WebSocketsLibrary</module>
+        <module>UberDebugger</module>
     </modules>
 
-    <name>Applications</name>
+
     <url>http://maven.apache.org</url>
 
     <properties>

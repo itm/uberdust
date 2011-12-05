@@ -1,6 +1,7 @@
 package eu.uberdust.communication.websocket;
 
 import eu.uberdust.lights.LightController;
+import eu.uberdust.uberlogger.UberLogger;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.WebSocket;
 
@@ -28,9 +29,10 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
         if (data.isEmpty()) {
             return;
         }
+        UberLogger.getInstance().LOG(data.split("\t")[0], "T6");
         LOGGER.info(new StringBuilder().append("-- onMessage: ").append(data).append(new Date()).toString());
-        LightController.getInstance().setLastReading(System.currentTimeMillis());
-        //LightController.getInstance().setLastReading(Long.parseLong(data.split("\t")[0]));
+        //LightController.getInstance().setLastReading(System.currentTimeMillis());
+        LightController.getInstance().setLastReading(Long.valueOf(data.split("\t")[0]));
         LOGGER.info(new StringBuilder().append("-- finished : ").append(new Date()).toString());
     }
 
