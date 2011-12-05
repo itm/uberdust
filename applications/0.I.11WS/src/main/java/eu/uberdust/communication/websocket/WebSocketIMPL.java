@@ -29,7 +29,8 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
         if (data.isEmpty()) {
             return;
         }
-        UberLogger.getInstance().LOG(Long.valueOf(data.split("\t")[0]).longValue(), "T6");
+        UberLogger.getInstance().LOG(Long.valueOf(data.split("\t")[0]), "T6");
+        //System.out.println(Long.valueOf(data.split("\t")[0]));
         LOGGER.info(new StringBuilder().append("-- onMessage: ").append(data).append(new Date()).toString());
         //LightController.getInstance().setLastReading(System.currentTimeMillis());
         LightController.getInstance().setLastReading(Long.valueOf(data.split("\t")[0]));
@@ -55,8 +56,8 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     @Override
     public final void onClose(final int closeCode, final String message) {
         LOGGER.info("onClose");
-        WSocketClient.getInstance().disconnect();
+     /*   WSocketClient.getInstance().disconnect();
         WSocketClient.getInstance().restPing();
-        WSocketClient.getInstance().connect();
+        WSocketClient.getInstance().connect();*/
     }
 }
