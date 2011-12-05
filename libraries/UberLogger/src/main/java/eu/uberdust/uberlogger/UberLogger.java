@@ -49,7 +49,7 @@ public class UberLogger {
 
     public final void LOG(final NodeReading nodeReading, final String level) {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(level).append(" -- ").append("ID: ").append(nodeReading.getTimestamp()).append(" , ");
+        stringBuilder.append(level).append(" -- ").append("ID: ").append(nodeReading.getTimestamp().getTime()).append(" , ");
         stringBuilder.append(System.currentTimeMillis());
         LOGGER.info(stringBuilder.toString());
     }
