@@ -65,16 +65,16 @@ public class TrNodeReading {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("TrNodeReading");
-        sb.append("{thisId=").append(thisId);
+        sb.append("{ID= ").append(thisId);
         sb.append(", timestamps=[ ");
         if (isComplete()) {
             for (String key : KEYS) {
-                sb.append(key).append(":");
+                sb.append(key).append(": ");
                 sb.append(timestamps.get(key)).append(", ");
             }
         } else {
             for (String s : timestamps.keySet()) {
-                sb.append(s).append(":");
+                sb.append(s).append(": ");
                 sb.append(timestamps.get(s)).append(", ");
             }
         }
@@ -101,18 +101,6 @@ public class TrNodeReading {
         } else {
             return 0;
         }
-    }
-
-    public void printKeys() {
-        ArrayList<String> str = new ArrayList<String>(timestamps.keySet());
-
-
-        for (String s : timestamps.keySet()) {
-            System.out.println("final static String " + s + "= \"" + s + "\"");
-        }
-
-        Collections.sort(str);
-        System.out.println(str);
     }
 }
 

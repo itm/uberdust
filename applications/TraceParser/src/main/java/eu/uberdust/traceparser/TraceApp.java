@@ -42,15 +42,12 @@ public class TraceApp {
 
         final ArrayList<TrNodeReading> finalReadings = new ArrayList<TrNodeReading>();
 
-        long averageDuration = 0;
         for (TrNodeReading reading : readings) {
             if (reading.isComplete()) {
                 finalReadings.add(reading);
-                averageDuration += reading.totalDuration();
             }
         }
 
-        //LOGGER.info(finalReadings);
         for (TrNodeReading finalReading : finalReadings) {
             LOGGER.info(finalReading);
         }
