@@ -135,9 +135,11 @@ public class TestbedController {
 
         // Send a message to nodes via uart (to receive them enable RX_UART_MSGS in the fronts_config.h-file)
         final Message msg = new Message();
-        final String pl = protoCommand.getPayload().replaceAll(",", "");
-        final String nodeId = pl.substring(3);
-        UberLogger.getInstance().LOG(nodeId, "T91");
+        if (protoCommand.getDestination().contains("494")) {
+            final String pl = protoCommand.getPayload().replaceAll(",", "");
+            final String nodeId = pl.substring(3);
+            UberLogger.getInstance().LOG(nodeId, "T91");
+        }
 
         final String macAddress = protoCommand.getDestination().
                 substring(protoCommand.getDestination().indexOf("0x") + 2);
@@ -172,9 +174,18 @@ public class TestbedController {
             LOGGER.error(e);
         }
 
-        UberLogger.getInstance().LOG(nodeId, "T10");
+        if (protoCommand.getDestination().contains("494")) {
+            final String pl = protoCommand.getPayload().replaceAll(",", "");
+            final String nodeId = pl.substring(3);
+            UberLogger.getInstance().LOG(nodeId, "T10");
+        }
+
         wsn.send(nodeURNs, msg, 10, TimeUnit.SECONDS);
-        UberLogger.getInstance().LOG(nodeId, "T101");
+        if (protoCommand.getDestination().contains("494")) {
+            final String pl = protoCommand.getPayload().replaceAll(",", "");
+            final String nodeId = pl.substring(3);
+            UberLogger.getInstance().LOG(nodeId, "T101");
+        }
     }
 
     public static void main(final String[] args) {
