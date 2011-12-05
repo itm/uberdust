@@ -16,7 +16,7 @@
 
     <modules>
         <module>WebSocketsLibrary</module>
-        <module>UberDebugger</module>
+        <module>UberLogger</module>
     </modules>
 
 
