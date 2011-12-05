@@ -3,6 +3,7 @@ package eu.uberdust.datacollector.parsers;
 import eu.uberdust.datacollector.DataCollector;
 import eu.uberdust.reading.LinkReading;
 import eu.uberdust.reading.NodeReading;
+import eu.uberdust.uberlogger.UberLogger;
 import org.apache.log4j.Logger;
 
 import java.util.Locale;
@@ -17,6 +18,7 @@ public class MessageParser implements Runnable { //NOPMD
      * LOGGER.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
+
 
     /**
      * Text line of the message received.
@@ -87,6 +89,12 @@ public class MessageParser implements Runnable { //NOPMD
 
         LOGGER.debug(strLine);
 
+
+        if (strLine.contains("id::0x1ccd EM_E 1")) {
+            String milliseconds = strLine.split(" ")[TIMESTAMP_POS];
+            UberLogger.getInstance().LOG(milliseconds, "Τ2.1");
+        }
+
         //get the node id
         final String nodeId = extractNodeId(strLine);
 
@@ -131,11 +139,13 @@ public class MessageParser implements Runnable { //NOPMD
                 LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
                 String milliseconds = String.valueOf(System.currentTimeMillis());
 
-                if (nodeId.contains("1ccd") && sensors.get(sensor).equals("pir")) {
-                    milliseconds = strLine.split(" ")[TIMESTAMP_POS];
-                    LOGGER.info("setting event time to " + milliseconds + " message '" + strLine + "'");
-                }
 
+
+                if ((nodeId.contains("1ccd") )&&( sensor.contains("EM_E"))) {
+                    milliseconds = strLine.split(" ")[TIMESTAMP_POS];
+                    LOGGER.info("setting eventt to " + milliseconds);
+
+                }
                 commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
             } catch (Exception e) {
                 LOGGER.error("Parse Error" + sensor + "'" + strLine.substring(start, end) + "'");
