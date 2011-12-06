@@ -5,11 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,20 +25,21 @@ public class UberParser {
     private final ArrayList<TrNodeReading> nodeReadings;
 
     private final static String ID = "ID: ";
-
-
+    private final String path;
 
 
     /**
      * Default Constructor.
      *
+     * @param path
      * @param file     the file
      * @param readings the readings
      */
-    public UberParser(final String[] file, final ArrayList<TrNodeReading> readings) {
+    public UberParser(String path, final String[] file, final ArrayList<TrNodeReading> readings) {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
         LOGGER.info("UberParser initialized");
         filenames = file;
+        this.path = path;
         nodeReadings = readings;
         extractData();
     }
@@ -50,8 +47,13 @@ public class UberParser {
     private void extractData() {
         try {
             for (String filename : filenames) {
-                LOGGER.info("Parsing file: " + filename);
-                final FileInputStream fileInputStream = new FileInputStream(filename);
+                LOGGER.info("Parsing file: " + path + filename);
+                FileInputStream fileInputStream;
+                try {
+                    fileInputStream = new FileInputStream(path + filename);
+                } catch (Exception e) {
+                    continue;
+                }
                 // Get the object of DataInputStream
                 final DataInputStream dataInputStream = new DataInputStream(fileInputStream);
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(dataInputStream));

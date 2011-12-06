@@ -9,7 +9,6 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,14 +33,17 @@ public class TRParser {
     private final static String END = "]";
 
     private final ArrayList<TrNodeReading> nodeReadings = new ArrayList<TrNodeReading>();
+    private final String path;
 
     /**
      * Default Constructor.
      *
+     * @param path
      * @param file the file
      */
-    public TRParser(final String[] file) {
+    public TRParser(String path, final String[] file) {
         PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
+        this.path = path;
         filenames = file;
         LOGGER.info("TRParser initialized");
         extractData();
@@ -50,8 +52,8 @@ public class TRParser {
     private void extractData() {
         try {
             for (String filename : filenames) {
-                LOGGER.info("Parsing file: " + filename);
-                final FileInputStream fileInputStream = new FileInputStream(filename);
+                LOGGER.info("Parsing file: " + path + filename);
+                final FileInputStream fileInputStream = new FileInputStream(path + filename);
                 // Get the object of DataInputStream
                 final DataInputStream dataInputStream = new DataInputStream(fileInputStream);
                 final BufferedReader reader = new BufferedReader(new InputStreamReader(dataInputStream));

@@ -1,8 +1,6 @@
 package eu.uberdust.traceparser;
 
-import eu.uberdust.traceparser.parsers.IntervalDurationParser;
-import eu.uberdust.traceparser.parsers.TRParser;
-import eu.uberdust.traceparser.parsers.UberParser;
+import eu.uberdust.traceparser.parsers.*;
 import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
 
@@ -34,13 +32,14 @@ public class TraceApp {
 
     private String[] uberLogFiles;
     private String threadLogFile;
+    private String path;
 
     public TraceApp() {
         readProperties();
-        final TRParser trParser = new TRParser(runtimeLogFiles);
+        final TRParser trParser = new TRParser(path, runtimeLogFiles);
         ArrayList<TrNodeReading> readings = trParser.returnReadings();
 
-        readings = (new UberParser(uberLogFiles, readings)).returnReadings();
+        readings = (new UberParser(path, uberLogFiles, readings)).returnReadings();
 
         final ArrayList<TrNodeReading> finalReadings = new ArrayList<TrNodeReading>();
 
@@ -51,9 +50,9 @@ public class TraceApp {
         }
 
 
-//        new ThreadParser(threadLogFile);
-//        new TotalTimeParser(finalReadings);
-//        new TotalTimeHistogramParser(finalReadings);
+        new ThreadParser(path,threadLogFile);
+        new TotalTimeParser(finalReadings);
+        new TotalTimeHistogramParser(finalReadings);
         new IntervalDurationParser(finalReadings);
 
 
@@ -71,6 +70,7 @@ public class TraceApp {
             LOGGER.error("No properties file found! dataCollector.properties not found!");
             return;
         }
+        path = properties.getProperty("log.dir");
 
         runtimeLogFiles = properties.getProperty("runtime.log").split(",");
         uberLogFiles = properties.getProperty("uberdust.log").split(",");

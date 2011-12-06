@@ -55,13 +55,14 @@ public class ThreadParser {
     /**
      * Default Constructor.
      *
+     * @param path
      * @param threadLogFile
      */
-    public ThreadParser(String threadLogFile) {
+    public ThreadParser(String path, String threadLogFile) {
 
         FileInputStream fileInputStream = null;
         try {
-            fileInputStream = new FileInputStream(threadLogFile);
+            fileInputStream = new FileInputStream(path + threadLogFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
