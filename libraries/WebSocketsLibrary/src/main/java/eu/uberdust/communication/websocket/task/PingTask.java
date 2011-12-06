@@ -24,6 +24,6 @@ public class PingTask extends TimerTask {
 
     @Override
     public final void run() {
-            InsertReadingWebSocketClient.getInstance().ping();
+        InsertReadingWebSocketClient.getInstance().ping();
     }
 }

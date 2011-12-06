@@ -135,6 +135,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Returns a string of the appropriate REST URL in order to insert this link reading.
+     *
      * @return a string of the appropriate REST URL in order to insert this link reading.
      */
     public String toRestString(){
@@ -145,14 +146,33 @@ public final class NodeReading implements Serializable {
                 + "/reading/" + reading;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Returns a delimited string representation of the node reading.
+     *
+     * @return delimited string.
+     */
+    public String toDelimitedString() {
         return  NodeReading.class.getName()
                 + DELIMITER + testbedId
                 + DELIMITER + nodeId
                 + DELIMITER + capabilityName
                 + DELIMITER + timestamp
                 + DELIMITER + reading;
+    }
+
+    /**
+     * Override implementation of Object.toString().
+     *
+     * @return toString() for this reading.
+     */
+    @Override
+    public String toString() {
+        return NodeReading.class.getName() + "{"
+                + testbedId + ", "
+                + nodeId + ", "
+                + capabilityName + ", "
+                + timestamp + ", "
+                + reading + "}";
     }
 }
 

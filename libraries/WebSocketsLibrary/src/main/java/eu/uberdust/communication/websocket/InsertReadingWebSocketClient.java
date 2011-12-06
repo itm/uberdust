@@ -99,10 +99,13 @@ public final class InsertReadingWebSocketClient {
     public void connect(final String webSocketUrl) throws IOException, URISyntaxException,
             ExecutionException, InterruptedException {
         try {
+
             // open connection
             connection = client.open(new URI(webSocketUrl), new InsertReadingWebSocketIMPL()).get();
+
             startPingingTask();
         } catch (final Exception e) {
+
             // in case of exception keep trying to make connection after 2 seconds
             LOGGER.error(e);
             try {
@@ -121,7 +124,7 @@ public final class InsertReadingWebSocketClient {
      * @throws java.io.IOException an IOException exception.
      */
     public void sendNodeReading(final NodeReading nodeReading) throws IOException {
-        sendMessage(nodeReading.toString());
+        sendMessage(nodeReading.toDelimitedString());
     }
 
     /**
@@ -130,8 +133,8 @@ public final class InsertReadingWebSocketClient {
      * @param linkReading a NodeReading instance.
      * @throws java.io.IOException an IOException exception.
      */
-    public void setLinkReading(final LinkReading linkReading) throws IOException {
-        sendMessage(linkReading.toString());
+    public void sendLinkReading(final LinkReading linkReading) throws IOException {
+        sendMessage(linkReading.toDelimitedString());
     }
 
     /**

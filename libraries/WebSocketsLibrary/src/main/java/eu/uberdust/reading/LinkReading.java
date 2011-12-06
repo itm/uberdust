@@ -176,8 +176,12 @@ public final class LinkReading implements Serializable {
                 + "/reading/" + reading;
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Returns a delimited string representation of the link reading.
+     *
+     * @return delimited string.
+     */
+    public String toDelimitedString() {
         return LinkReading.class.getName()
                 + DELIMITER + testbedId
                 + DELIMITER + linkSource
@@ -185,5 +189,21 @@ public final class LinkReading implements Serializable {
                 + DELIMITER + capabilityName
                 + DELIMITER + timestamp
                 + DELIMITER + reading;
+    }
+
+    /**
+     * Override implementation of Object.toString().
+     *
+     * @return toString() for this reading.
+     */
+    @Override
+    public String toString() {
+        return LinkReading.class.getName() + "{"
+                + testbedId + ", "
+                + linkSource + ", "
+                + linkTarget + ", "
+                + capabilityName + ", "
+                + timestamp + ", "
+                + reading + "}";
     }
 }

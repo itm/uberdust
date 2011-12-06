@@ -14,7 +14,7 @@
     <artifactId>WebSocketsLibrary</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>WebSocketsLibrary</name>
+    <name>ÜberDust - WebSockets Library</name>
 
     <properties>
         <jetty-version>8.0.4.v20111024</jetty-version>
@@ -73,7 +73,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>eu.uberdust.InsertReadingMainApp</mainClass>
+                            <mainClass>eu.uberdust.exampleapps.InsertReadingMainApp</mainClass>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>

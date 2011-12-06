@@ -13,6 +13,7 @@
     <groupId>uberdust</groupId>
     <artifactId>TraceParser</artifactId>
     <version>1.0</version>
+    <name>TraceParser</name>
     <packaging>jar</packaging>
 
     <properties>

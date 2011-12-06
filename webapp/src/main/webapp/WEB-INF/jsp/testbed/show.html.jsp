@@ -1,3 +1,4 @@
+<%@ page import="java.util.TimeZone" %>
 <%@page contentType="text/html;charset=UTF-8" %>
 <%@page pageEncoding="UTF-8" %>
 <%@page session="false" %>
@@ -45,6 +46,11 @@
     <tr>
         <td>Testbed URN prefix</td>
         <td><c:out value="${testbed.urnPrefix}"/></td>
+    </tr>
+    <tr>
+        <td>Testbed Timezone</td>
+        <c:set var="testbedZone" value="<%= testbed.getTimeZone().getDisplayName() %>"/>
+        <td><c:out value="${testbedZone}"/></td>
     </tr>
     <tr>
         <td>Testbed URL</td>

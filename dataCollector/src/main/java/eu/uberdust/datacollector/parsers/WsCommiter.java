@@ -40,7 +40,7 @@ public class WsCommiter {
     public WsCommiter(final LinkReading linkReading) {
         try {
             LOGGER.info("adding " + linkReading);
-            InsertReadingWebSocketClient.getInstance().setLinkReading(linkReading);
+            InsertReadingWebSocketClient.getInstance().sendLinkReading(linkReading);
             LOGGER.info("added " + linkReading);
         } catch (Exception e) {
             LOGGER.error("InsertReadingWebSocketClient -link- " + e);

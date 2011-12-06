@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Implementation of InsertReading WebSocket.
  */
-public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, WebSocket.OnTextMessage {
+public final class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, WebSocket.OnTextMessage {
 
     /**
      * Logger.
@@ -51,7 +51,7 @@ public class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessage, We
     }
 
     /**
-     * On Text Message
+     * On Text Message.
      * @param data , data.
      */
     @Override

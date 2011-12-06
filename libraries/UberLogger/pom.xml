@@ -14,7 +14,7 @@
     <artifactId>UberLogger</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>UberLogger</name>
+    <name>ÜberDust - ÜberLogger</name>
 
     <properties>
         <jetty-version>8.0.4.v20111024</jetty-version>
