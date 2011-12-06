@@ -1,0 +1,102 @@
+[2011-12-06 12:22:05,918]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.865493724568743 messages/sec
+[2011-12-06 12:22:05,919]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 12:22:05,919]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 3
+[2011-12-06 12:28:23,993]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.6449848442368427 messages/sec
+[2011-12-06 12:28:23,993]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 12:28:23,994]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 3
+[2011-12-06 12:33:43,114]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.1336174479819503 messages/sec
+[2011-12-06 12:33:43,115]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 12:33:43,115]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 4
+[2011-12-06 12:39:49,213]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.731509049489481 messages/sec
+[2011-12-06 12:39:49,214]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 12:39:49,214]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 4
+[2011-12-06 12:46:31,638]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.4873394422390036 messages/sec
+[2011-12-06 12:46:31,638]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 12:46:31,639]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 4
+[2011-12-06 12:53:09,525]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.513282699064556 messages/sec
+[2011-12-06 12:53:10,138]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 5 Active :1
+[2011-12-06 12:53:10,460]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 12:59:10,653]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.777916673611458 messages/sec
+[2011-12-06 12:59:10,907]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 12:59:11,065]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 13:05:23,500]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.6851188030814424 messages/sec
+[2011-12-06 13:05:23,500]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :0
+[2011-12-06 13:05:23,501]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 13:11:24,716]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.768664257928762 messages/sec
+[2011-12-06 13:11:24,804]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 13:11:24,804]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 13:16:49,704]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.0778701138811946 messages/sec
+[2011-12-06 13:16:49,708]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :0
+[2011-12-06 13:16:49,708]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 13:22:04,316]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.178578920936028 messages/sec
+[2011-12-06 13:22:04,316]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 13:22:04,317]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 13:27:57,840]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.828670270392591 messages/sec
+[2011-12-06 13:27:57,841]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 13:27:57,841]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 5
+[2011-12-06 13:33:50,111]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.838731654696682 messages/sec
+[2011-12-06 13:33:50,111]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 13:33:50,112]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 13:40:09,195]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.6379447245062426 messages/sec
+[2011-12-06 13:40:09,195]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :1
+[2011-12-06 13:40:09,196]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 13:45:45,300]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.9752695594220837 messages/sec
+[2011-12-06 13:45:45,300]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 13:45:45,301]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 13:51:15,471]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.028742768876639 messages/sec
+[2011-12-06 13:51:15,472]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 13:51:15,472]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 13:55:25,032]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 4.007068468778926 messages/sec
+[2011-12-06 13:55:25,032]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :0
+[2011-12-06 13:55:25,032]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:01:26,119]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.7694233506699235 messages/sec
+[2011-12-06 14:01:26,119]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:01:26,119]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:07:36,210]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.7020454484044425 messages/sec
+[2011-12-06 14:07:36,210]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:07:36,211]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:11:51,398]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.9186949178445607 messages/sec
+[2011-12-06 14:11:51,399]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:11:51,399]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:16:21,881]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.6971173575962823 messages/sec
+[2011-12-06 14:16:21,882]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:16:21,882]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:20:21,703]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 4.169776625066195 messages/sec
+[2011-12-06 14:20:21,704]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :0
+[2011-12-06 14:20:21,704]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:24:53,862]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.674336231159841 messages/sec
+[2011-12-06 14:24:53,863]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:24:53,863]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:29:00,057]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 4.061853911362224 messages/sec
+[2011-12-06 14:29:00,057]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:29:00,057]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:33:16,256]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.9032310947001934 messages/sec
+[2011-12-06 14:33:16,257]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :0
+[2011-12-06 14:33:16,257]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:37:32,460]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.9031701547997284 messages/sec
+[2011-12-06 14:37:32,461]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 14:37:32,461]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:42:02,608]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.7016883400518976 messages/sec
+[2011-12-06 14:42:02,608]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:42:02,609]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:48:00,703]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.7925628466268635 messages/sec
+[2011-12-06 14:48:00,999]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 4 Active :0
+[2011-12-06 14:48:00,999]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:52:43,143]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.544302002885062 messages/sec
+[2011-12-06 14:52:43,143]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 14:52:43,143]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 14:57:31,270]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.4707037893143973 messages/sec
+[2011-12-06 14:57:31,270]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 14:57:31,271]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 15:02:17,475]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.4940112646923174 messages/sec
+[2011-12-06 15:02:17,476]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 3 Active :0
+[2011-12-06 15:02:17,476]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 15:07:15,555]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.3548153341899294 messages/sec
+[2011-12-06 15:07:15,556]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 15:07:15,564]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 15:13:19,759]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 2.7457817927209325 messages/sec
+[2011-12-06 15:13:19,759]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 15:13:19,760]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
+[2011-12-06 15:17:37,807]  INFO DataCollectorChannelUpstreamHandler:83 - MessageRate : 3.875263033478397 messages/sec
+[2011-12-06 15:17:37,807]  INFO DataCollectorChannelUpstreamHandler:85 - PoolSize : 2 Active :0
+[2011-12-06 15:17:37,808]  INFO DataCollectorChannelUpstreamHandler:86 - Peak : 6
