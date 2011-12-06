@@ -1,6 +1,7 @@
 package eu.uberdust.traceparser.util;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -103,6 +104,12 @@ public class TrNodeReading {
 
     public long getStart() {
         return timestamps.get("Start");
+    }
+
+    public long getTime(String interval) {
+//        System.out.println(this);
+//        System.out.println(timestamps.keySet());
+        return timestamps.get(interval);
     }
 }
 

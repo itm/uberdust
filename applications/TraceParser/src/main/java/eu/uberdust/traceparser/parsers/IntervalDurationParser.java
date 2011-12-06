@@ -2,8 +2,17 @@ package eu.uberdust.traceparser.parsers;
 
 import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.time.Millisecond;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,46 +27,45 @@ public class IntervalDurationParser {
     private static final Logger LOGGER = Logger.getLogger(IntervalDurationParser.class);
 
     private String[] intervals = {
-            "T21", "T22", "T23", "T24", "T25",
-            "T3",
-            "T4", "T41",
-            "T51", "T52",
-            "T6",
-            "T7a", "T7b",
-            "T81", "T82", "T83", "T84",
-            "T9", "T91",
-            "T10", "T101"};
+            "Τ21", "Τ22", "T23", "T24", "T25", "T51", "T52",
+             "T81", "T82", "T83", "T84", "T9", "T91", "T10", "T101"};
 
     public IntervalDurationParser(ArrayList<TrNodeReading> finalReadings) {
-//        final TimeSeries series[
-//        intervals.length];
-//        long max = -1;
-//        for (TrNodeReading finalReading : finalReadings) {
+
+        TimeSeries[] serieses = new TimeSeries[intervals.length];
+        for (int i = 0; i < intervals.length; i++) {
+            serieses[i] = new TimeSeries(intervals[i]);
+        }
+        for (TrNodeReading finalReading : finalReadings) {
 //            LOGGER.info(finalReading);
 //            LOGGER.info(finalReading.getStart());
-//            if (finalReading.totalDuration() < 100000) {
-//                series.addOrUpdate(new Millisecond(new Date(finalReading.getStart())), finalReading.totalDuration());
-//                if (max < finalReading.totalDuration()) {
-//                    max = finalReading.totalDuration();
-//                }
-//            }
-//        }
-//
-//
-//        final TimeSeriesCollection collection = new TimeSeriesCollection();
-//        collection.addSeries(series);
-//        final JFreeChart chart = ChartFactory.createTimeSeriesChart(
-//                "Total Duration",
-//                "time",
-//                "Duration in Millis",
-//                collection, true, true, false);
-//        chart.getPlot().setBackgroundPaint(Color.white);
-//        chart.getXYPlot().setDomainGridlinePaint(Color.black);
-//        chart.getXYPlot().setRangeGridlinePaint(Color.black);
-//        final JFrame frame = new JFrame();
-//        frame.add(new ChartPanel(chart));
-//        frame.pack();
-//        frame.setVisible(true);
+            if (finalReading.totalDuration() < 100000) {
+                for (int i = 1; i < intervals.length; i++) {
+                    LOGGER.info("requesting " + intervals[i]);
+                    final long duration = finalReading.getTime(intervals[i]) - finalReading.getTime(intervals[i-1]);
+                    final Millisecond eventTime = new Millisecond(new Date(finalReading.getStart()));
+                    serieses[i].addOrUpdate(eventTime, duration);
+                }
+            }
+        }
+
+        final TimeSeriesCollection collection = new TimeSeriesCollection();
+        for (int i = 1; i < intervals.length; i++) {
+            collection.addSeries(serieses[i]);
+        }
+
+        final JFreeChart chart = ChartFactory.createTimeSeriesChart(
+                "Interval Duration",
+                "time",
+                "Duration in Millis",
+                collection, true, true, false);
+        chart.getPlot().setBackgroundPaint(Color.white);
+        chart.getXYPlot().setDomainGridlinePaint(Color.black);
+        chart.getXYPlot().setRangeGridlinePaint(Color.black);
+        final JFrame frame = new JFrame();
+        frame.add(new ChartPanel(chart));
+        frame.pack();
+        frame.setVisible(true);
 
     }
 }
