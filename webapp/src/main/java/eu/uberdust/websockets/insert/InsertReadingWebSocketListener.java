@@ -2,16 +2,13 @@ package eu.uberdust.websockets.insert;
 
 import com.caucho.websocket.AbstractWebSocketListener;
 import com.caucho.websocket.WebSocketContext;
+import eu.uberdust.uberlogger.UberLogger;
 import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.NodeReadingController;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Date;
 
 /**
@@ -113,6 +110,10 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         final int testbedId = Integer.parseInt(messageParts[1]);
         String message = "Neither Node nor Link reading. ERROR";
 
+        if (receivedMessage.contains("1ccd")) {
+            UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T23");
+        }
+
         try {
             if (classOfReading.contains("NodeReading")) {
                 // node reading incoming
@@ -120,6 +121,11 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final String capabilityId = messageParts[3];
                 final long timestamp = Long.parseLong(messageParts[4]);
                 final double readingValue = Double.parseDouble(messageParts[5]);
+
+                if (receivedMessage.contains("1ccd")) {
+                    UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T24");
+                }
+
                 nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
                 message = "Inserted for Node(" + nodeId + ") Capability(" + capabilityId
                         + ") Testbed(" + testbedId + ") : [" + timestamp + "," + readingValue + "]. OK";
@@ -144,6 +150,9 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             PrintWriter pw = context.startTextMessage();
             pw.print(message);
             pw.close();
+        }
+        if (receivedMessage.contains("1ccd")) {
+            UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T25");
         }
 
     }

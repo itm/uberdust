@@ -56,8 +56,8 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
     @Override
     public final void onClose(final int closeCode, final String message) {
         LOGGER.info("onClose");
-     /*   WSocketClient.getInstance().disconnect();
+        WSocketClient.getInstance().disconnect();
         WSocketClient.getInstance().restPing();
-        WSocketClient.getInstance().connect();*/
+        WSocketClient.getInstance().connect();
     }
 }

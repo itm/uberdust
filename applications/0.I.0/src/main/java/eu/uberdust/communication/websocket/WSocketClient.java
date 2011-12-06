@@ -117,7 +117,7 @@ public final class WSocketClient {
             final WebSocketClient clientLockScreen = factory.newWebSocketClient();
             clientLockScreen.setMaxIdleTime(-1);
             clientLockScreen.setProtocol(PROTOCOL_LOCK_SCREEN);
-            final WebSocket.Connection connLock = clientLightOut.open(WS_URI, lockScreenIMPL).get();
+            final WebSocket.Connection connLock = clientLockScreen.open(WS_URI, lockScreenIMPL).get();
             connections.add(connLock);
             clients.add(clientLockScreen);
 

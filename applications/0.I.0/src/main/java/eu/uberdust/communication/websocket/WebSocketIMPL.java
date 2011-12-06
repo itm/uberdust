@@ -25,6 +25,7 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
         PROTOCOL = protocol;
     }
 
+
     /**
      * Called with a complete text message when all fragments have been received.
      * The maximum size of text message that may be aggregated from multiple
@@ -37,8 +38,7 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
         if (data.isEmpty()) {
             return;
         }
-        LOGGER.info(data.split("\t")[1]);
-
+        LOGGER.info(data);
         if (PROTOCOL.equals(WSocketClient.PROTOCOL_LIGHT_OUT)) {
             final Double value = Double.parseDouble(data.split("\t")[1]);
             LOGGER.info("Lum: " + value);
