@@ -127,6 +127,11 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         if (command.getNodeId().contains("1ccd")) {
             UberLogger.getInstance().LOG(timestamp.getTime(), "T25");
         }
+
+        LOGGER.info("MEMSTAT_1: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+        Runtime.getRuntime().gc();
+        LOGGER.info("MEMSTAT_2: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+
         return null;
     }
 }

@@ -8,7 +8,11 @@ import eu.wisebed.wisedb.controller.NodeReadingController;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.util.Date;
 
 /**
@@ -154,6 +158,10 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         if (receivedMessage.contains("1ccd")) {
             UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T25");
         }
+
+        LOGGER.info("MEMSTAT_1: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+        Runtime.getRuntime().gc();
+        LOGGER.info("MEMSTAT_2: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
 
     }
 

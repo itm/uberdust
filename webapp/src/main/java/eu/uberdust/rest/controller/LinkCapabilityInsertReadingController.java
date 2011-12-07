@@ -65,9 +65,9 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
      * @param errors     BindException exception.
      * @return response http servlet response.
      * @throws InvalidTestbedIdException invalid testbed id exception.
-     * @throws TestbedNotFoundException testbed not found exception.
-     * @throws IOException IO exception.
-     * @throws UnknownTestbedException unknown testbed exception.
+     * @throws TestbedNotFoundException  testbed not found exception.
+     * @throws IOException               IO exception.
+     * @throws UnknownTestbedException   unknown testbed exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
@@ -100,7 +100,7 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
 
         // insert reading
         linkReadingManager.insertReading(command.getSourceId(), command.getTargetId(), command.getCapabilityId(),
-                testbed.getId(), reading,0.0, timestamp);
+                testbed.getId(), reading, 0.0, timestamp);
 
 
         response.setContentType("text/plain");
@@ -110,6 +110,11 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
                 + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
         textOutput.flush();
         textOutput.close();
+
+        LOGGER.info("MEMSTAT_1: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+        Runtime.getRuntime().gc();
+        LOGGER.info("MEMSTAT_2: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+
         return null;
     }
 }
