@@ -23,13 +23,13 @@ public class TotalTimeHistogramParser {
     /**
      * Static Logger,
      */
-    private static final Logger LOGGER = Logger.getLogger(TotalTimeParser.class);
+    private static final Logger LOGGER = Logger.getLogger(TotalTimeHistogramParser.class);
 
     public TotalTimeHistogramParser(ArrayList<TrNodeReading> finalReadings) {
         long max = -1;
         for (TrNodeReading finalReading : finalReadings) {
-            LOGGER.info(finalReading);
-            LOGGER.info(finalReading.getStart());
+            LOGGER.debug(finalReading);
+            LOGGER.debug(finalReading.getStart());
             if (finalReading.totalDuration() < 100000) {
                 if (max < finalReading.totalDuration()) {
                     max = finalReading.totalDuration();

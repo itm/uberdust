@@ -41,7 +41,7 @@ public class IntervalDurationParser {
 //            LOGGER.info(finalReading.getStart());
             if (finalReading.totalDuration() < 100000) {
                 for (int i = 1; i < intervals.length; i++) {
-                    LOGGER.info("requesting " + intervals[i]);
+                    LOGGER.debug("requesting " + intervals[i]);
                     final long duration = finalReading.getTime(intervals[i]) - finalReading.getTime(intervals[i-1]);
                     final Millisecond eventTime = new Millisecond(new Date(finalReading.getStart()));
                     serieses[i].addOrUpdate(eventTime, duration);
