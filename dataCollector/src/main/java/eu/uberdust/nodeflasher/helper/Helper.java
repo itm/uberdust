@@ -197,11 +197,17 @@ public class Helper {
         pccHost = properties.getProperty("testbed.protobuf.hostname");
         pccPort = Integer.parseInt(properties.getProperty("testbed.protobuf.port"));
 
-        Preconditions.checkArgument(
-                urnPrefixes.size() == usernames.size() && usernames.size() == passwords.size(),
-                "The list of URN prefixes must have the same length as the list of usernames and the list of passwords"
-        );
+        try {
+            Preconditions.checkArgument(
+                    urnPrefixes.size() == usernames.size() && usernames.size() == passwords.size(),
+                    "The list of URN prefixes must have the same length as the list of usernames and the list of passwords"
+            );
 
+        } catch (Exception e) {
+
+            LOGGER.error(e);
+            e.printStackTrace();
+        }
 
         // Endpoint URLs of Authentication (SNAA), Reservation (RS) and Experimentation (iWSN) services
         final String snaaEndpointURL = properties.getProperty("testbed.snaa.endpointurl");

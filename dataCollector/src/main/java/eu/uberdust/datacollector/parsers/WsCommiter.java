@@ -3,6 +3,7 @@ package eu.uberdust.datacollector.parsers;
 import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
 import eu.uberdust.reading.LinkReading;
 import eu.uberdust.reading.NodeReading;
+import eu.uberdust.uberlogger.UberLogger;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,9 +25,13 @@ public class WsCommiter {
      */
     public WsCommiter(final NodeReading nodeReading) {
         try {
-            LOGGER.info("adding " + nodeReading);
+            if (nodeReading.getNodeId().contains("1ccd") &&
+                    nodeReading.getCapabilityName().contains("pir")) {
+                UberLogger.getInstance().LOG(nodeReading.getTimestamp(), "Τ22");
+            }
+            LOGGER.debug("adding " + nodeReading);
             InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading);
-            LOGGER.info("added " + nodeReading);
+            LOGGER.debug("added " + nodeReading);
         } catch (Exception e) {
             LOGGER.error("InsertReadingWebSocketClient -node-" + e);
         }
@@ -39,7 +44,7 @@ public class WsCommiter {
      */
     public WsCommiter(final LinkReading linkReading) {
         try {
-            LOGGER.info("adding " + linkReading);
+            LOGGER.debug("adding " + linkReading);
             InsertReadingWebSocketClient.getInstance().sendLinkReading(linkReading);
             LOGGER.info("added " + linkReading);
         } catch (Exception e) {

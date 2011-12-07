@@ -35,8 +35,9 @@ public class RestCommiter {
      */
     public RestCommiter(final NodeReading nodeReading) {
 
-        if (nodeReading.getNodeId().contains("1ccd") && nodeReading.getCapabilityName().contains("pir")) {
-            UberLogger.getInstance().LOG(nodeReading.getTimestamp(), "Τ2.2");
+        if ("urn:wisebed:ctitestbed:0x1ccd".equals(nodeReading.getNodeId()) &&
+                "urn:wisebed:node:capability:pir".equals(nodeReading.getCapabilityName())) {
+            UberLogger.getInstance().LOG(nodeReading.getTimestamp(), "Τ22");
         }
         final StringBuilder urlBuilder = new StringBuilder(TESTBED_SERVER);
         urlBuilder.append(nodeReading.toRestString());

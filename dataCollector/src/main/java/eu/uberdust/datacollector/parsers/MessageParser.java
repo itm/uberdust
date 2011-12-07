@@ -92,7 +92,7 @@ public class MessageParser implements Runnable { //NOPMD
 
         if (strLine.contains("id::0x1ccd EM_E 1")) {
             String milliseconds = strLine.split(" ")[TIMESTAMP_POS];
-            UberLogger.getInstance().LOG(milliseconds, "Τ2.1");
+            UberLogger.getInstance().LOG(milliseconds, "Τ21");
         }
 
         //get the node id
@@ -104,9 +104,7 @@ public class MessageParser implements Runnable { //NOPMD
             LOGGER.debug("Node id is " + nodeId);
 
             //check for Link Readings
-            if (strLine.contains("LINK_")) {
-                checkLinkReading(nodeId);
-            } else {
+            if (!checkLinkReading(nodeId)) {
                 //check for all given capabilities
                 for (String sensor : sensors.keySet()) {
                     if (checkSensor(sensor, nodeId)) {
@@ -116,6 +114,7 @@ public class MessageParser implements Runnable { //NOPMD
                 }
             }
         }
+
     }
 
     /**
@@ -140,8 +139,7 @@ public class MessageParser implements Runnable { //NOPMD
                 String milliseconds = String.valueOf(System.currentTimeMillis());
 
 
-
-                if ((nodeId.contains("1ccd") )&&( sensor.contains("EM_E"))) {
+                if ((nodeId.contains("1ccd")) && (sensor.contains("EM_E"))) {
                     milliseconds = strLine.split(" ")[TIMESTAMP_POS];
                     LOGGER.info("setting eventt to " + milliseconds);
 
@@ -157,21 +155,48 @@ public class MessageParser implements Runnable { //NOPMD
     /**
      * Checks the message received for a new node reading.
      *
-     * @param nodeId the id of the node reporting the reading
+     * @param nodeId nodeId the id of the node reporting the reading
+     * @return true of a reading was found
      */
-    private void checkLinkReading(final String nodeId) {
+    private boolean checkLinkReading(final String nodeId) {
         if (strLine.contains("LINK_DOWN")) {
             //get the target id
             final int start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
             final int end = strLine.indexOf(' ', start);
-            commitLinkReading(nodeId, strLine.substring(start, end), 0);
+            commitLinkReading(nodeId, strLine.substring(start, end), "status", 0);
 
         } else if (strLine.contains("LINK_UP")) {
             //get the target id
             final int start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
             final int end = strLine.indexOf(' ', start);
-            commitLinkReading(nodeId, strLine.substring(start, end), 1);
+            commitLinkReading(nodeId, strLine.substring(start, end), "status", 1);
+        } else if (strLine.contains("command=")) {
+            LOGGER.info(strLine);
+            final int start = strLine.indexOf("dest::") + "dest::".length();
+            final int end = strLine.indexOf(" ", start);
+            LOGGER.info("nodid:" + strLine.substring(start, end));
+
+            final int commandStart = strLine.indexOf("command=");
+            final int commandStop = strLine.indexOf(" ", commandStart);
+            LOGGER.info("commandString:" + strLine.substring(commandStart, commandStop));
+            final String[] commandString = strLine.substring(commandStart, commandStop).split("0x");
+
+            int commandTotal = 0;
+            //LOGGER.info("args " + commandString.length + " cont " + commandString);
+            try {
+                LOGGER.info(commandString[4].substring(0, commandString[4].indexOf('|')));
+                commandTotal += 100 * Integer.parseInt(commandString[4].substring(0, commandString[4].indexOf('|')), 16);
+                LOGGER.info(commandString[5].substring(0, commandString[5].indexOf('|')));
+                commandTotal += 10 * Integer.parseInt(commandString[5].substring(0, commandString[5].indexOf('|')), 16);
+                LOGGER.info(commandString[6].substring(0, commandString[6].indexOf('|')));
+                commandTotal += Integer.parseInt(commandString[6].substring(0, commandString[6].indexOf('|')), 16);
+                commitLinkReading(nodeId, strLine.substring(start, end), "command", commandTotal);
+                LOGGER.info("COMMAND " + nodeId + " " + strLine.substring(start, end) + " " + commandTotal);
+            } catch (Exception e) {
+                return false;
+            }
         }
+        return false;
     }
 
     /**
@@ -195,23 +220,21 @@ public class MessageParser implements Runnable { //NOPMD
         nodeReading.setTimestamp(msec);
         nodeReading.setReading(String.valueOf(value));
 
-        new RestCommiter(nodeReading);
-//        new WsCommiter(nodeReading);
+        new WsCommiter(nodeReading);
     }
 
     /**
      * commits a nodeReading to the database using the Hibernate.
      *
-     * @param sourceId the id of the source node of the link
-     * @param targetId the id of the target node of the link
-     * @param status   the status value of the link
+     * @param source the id of the source node of the link
+     * @param target the id of the target node of the link
+     * @param value  the status value of the link
      */
-    private void commitLinkReading(final String sourceId, final String targetId, final int status) {
-        final String testbedCap = "status";
-        final String sourceUrn = TESTBED_URN + sourceId;
-        final String targetUrn = TESTBED_URN + targetId;
+    private void commitLinkReading(final String source, final String target, final String testbedCap, final int value) {
+        final String sourceUrn = TESTBED_URN + source;
+        final String targetUrn = TESTBED_URN + target;
 
-        LOGGER.debug("Fount a link down " + sourceUrn + "<<--" + status + "-->>" + targetUrn);
+        LOGGER.debug("LinkReading" + sourceUrn + "<->" + targetUrn + " " + testbedCap + " " + value);
         final long milliseconds = System.currentTimeMillis();
         final LinkReading linkReading = new LinkReading();
         linkReading.setTestbedId(TESTBED_ID);
@@ -219,10 +242,9 @@ public class MessageParser implements Runnable { //NOPMD
         linkReading.setLinkTarget(targetUrn);
         linkReading.setCapabilityName(testbedCap);
         linkReading.setTimestamp(String.valueOf(milliseconds));
-        linkReading.setReading(String.valueOf(status));
+        linkReading.setReading(String.valueOf(value));
 
 
-        new RestCommiter(linkReading);
-//        new WsCommiter(linkReading);
+        new WsCommiter(linkReading);
     }
 }
