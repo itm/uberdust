@@ -2,51 +2,72 @@
 #include "util/delegates/delegate.hpp"
 #include "util/pstl/map_static_vector.h"
 #include "util/pstl/static_string.h"
-#include "util/wisebed_node_api/sensors/sensor_controller.h"
-#include "util/wisebed_node_api/sensors/managed_sensor.h"
 
-#ifdef SHAWN
-
-#endif
-#ifdef ISENSE
-#include "external_interface/isense/isense_light_sensor.h"
-#include "external_interface/isense/isense_temp_sensor.h"
+//ISENSE SENSORS
+#include <isense/modules/environment_module/environment_module.h>
+#include <isense/modules/environment_module/temp_sensor.h>
+#include <isense/modules/environment_module/light_sensor.h>
 #include <isense/modules/security_module/pir_sensor.h>
 #include <isense/modules/security_module/lis_accelerometer.h>
-#endif
+
 
 typedef wiselib::OSMODEL Os;
 
-#ifdef ISENSE
-typedef wiselib::iSenseLightSensor<Os, 30 > LightSensor;
-typedef wiselib::ManagedSensor<Os, LightSensor, wiselib::StaticString> ManagedLightSensor;
-typedef wiselib::iSenseTempSensor<Os> TempSensor;
-typedef wiselib::ManagedSensor<Os, TempSensor, wiselib::StaticString> ManagedTempSensor;
-
-#endif
-
+//ND
 #include "algorithms/neighbor_discovery/echo.h"
 typedef wiselib::Echo<Os, Os::TxRadio, Os::Timer, Os::Debug> nb_t;
 
+//MESSAGE_TYPES
 #include "./collector_message.h"
 typedef wiselib::CollectorMsg<Os, Os::TxRadio> collectorMsg_t;
 typedef wiselib::BroadcastMsg<Os, Os::TxRadio> broadcastMsg_t;
 
+//TYPEDEFS
 typedef Os::TxRadio::node_id_t node_id_t;
 typedef Os::TxRadio::block_data_t block_data_t;
 
+//EVENT IDS
 #define TASK_SLEEP 1
 #define TASK_WAKE 2
 #define TASK_READ_SENSORS 2
 #define TASK_SET_LIGHT_THRESHOLD 3
 #define TASK_BROADCAST_GATEWAY 4
+#define TASK_TEST 5
+
 #define REPORTING_INTERVAL 180
 
 class Application
-: public isense::SensorHandler,
-public isense::BufferDataHandler {
+:
+public isense::SensorHandler,
+public isense::BufferDataHandler,
+public isense::Int8DataHandler,
+public isense::Uint32DataHandler {
 public:
 
+    //--------------------------------------------------------------
+
+    /**
+     * unused in this context
+     * @param value
+     */
+    void handle_uint32_data(uint32 value) {
+        //nothing
+    }
+
+    //--------------------------------------------------------------
+
+    /**
+     * unused in this context
+     * @param value
+     */
+    void handle_int8_data(int8 value) {
+        //nothing
+    }
+
+    /**
+     * boot function
+     * @param value pointer to os
+     */
     void init(Os::AppMainParameter& value) {
         radio_ = &wiselib::FacetProvider<Os, Os::TxRadio>::get_facet(value);
         timer_ = &wiselib::FacetProvider<Os, Os::Timer>::get_facet(value);
@@ -55,28 +76,40 @@ public:
         uart_ = &wiselib::FacetProvider<Os, Os::Uart>::get_facet(value);
         clock_ = &wiselib::FacetProvider<Os, Os::Clock>::get_facet(value);
 
-#ifdef SHAWN
-#endif
-#ifdef ISENSE
-        managed_light_sensor_.init_with_facetprovider(value, "light");
-        managed_temp_sensor_.init_with_facetprovider(value, "temp");
+        mygateway_ = 0xffff;
 
-        accelerometer_ = new isense::LisAccelerometer(value);
-        if (accelerometer_ != NULL) {
-            accelerometer_->set_mode(MODE_THRESHOLD);
-            accelerometer_->set_threshold(25);
-            accelerometer_->set_handler(this);
-            accelerometer_->enable();
+
+        em_ = new isense::EnvironmentModule(value);
+        if (em_ != NULL) {
+            em_->enable(true);
+            if (em_->light_sensor()->enable()) {
+                em_->light_sensor()->set_data_handler(this);
+                //os().add_task_in(Time(10, 0), this, (void*) TASK_SET_LIGHT_THRESHOLD);
+                debug_->debug("em light");
+            }
+            if (em_->temp_sensor()->enable()) {
+                em_->temp_sensor()->set_data_handler(this);
+                debug_->debug("em temp");
+            }
         }
+
 
         pir_ = new isense::PirSensor(value);
-        if (pir_ != NULL) {
-            pir_->set_sensor_handler(this);
-            pir_->set_pir_sensor_int_interval(2000);
-            pir_->enable();
+        pir_->set_sensor_handler(this);
+        pir_->set_pir_sensor_int_interval(2000);
+        if (pir_->enable()) {
+            pir_sensor_ = true;
+            debug_->debug("id::%x em pir", radio_->id());
         }
 
-#endif
+        //        accelerometer_ = new isense::LisAccelerometer(value);
+        //        if (accelerometer_ != NULL) {
+        //            accelerometer_->set_mode(MODE_THRESHOLD);
+        //            accelerometer_->set_threshold(25);
+        //            accelerometer_->set_handler(this);
+        //            accelerometer_->enable();
+        //        }
+
 
         radio_->reg_recv_callback<Application, &Application::receive > (this);
         radio_->set_channel(12);
@@ -95,10 +128,15 @@ public:
         if (is_gateway()) {
             // register task to be called in a minute for periodic sensor readings
             timer_->set_timer<Application, &Application::execute > (1000, this, (void*) TASK_BROADCAST_GATEWAY);
+            timer_->set_timer<Application, &Application::execute > (5000, this, (void*) TASK_TEST);
         }
     }
     // --------------------------------------------------------------------
 
+    /**
+     * Executed periodically
+     * @param userdata TASK to perform
+     */
     void execute(void* userdata) {
 
         // Get the Temperature and Luminance from sensors and debug them
@@ -109,14 +147,14 @@ public:
 
             if (!is_gateway()) {
 
-                int16 temp = managed_temp_sensor_();
+                int16 temp = em_->temp_sensor()->temperature();
                 collectorMsg_t mess;
                 mess.set_collector_type_id(collectorMsg_t::TEMPERATURE);
                 mess.set_temperature(&temp);
                 debug_->debug("Contains temp %d -> %x ", temp, mygateway_);
                 radio_->send(mygateway_, mess.buffer_size(), (uint8*) & mess);
 
-                uint32 lux = managed_light_sensor_();
+                uint32 lux = em_->light_sensor()->luminance();
                 collectorMsg_t mess1;
                 mess1.set_collector_type_id(collectorMsg_t::LIGHT);
                 mess1.set_light(&lux);
@@ -124,20 +162,28 @@ public:
                 radio_->send(mygateway_, mess1.buffer_size(), (uint8*) & mess1);
 
             } else {
-                debug_->debug("id::%x EM_T %d ", radio_->id(), managed_temp_sensor_());
-                debug_->debug("id::%x EM_L %d ", radio_->id(), managed_light_sensor_());
+                debug_->debug("id::%x EM_L %d ", radio_->id(), em_->light_sensor()->luminance());
+                debug_->debug("id::%x EM_T %d ", radio_->id(), em_->temp_sensor()->temperature());
             }
         } else if ((long) userdata == TASK_BROADCAST_GATEWAY) {
             debug_->debug("gateway");
             broadcastMsg_t msg;
             radio_->send(0xffff, msg.length(), (block_data_t*) & msg);
             timer_->set_timer<Application, &Application::execute > (20 * 1000, this, (void*) TASK_BROADCAST_GATEWAY);
+        } else if ((long) userdata == TASK_TEST) {
+            //handle_sensor();
+            //timer_->set_timer<Application, &Application::execute > (3000, this, (void*) TASK_TEST);
+
         }
     }
 
 protected:
 
+    /**
+     * Handles a new sensor reading
+     */
     virtual void handle_sensor() {
+        debug_->debug("pir event");
         if (!is_gateway()) {
             collectorMsg_t mess1;
             mess1.set_collector_type_id(collectorMsg_t::PIR);
@@ -145,11 +191,17 @@ protected:
             mess1.set_pir_event(&pir);
             radio_->send(mygateway_, mess1.buffer_size(), (uint8*) & mess1);
         } else {
-            debug_->debug("id::%x EM_E 1 ", radio_->id());
+            isense::Time event_time = clock_->time();
+            debug_->debug("id::%x EM_E 1 %d ", radio_->id(), event_time.sec_ * 1000 + event_time.ms_);
+            //            debug_->debug("id::%x EM_E 1 ", radio_->id());
         }
     }
 
-    virtual void handle_buffer_data(isense::BufferData*) {
+    /**
+     * Handles a new accelerometer event
+     * @param acceleration in 3 axis
+     */
+    virtual void handle_buffer_data(isense::BufferData* data) {
         if (!is_gateway()) {
             collectorMsg_t mess1;
             mess1.set_collector_type_id(collectorMsg_t::ACCELEROMETER);
@@ -162,6 +214,13 @@ protected:
         accelerometer_->set_mode(MODE_THRESHOLD);
     }
 
+    /**
+     * Handles a new neighborhood event
+     * @param event event type
+     * @param from neighbor id
+     * @param len unused
+     * @param data unused
+     */
     void ND_callback(uint8 event, uint16 from, uint8 len, uint8 * data) {
         if (event == nb_t::NEW_NB_BIDI) {
             if (!is_gateway()) {
@@ -193,14 +252,35 @@ protected:
         }
     }
 
+    /**
+     * Handle a new uart event
+     * @param len payload length
+     * @param mess payload buffer
+     */
     void handle_uart_msg(Os::Uart::size_t len, Os::Uart::block_data_t *mess) {
-        debug_payload(mess + 2, len - 2, 0xffff);
+
         node_id_t node;
         memcpy(&node, mess, sizeof (node_id_t));
         radio_->send(node, len - 2, (uint8*) mess + 2);
-        debug_->debug("sent to %x", node);
+        debug_command(mess + 2, len - 2, node);
+        if (len > 8) {
+            char buffer[100];
+            int bytes_written = 0;
+            for (int i = 8; i < len; i++) {
+                bytes_written += sprintf(buffer + bytes_written, "%d", mess[i]);
+            }
+            buffer[bytes_written] = '\0';
+            debug_->debug("FORWARDING to %x %s", node, buffer);
+        }
+
     }
 
+    /**
+     * Handle a new incoming message
+     * @param src_addr
+     * @param len
+     * @param buf
+     */
     void receive(node_id_t src_addr, Os::TxRadio::size_t len, block_data_t * buf) {
 
         if (!is_gateway()) {
@@ -332,7 +412,7 @@ private:
             case 0x1ccd: //0.1
             case 0xc7a: //0.2
             case 0x99ad: //3,1
-            case 0x8978: //1.1            
+            case 0x8978: //1.1                        
                 return true;
             default:
                 return false;
@@ -352,9 +432,24 @@ private:
         debug_->debug("%s", buffer);
     }
 
+    void debug_command(const uint8_t * payload, size_t length, node_id_t dest) {
+        //TEMPLATE : "id::%x dest::%x command=1|2|3"        
+        char buffer[1024];
+        int bytes_written = 0;
+        bytes_written += sprintf(buffer + bytes_written, "id::%x dest::%x command=", radio_->id(), dest);
+        for (size_t i = 0; i < length; i++) {
+            bytes_written += sprintf(buffer + bytes_written, "%x|", payload[i]);
+        }
+        bytes_written += sprintf(buffer + bytes_written, " ");
+        buffer[bytes_written] = '\0';
+        debug_->debug("%s", buffer);
+    }
+
     node_id_t mygateway_;
     nb_t nb_;
+    bool pir_sensor_;
 
+    isense::EnvironmentModule* em_;
     isense::LisAccelerometer* accelerometer_;
     isense::PirSensor* pir_;
 
@@ -363,10 +458,7 @@ private:
     Os::Debug::self_pointer_t debug_;
     Os::Uart::self_pointer_t uart_;
     Os::Clock::self_pointer_t clock_;
-#ifdef ISENSE
-    ManagedLightSensor managed_light_sensor_;
-    ManagedTempSensor managed_temp_sensor_;
-#endif
+
 };
 
 wiselib::WiselibApplication<Os, Application> application;
