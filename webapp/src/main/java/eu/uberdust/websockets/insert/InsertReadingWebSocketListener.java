@@ -105,11 +105,12 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onReadBinary(final WebSocketContext context, final InputStream is) throws IOException {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         IOUtils.copy(is, writer, "UTF-8");
         final String receivedMessage = writer.toString();
+        writer.close();
         LOGGER.info("onReadBinary(): " + receivedMessage);
-        String[] messageParts = receivedMessage.split(DELIMITER);
+        final String[] messageParts = receivedMessage.split(DELIMITER);
         final String classOfReading = messageParts[0];
         final int testbedId = Integer.parseInt(messageParts[1]);
         String message = "Neither Node nor Link reading. ERROR";
@@ -130,9 +131,8 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                     UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T24");
                 }
 
-                nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
-                message = "Inserted for Node(" + nodeId + ") Capability(" + capabilityId
-                        + ") Testbed(" + testbedId + ") : [" + timestamp + "," + readingValue + "]. OK";
+               // nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
+                message = new StringBuilder().append("Inserted for Node(").append(nodeId).append(") Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
 
             } else if (classOfReading.contains("LinkReading")) {
                 // link reading incoming
@@ -141,9 +141,8 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final String capabilityId = messageParts[4];
                 final long timestamp = Long.parseLong(messageParts[5]);
                 final double readingValue = Double.parseDouble(messageParts[6]);
-                linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
-                message = "Inserted for Link[" + sourceNodeId + "," + targetNodeId + "] Capability(" + capabilityId
-                        + ") Testbed(" + testbedId + ") : [" + timestamp + "," + readingValue + "]. OK";
+               // linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
+                message = new StringBuilder().append("Inserted for Link[").append(sourceNodeId).append(",").append(targetNodeId).append("] Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
             }
         } catch (Exception e) {
             message = "Exception OCCURED. ERROR";
@@ -151,7 +150,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         } finally {
             LOGGER.info("Sending " + message);
             // After message is set return it to client.
-            PrintWriter pw = context.startTextMessage();
+            final PrintWriter pw = context.startTextMessage();
             pw.print(message);
             pw.close();
         }
@@ -160,8 +159,8 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         }
 
         LOGGER.info("MEMSTAT_1: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
-        Runtime.getRuntime().gc();
-        LOGGER.info("MEMSTAT_2: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+        /*Runtime.getRuntime().gc();
+        LOGGER.info("MEMSTAT_2: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");*/
 
     }
 
