@@ -4,6 +4,7 @@
 #include "util/pstl/static_string.h"
 
 //ISENSE SENSORS
+#include <isense/modules/core_module/core_module.h>
 #include <isense/modules/environment_module/environment_module.h>
 #include <isense/modules/environment_module/temp_sensor.h>
 #include <isense/modules/environment_module/light_sensor.h>
@@ -75,6 +76,8 @@ public:
         debug_->debug("*Boot*");
         uart_ = &wiselib::FacetProvider<Os, Os::Uart>::get_facet(value);
         clock_ = &wiselib::FacetProvider<Os, Os::Clock>::get_facet(value);
+
+        cm_ = new isense::CoreModule(value);
 
         mygateway_ = 0xffff;
 
@@ -258,20 +261,28 @@ protected:
      * @param mess payload buffer
      */
     void handle_uart_msg(Os::Uart::size_t len, Os::Uart::block_data_t *mess) {
+        if (mess[0] == 9) {
+            cm_->led_on();
+        } else if (mess[0] == 10) {
+            cm_->led_off();
+        } else {
 
-        node_id_t node;
-        memcpy(&node, mess, sizeof (node_id_t));
-        radio_->send(node, len - 2, (uint8*) mess + 2);
-        debug_command(mess + 2, len - 2, node);
-        if (len > 8) {
-            char buffer[100];
-            int bytes_written = 0;
-            for (int i = 8; i < len; i++) {
-                bytes_written += sprintf(buffer + bytes_written, "%d", mess[i]);
+            node_id_t node;
+            memcpy(&node, mess, sizeof (node_id_t));
+            radio_->send(node, len - 2, (uint8*) mess + 2);
+            debug_command(mess + 2, len - 2, node);
+            if (len > 8) {
+                char buffer[100];
+                int bytes_written = 0;
+                for (int i = 8; i < len; i++) {
+                    bytes_written += sprintf(buffer + bytes_written, "%d", mess[i]);
+                }
+                buffer[bytes_written] = '\0';
+                debug_->debug("FORWARDING to %x %s", node, buffer);
             }
-            buffer[bytes_written] = '\0';
-            debug_->debug("FORWARDING to %x %s", node, buffer);
         }
+
+
 
     }
 
@@ -452,6 +463,7 @@ private:
     isense::EnvironmentModule* em_;
     isense::LisAccelerometer* accelerometer_;
     isense::PirSensor* pir_;
+    isense::CoreModule* cm_;
 
     Os::TxRadio::self_pointer_t radio_;
     Os::Timer::self_pointer_t timer_;
