@@ -154,10 +154,11 @@ public class DataCollector {
      */
     public final void restart() {
         factory.releaseExternalResources();
-        while (!start()) {
-            LOGGER.error("could not start sleeping 5000");
-            System.exit(1);
-        }
+//        while (!start()) {
+//            LOGGER.error("could not start sleeping 5000");
+//            System.exit(1);
+//        }
 
+        System.exit(1);
     }
 }

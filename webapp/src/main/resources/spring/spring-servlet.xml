@@ -73,7 +73,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading">nodeCapabilityLastReadingController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading/json">nodeCapabilityJsonLastReadingController</prop>
-                <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*">
+                <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*/">
                     nodeCapabilityInsertReadingController
                 </prop>
 
@@ -88,7 +88,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/link/*/*/capability/*/lastreading">linkCapabilityLastReadingController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/latestreading/json">linkCapabilityJsonLastReadingController</prop>
                 -->
-                <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*">linkCapabilityInsertReadingController</prop>
+                <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*/">linkCapabilityInsertReadingController</prop>
 
                 <!-- Send Command Controller -->
                 <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
@@ -436,7 +436,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeReadingManager" ref="nodeReadingManager"/>
         <property name="uriPattern"
-                  value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}"/>
+                  value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}/"/>
     </bean>
 
     <!-- Link-Capability Controller InsertReading -->
@@ -446,7 +446,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager" />
         <property name="linkReadingManager" ref="linkReadingManager"/>
         <property name="uriPattern"
-                  value="/testbed/{testbedId}/link/{sourceId}/{targetId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}"/>
+                  value="/testbed/{testbedId}/link/{sourceId}/{targetId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}/"/>
     </bean>
 
     <!-- Send Commmand Controller -->
