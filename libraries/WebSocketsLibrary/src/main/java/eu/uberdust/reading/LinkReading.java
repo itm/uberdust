@@ -173,7 +173,7 @@ public final class LinkReading implements Serializable {
                 + "/link/" + linkSource + "/" + linkTarget
                 + "/capability/" + capabilityName
                 + "/insert/timestamp/" + timestamp
-                + "/reading/" + reading;
+                + "/reading/" + reading + "/";
     }
 
     /**

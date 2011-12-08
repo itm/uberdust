@@ -61,7 +61,7 @@ public final class InsertReadingMainApp {
          * REST Call
          */
 
-        final String restBaseUrl = "http://uberdust.cti.gr/rest";
+        final String restBaseUrl = "http://carrot.cti.gr:8080/uberdust/rest";
 
         // insert node reading using REST
         LOGGER.info("Calling REST at (" + restBaseUrl + nodeReading1.toRestString() + ")");

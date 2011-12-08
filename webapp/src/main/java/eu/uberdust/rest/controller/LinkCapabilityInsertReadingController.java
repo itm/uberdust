@@ -93,9 +93,8 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
         }
 
         // parse reading and timestamp
-        final double reading;
         final Date timestamp;
-        reading = Double.parseDouble(command.getReading());
+        final Double reading = Double.parseDouble(command.getReading());
         timestamp = new Date(Long.parseLong(command.getTimestamp()));
 
         // insert reading

@@ -143,7 +143,7 @@ public final class NodeReading implements Serializable {
                 + "/node/" + nodeId
                 + "/capability/" + capabilityName
                 + "/insert/timestamp/" + timestamp
-                + "/reading/" + reading;
+                + "/reading/" + reading + "/";
     }
 
     /**

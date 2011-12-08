@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.util.Date;
 
 /**
  * Insert Reading Web Socket Listener.
@@ -131,7 +130,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                     UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T24");
                 }
 
-               // nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
+                // nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
                 message = new StringBuilder().append("Inserted for Node(").append(nodeId).append(") Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
 
             } else if (classOfReading.contains("LinkReading")) {
@@ -141,7 +140,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final String capabilityId = messageParts[4];
                 final long timestamp = Long.parseLong(messageParts[5]);
                 final double readingValue = Double.parseDouble(messageParts[6]);
-               // linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
+                // linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
                 message = new StringBuilder().append("Inserted for Link[").append(sourceNodeId).append(",").append(targetNodeId).append("] Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
             }
         } catch (Exception e) {
@@ -172,7 +171,14 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
      * @throws IOException IOException exception.
      */
     public void onReadText(final WebSocketContext context, final Reader is) throws IOException {
-        LOGGER.info("onReadText()");
+        char[] arr = new char[1024]; // 1K at a time
+        StringBuffer buf = new StringBuffer();
+        int numChars;
+
+        while ((numChars = is.read(arr, 0, arr.length)) > 0) {
+            buf.append(arr, 0, numChars);
+        }
+        LOGGER.info("onReadText() : " + buf.toString());
         super.onReadText(context, is);
     }
 
