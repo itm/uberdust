@@ -139,11 +139,11 @@ public class MessageParser implements Runnable { //NOPMD
                 String milliseconds = String.valueOf(System.currentTimeMillis());
 
 
-                if ((nodeId.contains("1ccd")) && (sensor.contains("EM_E"))) {
-                    milliseconds = strLine.split(" ")[TIMESTAMP_POS];
-                    LOGGER.info("setting eventt to " + milliseconds);
-
-                }
+//                if ((nodeId.contains("1ccd")) && (sensor.contains("EM_E"))) {
+//                    milliseconds = strLine.split(" ")[TIMESTAMP_POS];
+//                    LOGGER.info("setting eventt to " + milliseconds);
+//
+//                }
                 commitNodeReading(nodeId, sensors.get(sensor), value, milliseconds);
             } catch (Exception e) {
                 LOGGER.error("Parse Error" + sensor + "'" + strLine.substring(start, end) + "'");
