@@ -131,7 +131,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                     UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T24");
                 }
 
-               // nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
+                nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
                 message = new StringBuilder().append("Inserted for Node(").append(nodeId).append(") Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
 
             } else if (classOfReading.contains("LinkReading")) {
@@ -141,7 +141,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final String capabilityId = messageParts[4];
                 final long timestamp = Long.parseLong(messageParts[5]);
                 final double readingValue = Double.parseDouble(messageParts[6]);
-               // linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
+                linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
                 message = new StringBuilder().append("Inserted for Link[").append(sourceNodeId).append(",").append(targetNodeId).append("] Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
             }
         } catch (Exception e) {
