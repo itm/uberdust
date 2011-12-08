@@ -6,6 +6,8 @@ import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.uberdust.uberlogger.UberLogger;
 import eu.wisebed.wisedb.controller.NodeReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.exception.UnknownCapabilityException;
+import eu.wisebed.wisedb.exception.UnknownNodeException;
 import eu.wisebed.wisedb.exception.UnknownTestbedException;
 import eu.wisebed.wisedb.model.Testbed;
 import org.apache.log4j.Logger;
@@ -82,7 +84,8 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws InvalidTestbedIdException, TestbedNotFoundException, UnknownTestbedException, IOException {
+            throws InvalidTestbedIdException, TestbedNotFoundException, UnknownTestbedException, IOException,
+            UnknownNodeException, UnknownCapabilityException {
 
         // set commandNode object
         final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
