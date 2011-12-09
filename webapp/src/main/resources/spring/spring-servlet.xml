@@ -49,6 +49,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*">showNodeController</prop>
                 <prop key="GET /testbed/*/node/*/georss">showNodeGeoRssController</prop>
                 <prop key="GET /testbed/*/node/*/kml">showNodeKmlController</prop>
+                <prop key="GET /testbed/*/node/*/insert/description">nodeInsertDescriptionController</prop>
 
                 <!-- Link Related Controllers -->
                 <prop key="GET /testbed/*/link">listLinksController</prop>
@@ -58,6 +59,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/capability">listCapabilitiesController</prop>
                 <prop key="GET /testbed/*/capability/*">showCapbilityController</prop>
                 <prop key="GET /testbed/*/capability/*/tabdelimited">capabilityTabDelimitedController</prop>
+                <!--<prop key="GET /testbed/*/capability/*/insert/description/*/">capabilityInsertDescriptionController</prop>-->
 
                 <!-- Node/Capability Controllers for readings -->
                 <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
@@ -248,6 +250,13 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <bean name="showNodeKmlController" class="eu.uberdust.rest.controller.ShowNodeKmlController">
         <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/kml"/>
+    </bean>
+
+    <bean name="nodeInsertDescriptionController" class="eu.uberdust.rest.controller.NodeInsertDescriptionController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/insert/description/{description}/"/>
     </bean>
 
     <!-- List available Link Controller -->
