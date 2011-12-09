@@ -11,7 +11,7 @@
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
-
+<jsp:useBean id="limit" scope="request" class="java.lang.Integer"/>
 
 <html>
 <%@include file="/header.jsp" %>
@@ -25,7 +25,7 @@
 
         function requestData() {
             $.ajax({
-                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>',
+                url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json/limit/100"/>',
                 success: function(json, textStatus, xhr) {
                     var readings = json['readings'];
                     for (var i in readings) {

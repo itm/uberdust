@@ -52,14 +52,14 @@
                                     value="${capability.name}"/></a>
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/html"/>">HTML</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/html/limit/10"/>">HTML(10)</a>
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited"/>">Tab
-                                Delimited</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited/limit/1000"/>">Tab
+                                Delimited(1000)</a>
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>">JSON</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json/limit/1000"/>">JSON(1000)</a>
                         </td>
                         <td>
                             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/wiseml"/>">WiseML</a>
@@ -70,7 +70,7 @@
                                 Reading</a>(<a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading/json"/>">JSON</a>)
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart"/>">Chart</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart/limit/1000"/>">Chart(1000)</a>
                         </td>
                     </tr>
                 </c:forEach>

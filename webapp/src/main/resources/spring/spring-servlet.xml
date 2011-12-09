@@ -71,6 +71,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*/capability/*/wiseml">nodeCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/wiseml/limit/*">nodeCapabilityWiseMlController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/chart">nodeCapabilityChartController</prop>
+                <prop key="GET /testbed/*/node/*/capability/*/chart/limit/*">nodeCapabilityChartController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading">nodeCapabilityLastReadingController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/latestreading/json">nodeCapabilityJsonLastReadingController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/insert/timestamp/*/reading/*/">
@@ -383,7 +384,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/chart"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/capability/{capabilityId}/chart/limit/{readingsLimit}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="capability/chart.html"/>
