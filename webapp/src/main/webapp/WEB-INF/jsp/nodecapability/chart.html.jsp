@@ -11,7 +11,6 @@
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="node" scope="request" class="eu.wisebed.wiseml.model.setup.Node"/>
 <jsp:useBean id="capability" scope="request" class="eu.wisebed.wiseml.model.setup.Capability"/>
-<jsp:useBean id="limit" scope="request" type="java.lang.Integer"/>
 
 <html>
 <%@include file="/header.jsp" %>
@@ -27,7 +26,7 @@
             $.ajax({
                 url: 'http://${pageContext.request.serverName}:${pageContext.request.serverPort}'
                     .concat('<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json"/>')
-                    <c:if test="${limit != null}">.concat('/limit/<c:out value="${limit}"/>')</c:if>,
+                    <c:if test="${requestScope.limit != null}">.concat('/limit/<c:out value="${requestScope.limit}"/>')</c:if>,
                 success: function(json, textStatus, xhr) {
                     var readings = json['readings'];
                     for (var i in readings) {
