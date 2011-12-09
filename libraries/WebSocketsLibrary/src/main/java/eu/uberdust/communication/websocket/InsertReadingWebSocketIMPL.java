@@ -4,7 +4,10 @@ package eu.uberdust.communication.websocket;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.WebSocket;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -20,7 +23,8 @@ public final class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessa
 
     /**
      * On Binary Message arrival.
-     * @param data , data byte array.
+     *
+     * @param data   , data byte array.
      * @param offset , offset.
      * @param length , length/
      */
@@ -33,6 +37,7 @@ public final class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessa
 
     /**
      * On open connection.
+     *
      * @param connection connection instance.
      */
     @Override
@@ -42,16 +47,33 @@ public final class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessa
 
     /**
      * On close connection.
+     *
      * @param closeCode , close code.
-     * @param message , on string message.
+     * @param message   , on string message.
      */
     @Override
     public void onClose(final int closeCode, final String message) {
         LOGGER.info("Connection closed");
+        InsertReadingWebSocketClient.getInstance().disconnect();
+        InsertReadingWebSocketClient.getInstance().restPing();
+        try {
+            LOGGER.info("reconnecting in 5000");
+            Thread.sleep(5000);
+            InsertReadingWebSocketClient.getInstance().connect();
+        } catch (IOException e) {
+            LOGGER.fatal(e);
+        } catch (ExecutionException e) {
+            LOGGER.fatal(e);
+        } catch (URISyntaxException e) {
+            LOGGER.fatal(e);
+        } catch (InterruptedException e) {
+            LOGGER.fatal(e);
+        }
     }
 
     /**
      * On Text Message.
+     *
      * @param data , data.
      */
     @Override
