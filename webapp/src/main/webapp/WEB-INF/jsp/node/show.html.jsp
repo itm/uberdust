@@ -55,11 +55,11 @@
                             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/html/limit/10"/>">HTML</a>
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited/limit/1000"/>">Tab
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/tabdelimited/limit/10"/>">Tab
                                 Delimited</a>
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json/limit/1000"/>">JSON</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/json/limit/10"/>">JSON</a>
                         </td>
                         <td>
                             <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/wiseml"/>">WiseML</a>
@@ -70,9 +70,7 @@
                                 Reading</a>(<a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/latestreading/json"/>">JSON</a>)
                         </td>
                         <td>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart/limit/10"/>">Chart(10)</a>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart/limit/100"/>">Chart(100)</a>
-                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart/limit/1000"/>">Chart(1000)</a>
+                            <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capability/${capability.name}/chart/limit/10"/>">Chart</a>
                         </td>
                     </tr>
                 </c:forEach>
