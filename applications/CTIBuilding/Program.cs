@@ -34,7 +34,13 @@ namespace CTIBuilding
             const string subkey = "CTIBuilding";
             const string keyName = userRoot + "\\" + subkey;
 
-            // Real last insert time
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey(subkey);
+            if (rk == null)
+            {
+                RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(subkey);
+                key.SetValue("time0", 1, RegistryValueKind.DWord);
+            }
+
             int tInteger = (int)Registry.GetValue(keyName, "time0", -1);
             Console.WriteLine("(Default): {0}", tInteger);
 
