@@ -81,6 +81,9 @@ public final class ShowNodeController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, NodeNotFoundException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final NodeCommand command = (NodeCommand) commandObj;
 

@@ -114,6 +114,10 @@ public final class ShowCapabilityController extends AbstractRestController {
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, CapabilityNotFoundException {
+
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
 

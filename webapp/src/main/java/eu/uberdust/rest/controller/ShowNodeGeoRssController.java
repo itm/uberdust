@@ -116,6 +116,9 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
             throws IOException, FeedException, NodeNotFoundException, TestbedNotFoundException,
             InvalidTestbedIdException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final NodeCommand command = (NodeCommand) commandObj;
 

@@ -122,6 +122,9 @@ public final class NodeCapabilityLatestReadingController extends AbstractRestCon
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
 

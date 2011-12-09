@@ -124,6 +124,9 @@ public final class NodeCapabilityHTMLController extends AbstractRestController {
             throws CapabilityNotFoundException, NodeNotFoundException, TestbedNotFoundException,
             InvalidTestbedIdException, InvalidCapabilityNameException, InvalidNodeIdException, InvalidLimitException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
 

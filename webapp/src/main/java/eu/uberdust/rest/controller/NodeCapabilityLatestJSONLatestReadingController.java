@@ -118,6 +118,10 @@ public final class NodeCapabilityLatestJSONLatestReadingController extends Abstr
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, NodeNotFoundException,
             CapabilityNotFoundException, InvalidCapabilityNameException, InvalidNodeIdException, IOException {
+
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
        // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
 

@@ -99,6 +99,9 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException, IOException, FeedException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
 

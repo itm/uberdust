@@ -74,6 +74,9 @@ public final class ShowLinkController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, LinkNotFoundException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final LinkCommand command = (LinkCommand) commandObj;
 

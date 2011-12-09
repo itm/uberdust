@@ -68,6 +68,7 @@ public final class ListCapabilitiesController extends AbstractRestController {
 
     /**
      * Handle Request and return the appropriate response.
+     * System.out.println(request.getRemoteUser());
      *
      * @param request    http servlet request.
      * @param response   http servlet response.
@@ -80,6 +81,8 @@ public final class ListCapabilitiesController extends AbstractRestController {
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException {
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
 
         // get command
         final CapabilityCommand command = (CapabilityCommand) commandObj;

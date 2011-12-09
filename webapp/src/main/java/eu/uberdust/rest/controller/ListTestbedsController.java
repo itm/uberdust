@@ -59,6 +59,9 @@ public final class ListTestbedsController extends AbstractRestController {
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors) {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // testbed list
         final List<Testbed> testbeds = testbedManager.list();
 

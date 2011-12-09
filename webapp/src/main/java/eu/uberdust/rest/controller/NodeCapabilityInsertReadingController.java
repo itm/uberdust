@@ -84,6 +84,9 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, UnknownTestbedException, IOException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set commandNode object
         final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
 

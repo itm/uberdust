@@ -67,6 +67,9 @@ public final class SendCommandController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws NodeNotFoundException, IOException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set commandNode object
         final DestinationPayloadCommand command = (DestinationPayloadCommand) commandObj;
         final String payload = command.getPayload().replaceAll(",", "");

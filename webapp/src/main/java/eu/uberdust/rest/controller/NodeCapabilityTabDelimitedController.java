@@ -126,6 +126,9 @@ public final class NodeCapabilityTabDelimitedController extends AbstractRestCont
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException, IOException,
             InvalidLimitException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set commandNode object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
 

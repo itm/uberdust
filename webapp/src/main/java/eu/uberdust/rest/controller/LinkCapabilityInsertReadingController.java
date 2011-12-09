@@ -73,6 +73,9 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException, IOException, UnknownTestbedException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object object
         final LinkCapabilityInsertReadingCommand command = (LinkCapabilityInsertReadingCommand) commandObj;
 

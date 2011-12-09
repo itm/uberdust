@@ -81,6 +81,9 @@ public final class ListLinksController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // get command
         final LinkCommand command = (LinkCommand) commandObj;
 

@@ -105,6 +105,9 @@ public final class NodeCapabilityChartController extends AbstractRestController 
             throws InvalidNodeIdException, InvalidCapabilityNameException, InvalidTestbedIdException,
             TestbedNotFoundException, NodeNotFoundException, CapabilityNotFoundException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final NodeCapabilityCommand command = (NodeCapabilityCommand) commandObj;
 

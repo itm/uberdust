@@ -97,6 +97,9 @@ public final class ShowTestbedStatusController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws InvalidTestbedIdException, TestbedNotFoundException {
 
+        LOGGER.info("Remote address: " + request.getRemoteAddr());
+        LOGGER.info("Remote host: " + request.getRemoteHost());
+
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
 
