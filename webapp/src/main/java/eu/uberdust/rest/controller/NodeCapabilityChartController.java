@@ -149,6 +149,12 @@ public final class NodeCapabilityChartController extends AbstractRestController 
             throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityId() + "]");
         }
 
+        // check if limit is provided
+        Integer limit = null;
+        if (command.getReadingsLimit() != null) {
+            limit = new Integer(command.getReadingsLimit());
+        }
+
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
@@ -156,6 +162,7 @@ public final class NodeCapabilityChartController extends AbstractRestController 
         refData.put("testbed", testbed);
         refData.put("node", node);
         refData.put("capability", capability);
+        refData.put("limit", limit);
 
         // check type of view requested
         return new ModelAndView("nodecapability/chart.html", refData);
