@@ -29,7 +29,7 @@ public class WebSocketIMPL implements WebSocket.OnTextMessage {
         if (data.isEmpty()) {
             return;
         }
-        UberLogger.getInstance().LOG(Long.valueOf(data.split("\t")[0]), "T6");
+        UberLogger.getInstance().log(Long.valueOf(data.split("\t")[0]), "T6");
         //System.out.println(Long.valueOf(data.split("\t")[0]));
         LOGGER.info(new StringBuilder().append("-- onMessage: ").append(data).append(new Date()).toString());
         //LightController.getInstance().setLastReading(System.currentTimeMillis());
