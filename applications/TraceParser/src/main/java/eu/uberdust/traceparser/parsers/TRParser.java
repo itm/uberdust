@@ -5,10 +5,15 @@ import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -21,34 +26,53 @@ import java.util.Locale;
 public class TRParser {
 
     /**
-     * Static Logger,
+     * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(TRParser.class);
 
-    private final String[] filenames;// = "/home/akribopo/Projects/uberdust/tr.out";
+    /**
+     * filenames to parse.
+     */
+    private final transient String[] filenames;
+    /**
+     * path to files to parse.
+     */
+    private final transient String path;
+    /**
+     * Text part indicator.
+     */
+    private static final String TEXT = "Text [";
+    /**
+     * Date part indicator.
+     */
+    private static final String DATE = "Time [";
+    /**
+     * End part indicator.
+     */
+    private static final String END = "]";
+    /**
+     * list of all node readings.
+     */
+    private final transient List<TrNodeReading> nodeReadings = new ArrayList<TrNodeReading>();
 
-    private final static String URN = "Source [";
-    private final static String TEXT = "Text [";
-    private final static String DATE = "Time [";
-    private final static String END = "]";
-
-    private final ArrayList<TrNodeReading> nodeReadings = new ArrayList<TrNodeReading>();
-    private final String path;
 
     /**
      * Default Constructor.
      *
-     * @param path
+     * @param path path to the files
      * @param file the file
      */
-    public TRParser(String path, final String[] file) {
-        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
+    public TRParser(final String path, final String[] file) {
+        PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
         this.path = path;
-        filenames = file;
+        filenames = file.clone();
         LOGGER.info("TRParser initialized");
         extractData();
     }
 
+    /**
+     * Extracts readings from the files.
+     */
     private void extractData() {
         try {
             for (String filename : filenames) {
@@ -65,15 +89,15 @@ public class TRParser {
                     if (nodeReadings.contains(thisNodeReading)) {
                         final TrNodeReading savedNodeReading = nodeReadings.get(nodeReadings.indexOf(thisNodeReading));
                         if (strLine.contains("id::0x1ccd EM_E")) {
-                            savedNodeReading.addTimestamp(TrNodeReading.START, extractDate(strLine));
+                            savedNodeReading.addTimestamp(TrNodeReading.START_TEXT, extractDate(strLine));
                         } else if (strLine.contains("FORWARDING to 0x494")) {
-                            savedNodeReading.addTimestamp(TrNodeReading.END, extractDate(strLine));
+                            savedNodeReading.addTimestamp(TrNodeReading.END_TEXT, extractDate(strLine));
                         }
                     } else {
                         if (strLine.contains("id::0x1ccd EM_E")) {
-                            thisNodeReading.addTimestamp(TrNodeReading.START, extractDate(strLine));
+                            thisNodeReading.addTimestamp(TrNodeReading.START_TEXT, extractDate(strLine));
                         } else if (strLine.contains("FORWARDING to 0x494")) {
-                            thisNodeReading.addTimestamp(TrNodeReading.END, extractDate(strLine));
+                            thisNodeReading.addTimestamp(TrNodeReading.END_TEXT, extractDate(strLine));
                         }
                         nodeReadings.add(thisNodeReading);
                     }
@@ -89,23 +113,29 @@ public class TRParser {
 
     }
 
-    private String extractNodeUrn(final String line) {
-        final int nodeurnStart = line.indexOf(URN) + URN.length();
-        final int nodeurnStop = line.indexOf(END, nodeurnStart);
-        return line.substring(nodeurnStart, nodeurnStop);
-    }
-
+    /**
+     * Extracts the reading ID from text.
+     *
+     * @param line the text to parse
+     * @return the reading ID
+     */
     private Long extractID(final String line) {
-        final int text_start = line.indexOf(TEXT) + TEXT.length();
-        final int text_stop = line.indexOf(END, text_start);
-        final String[] text = line.substring(text_start, text_stop).split(" ");
+        final int textStart = line.indexOf(TEXT) + TEXT.length();
+        final int textStop = line.indexOf(END, textStart);
+        final String[] text = line.substring(textStart, textStop).split(" ");
         return Long.valueOf(text[text.length - 1]);
     }
 
+    /**
+     * Extracts the date of the reading from the text.
+     *
+     * @param line the text to parse
+     * @return the date of the event as long
+     */
     private long extractDate(final String line) {
-        final int date_start = line.indexOf(DATE) + DATE.length();
-        final int date_stop = line.indexOf("+02:00" + END, date_start);
-        final String date = line.substring(date_start, date_stop);
+        final int dateStart = line.indexOf(DATE) + DATE.length();
+        final int dateStop = line.indexOf("+02:00" + END, dateStart);
+        final String date = line.substring(dateStart, dateStop);
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.'S", Locale.US);
         try {
             final Date parseDate = dateFormat.parse(date);
@@ -116,8 +146,12 @@ public class TRParser {
         return -1;
     }
 
-
-    public ArrayList<TrNodeReading> returnReadings() {
+    /**
+     * returns the readings parsed from the files.
+     *
+     * @return a list of all readings
+     */
+    public final List<TrNodeReading> returnReadings() {
         return nodeReadings;
     }
 

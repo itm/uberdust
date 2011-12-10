@@ -8,9 +8,14 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
+import javax.swing.JFrame;
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,47 +29,47 @@ import java.util.Locale;
 public class ThreadParser {
 
     /**
-     * Static Logger,
+     * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ThreadParser.class);
     /**
      * Prefix that describes a thread pool statistic.
      */
-    private final static String TEMPLATE_POOL = "DataCollectorChannelUpstreamHandler:85 - ";
+    private static final String TEMPLATE_POOL = "DataCollectorChannelUpstreamHandler:85 - ";
     /**
      * Prefix that describes the message rate.
      */
-    private final static String TEMPLATE_RATE = "MessageRate : ";
+    private static final String TEMPLATE_RATE = "MessageRate : ";
     /**
      * Prefix that describes the current pool size.
      */
-    private final static String POOL_SIZE_PX = "PoolSize : ";
+    private static final String POOL_SIZE_PX = "PoolSize : ";
     /**
      * Prefix that describes the active threads in the pool size.
      */
-    private final static String ACTIVE_SIZE_PX = "Active :";
+    private static final String ACTIVE_SIZE_PX = "Active :";
     /**
      * date Start.
      */
-    private final static String DATE = "[";
+    private static final String DATE = "[";
     /**
      * date End.
      */
-    private final static String END = "]";
+    private static final String END = "]";
 
     /**
      * Default Constructor.
      *
-     * @param path
-     * @param threadLogFile
+     * @param path path to file
+     * @param threadLogFile file to parse
      */
-    public ThreadParser(String path, String threadLogFile) {
+    public ThreadParser(final String path, final String threadLogFile) {
 
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(path + threadLogFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.fatal(e);
         }
 
         // Get the object of DataInputStream
@@ -109,7 +114,7 @@ public class ThreadParser {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e);
         }
 
 
@@ -161,17 +166,8 @@ public class ThreadParser {
             final Date parseDate = dateFormat.parse(date);
             return parseDate.getTime();
         } catch (Exception e) {
-
+            LOGGER.error(e);
         }
         return -1;
     }
-
-//    /**
-//     * starts the application.
-//     *
-//     * @param args user arguments
-//     */
-//    public static void main(String[] args) {
-//
-//    }
 }

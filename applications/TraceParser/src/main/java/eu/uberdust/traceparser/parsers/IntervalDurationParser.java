@@ -9,10 +9,10 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
+import javax.swing.JFrame;
+import java.awt.Color;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,27 +22,39 @@ import java.util.Date;
  */
 public class IntervalDurationParser {
     /**
-     * Static Logger,
+     * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(IntervalDurationParser.class);
 
-    private String[] intervals = {
+    /**
+     * Intervals to be plotted.
+     */
+    private final transient String[] intervals = {
             "Τ21", "Τ22", "T23", "T24", "T25", "T51", "T52",
-             "T81", "T82", "T83", "T84", "T9", "T91", "T10", "T101"};
+            "T81", "T82", "T83", "T84", "T9", "T91", "T10", "T101"};
+    /**
+     * Threshold to exclude readings.
+     */
+    private static final long EXCLUDE_THRESHOLD = 100000;
 
-    public IntervalDurationParser(ArrayList<TrNodeReading> finalReadings) {
+    /**
+     * Constructor.
+     *
+     * @param finalReadings the readings to use for the plot
+     */
+    public IntervalDurationParser(final List<TrNodeReading> finalReadings) {
 
         TimeSeries[] serieses = new TimeSeries[intervals.length];
         for (int i = 0; i < intervals.length; i++) {
             serieses[i] = new TimeSeries(intervals[i]);
         }
-        for (TrNodeReading finalReading : finalReadings) {
+        for (final TrNodeReading finalReading : finalReadings) {
 //            LOGGER.info(finalReading);
 //            LOGGER.info(finalReading.getStart());
-            if (finalReading.totalDuration() < 100000) {
+            if (finalReading.totalDuration() < EXCLUDE_THRESHOLD) {
                 for (int i = 1; i < intervals.length; i++) {
                     LOGGER.debug("requesting " + intervals[i]);
-                    final long duration = finalReading.getTime(intervals[i]) - finalReading.getTime(intervals[i-1]);
+                    final long duration = finalReading.getTime(intervals[i]) - finalReading.getTime(intervals[i - 1]);
                     final Millisecond eventTime = new Millisecond(new Date(finalReading.getStart()));
                     serieses[i].addOrUpdate(eventTime, duration);
                 }
