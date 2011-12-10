@@ -76,7 +76,7 @@ public final class SendCommandController extends AbstractRestController {
         final String nodeId = payload.substring(3);
 
         if (command.getDestination().contains("494")) {
-            UberLogger.getInstance().LOG(nodeId, "T81");
+            UberLogger.getInstance().log(nodeId, "T81");
         }
 
 
@@ -87,7 +87,7 @@ public final class SendCommandController extends AbstractRestController {
         }
 
         if (command.getDestination().contains("494")) {
-            UberLogger.getInstance().LOG(nodeId, "T82");
+            UberLogger.getInstance().log(nodeId, "T82");
         }
         // prepare socket for connection and writer
         final Socket kkSocket = new Socket("gold.cti.gr", 4444);
@@ -104,13 +104,13 @@ public final class SendCommandController extends AbstractRestController {
         out.close();
         kkSocket.close();
         if (command.getDestination().contains("494")) {
-            UberLogger.getInstance().LOG(nodeId, "T83");
+            UberLogger.getInstance().log(nodeId, "T83");
         }
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("OK . Destination : " + command.getDestination() + "\nPayload : " + command.getPayload());
         if (command.getDestination().contains("494")) {
-            UberLogger.getInstance().LOG(nodeId, "T84");
+            UberLogger.getInstance().log(nodeId, "T84");
         }
         return null;
 
