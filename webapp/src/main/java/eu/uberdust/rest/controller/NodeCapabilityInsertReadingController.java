@@ -91,7 +91,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
 
         if (command.getNodeId().contains("1ccd")) {
-            UberLogger.getInstance().LOG(Long.parseLong(command.getTimestamp()), "T23");
+            UberLogger.getInstance().log(Long.parseLong(command.getTimestamp()), "T23");
         }
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -115,7 +115,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         reading = Double.parseDouble(command.getReading());
         timestamp = new Date(Long.parseLong(command.getTimestamp()));
         if (command.getNodeId().contains("1ccd")) {
-            UberLogger.getInstance().LOG(timestamp.getTime(), "T24");
+            UberLogger.getInstance().log(timestamp.getTime(), "T24");
         }
         // insert reading
         nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getId(),
@@ -128,7 +128,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         textOutput.flush();
         textOutput.close();
         if (command.getNodeId().contains("1ccd")) {
-            UberLogger.getInstance().LOG(timestamp.getTime(), "T25");
+            UberLogger.getInstance().log(timestamp.getTime(), "T25");
         }
 
         LOGGER.info("MEMSTAT_3: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
