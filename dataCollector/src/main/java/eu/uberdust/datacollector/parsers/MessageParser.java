@@ -83,35 +83,36 @@ public class MessageParser implements Runnable { //NOPMD
 
 
     /**
-     * Parsers the message and create the event to report.
+     * Parses the message and creates the event to report.
      */
     public final void parse() {
 
         LOGGER.debug(strLine);
 
-
         if (strLine.contains("id::0x1ccd EM_E 1")) {
-            String milliseconds = strLine.split(" ")[TIMESTAMP_POS];
-            UberLogger.getInstance().LOG(milliseconds, "Τ21");
+            final String milliseconds = strLine.split(" ")[TIMESTAMP_POS];
+            UberLogger.getInstance().log(milliseconds, "Τ21");
         }
 
         //get the node id
         final String nodeId = extractNodeId(strLine);
 
         //if there is a node id
-        if (!"".equals(nodeId)) {
+        if ("".equals(nodeId)) {
+            return;
+        }
 
-            LOGGER.debug("Node id is " + nodeId);
+        LOGGER.debug("Node id is " + nodeId);
 
-            //check for Link Readings
-            if (!checkLinkReading(nodeId)) {
-                //check for all given capabilities
-                for (String sensor : sensors.keySet()) {
-                    if (checkSensor(sensor, nodeId)) {
-                        break;
-                    }
+        //check for Link Readings
+        if (checkLinkReading(nodeId)) {
+            return;
+        }
 
-                }
+        //check for all given capabilities
+        for (String sensor : sensors.keySet()) {
+            if (checkSensor(sensor, nodeId)) {
+                return;
             }
         }
 
@@ -136,7 +137,7 @@ public class MessageParser implements Runnable { //NOPMD
             try {
                 final int value = Integer.parseInt(strLine.substring(start, end));
                 LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
-                String milliseconds = String.valueOf(System.currentTimeMillis());
+                final String milliseconds = String.valueOf(System.currentTimeMillis());
 
 
 //                if ((nodeId.contains("1ccd")) && (sensor.contains("EM_E"))) {
@@ -173,28 +174,16 @@ public class MessageParser implements Runnable { //NOPMD
         } else if (strLine.contains("command=")) {
             LOGGER.info(strLine);
             final int start = strLine.indexOf("dest::") + "dest::".length();
-            final int end = strLine.indexOf(" ", start);
+            final int end = strLine.indexOf(' ', start);
             LOGGER.info("nodid:" + strLine.substring(start, end));
 
             final int commandStart = strLine.indexOf("command=");
-            final int commandStop = strLine.indexOf(" ", commandStart);
-            LOGGER.info("commandString:" + strLine.substring(commandStart, commandStop));
-            final String[] commandString = strLine.substring(commandStart, commandStop).split("0x");
+            final int commandStop = strLine.indexOf(' ', commandStart);
+            final iSenseArduinoCmd command = new iSenseArduinoCmd(strLine.substring(commandStart, commandStop));
+            LOGGER.info("commandString:" + command.toString());
+            commitLinkReading(nodeId, strLine.substring(start, end), "command", command.toInt());
+            LOGGER.info("COMMAND " + nodeId + " " + strLine.substring(start, end) + " " + command.toString());
 
-            int commandTotal = 0;
-            //LOGGER.info("args " + commandString.length + " cont " + commandString);
-            try {
-                LOGGER.info(commandString[4].substring(0, commandString[4].indexOf('|')));
-                commandTotal += 100 * Integer.parseInt(commandString[4].substring(0, commandString[4].indexOf('|')), 16);
-                LOGGER.info(commandString[5].substring(0, commandString[5].indexOf('|')));
-                commandTotal += 10 * Integer.parseInt(commandString[5].substring(0, commandString[5].indexOf('|')), 16);
-                LOGGER.info(commandString[6].substring(0, commandString[6].indexOf('|')));
-                commandTotal += Integer.parseInt(commandString[6].substring(0, commandString[6].indexOf('|')), 16);
-                commitLinkReading(nodeId, strLine.substring(start, end), "command", commandTotal);
-                LOGGER.info("COMMAND " + nodeId + " " + strLine.substring(start, end) + " " + commandTotal);
-            } catch (Exception e) {
-                return false;
-            }
         }
         return false;
     }
@@ -226,9 +215,10 @@ public class MessageParser implements Runnable { //NOPMD
     /**
      * commits a nodeReading to the database using the Hibernate.
      *
-     * @param source the id of the source node of the link
-     * @param target the id of the target node of the link
-     * @param value  the status value of the link
+     * @param source     the id of the source node of the link
+     * @param target     the id of the target node of the link
+     * @param testbedCap the capability describing the link reading
+     * @param value      the status value of the link
      */
     private void commitLinkReading(final String source, final String target, final String testbedCap, final int value) {
         final String sourceUrn = TESTBED_URN + source;

@@ -121,7 +121,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
     }
 
     /**
-     * Shuts down the executorService
+     * Shuts down the executorService.
      */
     private void shutdown() {
         LOGGER.error("Shutting down!!!");
@@ -130,6 +130,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
     }
 
     /**
+     * Submits a new thread to the executor to parse the new string message.
      * @param toString the string to parse
      */
     private void parse(final String toString) {

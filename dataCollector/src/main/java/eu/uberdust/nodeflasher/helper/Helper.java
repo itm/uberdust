@@ -69,6 +69,11 @@ public class Helper {
      * TR server protobuf port.
      */
     private transient int pccPort;
+    /**
+     * Error message when wrong user arguments were given.
+     */
+    private static final String WRONG_SIZE_ERROR_MESSAGE =
+            "The list of URN prefixes must have the same length as the list of usernames and the list of passwords";
 
     /**
      * returns the reservation system used.
@@ -103,7 +108,7 @@ public class Helper {
      *
      * @return a list of all declared urnPrefixes
      */
-    public List getUrnPrefixes() {
+    public final List getUrnPrefixes() {
         return urnPrefixes;
     }
 
@@ -200,13 +205,13 @@ public class Helper {
         try {
             Preconditions.checkArgument(
                     urnPrefixes.size() == usernames.size() && usernames.size() == passwords.size(),
-                    "The list of URN prefixes must have the same length as the list of usernames and the list of passwords"
+                    WRONG_SIZE_ERROR_MESSAGE
             );
 
         } catch (Exception e) {
 
-            LOGGER.error(e);
-            e.printStackTrace();
+            LOGGER.fatal(e);
+
         }
 
         // Endpoint URLs of Authentication (SNAA), Reservation (RS) and Experimentation (iWSN) services
