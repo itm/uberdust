@@ -44,24 +44,24 @@ public class UberLogger {
      * Private constructor suppresses generation of a (public) default constructor.
      */
     private UberLogger() {
-        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
+        PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
     }
 
-    public final void LOG(final NodeReading nodeReading, final String level) {
+    public final void log(final NodeReading nodeReading, final String level) {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(level).append(" -- ").append("ID: ").append(nodeReading.getTimestamp().getTime()).append(" , ");
         stringBuilder.append(System.currentTimeMillis());
         LOGGER.info(stringBuilder.toString());
     }
 
-    public final void LOG(final String nodeReadingID, final String level) {
+    public final void log(final String nodeReadingID, final String level) {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(level).append(" -- ").append("ID: ").append(nodeReadingID).append(" , ");
         stringBuilder.append(System.currentTimeMillis());
         LOGGER.info(stringBuilder.toString());
     }
 
-    public final void LOG(final long nodeReadingID, final String level) {
+    public final void log(final long nodeReadingID, final String level) {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(level).append(" -- ").append("ID: ").append(nodeReadingID).append(" , ");
         stringBuilder.append(System.currentTimeMillis());
