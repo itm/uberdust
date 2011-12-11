@@ -11,6 +11,11 @@ public final class CapabilityCommand extends TestbedCommand {
     private String capabilityName;
 
     /**
+     * Capability description.
+     */
+    private String description;
+
+    /**
      * Returns capability name.
      * @return capability name.
      */
@@ -24,5 +29,23 @@ public final class CapabilityCommand extends TestbedCommand {
      */
     public void setCapabilityName(final String capabilityName) {
         this.capabilityName = capabilityName;
+    }
+
+    /**
+     * Returns description.
+     *
+     * @return description.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets description.
+     *
+     * @param description description.
+     */
+    public void setDescription(final String description) {
+        this.description = description;
     }
 }

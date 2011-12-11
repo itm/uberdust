@@ -77,12 +77,11 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
      * @return response http servlet response.
      * @throws InvalidTestbedIdException invalid testbed id exception.
      * @throws TestbedNotFoundException  testbed not found exception.
-     * @throws UnknownTestbedException   unknown testbed exception.
      * @throws IOException               IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws InvalidTestbedIdException, TestbedNotFoundException, UnknownTestbedException, IOException {
+            throws InvalidTestbedIdException, TestbedNotFoundException, IOException {
 
         LOGGER.info("Remote address: " + request.getRemoteAddr());
         LOGGER.info("Remote host: " + request.getRemoteHost());
@@ -117,10 +116,16 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         if (command.getNodeId().contains("1ccd")) {
             UberLogger.getInstance().log(timestamp.getTime(), "T24");
         }
-        // insert reading
-        nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getId(),
-                reading, timestamp);
 
+        // insert reading
+        try {
+            nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getId(),
+                    reading, timestamp);
+        } catch (UnknownTestbedException e) {
+            throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
+        }
+
+        // make response
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("Inserted for Node(" + command.getNodeId() + ") Capability(" + command.getCapabilityId()

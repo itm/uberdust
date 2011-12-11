@@ -11,6 +11,11 @@ public final class NodeCommand extends TestbedCommand {
     private String nodeId = null;
 
     /**
+     * Node's description.
+     */
+    private String description = null;
+
+    /**
      * Get the ID of the node.
      *
      * @return the Node ID.
@@ -28,4 +33,21 @@ public final class NodeCommand extends TestbedCommand {
         nodeId = thisId;
     }
 
+    /**
+     * Returns the description of the node.
+     *
+     * @return the description of the node.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description of the node.
+     *
+     * @param description node's description.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

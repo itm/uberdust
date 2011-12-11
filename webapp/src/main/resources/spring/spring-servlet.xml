@@ -59,7 +59,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/capability">listCapabilitiesController</prop>
                 <prop key="GET /testbed/*/capability/*">showCapbilityController</prop>
                 <prop key="GET /testbed/*/capability/*/tabdelimited">capabilityTabDelimitedController</prop>
-                <!--<prop key="GET /testbed/*/capability/*/insert/description/*/">capabilityInsertDescriptionController</prop>-->
+                <prop key="GET /testbed/*/capability/*/insert/description/*/">capabilityInsertDescriptionController</prop>
 
                 <!-- Node/Capability Controllers for readings -->
                 <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
@@ -341,6 +341,15 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
         <property name="lastLinkReadingManager" ref="lastLinkReadingManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/capability/{capabilityName}/tabdelimited"/>
+    </bean>
+
+    <!-- Insert description of a capability -->
+    <bean name="capabilityInsertDescriptionController" class="eu.uberdust.rest.controller.CapabilityInsertDescriptionController">
+        <property name="commandClass" value="eu.uberdust.command.CapabilityCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/capability/{capabilityName}/insert/description/{description}/"/>
+
     </bean>
 
     <!-- Node-Capability Controller for HTML Format -->

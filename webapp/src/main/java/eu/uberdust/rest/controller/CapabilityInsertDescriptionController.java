@@ -1,14 +1,13 @@
 package eu.uberdust.rest.controller;
 
-import eu.uberdust.command.NodeCommand;
+import eu.uberdust.command.CapabilityCommand;
+import eu.uberdust.rest.exception.CapabilityNotFoundException;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
-import eu.uberdust.rest.exception.NodeNotFoundException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
-import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Node;
-import org.apache.log4j.Logger;
+import eu.wisebed.wiseml.model.setup.Capability;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
@@ -21,38 +20,34 @@ import java.io.Writer;
 /**
  * Controller class for inserting description of a node.
  */
-public final class NodeInsertDescriptionController extends AbstractRestController {
-
-    /**
-     * Node persistence manager.
-     */
-    private transient NodeController nodeManager;
+public final class CapabilityInsertDescriptionController extends AbstractRestController {
 
     /**
      * Testbed persistence manager.
      */
-    private transient TestbedController testbedManager;
+    private TestbedController testbedManager;
 
     /**
-     * Logger.
+     * Capability persistence manager.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
-
-    /**
-     * Sets node persistence manager.
-     *
-     * @param nodeManager node persistence manager.
-     */
-    public void setNodeManager(final NodeController nodeManager) {
-        this.nodeManager = nodeManager;
-    }
+    private CapabilityController capabilityManager;
 
     /**
      * Sets testbed persistence manager.
+     *
      * @param testbedManager testbed persistence manager.
      */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
+    }
+
+    /**
+     * Sets capability persistence manager.
+     *
+     * @param capabilityManager capability persistence manager.
+     */
+    public void setCapabilityManager(final CapabilityController capabilityManager) {
+        this.capabilityManager = capabilityManager;
     }
 
     /**
@@ -65,16 +60,16 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
      * @return response http servlet response.
      * @throws InvalidTestbedIdException an invalid testbed id exception.
      * @throws TestbedNotFoundException testbed not found exception.
-     * @throws NodeNotFoundException node node found exception.
-     * @throws IOException IO exception.
+     * @throws CapabilityNotFoundException capability not found exception.
+     * @throws java.io.IOException IO exception.
      */
     @Override
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors) throws InvalidTestbedIdException,
-            TestbedNotFoundException, NodeNotFoundException, IOException {
+            TestbedNotFoundException, CapabilityNotFoundException, IOException {
 
         // set commandNode object
-        final NodeCommand command = (NodeCommand) commandObj;
+        final CapabilityCommand command = (CapabilityCommand) commandObj;
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -92,23 +87,23 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
         }
 
         // look up node
-        final String nodeId = command.getNodeId();
-        final Node node = nodeManager.getByID(nodeId);
-        if (node == null) {
+        final String capabilityName = command.getCapabilityName();
+        final Capability capability = capabilityManager.getByID(capabilityName);
+        if (capability == null) {
             // if no node is found throw exception
-            throw new NodeNotFoundException("Cannot find node [" + command.getNodeId() + "].");
+            throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityName() + "].");
         }
 
         // update description
         final String description = command.getDescription();
-        node.setDescription(description);
-        nodeManager.update(node);
+        capability.setDescription(description);
+        capabilityManager.update(capability);
 
         // make response
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
-        textOutput.write("Desciption \"" + description + "\" inserted for Node(" + node.getId() + ")"
-                + ") Testbed(" + testbed.getId() + "). OK");
+        textOutput.write("Desciption \"" + description + "\" inserted for Capability(" + command.getCapabilityName()
+                + ")" + ") Testbed(" + testbed.getId() + "). OK");
         textOutput.flush();
         textOutput.close();
 
