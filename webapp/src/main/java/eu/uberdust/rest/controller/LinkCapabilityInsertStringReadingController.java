@@ -34,7 +34,7 @@ public final class LinkCapabilityInsertStringReadingController extends AbstractR
     /**
      * Looger.
      */
-    private static final Logger LOGGER = Logger.getLogger(LinkCapabilityInsertReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(LinkCapabilityInsertStringReadingController.class);
 
     /**
      * Sets testbed persistence manager.

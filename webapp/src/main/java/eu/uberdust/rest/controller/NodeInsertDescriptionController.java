@@ -36,7 +36,7 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(NodeInsertDescriptionController.class);
 
     /**
      * Sets node persistence manager.

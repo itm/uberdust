@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-public final class NodeCapabilityInsertStringReadingController extends AbstractRestController {
+/**
+ * Controller class for inserting readings for a node capability pair.
+ */
+public final class NodeCapabilityInsertDoubleReadingController extends AbstractRestController {
 
     /**
      * NodeReading persistence manager.
@@ -34,12 +37,12 @@ public final class NodeCapabilityInsertStringReadingController extends AbstractR
     /**
      * Looger.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertStringReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertDoubleReadingController.class);
 
     /**
      * Constructor.
      */
-    public NodeCapabilityInsertStringReadingController() {
+    public NodeCapabilityInsertDoubleReadingController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -72,9 +75,9 @@ public final class NodeCapabilityInsertStringReadingController extends AbstractR
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException invalid testbed id exception.
-     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  testbed not found exception.
-     * @throws java.io.IOException               IO exception.
+     * @throws InvalidTestbedIdException invalid testbed id exception.
+     * @throws TestbedNotFoundException  testbed not found exception.
+     * @throws IOException               IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
@@ -106,8 +109,8 @@ public final class NodeCapabilityInsertStringReadingController extends AbstractR
         }
 
         // parse reading and timestamp
+        final Double reading = new Double(command.getReading());
         final Date timestamp = new Date(Long.parseLong(command.getTimestamp()));
-        final String reading = command.getStringReading();
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
         if (nodeId.contains("1ccd")) {

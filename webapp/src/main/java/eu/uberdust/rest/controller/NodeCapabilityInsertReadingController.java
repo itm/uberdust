@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-/**
- * Controller class for inserting readings for a node capability pair.
- */
-public final class NodeCapabilityInsertReadingController extends AbstractRestController {
+public class NodeCapabilityInsertReadingController extends AbstractRestController {
 
     /**
      * NodeReading persistence manager.
@@ -75,9 +72,9 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws InvalidTestbedIdException invalid testbed id exception.
-     * @throws TestbedNotFoundException  testbed not found exception.
-     * @throws IOException               IO exception.
+     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException invalid testbed id exception.
+     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  testbed not found exception.
+     * @throws java.io.IOException               IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
@@ -109,18 +106,18 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         }
 
         // parse reading and timestamp
-        final double reading;
-        final Date timestamp;
-        reading = Double.parseDouble(command.getReading());
-        timestamp = new Date(Long.parseLong(command.getTimestamp()));
-        if (command.getNodeId().contains("1ccd")) {
+        final Double doubleReading = new Double(command.getReading());
+        final String stringReading = command.getStringReading();
+        final Date timestamp = new Date(Long.parseLong(command.getTimestamp()));
+        final String nodeId = command.getNodeId();
+        final String capabilityId = command.getCapabilityId();
+        if (nodeId.contains("1ccd")) {
             UberLogger.getInstance().log(timestamp.getTime(), "T24");
         }
 
         // insert reading
         try {
-            nodeReadingManager.insertReading(command.getNodeId(), command.getCapabilityId(), testbed.getId(),
-                    reading, timestamp);
+            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, doubleReading, stringReading, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }
@@ -129,7 +126,7 @@ public final class NodeCapabilityInsertReadingController extends AbstractRestCon
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("Inserted for Node(" + command.getNodeId() + ") Capability(" + command.getCapabilityId()
-                + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
+                + ") Testbed(" + testbed.getName() + ") : [" + doubleReading + "," + stringReading + "]. OK");
         textOutput.flush();
         textOutput.close();
         if (command.getNodeId().contains("1ccd")) {

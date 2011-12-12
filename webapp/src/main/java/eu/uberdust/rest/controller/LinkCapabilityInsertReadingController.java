@@ -18,10 +18,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-/**
- * Controller class for inserting readings for a link capability pair.
- */
-public final class LinkCapabilityInsertReadingController extends AbstractRestController {
+public class LinkCapabilityInsertReadingController extends AbstractRestController
+
+    {
 
     /**
      * LinkReading persistence manager.
@@ -74,9 +73,9 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws InvalidTestbedIdException invalid testbed id exception.
-     * @throws TestbedNotFoundException  testbed not found exception.
-     * @throws IOException               IO exception.
+     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException invalid testbed id exception.
+     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  testbed not found exception.
+     * @throws java.io.IOException               IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
@@ -105,24 +104,26 @@ public final class LinkCapabilityInsertReadingController extends AbstractRestCon
         }
 
         // parse reading and timestamp
-        final Date timestamp;
-        final Double reading = Double.parseDouble(command.getReading());
-        timestamp = new Date(Long.parseLong(command.getTimestamp()));
+        final Date timestamp = new Date(Long.parseLong(command.getTimestamp()));
+        final Double doubleReading = new Double(command.getReading());
+        final String stringReading = command.getStringReading();
+        final String sourceId = command.getSourceId();
+        final String targetId = command.getTargetId();
+        final String capabilityId = command.getCapabilityId();
 
         // insert reading
         try {
-            linkReadingManager.insertReading(command.getSourceId(), command.getTargetId(), command.getCapabilityId(),
-                    testbed.getId(), reading, 0.0, timestamp);
+            linkReadingManager.insertReading(sourceId, targetId, capabilityId, testbedId, doubleReading, stringReading,
+                    null, timestamp);
         } catch (UnknownTestbedException e) {
-            throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].", e);
+            throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }
-
 
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("Inserted for Link [" + command.getSourceId() + "," + command.getTargetId()
                 + "] Capability(" + command.getCapabilityId()
-                + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
+                + ") Testbed(" + testbed.getName() + ") : [" + doubleReading + "," + stringReading + "]. OK");
         textOutput.flush();
         textOutput.close();
 
