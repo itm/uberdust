@@ -22,6 +22,12 @@
 <body>
 <%@include file="/header.jsp"%>
 <h1>Testbed <c:out value="${testbed.name}"/> status page</h1>
+<p>
+    /<a href="<c:url value="/rest/testbed"/>">testbeds</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}"/>">testbed</a>/
+    <a href="<c:url value="/rest/testbed/${testbed.id}/status"/>">status</a>
+</p>
+
 <c:choose>
     <c:when test="${lastLinkReadings != null}">
         <h2>Nodes</h2>
