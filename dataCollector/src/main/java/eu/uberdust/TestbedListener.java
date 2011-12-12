@@ -2,6 +2,7 @@ package eu.uberdust;
 
 import eu.uberdust.controller.TestbedController;
 import eu.uberdust.datacollector.DataCollector;
+import eu.uberdust.nodeflasher.NodeFlasherController;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,13 +15,13 @@ public class TestbedListener {
     private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(TestbedListener.class);
 
     public static void main(final String[] args) {
-        LOGGER.debug("starting TestbedController");
+        LOGGER.info("starting TestbedController");
         TestbedController.getInstance();
-        LOGGER.debug("starting NodeFlasherController");
-//        new NodeFlasherController();
-        LOGGER.debug("starting DataCollector");
+        LOGGER.info("starting NodeFlasherController");
+        new NodeFlasherController();
+        LOGGER.info("starting DataCollector");
         final DataCollector dataCollector = new DataCollector();
         dataCollector.start();
-        LOGGER.debug("up and running");
+        LOGGER.info("up and running");
     }
 }
