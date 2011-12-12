@@ -15,6 +15,11 @@ public final class LinkCapabilityInsertReadingCommand extends LinkCapabilityComm
     private String timestamp;
 
     /**
+     * String reading.
+     */
+    private String stringReading;
+
+    /**
      * Returns reading.
      * @return reading.
      */
@@ -44,5 +49,21 @@ public final class LinkCapabilityInsertReadingCommand extends LinkCapabilityComm
      */
     public void setTimestamp(final String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Returns string reading.
+     * @return string reading.
+     */
+    public String getStringReading() {
+        return stringReading;
+    }
+
+    /**
+     * Sets string reading
+     * @param stringReading string reading.
+     */
+    public void setStringReading(final String stringReading) {
+        this.stringReading = stringReading;
     }
 }

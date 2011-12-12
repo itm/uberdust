@@ -16,6 +16,11 @@ public final class NodeCapabilityInsertReadingCommand extends NodeCapabilityComm
     private String timestamp;
 
     /**
+     * String Reading.
+     */
+    private String stringReading;
+
+    /**
      * Returns reading.
      * @return reading.
      */
@@ -45,5 +50,21 @@ public final class NodeCapabilityInsertReadingCommand extends NodeCapabilityComm
      */
     public void setTimestamp(final String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Returns string reading.
+     * @return string reading.
+     */
+    public String getStringReading() {
+        return stringReading;
+    }
+
+    /**
+     * Sets string reading
+     * @param stringReading string reading.
+     */
+    public void setStringReading(final String stringReading) {
+        this.stringReading = stringReading;
     }
 }
