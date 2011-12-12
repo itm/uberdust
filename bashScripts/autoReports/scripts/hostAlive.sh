@@ -1,5 +1,5 @@
 #!/bin/bash
-source /var/autoReports/settings
+source ../settings
 
 addReading "status" "1"
 
