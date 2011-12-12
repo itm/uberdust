@@ -33,6 +33,7 @@ public class Reserver {
      * @return the reservation key
      */
     public final String reserve(final String[] nodes) {
+        helper.authenticate();
 
         LOGGER.info("|+   Trying to reserve " + nodes.length + " nodes");
 
