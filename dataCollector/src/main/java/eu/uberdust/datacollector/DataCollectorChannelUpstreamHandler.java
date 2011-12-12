@@ -5,12 +5,15 @@ import de.uniluebeck.itm.gtr.messaging.Messages;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNApp;
 import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import eu.uberdust.datacollector.parsers.MessageParser;
+import eu.uberdust.datacollector.parsers.WsCommiter;
+import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -84,6 +87,19 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
                 final ThreadPoolExecutor pool = (ThreadPoolExecutor) executorService;
                 LOGGER.info("PoolSize : " + pool.getPoolSize() + " Active :" + pool.getActiveCount());
                 LOGGER.info("Peak : " + pool.getLargestPoolSize());
+                final NodeReading nodeReading = new NodeReading();
+                nodeReading.setTestbedId("3");
+                nodeReading.setNodeId("urn:ctinetwork:uberdust");
+                nodeReading.setCapabilityName("urn:ctinetwork:testbedlistener:poolSize");
+                nodeReading.setReading(String.valueOf(pool.getPoolSize()));
+                nodeReading.setTimestamp(String.valueOf((new Date()).getTime()));
+                new WsCommiter(nodeReading);
+                nodeReading.setCapabilityName("urn:ctinetwork:testbedlistener:activeThreads");
+                nodeReading.setReading(String.valueOf(pool.getActiveCount()));
+                new WsCommiter(nodeReading);
+                nodeReading.setCapabilityName("urn:ctinetwork:testbedlistener:messageRate");
+                nodeReading.setReading(String.valueOf(stat));
+                new WsCommiter(nodeReading);
 
                 lastTime = System.currentTimeMillis();
                 messageCounter = 0;
