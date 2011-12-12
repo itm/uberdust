@@ -29,7 +29,7 @@ public class PeriodicFlasherJob implements Job {
         try {
             helper.flash(helper.getNodes("nodes.telosb"), "telosb");
         } catch (Exception e) {
-            LOGGER.info(e);
+            LOGGER.error(e);
         }
     }
 }
