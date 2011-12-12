@@ -1,6 +1,7 @@
 package eu.uberdust.nodeflasher;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -40,8 +41,13 @@ public class NodeFlasherController {
      * Default Constructor.
      */
     public NodeFlasherController() {
-
+        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
+        LOGGER.info("NodeFlasherController");
         final SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+        LOGGER.info(" new StdSchedulerFactory()");
+
+
+
 
         final Scheduler sched;
         try {
