@@ -1,5 +1,5 @@
 #!/bin/bash
-source /var/autoReports/settings
+source ../settings
 
 #execute commands
 VAL=$(acpi | cut -d " " -f 4)

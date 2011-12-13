@@ -9,10 +9,10 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
+import javax.swing.JFrame;
+import java.awt.Color;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,14 +25,22 @@ public class TotalTimeParser {
      * Static Logger,
      */
     private static final Logger LOGGER = Logger.getLogger(TotalTimeParser.class);
+        /**
+     * Threshold to exclude readings.
+     */
+    private static final long EXCLUDE_THRESHOLD = 100000;
 
-    public TotalTimeParser(ArrayList<TrNodeReading> finalReadings) {
+    /**
+     * Constructor.
+     * @param finalReadings the readings to plot
+     */
+    public TotalTimeParser(final List<TrNodeReading> finalReadings) {
         final TimeSeries series = new TimeSeries("Total Duration");
         long max = -1;
         for (TrNodeReading finalReading : finalReadings) {
             LOGGER.info(finalReading);
             LOGGER.info(finalReading.getStart());
-            if (finalReading.totalDuration() < 100000) {
+            if (finalReading.totalDuration() < EXCLUDE_THRESHOLD) {
                 series.addOrUpdate(new Millisecond(new Date(finalReading.getStart())), finalReading.totalDuration());
                 if (max < finalReading.totalDuration()) {
                     max = finalReading.totalDuration();

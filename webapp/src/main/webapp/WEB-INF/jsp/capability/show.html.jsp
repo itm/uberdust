@@ -35,6 +35,10 @@
                     value="${capability.name}"/></a>
         </td>
     </tr>
+    <tr>
+        <td>Capability Description</td>
+        <td><c:out value="${capability.description}"/></td>
+    </tr>
     <c:if test="${nodes != null && fn:length(nodes) != 0}">
         <tr>
             <td>Nodes(<c:out value="${fn:length(nodes)}"/>)</td>

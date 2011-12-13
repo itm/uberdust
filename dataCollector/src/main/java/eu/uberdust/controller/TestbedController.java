@@ -138,7 +138,7 @@ public class TestbedController {
         if (protoCommand.getDestination().contains("494")) {
             final String pl = protoCommand.getPayload().replaceAll(",", "");
             final String nodeId = pl.substring(3);
-            UberLogger.getInstance().LOG(nodeId, "T91");
+            UberLogger.getInstance().log(nodeId, "T91");
         }
 
         final String macAddress = protoCommand.getDestination().
@@ -177,14 +177,14 @@ public class TestbedController {
         if (protoCommand.getDestination().contains("494")) {
             final String pl = protoCommand.getPayload().replaceAll(",", "");
             final String nodeId = pl.substring(3);
-            UberLogger.getInstance().LOG(nodeId, "T10");
+            UberLogger.getInstance().log(nodeId, "T10");
         }
 
         wsn.send(nodeURNs, msg, 10, TimeUnit.SECONDS);
         if (protoCommand.getDestination().contains("494")) {
             final String pl = protoCommand.getPayload().replaceAll(",", "");
             final String nodeId = pl.substring(3);
-            UberLogger.getInstance().LOG(nodeId, "T101");
+            UberLogger.getInstance().log(nodeId, "T101");
         }
     }
 

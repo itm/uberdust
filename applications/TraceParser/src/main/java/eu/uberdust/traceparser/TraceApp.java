@@ -1,11 +1,17 @@
 package eu.uberdust.traceparser;
 
-import eu.uberdust.traceparser.parsers.*;
+import eu.uberdust.traceparser.parsers.IntervalDurationParser;
+import eu.uberdust.traceparser.parsers.TRParser;
+import eu.uberdust.traceparser.parsers.ThreadParser;
+import eu.uberdust.traceparser.parsers.TotalTimeHistogramParser;
+import eu.uberdust.traceparser.parsers.TotalTimeParser;
+import eu.uberdust.traceparser.parsers.UberParser;
 import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -18,7 +24,7 @@ import java.util.Properties;
 public class TraceApp {
 
     /**
-     * Static Logger,
+     * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(TraceApp.class);
 
@@ -27,17 +33,30 @@ public class TraceApp {
      * Application property file name.
      */
     private static final String PROPERTY_FILE = "parser.properties";
+    /**
+     * files from testbed runtime.
+     */
+    private transient String[] runtimeLogFiles;
+    /**
+     * files from uberdust.
+     */
+    private transient String[] uberLogFiles;
+    /**
+     * files for thread statistics.
+     */
+    private transient String threadLogFile;
+    /**
+     * path to logfiles.
+     */
+    private transient String path;
 
-    private String[] runtimeLogFiles;
-
-    private String[] uberLogFiles;
-    private String threadLogFile;
-    private String path;
-
-    public TraceApp() {
+    /**
+     * Constructor.
+     */
+    private TraceApp() {
         readProperties();
         final TRParser trParser = new TRParser(path, runtimeLogFiles);
-        ArrayList<TrNodeReading> readings = trParser.returnReadings();
+        List<TrNodeReading> readings = trParser.returnReadings();
 
         readings = (new UberParser(path, uberLogFiles, readings)).returnReadings();
 
@@ -50,7 +69,7 @@ public class TraceApp {
         }
 
 
-        new ThreadParser(path,threadLogFile);
+        new ThreadParser(path, threadLogFile);
         new TotalTimeParser(finalReadings);
         new TotalTimeHistogramParser(finalReadings);
         new IntervalDurationParser(finalReadings);
@@ -78,7 +97,7 @@ public class TraceApp {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new TraceApp();
     }
 }

@@ -25,9 +25,9 @@ public class WsCommiter {
      */
     public WsCommiter(final NodeReading nodeReading) {
         try {
-            if (nodeReading.getNodeId().contains("1ccd") &&
-                    nodeReading.getCapabilityName().contains("pir")) {
-                UberLogger.getInstance().LOG(nodeReading.getTimestamp(), "Τ22");
+            if (nodeReading.getNodeId().contains("1ccd")
+                    && nodeReading.getCapabilityName().contains("pir")) {
+                UberLogger.getInstance().log(nodeReading.getTimestamp(), "Τ22");
             }
             LOGGER.debug("adding " + nodeReading);
             InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading);

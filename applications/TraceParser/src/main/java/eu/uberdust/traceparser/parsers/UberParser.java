@@ -4,8 +4,12 @@ import eu.uberdust.traceparser.util.TrNodeReading;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,31 +23,42 @@ public class UberParser {
      * Static Logger,
      */
     private static final Logger LOGGER = Logger.getLogger(TRParser.class);
-
-    private final String[] filenames;// = "/home/akribopo/Projects/uberdust/tr.out";
-
-    private final ArrayList<TrNodeReading> nodeReadings;
-
-    private final static String ID = "ID: ";
-    private final String path;
-
+    /**
+     * Text to split ids.
+     */
+    private static final String ID_TEXT = "ID: ";
+    /**
+     * The files to parse.
+     */
+    private final transient String[] filenames;
+    /**
+     * Path to files.
+     */
+    private final transient String path;
+    /**
+     * List of all node readings.
+     */
+    private final transient List<TrNodeReading> nodeReadings;
 
     /**
      * Default Constructor.
      *
-     * @param path
+     * @param path     path to files
      * @param file     the file
      * @param readings the readings
      */
-    public UberParser(String path, final String[] file, final ArrayList<TrNodeReading> readings) {
-        PropertyConfigurator.configure(this.getClass().getClassLoader().getResource("log4j.properties"));
+    public UberParser(final String path, final String[] file, final List<TrNodeReading> readings) {
+        PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
         LOGGER.info("UberParser initialized");
-        filenames = file;
+        filenames = file.clone();
         this.path = path;
         nodeReadings = readings;
         extractData();
     }
 
+    /**
+     * Read and parse data from files.
+     */
     private void extractData() {
         try {
             for (String filename : filenames) {
@@ -71,7 +86,7 @@ public class UberParser {
                             nodeReadings.get(nodeReadings.indexOf(trNodeReading)).addTimestamp(timestampID, Long.valueOf(reading[1]));
                         }
                     } catch (final NumberFormatException e) {
-                        //LOGGER.error(e);
+                        LOGGER.debug(e);
                     }
                 }
                 reader.close();
@@ -83,11 +98,20 @@ public class UberParser {
         }
     }
 
+    /**
+     * Cleanup Reading Text from string.
+     * @param line the line to cleanup.
+     * @return the parsed line
+     */
     private String[] extractReading(final String line) {
-        return line.substring(line.indexOf(ID) + ID.length()).split(" , ");
+        return line.substring(line.indexOf(ID_TEXT) + ID_TEXT.length()).split(" , ");
     }
 
-    public ArrayList<TrNodeReading> returnReadings() {
+    /**
+     * get a list of all node readings.
+     * @return the readings
+     */
+    public final List<TrNodeReading> returnReadings() {
         return nodeReadings;
     }
 

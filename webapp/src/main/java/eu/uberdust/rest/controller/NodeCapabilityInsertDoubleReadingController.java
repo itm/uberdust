@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-public class NodeCapabilityInsertReadingController extends AbstractRestController {
+/**
+ * Controller class for inserting readings for a node capability pair.
+ */
+public final class NodeCapabilityInsertDoubleReadingController extends AbstractRestController {
 
     /**
      * NodeReading persistence manager.
@@ -34,12 +37,12 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
     /**
      * Looger.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertDoubleReadingController.class);
 
     /**
      * Constructor.
      */
-    public NodeCapabilityInsertReadingController() {
+    public NodeCapabilityInsertDoubleReadingController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -72,9 +75,9 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException invalid testbed id exception.
-     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  testbed not found exception.
-     * @throws java.io.IOException               IO exception.
+     * @throws InvalidTestbedIdException invalid testbed id exception.
+     * @throws TestbedNotFoundException  testbed not found exception.
+     * @throws IOException               IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
@@ -106,8 +109,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         }
 
         // parse reading and timestamp
-        final Double doubleReading = new Double(command.getReading());
-        final String stringReading = command.getStringReading();
+        final Double reading = new Double(command.getReading());
         final Date timestamp = new Date(Long.parseLong(command.getTimestamp()));
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
@@ -117,7 +119,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
 
         // insert reading
         try {
-            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, doubleReading, stringReading, timestamp);
+            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, reading, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }
@@ -126,7 +128,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("Inserted for Node(" + command.getNodeId() + ") Capability(" + command.getCapabilityId()
-                + ") Testbed(" + testbed.getName() + ") : [" + doubleReading + "," + stringReading + "]. OK");
+                + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
         textOutput.flush();
         textOutput.close();
         if (command.getNodeId().contains("1ccd")) {

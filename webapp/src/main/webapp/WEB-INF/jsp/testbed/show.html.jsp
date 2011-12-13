@@ -114,7 +114,7 @@
             </p>
             <c:choose>
                 <c:when test="${nodes == null || fn:length(nodes) == 0}">
-                    <p style="color : red">No nodes found for testbed <c:out value="${testbed.name}"/>}</p>
+                    <p style="color : red">No nodes found for testbed <c:out value="${testbed.name}"/></p>
                 </c:when>
                 <c:otherwise>
                     <table>

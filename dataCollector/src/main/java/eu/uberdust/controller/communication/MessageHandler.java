@@ -56,7 +56,7 @@ public class MessageHandler extends Thread {
             if (cmd.getDestination().contains("494")) {
                 final String payload = cmd.getPayload().replaceAll(",", "");
                 final String nodeId = payload.substring(3);
-                UberLogger.getInstance().LOG(nodeId, "T9");
+                UberLogger.getInstance().log(nodeId, "T9");
             }
             TestbedController.getInstance().sendCommand(cmd.toBuilder());
         } catch (final IOException e) {

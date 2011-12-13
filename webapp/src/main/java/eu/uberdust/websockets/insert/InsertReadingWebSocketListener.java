@@ -116,7 +116,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
         String message = "Neither Node nor Link reading. ERROR";
 
         if (receivedMessage.contains("1ccd")) {
-            UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T23");
+            UberLogger.getInstance().log(Long.parseLong(messageParts[4]), "T23");
         }
 
         try {
@@ -128,7 +128,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final double readingValue = Double.parseDouble(messageParts[5]);
 
                 if (receivedMessage.contains("1ccd")) {
-                    UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T24");
+                    UberLogger.getInstance().log(Long.parseLong(messageParts[4]), "T24");
                 }
 
                 nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
@@ -155,7 +155,7 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
             pw.close();
         }
         if (receivedMessage.contains("1ccd")) {
-            UberLogger.getInstance().LOG(Long.parseLong(messageParts[4]), "T25");
+            UberLogger.getInstance().log(Long.parseLong(messageParts[4]), "T25");
         }
 
         LOGGER.info("MEMSTAT_1: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");

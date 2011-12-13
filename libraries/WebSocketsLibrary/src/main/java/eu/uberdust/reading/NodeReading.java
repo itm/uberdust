@@ -40,7 +40,7 @@ public final class NodeReading implements Serializable {
     /**
      * String Capability reading value for this node.
      */
-    private String  reading;
+    private String reading;
 
     /**
      * Constructor.
@@ -51,6 +51,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Returns testbed id.
+     *
      * @return testbed id.
      */
     public String getTestbedId() {
@@ -59,6 +60,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Sets testbed id.
+     *
      * @param testbedId testbed id.
      */
     public void setTestbedId(final String testbedId) {
@@ -67,6 +69,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Returns node id.
+     *
      * @return node id.
      */
     public String getNodeId() {
@@ -75,6 +78,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Sets node id.
+     *
      * @param nodeId node id.
      */
     public void setNodeId(final String nodeId) {
@@ -83,6 +87,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Returns capability name.
+     *
      * @return capability name.
      */
     public String getCapabilityName() {
@@ -91,6 +96,7 @@ public final class NodeReading implements Serializable {
 
     /**
      * Sets capability name.
+     *
      * @param capabilityName capability name.
      */
     public void setCapabilityName(final String capabilityName) {
@@ -102,7 +108,7 @@ public final class NodeReading implements Serializable {
      *
      * @return timestamp of the reading.
      */
-    public String  getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
@@ -138,7 +144,7 @@ public final class NodeReading implements Serializable {
      *
      * @return a string of the appropriate REST URL in order to insert this link reading.
      */
-    public String toRestString(){
+    public String toRestString() {
         return "/testbed/" + testbedId
                 + "/node/" + nodeId
                 + "/capability/" + capabilityName
@@ -152,7 +158,7 @@ public final class NodeReading implements Serializable {
      * @return delimited string.
      */
     public String toDelimitedString() {
-        return  NodeReading.class.getName()
+        return NodeReading.class.getName()
                 + DELIMITER + testbedId
                 + DELIMITER + nodeId
                 + DELIMITER + capabilityName

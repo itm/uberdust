@@ -107,10 +107,10 @@ public final class LightController {
         for (int i = 0; i < reading.length(); i++) {
             linkBuilder.append(",").append(reading.charAt(i));
         }
-        UberLogger.getInstance().LOG(reading, "T7a");
+        UberLogger.getInstance().log(reading, "T7a");
         LOGGER.info(linkBuilder.toString());
         RestClient.getInstance().callRestfulWebService(linkBuilder.toString());
-        UberLogger.getInstance().LOG(reading, "T7b");
+        UberLogger.getInstance().log(reading, "T7b");
     }
 
     public boolean isZone1() {

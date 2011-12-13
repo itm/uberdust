@@ -1,5 +1,6 @@
 package eu.uberdust.communication.websocket;
 
+import eu.uberdust.communication.rest.InsertReadingRestClient;
 import eu.uberdust.communication.websocket.task.PingTask;
 import eu.uberdust.reading.LinkReading;
 import eu.uberdust.reading.NodeReading;
@@ -34,6 +35,14 @@ public final class InsertReadingWebSocketClient {
      * Web Socket Protocol.
      */
     private static final String PROTOCOL = "INSERTREADING";
+    /**
+     * Websocket url prefix.
+     */
+    private static final String WS_PREFIX = "ws://";
+    /**
+     * Http url prefix.
+     */
+    private static final String HTTP_PREFIX = "http://";
 
     /**
      * Timer
@@ -54,6 +63,8 @@ public final class InsertReadingWebSocketClient {
      * WebSocketClientFactory,
      */
     private WebSocketClientFactory factory;
+    private String webSocketUrl;
+
 
     /**
      * WSocketClient is loaded on the first execution of WSocketClient.getInstance()
@@ -89,6 +100,21 @@ public final class InsertReadingWebSocketClient {
     /**
      * Connects to the WebSocket.
      *
+     * @throws java.io.IOException         an IOException exception.
+     * @throws java.net.URISyntaxException a URI SyntaxException.
+     * @throws InterruptedException        InterruptedException exception.
+     * @throws java.util.concurrent.ExecutionException
+     *                                     ExecutionException exception.
+     */
+    public void connect() throws IOException, ExecutionException, URISyntaxException, InterruptedException {
+        if (webSocketUrl != null) {
+            connect(webSocketUrl);
+        }
+    }
+
+    /**
+     * Connects to the WebSocket.
+     *
      * @param webSocketUrl WebSocket URL.
      * @throws java.io.IOException         an IOException exception.
      * @throws java.net.URISyntaxException a URI SyntaxException.
@@ -96,18 +122,37 @@ public final class InsertReadingWebSocketClient {
      * @throws java.util.concurrent.ExecutionException
      *                                     ExecutionException exception.
      */
-    public void connect(final String webSocketUrl) throws IOException, URISyntaxException,
-            ExecutionException, InterruptedException {
-        try {
+    public void connect(final String webSocketUrl) throws IOException, URISyntaxException, ExecutionException, InterruptedException {
+        this.webSocketUrl = webSocketUrl;
 
+        factory = new WebSocketClientFactory();
+        factory.setBufferSize(4096);
+        try {
+            factory.start();
+            client = factory.newWebSocketClient();
+            client.setMaxIdleTime(-1);
+            client.setProtocol(PROTOCOL);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+
+        try {
+            LOGGER.info("Connecting to " + webSocketUrl);
             // open connection
             connection = client.open(new URI(webSocketUrl), new InsertReadingWebSocketIMPL()).get();
 
-            startPingingTask();
+            try {
+                startPingingTask();
+            } catch (Exception e) {
+                LOGGER.error(e);
+            }
+
         } catch (final Exception e) {
 
             // in case of exception keep trying to make connection after 2 seconds
             LOGGER.error(e);
+            e.printStackTrace();
+
             try {
                 Thread.sleep(2000);
             } catch (final InterruptedException e1) {
@@ -158,9 +203,7 @@ public final class InsertReadingWebSocketClient {
      * Start pinging task.
      */
     private void startPingingTask() {
-        if (timer == null) {
-            timer = new Timer();
-        }
+        timer = new Timer();
         timer.scheduleAtFixedRate(new PingTask(), PingTask.DELAY, PingTask.DELAY);
     }
 
@@ -193,14 +236,21 @@ public final class InsertReadingWebSocketClient {
      */
     public void disconnect() {
         try {
-            stopPingingTask();
+//            stopPingingTask();
             connection.disconnect();
             if (factory.isRunning()) {
-                factory.stop();
+                factory.destroy();
             }
-            factory.destroy();
+            factory.stop();
         } catch (final Exception e) {
             LOGGER.error(e);
         }
+    }
+
+    /**
+     * Checks the Rest Interface to see if connection is available.
+     */
+    public void restPing() {
+        InsertReadingRestClient.getInstance().callRestfulWebService(webSocketUrl.replace(WS_PREFIX, HTTP_PREFIX));
     }
 }

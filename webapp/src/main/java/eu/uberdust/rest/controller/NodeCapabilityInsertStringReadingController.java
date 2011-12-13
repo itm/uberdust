@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-public class NodeCapabilityInsertReadingController extends AbstractRestController {
+public final class NodeCapabilityInsertStringReadingController extends AbstractRestController {
 
     /**
      * NodeReading persistence manager.
@@ -34,12 +34,12 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
     /**
      * Looger.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertStringReadingController.class);
 
     /**
      * Constructor.
      */
-    public NodeCapabilityInsertReadingController() {
+    public NodeCapabilityInsertStringReadingController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -106,9 +106,8 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         }
 
         // parse reading and timestamp
-        final Double doubleReading = new Double(command.getReading());
-        final String stringReading = command.getStringReading();
         final Date timestamp = new Date(Long.parseLong(command.getTimestamp()));
+        final String reading = command.getStringReading();
         final String nodeId = command.getNodeId();
         final String capabilityId = command.getCapabilityId();
         if (nodeId.contains("1ccd")) {
@@ -117,7 +116,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
 
         // insert reading
         try {
-            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, doubleReading, stringReading, timestamp);
+            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, reading, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }
@@ -126,7 +125,7 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
         textOutput.write("Inserted for Node(" + command.getNodeId() + ") Capability(" + command.getCapabilityId()
-                + ") Testbed(" + testbed.getName() + ") : [" + doubleReading + "," + stringReading + "]. OK");
+                + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
         textOutput.flush();
         textOutput.close();
         if (command.getNodeId().contains("1ccd")) {

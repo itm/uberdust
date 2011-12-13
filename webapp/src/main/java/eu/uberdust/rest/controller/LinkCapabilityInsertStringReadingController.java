@@ -1,10 +1,10 @@
 package eu.uberdust.rest.controller;
 
-import eu.uberdust.command.NodeCapabilityInsertReadingCommand;
+
+import eu.uberdust.command.LinkCapabilityInsertReadingCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
-import eu.uberdust.uberlogger.UberLogger;
-import eu.wisebed.wisedb.controller.NodeReadingController;
+import eu.wisebed.wisedb.controller.LinkReadingController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.exception.UnknownTestbedException;
 import eu.wisebed.wisedb.model.Testbed;
@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-public class NodeCapabilityInsertReadingController extends AbstractRestController {
+public final class LinkCapabilityInsertStringReadingController extends AbstractRestController {
 
     /**
-     * NodeReading persistence manager.
+     * LinkReading persistence manager.
      */
-    private transient NodeReadingController nodeReadingManager;
+    private transient LinkReadingController linkReadingManager;
 
     /**
      * Testbed persistence manager.
@@ -34,34 +34,34 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
     /**
      * Looger.
      */
-    private static final Logger LOGGER = Logger.getLogger(NodeCapabilityInsertReadingController.class);
+    private static final Logger LOGGER = Logger.getLogger(LinkCapabilityInsertStringReadingController.class);
+
+    /**
+     * Sets testbed persistence manager.
+     *
+     * @param testbedManager testbed persistence manager.
+     */
+    public void setTestbedManager(final TestbedController testbedManager) {
+        this.testbedManager = testbedManager;
+    }
+
+    /**
+     * Sets link persistence manager.
+     *
+     * @param linkReadingManager LinkReading persistence manager.
+     */
+    public void setLinkReadingManager(final LinkReadingController linkReadingManager) {
+        this.linkReadingManager = linkReadingManager;
+    }
 
     /**
      * Constructor.
      */
-    public NodeCapabilityInsertReadingController() {
+    public LinkCapabilityInsertStringReadingController() {
         super();
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
-    }
-
-    /**
-     * Sets NodeReading persistence manager.
-     *
-     * @param nodeReadingManager NodeReading persistence manager.
-     */
-    public void setNodeReadingManager(final NodeReadingController nodeReadingManager) {
-        this.nodeReadingManager = nodeReadingManager;
-    }
-
-    /**
-     * Sets Testbed persistence manager.
-     *
-     * @param testbedManager Testbed persistence manager.
-     */
-    public void setTestbedManager(final TestbedController testbedManager) {
-        this.testbedManager = testbedManager;
     }
 
     /**
@@ -72,8 +72,8 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException invalid testbed id exception.
-     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  testbed not found exception.
+     * @throws InvalidTestbedIdException invalid testbed id exception.
+     * @throws TestbedNotFoundException  testbed not found exception.
      * @throws java.io.IOException               IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
@@ -83,12 +83,9 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         LOGGER.info("Remote address: " + request.getRemoteAddr());
         LOGGER.info("Remote host: " + request.getRemoteHost());
 
-        // set commandNode object
-        final NodeCapabilityInsertReadingCommand command = (NodeCapabilityInsertReadingCommand) commandObj;
+        // set command object object
+        final LinkCapabilityInsertReadingCommand command = (LinkCapabilityInsertReadingCommand) commandObj;
 
-        if (command.getNodeId().contains("1ccd")) {
-            UberLogger.getInstance().log(Long.parseLong(command.getTimestamp()), "T23");
-        }
         // a specific testbed is requested by testbed Id
         int testbedId;
         try {
@@ -106,34 +103,30 @@ public class NodeCapabilityInsertReadingController extends AbstractRestControlle
         }
 
         // parse reading and timestamp
-        final Double doubleReading = new Double(command.getReading());
-        final String stringReading = command.getStringReading();
         final Date timestamp = new Date(Long.parseLong(command.getTimestamp()));
-        final String nodeId = command.getNodeId();
+        final String reading = command.getStringReading();
+        final String sourceId = command.getSourceId();
+        final String targetId = command.getTargetId();
         final String capabilityId = command.getCapabilityId();
-        if (nodeId.contains("1ccd")) {
-            UberLogger.getInstance().log(timestamp.getTime(), "T24");
-        }
 
         // insert reading
         try {
-            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, doubleReading, stringReading, timestamp);
+            linkReadingManager.insertReading(sourceId, targetId, capabilityId, testbedId, reading, null, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }
 
-        // make response
         response.setContentType("text/plain");
         final Writer textOutput = (response.getWriter());
-        textOutput.write("Inserted for Node(" + command.getNodeId() + ") Capability(" + command.getCapabilityId()
-                + ") Testbed(" + testbed.getName() + ") : [" + doubleReading + "," + stringReading + "]. OK");
+        textOutput.write("Inserted for Link [" + command.getSourceId() + "," + command.getTargetId()
+                + "] Capability(" + command.getCapabilityId()
+                + ") Testbed(" + testbed.getName() + ") : " + reading + ". OK");
         textOutput.flush();
         textOutput.close();
-        if (command.getNodeId().contains("1ccd")) {
-            UberLogger.getInstance().log(timestamp.getTime(), "T25");
-        }
 
-        LOGGER.info("MEMSTAT_3: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+        LOGGER.info("MEMSTAT_1: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
+        Runtime.getRuntime().gc();
+        LOGGER.info("MEMSTAT_2: " + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory() + " -- " + Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().totalMemory() + "% free mem");
 
         return null;
     }
