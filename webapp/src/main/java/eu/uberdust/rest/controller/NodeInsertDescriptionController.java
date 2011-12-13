@@ -2,7 +2,6 @@ package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.NodeCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
-import eu.uberdust.rest.exception.NodeNotFoundException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
@@ -65,13 +64,12 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
      * @return response http servlet response.
      * @throws InvalidTestbedIdException an invalid testbed id exception.
      * @throws TestbedNotFoundException testbed not found exception.
-     * @throws NodeNotFoundException node node found exception.
      * @throws IOException IO exception.
      */
     @Override
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors) throws InvalidTestbedIdException,
-            TestbedNotFoundException, NodeNotFoundException, IOException {
+            TestbedNotFoundException, IOException {
 
         // set commandNode object
         final NodeCommand command = (NodeCommand) commandObj;
@@ -93,10 +91,11 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
 
         // look up node
         final String nodeId = command.getNodeId();
-        final Node node = nodeManager.getByID(nodeId);
+        Node node = nodeManager.getByID(nodeId);
         if (node == null) {
-            // if no node is found throw exception
-            throw new NodeNotFoundException("Cannot find node [" + command.getNodeId() + "].");
+            // if no node is found create it and store it.
+            node = new Node();
+            node.setId(nodeId);
         }
 
         // update description

@@ -1,7 +1,6 @@
 package eu.uberdust.rest.controller;
 
 import eu.uberdust.command.CapabilityCommand;
-import eu.uberdust.rest.exception.CapabilityNotFoundException;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.CapabilityController;
@@ -60,13 +59,12 @@ public final class CapabilityInsertDescriptionController extends AbstractRestCon
      * @return response http servlet response.
      * @throws InvalidTestbedIdException an invalid testbed id exception.
      * @throws TestbedNotFoundException testbed not found exception.
-     * @throws CapabilityNotFoundException capability not found exception.
      * @throws java.io.IOException IO exception.
      */
     @Override
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors) throws InvalidTestbedIdException,
-            TestbedNotFoundException, CapabilityNotFoundException, IOException {
+            TestbedNotFoundException, IOException {
 
         // set commandNode object
         final CapabilityCommand command = (CapabilityCommand) commandObj;
@@ -88,10 +86,11 @@ public final class CapabilityInsertDescriptionController extends AbstractRestCon
 
         // look up node
         final String capabilityName = command.getCapabilityName();
-        final Capability capability = capabilityManager.getByID(capabilityName);
+        Capability capability = capabilityManager.getByID(capabilityName);
         if (capability == null) {
-            // if no node is found throw exception
-            throw new CapabilityNotFoundException("Cannot find capability [" + command.getCapabilityName() + "].");
+            // if capability not found create one and store it
+            capability = new Capability();
+            capability.setName(capabilityName);
         }
 
         // update description
