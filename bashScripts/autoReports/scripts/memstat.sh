@@ -1,5 +1,5 @@
 #!/bin/bash
-source /var/autoReports/settings
+source ../settings
 
 FILE=temp
 PREFIX="MemFree"
