@@ -96,6 +96,7 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
             // if no node is found create it and store it.
             node = new Node();
             node.setId(nodeId);
+            node.setSetup(testbed.getSetup());
         }
 
         // update description
