@@ -1,20 +1,26 @@
 <html>
 
 <?php
+    // room
     $room = "CTI Room 0.I.1";
-    $node1Mac = "0x1cd3";
+    $ctiPrefix = "urn:wisebed:ctitestbed:";
+
+    // node 1
+    $node1Mac = "0x84";
     $node1type = "iSense";
-    $node1 = $node1type." ".$node1Mac;
-    $nodeUrn1 = "urn:wisebed:ctitestbed:0x1cde";
-    $capability1 = "Luminosity";
-    $capabilityUrn1 = "urn:wisebed:node:capability:light";
+    $node1 = $node1type . " " . $node1Mac;
+    $nodeUrn1 = $ctiPrefix.$node1Mac;
+
+    // node 2
     $node2Mac = "0xddba";
     $node2type = "iSense";
-    $node2 = $node2type." ".$node2Mac;
-    $nodeUrn2 = "urn:wisebed:ctitestbed:0xddba";
-    $capability2 = "Luminosity";
-    $capabilityUrn2 = "urn:wisebed:node:capability:light";
+    $node2 = $node2type . " " . $node2Mac;
+    $nodeUrn2 = $ctiPrefix.$node2Mac;
+
+    $capability = "Luminosity";
+    $capabilityUrn = "urn:wisebed:node:capability:light";
     $unit = "(lux)";
+
     $maxRows = 1000;
 ?>
 
@@ -26,9 +32,9 @@
     <script type="text/javascript">
         console.log("load readings data");
         var sequence = {
-            name :'<?= $capability1 ?> reading <?= $unit ?>',
+            name :'<?= $capability ?> reading <?= $unit ?>',
             data :[ <?php
-            $tabdelimited = file_get_contents("http://uberdust.cti.gr/rest/testbed/1/node/" . $nodeUrn1 . "/capability/" . $capabilityUrn1 . "/tabdelimited/limit/" . $maxRows);
+            $tabdelimited = file_get_contents("http://uberdust.cti.gr/rest/testbed/1/node/" . $nodeUrn1 . "/capability/" . $capabilityUrn . "/tabdelimited/limit/" . $maxRows);
             $lines = explode("\n", $tabdelimited, $maxRows);
             unset($lines[count($lines) - 1]);
             $firstRow = explode("\t", $lines[0]);
@@ -41,19 +47,16 @@
             ?>
             ]
         };
-        divContainer = 'container-<?= $node1Mac . '-' . $capability1 ?>';
-        titleText = '<?=$capability1?> chart inside <?= $room?>';
+        divContainer = 'container-chart';
+        titleText = '<?=$capability?> chart inside <?= $room?>';
         subtitleText = '<?=$node1?>';
-        yaxisText = '<?= $capability1 . " " . $unit ?>';
+        yaxisText = '<?= $capability . " " . $unit ?>';
         console.log("readings data loaded")
         uberdustSeries.push(sequence);
-    </script>
-    <script type="text/javascript">
-        console.log("load readings data");
         var sequence = {
-            name :'<?= $capability2 ?> reading <?= $unit ?>',
+            name :'<?= $capabilityUrn ?> reading <?= $unit ?>',
             data :[ <?php
-            $tabdelimited = file_get_contents("http://uberdust.cti.gr/rest/testbed/1/node/" . $nodeUrn2 . "/capability/" . $capabilityUrn2 . "/tabdelimited/limit/" . $maxRows);
+            $tabdelimited = file_get_contents("http://uberdust.cti.gr/rest/testbed/1/node/" . $nodeUrn2 . "/capability/" . $capabilityUrn . "/tabdelimited/limit/" . $maxRows);
             $lines = explode("\n", $tabdelimited, $maxRows);
             unset($lines[count($lines) - 1]);
             $firstRow = explode("\t", $lines[0]);
@@ -66,19 +69,12 @@
             ?>
             ]
         };
-        divContainer = 'container-<?= $node2Mac . '-' . $capability2 ?>';
-        titleText = '<?=$capability2?> chart inside <?= $room?>';
-        subtitleText = '<?=$node1?>';
-        yaxisText = '<?= $capability2 . " " . $unit ?>';
-        yaxisText = '<?= $capability2 . " " . $unit ?>';
-        console.log("readings data loaded")
         uberdustSeries.push(sequence);
     </script>
 </head>
 
 <body>
-<div id="container-<?= $node1Mac . '-' . $capability1 ?>" style="width: 100%; height: 400px"></div>
-<div id="container-<?= $node2Mac . '-' . $capability2 ?>" style="width: 100%; height: 400px"></div>
+<div id="container-chart" style="width: 100%; height: 400px"></div>
 </body>
 
 </html>
