@@ -44,7 +44,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="log4j.logger.net.sf.hibernate">warn</prop>
                 <prop key="show_sql">true</prop>
                 <prop key="format_sql">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.hbm2ddl.auto">${wisedb.hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.jdbc.batch_size">0</prop>
                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
                 <prop key="hibernate.cache.use_query_cache">false</prop>
