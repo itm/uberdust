@@ -27,7 +27,7 @@
         <mysql.connector.version>5.1.10</mysql.connector.version>
         <hibernate.version>3.5.6-Final</hibernate.version>
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <uberdust.deployment.host>uberdust.cti.gr</uberdust.deployment.host>
+        <uberdust.deployment.host>carrot.cti.gr</uberdust.deployment.host>
         <!-- TODO Hudson must pass this, so I can declare local testing host -->
     </properties>
 
@@ -277,7 +277,7 @@
 
         <plugins>
 
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>
@@ -287,7 +287,7 @@
                         <configuration>
                             <target>
                                 <scp file="${project.build.directory}/${project.groupId}.war"
-                                     todir="testbedruntime@${uberdust.deployment.host}:/var/www/webapps/"
+                                     todir="uberdust@${uberdust.deployment.host}:~/webapps/"
                                      keyfile="${user.home}/.ssh/id_rsa"
                                      trust="true" verbose="true" port="22"
                                      passphrase=""/>
@@ -310,7 +310,7 @@
                         <version>0.1.38</version>
                     </dependency>
                 </dependencies>
-            </plugin>-->
+            </plugin>
 
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
