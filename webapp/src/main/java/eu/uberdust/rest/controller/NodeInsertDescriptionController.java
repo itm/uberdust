@@ -101,7 +101,7 @@ public final class NodeInsertDescriptionController extends AbstractRestControlle
         // update description
         final String description = command.getDescription();
         node.setDescription(description);
-        nodeManager.update(node);
+        nodeManager.add(node);
 
         // make response
         response.setContentType("text/plain");

@@ -96,7 +96,7 @@ public final class CapabilityInsertDescriptionController extends AbstractRestCon
         // update description
         final String description = command.getDescription();
         capability.setDescription(description);
-        capabilityManager.update(capability);
+        capabilityManager.add(capability);
 
         // make response
         response.setContentType("text/plain");
