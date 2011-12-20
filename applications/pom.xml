@@ -16,7 +16,6 @@
             <module>0.I.11WS</module>
             <module>0.I.0</module>
             <module>TraceParser</module>
-            <!--<module>InsertReadingApp</module>-->
         </modules>
 
         <name>Applications</name>
