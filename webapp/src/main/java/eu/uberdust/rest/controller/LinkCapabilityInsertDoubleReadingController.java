@@ -113,7 +113,7 @@ public final class LinkCapabilityInsertDoubleReadingController extends AbstractR
 
         // insert reading
         try {
-            linkReadingManager.insertReading(sourceId, targetId, capabilityId, testbedId, reading, null, timestamp);
+            linkReadingManager.insertReading(sourceId, targetId, capabilityId, testbedId, reading, null, null, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }

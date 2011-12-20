@@ -45,7 +45,7 @@ public final class InsertReadingWebSocketClient {
     private static final String HTTP_PREFIX = "http://";
 
     /**
-     * Timer
+     * Timer.
      */
     private Timer timer;
 
@@ -60,7 +60,7 @@ public final class InsertReadingWebSocketClient {
     private WebSocket.Connection connection;
 
     /**
-     * WebSocketClientFactory,
+     * WebSocketClientFactory.
      */
     private WebSocketClientFactory factory;
     private String webSocketUrl;

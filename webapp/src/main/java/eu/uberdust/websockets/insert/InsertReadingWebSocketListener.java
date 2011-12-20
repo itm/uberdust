@@ -36,6 +36,22 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
     private static final String DELIMITER = "@";
 
     /**
+     * Double Reading type.
+     */
+    private static final String DOUBLE_READING = "D";
+
+    /**
+     * String Reading type.
+     */
+    private static final String STRING_READING = "S";
+
+    /**
+     * Both reading type.
+     */
+    private static final String BOTH_READING = "B";
+
+
+    /**
      * NodeReading persistence manager.
      */
     private NodeReadingController nodeReadingManager;
@@ -125,14 +141,27 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final String nodeId = messageParts[2];
                 final String capabilityId = messageParts[3];
                 final long timestamp = Long.parseLong(messageParts[4]);
-                final double readingValue = Double.parseDouble(messageParts[5]);
+                final String readingType = messageParts[5];
+                Double readingValue = null;
+                String stringReadingValue = null;
+                if (readingType.equals(DOUBLE_READING)) {
+                    readingValue = Double.parseDouble(messageParts[6]);
+                } else if (readingType.equals(STRING_READING)) {
+                    stringReadingValue = messageParts[6];
+                } else if (readingType.equals(BOTH_READING)) {
+                    readingValue =  Double.parseDouble(messageParts[6]);
+                    stringReadingValue = messageParts[7];
+                }
 
                 if (receivedMessage.contains("1ccd")) {
                     UberLogger.getInstance().log(Long.parseLong(messageParts[4]), "T24");
                 }
 
-                nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue, new Date(timestamp));
-                message = new StringBuilder().append("Inserted for Node(").append(nodeId).append(") Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
+                nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, readingValue , stringReadingValue ,
+                        new Date(timestamp));
+                message = new StringBuilder().append("Inserted for Node(").append(nodeId).append(") Capability(")
+                        .append(capabilityId).append(") Testbed(").append(testbedId).append(") : [")
+                        .append(timestamp).append(",").append(readingValue).append("]. OK").toString();
 
             } else if (classOfReading.contains("LinkReading")) {
                 // link reading incoming
@@ -140,9 +169,23 @@ public final class InsertReadingWebSocketListener extends AbstractWebSocketListe
                 final String targetNodeId = messageParts[3];
                 final String capabilityId = messageParts[4];
                 final long timestamp = Long.parseLong(messageParts[5]);
-                final double readingValue = Double.parseDouble(messageParts[6]);
-                linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue, 0.0, new Date(timestamp));
-                message = new StringBuilder().append("Inserted for Link[").append(sourceNodeId).append(",").append(targetNodeId).append("] Capability(").append(capabilityId).append(") Testbed(").append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue).append("]. OK").toString();
+                final String readingType = messageParts[6];
+                Double readingValue = null;
+                String stringReadingValue = null;
+                if (readingType.equals(DOUBLE_READING)) {
+                    readingValue = Double.parseDouble(messageParts[7]);
+                } else if (readingType.equals(STRING_READING)) {
+                    stringReadingValue = messageParts[7];
+                } else if (readingType.equals(BOTH_READING)) {
+                    readingValue =  Double.parseDouble(messageParts[7]);
+                    stringReadingValue = messageParts[8];
+                }
+                linkReadingManager.insertReading(sourceNodeId, targetNodeId, capabilityId, testbedId, readingValue,
+                        stringReadingValue, null, new Date(timestamp));
+                message = new StringBuilder().append("Inserted for Link[").append(sourceNodeId).append(",")
+                        .append(targetNodeId).append("] Capability(").append(capabilityId).append(") Testbed(")
+                        .append(testbedId).append(") : [").append(timestamp).append(",").append(readingValue)
+                        .append("]. OK").toString();
             }
         } catch (Exception e) {
             message = "Exception OCCURED. ERROR";

@@ -119,7 +119,7 @@ public final class NodeCapabilityInsertDoubleReadingController extends AbstractR
 
         // insert reading
         try {
-            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, reading, timestamp);
+            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, reading,null, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }

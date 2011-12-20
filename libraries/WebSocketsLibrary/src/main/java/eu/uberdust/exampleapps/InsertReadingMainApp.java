@@ -46,7 +46,7 @@ public final class InsertReadingMainApp {
         nodeReading1.setNodeId("urn:ctinetwork:carrot_delete_me");
         nodeReading1.setCapabilityName("urn:ctinetwork:node:capability:lockScreen");
         nodeReading1.setTimestamp(Long.toString(new Date().getTime()));
-        nodeReading1.setReading("30.0");
+        nodeReading1.setReading("30.2");
         LOGGER.info(nodeReading1.toDelimitedString());
 
         NodeReading nodeReading2 = new NodeReading();
@@ -64,9 +64,6 @@ public final class InsertReadingMainApp {
         linkReading1.setLinkTarget("urn:ctinetwork:target");
         linkReading1.setCapabilityName("command1");
         linkReading1.setTimestamp(Long.toString(new Date().getTime()));
-        linkReading1.setReading("30.2");
-
-
 
         /**
          * REST Call Nodes #1
@@ -99,9 +96,9 @@ public final class InsertReadingMainApp {
         // insert node reading using WebSockets
         LOGGER.info("Calling WebSocket at (" + webSocketUrl + ") connecting");
         InsertReadingWebSocketClient.getInstance().connect(webSocketUrl);
-        LOGGER.info("Calling sendNodeReading(nodeReading1)");
+        LOGGER.info("Calling sendNodeReading(nodeReading1) (" + nodeReading1.toDelimitedString() + ")");
         InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading1);
-        LOGGER.info("Calling sendNodeReading(nodeReading2)");
+        LOGGER.info("Calling sendNodeReading(nodeReading2) (" + nodeReading2.toDelimitedString() + ")");
         InsertReadingWebSocketClient.getInstance().sendNodeReading(nodeReading2);
         InsertReadingWebSocketClient.getInstance().disconnect();
         LOGGER.info("Disconnect");
