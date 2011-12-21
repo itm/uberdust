@@ -28,7 +28,7 @@
         <hibernate.version>3.5.6-Final</hibernate.version>
         <main.basedir>${project.parent.basedir}</main.basedir>
         <uberdust.deployment.host>carrot.cti.gr</uberdust.deployment.host>
-        <!-- TODO Hudson must pass this, so I can declare local testing host -->
+
     </properties>
 
     <repositories>
@@ -300,11 +300,6 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant-jsch</artifactId>
-                        <version>1.7.1</version>
-                    </dependency>
-                    <dependency>
                         <groupId>com.jcraft</groupId>
                         <artifactId>jsch</artifactId>
                         <version>0.1.38</version>
@@ -397,18 +392,6 @@
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <encoding>utf-8</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
-                <version>1.1</version>
-                <configuration>
-                    <server>tomcat6</server>
-                    <warFile>${project.build.directory}/${project.groupId}.war</warFile>
-                    <path>/uberdust</path>
-                    <url>${local.tomcat.manager.url}</url>
                 </configuration>
             </plugin>
 

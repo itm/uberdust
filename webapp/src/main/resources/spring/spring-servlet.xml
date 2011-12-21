@@ -96,7 +96,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/link/*/*/capability/*/json">linkCapabilityJsonController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/chart">linkCapabilityChartController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/wiseml">linkCapabilityWiseMlController</prop>
-                <prop key="GET /testbed/*/link/*/*/capability/*/lastreading">linkCapabilityLastReadingController</prop>
+                <prop key="GET /testbed/*/link/*/*/capability/*/last">linkCapabilityLastReadingController</prop>
                 <prop key="GET /testbed/*/link/*/*/capability/*/latestreading/json">linkCapabilityJsonLastReadingController</prop>
                 -->
                 <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*/">
