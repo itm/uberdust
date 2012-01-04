@@ -20,8 +20,8 @@ public class TestbedListener {
         LOGGER.info("starting NodeFlasherController");
         new NodeFlasherController();
         LOGGER.info("starting DataCollector");
-        final DataCollector dataCollector = new DataCollector();
-        dataCollector.start();
+        final Thread dataCollector = new Thread(new DataCollector());
+        dataCollector.run();
         LOGGER.info("up and running");
     }
 }
