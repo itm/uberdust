@@ -25,6 +25,7 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      */
     private final transient DataCollectorChannelUpstreamHandler upstreamHandler;
     private String testbedPrefix;
+    private int testbedId;
 
     /**
      * @param dataCollector a datacollector object
@@ -41,6 +42,7 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
     public final void setSensors(final Map<String, String> sensors) {
         upstreamHandler.setSensors(sensors);
         upstreamHandler.setTestbedPrefix(testbedPrefix);
+        upstreamHandler.setTestbedId(testbedId);
     }
 
     /**
@@ -76,5 +78,10 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
 
     public void setTestbedPrefix(String testbedPrefix) {
         this.testbedPrefix = testbedPrefix;
+    }
+
+
+    public void setTestbedId(int testbedId) {
+        this.testbedId = testbedId;
     }
 }

@@ -59,6 +59,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      */
     private final transient DataCollector dataCollector;
     private String testbedPrefix;
+    private int testbedId;
 
     /**
      * @param dataCollector a datacollector object
@@ -156,10 +157,14 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * @param toString the string to parse
      */
     private void parse(final String toString) {
-        executorService.submit(new MessageParser(toString, sensors,testbedPrefix));
+        executorService.submit(new MessageParser(toString, sensors,testbedPrefix,testbedId));
     }
 
     public void setTestbedPrefix(String testbedPrefix) {
         this.testbedPrefix = testbedPrefix;
+    }
+
+    public void setTestbedId(int testbedId) {
+        this.testbedId = testbedId;
     }
 }

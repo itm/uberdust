@@ -18,8 +18,6 @@ public class MessageParser implements Runnable { //NOPMD
      * LOGGER.
      */
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
-
-
     /**
      * Text line of the message received.
      */
@@ -29,14 +27,6 @@ public class MessageParser implements Runnable { //NOPMD
      */
     private final transient Map<String, String> sensors;
     /**
-     * ID of the testbed Monitored.
-     */
-    private static final String TESTBED_ID = "1";
-    /**
-     * URN of the testbed Monitored.
-     */
-    private static final String TESTBED_URN = "urn:wisebed:ctitestbed:";
-    /**
      * Testbed Capability prefix.
      */
     private static final String CAPABILITY_PREFIX = "urn:wisebed:node:capability:";
@@ -45,14 +35,16 @@ public class MessageParser implements Runnable { //NOPMD
      */
     private static final int TIMESTAMP_POS = 4;
     private String testbedPrefix;
+    private int testbedId;
 
 
     /**
      * @param msg    the message received from the testbed
      * @param senses the Map containing the sensor codenames on testbed , capability names
      */
-    public MessageParser(final String msg, final Map<String, String> senses,String testbedPrefix) {
+    public MessageParser(final String msg, final Map<String, String> senses,String testbedPrefix,int testbedId) {
         this.testbedPrefix =testbedPrefix;
+        this.testbedId =testbedId;
         strLine = msg.substring(msg.indexOf("binaryData:") + "binaryData:".length());
         sensors = senses;
     }
@@ -141,7 +133,6 @@ public class MessageParser implements Runnable { //NOPMD
                 LOGGER.debug(sensors.get(sensor) + " value " + value + " node " + nodeId);
                 final String milliseconds = String.valueOf(System.currentTimeMillis());
 
-
 //                if ((nodeId.contains("1ccd")) && (sensor.contains("EM_E"))) {
 //                    milliseconds = strLine.split(" ")[TIMESTAMP_POS];
 //                    LOGGER.info("setting eventt to " + milliseconds);
@@ -167,7 +158,6 @@ public class MessageParser implements Runnable { //NOPMD
             final int start = strLine.indexOf("LINK_DOWN") + "LINK_DOWN".length() + 1;
             final int end = strLine.indexOf(' ', start);
             commitLinkReading(nodeId, strLine.substring(start, end), "status", 0);
-
         } else if (strLine.contains("LINK_UP")) {
             //get the target id
             final int start = strLine.indexOf("LINK_UP") + "LINK_UP".length() + 1;
@@ -185,7 +175,6 @@ public class MessageParser implements Runnable { //NOPMD
             LOGGER.info("commandString:" + command.toString());
             commitLinkReading(nodeId, strLine.substring(start, end), "command", command.toInt());
             LOGGER.info("COMMAND " + nodeId + " " + strLine.substring(start, end) + " " + command.toString());
-
         }
         return false;
     }
@@ -203,9 +192,8 @@ public class MessageParser implements Runnable { //NOPMD
         final String nodeUrn = testbedPrefix + nodeId;
         final String capabilityName = (CAPABILITY_PREFIX + capability).toLowerCase(Locale.US);
 
-
         final NodeReading nodeReading = new NodeReading();
-        nodeReading.setTestbedId(TESTBED_ID);
+        nodeReading.setTestbedId(String.valueOf(testbedId));
         nodeReading.setNodeId(nodeUrn);
         nodeReading.setCapabilityName(capabilityName);
         nodeReading.setTimestamp(msec);
@@ -229,13 +217,12 @@ public class MessageParser implements Runnable { //NOPMD
         LOGGER.debug("LinkReading" + sourceUrn + "<->" + targetUrn + " " + testbedCap + " " + value);
         final long milliseconds = System.currentTimeMillis();
         final LinkReading linkReading = new LinkReading();
-        linkReading.setTestbedId(TESTBED_ID);
+        linkReading.setTestbedId(String.valueOf(testbedId));
         linkReading.setLinkSource(sourceUrn);
         linkReading.setLinkTarget(targetUrn);
         linkReading.setCapabilityName(testbedCap);
         linkReading.setTimestamp(String.valueOf(milliseconds));
         linkReading.setReading(String.valueOf(value));
-
 
         new RestCommiter(linkReading);
     }
