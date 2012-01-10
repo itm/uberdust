@@ -24,6 +24,7 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      * Chanel handler that receives the messages and Generates parser threads.
      */
     private final transient DataCollectorChannelUpstreamHandler upstreamHandler;
+    private String testbedPrefix;
 
     /**
      * @param dataCollector a datacollector object
@@ -39,6 +40,7 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      */
     public final void setSensors(final Map<String, String> sensors) {
         upstreamHandler.setSensors(sensors);
+        upstreamHandler.setTestbedPrefix(testbedPrefix);
     }
 
     /**
@@ -70,5 +72,9 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
 
         return channelPipeline;
 
+    }
+
+    public void setTestbedPrefix(String testbedPrefix) {
+        this.testbedPrefix = testbedPrefix;
     }
 }

@@ -58,6 +58,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * reference to the class that created the handler.
      */
     private final transient DataCollector dataCollector;
+    private String testbedPrefix;
 
     /**
      * @param dataCollector a datacollector object
@@ -155,7 +156,10 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * @param toString the string to parse
      */
     private void parse(final String toString) {
-        executorService.submit(new MessageParser(toString, sensors));
+        executorService.submit(new MessageParser(toString, sensors,testbedPrefix));
     }
 
+    public void setTestbedPrefix(String testbedPrefix) {
+        this.testbedPrefix = testbedPrefix;
+    }
 }

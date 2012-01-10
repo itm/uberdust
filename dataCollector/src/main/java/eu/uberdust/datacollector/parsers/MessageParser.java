@@ -44,13 +44,15 @@ public class MessageParser implements Runnable { //NOPMD
      * Position of the timestamp in a node Reading .
      */
     private static final int TIMESTAMP_POS = 4;
+    private String testbedPrefix;
 
 
     /**
      * @param msg    the message received from the testbed
      * @param senses the Map containing the sensor codenames on testbed , capability names
      */
-    public MessageParser(final String msg, final Map<String, String> senses) {
+    public MessageParser(final String msg, final Map<String, String> senses,String testbedPrefix) {
+        this.testbedPrefix =testbedPrefix;
         strLine = msg.substring(msg.indexOf("binaryData:") + "binaryData:".length());
         sensors = senses;
     }
@@ -198,7 +200,7 @@ public class MessageParser implements Runnable { //NOPMD
      */
     private void commitNodeReading(final String nodeId, final String capability, final int value, final String msec) {
 
-        final String nodeUrn = TESTBED_URN + nodeId;
+        final String nodeUrn = testbedPrefix + nodeId;
         final String capabilityName = (CAPABILITY_PREFIX + capability).toLowerCase(Locale.US);
 
 
@@ -221,8 +223,8 @@ public class MessageParser implements Runnable { //NOPMD
      * @param value      the status value of the link
      */
     private void commitLinkReading(final String source, final String target, final String testbedCap, final int value) {
-        final String sourceUrn = TESTBED_URN + source;
-        final String targetUrn = TESTBED_URN + target;
+        final String sourceUrn = testbedPrefix + source;
+        final String targetUrn = testbedPrefix + target;
 
         LOGGER.debug("LinkReading" + sourceUrn + "<->" + targetUrn + " " + testbedCap + " " + value);
         final long milliseconds = System.currentTimeMillis();
