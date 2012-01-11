@@ -8,11 +8,9 @@ import eu.uberdust.datacollector.parsers.MessageParser;
 import eu.uberdust.datacollector.parsers.WsCommiter;
 import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.channel.*;
 
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -60,6 +58,8 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * reference to the class that created the handler.
      */
     private final transient DataCollector dataCollector;
+    private String testbedPrefix;
+    private int testbedId;
 
     /**
      * @param dataCollector a datacollector object
@@ -70,6 +70,13 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
         lastTime = System.currentTimeMillis();
 
         executorService = Executors.newCachedThreadPool();
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+        if (e instanceof ConnectException) {
+            LOGGER.warn("ConnectException");
+        }
     }
 
     @Override
@@ -141,16 +148,23 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      */
     private void shutdown() {
         LOGGER.error("Shutting down!!!");
-        executorService.shutdown();
         dataCollector.restart();
     }
 
     /**
      * Submits a new thread to the executor to parse the new string message.
+     *
      * @param toString the string to parse
      */
     private void parse(final String toString) {
-        executorService.submit(new MessageParser(toString, sensors));
+        executorService.submit(new MessageParser(toString, sensors,testbedPrefix,testbedId));
     }
 
+    public void setTestbedPrefix(String testbedPrefix) {
+        this.testbedPrefix = testbedPrefix;
+    }
+
+    public void setTestbedId(int testbedId) {
+        this.testbedId = testbedId;
+    }
 }

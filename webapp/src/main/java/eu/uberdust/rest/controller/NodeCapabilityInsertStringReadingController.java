@@ -116,7 +116,7 @@ public final class NodeCapabilityInsertStringReadingController extends AbstractR
 
         // insert reading
         try {
-            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, reading, timestamp);
+            nodeReadingManager.insertReading(nodeId, capabilityId, testbedId, null, reading, timestamp);
         } catch (UnknownTestbedException e) {
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].",e);
         }

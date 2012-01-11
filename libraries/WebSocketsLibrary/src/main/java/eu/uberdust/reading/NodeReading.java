@@ -18,6 +18,21 @@ public final class NodeReading implements Serializable {
     private static final String DELIMITER = "@";
 
     /**
+     * Double Reading type.
+     */
+    private static final String DOUBLE_READING = "D";
+
+    /**
+     * String Reading type.
+     */
+    private static final String STRING_READING = "S";
+
+    /**
+     * Both reading type.
+     */
+    private static final String BOTH_READING = "B";
+
+    /**
      * Testbed ID.
      */
     private String testbedId;
@@ -38,9 +53,14 @@ public final class NodeReading implements Serializable {
     private String timestamp;
 
     /**
-     * String Capability reading value for this node.
+     * Numeric value of the reading.
      */
-    private String reading;
+    private String reading = null;
+
+    /**
+     * String value for this node.
+     */
+    private String stringReading = null;
 
     /**
      * Constructor.
@@ -122,9 +142,9 @@ public final class NodeReading implements Serializable {
     }
 
     /**
-     * Returns this reading value.
+     * Returns this (double) reading value.
      *
-     * @return this reading value.
+     * @return this (double) reading value.
      */
     public String getReading() {
         return reading;
@@ -140,30 +160,72 @@ public final class NodeReading implements Serializable {
     }
 
     /**
+     * Returns this (string) reading value.
+     *
+     * @return this (string) reading value.
+     */
+    public String getStringReading() {
+        return stringReading;
+    }
+
+    /**
+     * Sets this (string) reading value.
+     *
+     * @param stringReading (string) reading value.
+     */
+    public void setStringReading(final String stringReading) {
+        this.stringReading = stringReading;
+    }
+
+    /**
      * Returns a string of the appropriate REST URL in order to insert this link reading.
      *
      * @return a string of the appropriate REST URL in order to insert this link reading.
      */
     public String toRestString() {
-        return "/testbed/" + testbedId
-                + "/node/" + nodeId
-                + "/capability/" + capabilityName
-                + "/insert/timestamp/" + timestamp
-                + "/reading/" + reading + "/";
+
+        StringBuilder restString = new StringBuilder();
+        restString.append("/testbed/").append(testbedId).append("/node/").append(nodeId).append("/capability/")
+                .append(capabilityName).append("/insert/timestamp/").append(timestamp);
+
+        // if it has reading value
+        if (reading != null) {
+            restString.append("/reading/").append(reading);
+        }
+
+        // if  it has stringReading value
+        if (stringReading != null) {
+            restString.append("/stringreading/").append(stringReading);
+        }
+
+        // finish restString
+        restString.append("/");
+        return restString.toString();
     }
 
     /**
-     * Returns a delimited string representation of the node reading.
+     * Returns a delimited string representation of the link reading.
      *
      * @return delimited string.
      */
     public String toDelimitedString() {
-        return NodeReading.class.getName()
-                + DELIMITER + testbedId
-                + DELIMITER + nodeId
-                + DELIMITER + capabilityName
-                + DELIMITER + timestamp
-                + DELIMITER + reading;
+
+        // build string to be sent
+        final StringBuilder delimitedString = new StringBuilder();
+        delimitedString.append(NodeReading.class.getName()).append(DELIMITER).append(testbedId).append(DELIMITER)
+                .append(nodeId).append(DELIMITER).append(capabilityName)
+                .append(DELIMITER).append(timestamp);
+
+        // complete the string according to the type of reading . Double/String/Both.
+        if (reading != null && stringReading == null) {
+            delimitedString.append(DELIMITER).append(DOUBLE_READING).append(DELIMITER).append(reading);
+        } else if (reading == null && stringReading != null) {
+            delimitedString.append(DELIMITER).append(STRING_READING).append(DELIMITER).append(stringReading);
+        } else {
+            delimitedString.append(DELIMITER).append(BOTH_READING).append(DELIMITER).append(reading)
+                    .append(DELIMITER).append(stringReading);
+        }
+        return delimitedString.toString();
     }
 
     /**
@@ -178,7 +240,9 @@ public final class NodeReading implements Serializable {
                 + nodeId + ", "
                 + capabilityName + ", "
                 + timestamp + ", "
-                + reading + "}";
+                + ((reading != null) ? reading : "null") + ", "
+                + ((stringReading != null) ? stringReading : "null") + "}";
     }
 }
+
 

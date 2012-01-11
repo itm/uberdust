@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
-public class LinkCapabilityInsertReadingController extends AbstractRestController
-
-    {
+public final class LinkCapabilityInsertReadingController extends AbstractRestController {
 
     /**
      * LinkReading persistence manager.

@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 /**
  * Opens a connection to a TestbedRuntime server and received debug messages from all nodes to collect data.
  */
-public class DataCollector {
+public class DataCollector implements Runnable {
 
     /**
      * Logger.
@@ -54,6 +54,9 @@ public class DataCollector {
      * pipeline factory.
      */
     private transient NioClientSocketChannelFactory factory;
+    private transient ClientBootstrap bootstrap;
+    private String testbedPrefix;
+    private int testbedId;
 
     /**
      * Default Constructor.
@@ -92,6 +95,8 @@ public class DataCollector {
 
         host = properties.getProperty("runtime.ipAddress");
         port = Integer.parseInt(properties.getProperty("runtime.port"));
+        testbedPrefix = properties.getProperty("testbed.prefix");
+        testbedId = Integer.parseInt(properties.getProperty("testbed.id"));
 
         final String[] sensorsNames = properties.getProperty("sensors.names").split(",");
         final String[] sensorsPrefixes = properties.getProperty("sensors.prefixes").split(",");
@@ -125,40 +130,54 @@ public class DataCollector {
      */
     public final boolean start() {
 
-        factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
-
-        final ClientBootstrap bootstrap = new ClientBootstrap(factory);
-
-        chPipelineFactory.setSensors(sensors);
-
-        // Configure the event pipeline factory.
-        bootstrap.setPipelineFactory(chPipelineFactory);
-
+        ChannelFuture connectFuture = null;
         // Make a new connection.
-        final ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
+        connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
+        final Channel channel = connectFuture.getChannel();
+        LOGGER.info(channel.getId());
 
-        final Channel channel = connectFuture.awaitUninterruptibly().getChannel();
-        LOGGER.debug(channel.getId());
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            LOGGER.error(e);
+        }
 
         // Wait until the connection is made successfully.
         if (!connectFuture.isSuccess()) {
-            LOGGER.error("client connect failed!", connectFuture.getCause());
+            LOGGER.warn("Client Connect Failed!", connectFuture.getCause());
             return false;
         }
         return true;
-
     }
 
     /**
      * Reconnects to testbedruntime when connection was lost.
      */
     public final void restart() {
-        factory.releaseExternalResources();
-//        while (!start()) {
-//            LOGGER.error("could not start sleeping 5000");
-//            System.exit(1);
-//        }
+        LOGGER.info("Waiting for Testbed Restart...");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            LOGGER.error(e);
+        }
+        LOGGER.info("Reconnecting...");
+        if (!start()) {
+            restart();
+        }
+    }
 
-        System.exit(1);
+    @Override
+    public void run() {
+        factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+        bootstrap = new ClientBootstrap(factory);
+        chPipelineFactory.setSensors(sensors);
+        chPipelineFactory.setTestbedPrefix(testbedPrefix);
+        chPipelineFactory.setTestbedId(testbedId);
+        // Configure the event pipeline factory.
+        bootstrap.setPipelineFactory(chPipelineFactory);
+
+        if (!start()) {
+            restart();
+        }
     }
 }

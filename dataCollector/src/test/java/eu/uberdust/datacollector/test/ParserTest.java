@@ -49,6 +49,14 @@ public class ParserTest
      * Rigourous Test :-)
      */
     public void testApp() {
+
+        String testString = "0x7f|0x69|0x70|0x1|0x1|0x1|0x1|0x3|0x2|0x4|0x4|0x6|0x4|0x1|0x9|0x6|0x6|0x8|0x5|";
+        System.out.println(testString.replaceAll("0x", ""));
+        String testbedPrefix = "urn:wisebed:ctitestbed:";
+
+        System.out.println(testString.replace('|', ','));
+
+
         BasicConfigurator.configure();
         LOGGER.setLevel(Level.ALL);
 
@@ -69,20 +77,20 @@ public class ParserTest
         }
         long millis = System.currentTimeMillis();
         String eventString = "binaryData:h\\000id::0x1ccd EM_E 0 ";
-        MessageParser messageParser = new MessageParser(eventString, sensors);
+        MessageParser messageParser = new MessageParser(eventString, sensors, testbedPrefix,1);
         messageParser.parse();
         LOGGER.debug("Parsing and thread creation takes " + (System.currentTimeMillis() - millis) + " millis");
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c EM_L 165 ";
-        messageParser = new MessageParser(eventString, sensors);
+        messageParser = new MessageParser(eventString, sensors, testbedPrefix,1);
         messageParser.parse();
         LOGGER.debug("Parsing needs " + (System.currentTimeMillis() - millis) + " millis");
 
 
         millis = System.currentTimeMillis();
         eventString = "binaryData:h\\000id::0x99c RL4 0 ";
-        messageParser = new MessageParser(eventString, sensors);
+        messageParser = new MessageParser(eventString, sensors, testbedPrefix,1);
         messageParser.parse();
         LOGGER.debug("Parsing needs " + (System.currentTimeMillis() - millis) + " millis");
 
