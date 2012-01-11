@@ -27,8 +27,7 @@
         <mysql.connector.version>5.1.10</mysql.connector.version>
         <hibernate.version>3.5.6-Final</hibernate.version>
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <uberdust.deployment.host>carrot.cti.gr</uberdust.deployment.host>
-
+        <uberdust.deployment.host>carrot.cti.gr</uberdust.deployment.host> <!-- Testing only deployment -->
     </properties>
 
     <repositories>
@@ -416,7 +415,7 @@
         <!-- use the following if you're not using a snapshot version. -->
         <repository>
             <id>repository.ru1</id>
-            <name>Ru1 Repo</name>
+            <name>RU1 Repo</name>
             <url>scp://ru1.cti.gr/srv/maven</url>
         </repository>
 

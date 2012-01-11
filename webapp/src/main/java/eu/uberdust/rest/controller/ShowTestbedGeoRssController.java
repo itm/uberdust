@@ -99,9 +99,6 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException, IOException, FeedException {
 
-        LOGGER.info("Remote address: " + request.getRemoteAddr());
-        LOGGER.info("Remote host: " + request.getRemoteHost());
-
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
 
@@ -140,13 +137,17 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
             properOrigin = Coordinate.blh2xyz(originCoordinate);
         }
 
+        // current host base URL;
+        final String baseUrl = (request.getRequestURL().toString()).replace(request.getRequestURI(),"");
+        LOGGER.info("baseUrl : " + baseUrl);
+
         // make an entry and it
         for (Node node : testbed.getSetup().getNodes()) {
             final SyndEntry entry = new SyndEntryImpl();
 
             // set entry's title,link and publishing date
             entry.setTitle(node.getId());
-            entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/rest/testbed/")
+            entry.setLink(new StringBuilder().append("http://").append(baseUrl).append("/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).toString());
             entry.setPublishedDate(new Date());
 
@@ -154,12 +155,12 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
             final SyndContent description = new SyndContentImpl();
             final StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
-            descriptionBuffer.append("<p><a href=\"http://").append(deploymentHost).append("/rest/testbed/")
+            descriptionBuffer.append("<p><a href=\"http://").append(baseUrl).append("/uberdust/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/georss").append("\">")
                     .append("GeoRSS feed").append("</a></p>");
             descriptionBuffer.append("<ul>");
             for (Capability capability : node.getCapabilities()) {
-                descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/rest/testbed/")
+                descriptionBuffer.append("<li><a href=\"http://").append(baseUrl).append("/uberdust/rest/testbed/")
                         .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                         .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
             }

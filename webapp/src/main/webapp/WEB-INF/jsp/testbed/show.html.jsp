@@ -7,8 +7,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
-<spring:message code="uberdust.deployment.host" var="uberdustDeploymentHost" />
-
 <jsp:useBean id="testbed" scope="request" class="eu.wisebed.wisedb.model.Testbed"/>
 <jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
@@ -82,7 +80,7 @@
         <td>Testbed GeoRSS feed</td>
         <td>
             <a href="<c:url value="/rest/testbed/${testbed.id}/georss"/>">GeoRSS feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}<c:url value="/rest/testbed/${testbed.id}/georss"/>">View On Google
+            (<a href="http://maps.google.com/maps?q=<c:url value="${baseURL}/rest/testbed/${testbed.id}/georss"/>">View On Google
             Maps</a>)
         </td>
     </tr>
@@ -90,7 +88,7 @@
         <td>Testbed KML feed</td>
         <td>
             <a href="<c:url value="/rest/testbed/${testbed.id}/kml"/>">KML feed</a>
-            (<a href="http://maps.google.com/maps?q=http://${uberdustDeploymentHost}<c:url value="/rest/testbed/${testbed.id}/KML"/>">View On Google
+            (<a href="http://maps.google.com/maps?q=<c:url value="${baseURL}/rest/testbed/${testbed.id}/kml"/>">View On Google
             Maps</a>)
             <span style="color : red">not implemented yet</span>
         </td>
