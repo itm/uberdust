@@ -50,11 +50,6 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
     private transient NodeController nodeManager;
 
     /**
-     * Deployment host.
-     */
-    private transient String deploymentHost;
-
-    /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ShowNodeGeoRssController.class);
@@ -88,15 +83,6 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
     }
 
     /**
-     * Sets deployment host.
-     *
-     * @param deploymentHost deployment host.
-     */
-    public void setDeploymentHost(final String deploymentHost) {
-        this.deploymentHost = deploymentHost;
-    }
-
-    /**
      * Handle request and return the appropriate response.
      *
      * @param request    http servlet request.
@@ -115,9 +101,6 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws IOException, FeedException, NodeNotFoundException, TestbedNotFoundException,
             InvalidTestbedIdException {
-
-        LOGGER.info("Remote address: " + request.getRemoteAddr());
-        LOGGER.info("Remote host: " + request.getRemoteHost());
 
         // set command object
         final NodeCommand command = (NodeCommand) commandObj;
@@ -145,6 +128,10 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
             throw new NodeNotFoundException("Cannot find testbed [" + command.getNodeId() + "].");
         }
 
+        // current host base URL
+        final String baseUrl = (request.getRequestURL().toString()).replace(request.getRequestURI(), "");
+        LOGGER.info("baseUrl : " + baseUrl);
+
         // set up feed and entries
         response.setContentType("application/xml; charset=UTF-8");
         final SyndFeed feed = new SyndFeedImpl();
@@ -157,7 +144,7 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
         // set entry's title,link and publishing date
         final SyndEntry entry = new SyndEntryImpl();
         entry.setTitle(node.getId());
-        entry.setLink(new StringBuilder().append("http://").append(deploymentHost).append("/rest/testbed/")
+        entry.setLink(new StringBuilder().append(baseUrl).append("/uberdust/rest/testbed/")
                 .append(testbed.getId()).append("/node/").append(node.getId()).toString());
         entry.setPublishedDate(new Date());
 
@@ -167,7 +154,7 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
         descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
         descriptionBuffer.append("<ul>");
         for (Capability capability : node.getCapabilities()) {
-            descriptionBuffer.append("<li><a href=\"http://").append(deploymentHost).append("/rest/testbed/")
+            descriptionBuffer.append("<li><a href=\"").append(baseUrl).append("/uberdust/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                     .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
         }
@@ -178,7 +165,7 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
 
         // set the GeoRSS module and add it
         final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-        if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+        if (!(testbed.getSetup().getCoordinateType().equals("Absolute"))) {
 
             // convert testbed origin from long/lat position to xyz if needed
             final Origin origin = testbed.getSetup().getOrigin();
@@ -189,7 +176,7 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
             // convert node position from xyz to long/lat
             final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
             final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),
-                    (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
+                    (double) position.getZ());
             final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
             final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
             final Coordinate nodePosition = Coordinate.xyz2blh(absolute);

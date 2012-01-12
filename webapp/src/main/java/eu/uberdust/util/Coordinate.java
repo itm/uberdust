@@ -73,6 +73,17 @@ public final class Coordinate implements Serializable {
     }
 
     /**
+     * Constructor.
+     */
+    public Coordinate(final Double x, final Double y, final Double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.phi = 0.0;
+        this.theta = 0.0;
+    }
+
+    /**
      * Returns x.
      *
      * @return x

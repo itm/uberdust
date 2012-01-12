@@ -43,11 +43,6 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
     private transient TestbedController testbedManager;
 
     /**
-     * Deployment host.
-     */
-    private transient String deploymentHost;
-
-    /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedGeoRssController.class);
@@ -70,16 +65,6 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
-
-    /**
-     * Sets deployment host.
-     *
-     * @param deploymentHost deployment host.
-     */
-    public void setDeploymentHost(final String deploymentHost) {
-        this.deploymentHost = deploymentHost;
-    }
-
 
     /**
      * Handle request and return the appropriate response.
@@ -129,7 +114,7 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
 
         // convert testbed origin from long/lat position to xyz if needed
         Coordinate properOrigin = null;
-        if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+        if (!(testbed.getSetup().getCoordinateType().equals("Absolute"))) {
             // determine testbed origin by the type of coordinates given
             final Origin origin = testbed.getSetup().getOrigin();
             final Coordinate originCoordinate = new Coordinate((double) origin.getX(), (double) origin.getY(),
@@ -137,17 +122,20 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
             properOrigin = Coordinate.blh2xyz(originCoordinate);
         }
 
-        // current host base URL;
-        final String baseUrl = (request.getRequestURL().toString()).replace(request.getRequestURI(),"");
-        LOGGER.info("baseUrl : " + baseUrl);
+        // current host base URL
+        final String baseUrl = (request.getRequestURL().toString()).replace(request.getRequestURI(), "");
+        LOGGER.info(baseUrl);
+
+        // list of nodes
+        final List<Node> nodes = testbed.getSetup().getNodes();
 
         // make an entry and it
-        for (Node node : testbed.getSetup().getNodes()) {
+        for (Node node : nodes) {
             final SyndEntry entry = new SyndEntryImpl();
 
             // set entry's title,link and publishing date
             entry.setTitle(node.getId());
-            entry.setLink(new StringBuilder().append("http://").append(baseUrl).append("/rest/testbed/")
+            entry.setLink(new StringBuilder().append(baseUrl).append("/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).toString());
             entry.setPublishedDate(new Date());
 
@@ -155,12 +143,12 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
             final SyndContent description = new SyndContentImpl();
             final StringBuilder descriptionBuffer = new StringBuilder();
             descriptionBuffer.append("<p>").append(node.getDescription()).append("</p>");
-            descriptionBuffer.append("<p><a href=\"http://").append(baseUrl).append("/uberdust/rest/testbed/")
+            descriptionBuffer.append("<p><a href=\"").append(baseUrl).append("/uberdust/rest/testbed/")
                     .append(testbed.getId()).append("/node/").append(node.getId()).append("/georss").append("\">")
                     .append("GeoRSS feed").append("</a></p>");
             descriptionBuffer.append("<ul>");
             for (Capability capability : node.getCapabilities()) {
-                descriptionBuffer.append("<li><a href=\"http://").append(baseUrl).append("/uberdust/rest/testbed/")
+                descriptionBuffer.append("<li><a href=\"").append(baseUrl).append("/uberdust/rest/testbed/")
                         .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
                         .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
             }
@@ -172,11 +160,11 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
 
             // set the GeoRSS module and add it to entry
             final GeoRSSModule geoRSSModule = new SimpleModuleImpl();
-            if ((testbed.getSetup().getCoordinateType().equals("Cartesian"))) {
+            if (!(testbed.getSetup().getCoordinateType().equals("Absolute"))) {
                 // convert node position from xyz to long/lat
                 final eu.wisebed.wiseml.model.setup.Position position = node.getPosition();
                 final Coordinate nodeCoordinate = new Coordinate((double) position.getX(), (double) position.getY(),
-                        (double) position.getZ(), (double) position.getPhi(), (double) position.getTheta());
+                        (double) position.getZ());
                 final Coordinate rotated = Coordinate.rotate(nodeCoordinate, properOrigin.getPhi());
                 final Coordinate absolute = Coordinate.absolute(properOrigin, rotated);
                 final Coordinate nodePosition = Coordinate.xyz2blh(absolute);
