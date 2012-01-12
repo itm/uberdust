@@ -49,13 +49,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="hibernate.cache.region.factory_class">
                     net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory
                 </prop>
-                <prop key="hibernate.c3p0.acquire_increment">3</prop>
+                <prop key="hibernate.connection.pool_size">10</prop>
+                <!--<prop key="hibernate.c3p0.acquire_increment">3</prop>
                 <prop key="hibernate.c3p0.idle_test_period">14400</prop>
                 <prop key="hibernate.c3p0.timeout">25200</prop>
                 <prop key="hibernate.c3p0.max_size">20</prop>
                 <prop key="hibernate.c3p0.min_size">10</prop>
                 <prop key="hibernate.c3p0.max_statements">0</prop>
-                <prop key="hibernate.c3p0.preferredTestQuery">select 1;</prop>
+                <prop key="hibernate.c3p0.preferredTestQuery">select 1;</prop>-->
                 <prop key="log4j.logger.net.sf.hibernate">warn</prop>
                 <prop key="show_sql">true</prop>
                 <prop key="format_sql">true</prop>
