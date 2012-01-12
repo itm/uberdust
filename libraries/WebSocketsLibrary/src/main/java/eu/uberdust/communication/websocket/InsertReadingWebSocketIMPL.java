@@ -4,10 +4,7 @@ package eu.uberdust.communication.websocket;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.websocket.WebSocket;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -60,13 +57,7 @@ public final class InsertReadingWebSocketIMPL implements WebSocket.OnBinaryMessa
             LOGGER.info("reconnecting in 5000");
             Thread.sleep(5000);
             InsertReadingWebSocketClient.getInstance().connect();
-        } catch (IOException e) {
-            LOGGER.fatal(e);
-        } catch (ExecutionException e) {
-            LOGGER.fatal(e);
-        } catch (URISyntaxException e) {
-            LOGGER.fatal(e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             LOGGER.fatal(e);
         }
     }
