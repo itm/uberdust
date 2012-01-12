@@ -35,7 +35,7 @@ public class NodeFlasherController {
     /**
      * Hours in a day.
      */
-    private static final int HOURS_OF_DAY = 24;
+    private static final int HOURS_OF_DAY = 3;
 
     /**
      * Default Constructor.
