@@ -8,7 +8,11 @@ import eu.uberdust.datacollector.parsers.MessageParser;
 import eu.uberdust.datacollector.parsers.WsCommiter;
 import eu.uberdust.reading.NodeReading;
 import org.apache.log4j.Logger;
-import org.jboss.netty.channel.*;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.ExceptionEvent;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import java.net.ConnectException;
 import java.util.Date;
@@ -157,7 +161,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
      * @param toString the string to parse
      */
     private void parse(final String toString) {
-        executorService.submit(new MessageParser(toString, sensors,testbedPrefix,testbedId));
+        executorService.submit(new MessageParser(toString, sensors, testbedPrefix, testbedId));
     }
 
     public void setTestbedPrefix(String testbedPrefix) {
