@@ -96,7 +96,9 @@ public class DataCollector implements Runnable {
         host = properties.getProperty("runtime.ipAddress");
         port = Integer.parseInt(properties.getProperty("runtime.port"));
         testbedPrefix = properties.getProperty("testbed.prefix");
+        LOGGER.info(testbedPrefix);
         testbedId = Integer.parseInt(properties.getProperty("testbed.id"));
+        LOGGER.info(testbedId);
 
         final String[] sensorsNames = properties.getProperty("sensors.names").split(",");
         final String[] sensorsPrefixes = properties.getProperty("sensors.prefixes").split(",");
@@ -171,7 +173,9 @@ public class DataCollector implements Runnable {
         factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
         bootstrap = new ClientBootstrap(factory);
         chPipelineFactory.setSensors(sensors);
+        LOGGER.info("setting testbedPrefix to " + testbedPrefix);
         chPipelineFactory.setTestbedPrefix(testbedPrefix);
+        LOGGER.info("setting testbedId to " + testbedId);
         chPipelineFactory.setTestbedId(testbedId);
         // Configure the event pipeline factory.
         bootstrap.setPipelineFactory(chPipelineFactory);
