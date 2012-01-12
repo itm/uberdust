@@ -151,22 +151,34 @@ public:
             if (!is_gateway()) {
 
                 int16 temp = em_->temp_sensor()->temperature();
-                collectorMsg_t mess;
-                mess.set_collector_type_id(collectorMsg_t::TEMPERATURE);
-                mess.set_temperature(&temp);
-                debug_->debug("Contains temp %d -> %x ", temp, mygateway_);
-                radio_->send(mygateway_, mess.buffer_size(), (uint8*) & mess);
-
+                if (temp < 100) {
+                    collectorMsg_t mess;
+                    mess.set_collector_type_id(collectorMsg_t::TEMPERATURE);
+                    mess.set_temperature(&temp);
+                    debug_->debug("Contains temp %d -> %x ", temp, mygateway_);
+                    radio_->send(mygateway_, mess.buffer_size(), (uint8*) & mess);
+                }
                 uint32 lux = em_->light_sensor()->luminance();
-                collectorMsg_t mess1;
-                mess1.set_collector_type_id(collectorMsg_t::LIGHT);
-                mess1.set_light(&lux);
-                debug_->debug("Contains light %d -> %x", lux, mygateway_);
-                radio_->send(mygateway_, mess1.buffer_size(), (uint8*) & mess1);
+                if (lux < 20000) {
+                    collectorMsg_t mess1;
+                    mess1.set_collector_type_id(collectorMsg_t::LIGHT);
+                    mess1.set_light(&lux);
+                    debug_->debug("Contains light %d -> %x", lux, mygateway_);
+                    radio_->send(mygateway_, mess1.buffer_size(), (uint8*) & mess1);
+                }
 
             } else {
-                debug_->debug("id::%x EM_L %d ", radio_->id(), em_->light_sensor()->luminance());
-                debug_->debug("id::%x EM_T %d ", radio_->id(), em_->temp_sensor()->temperature());
+                int16 temp = em_->temp_sensor()->temperature();
+                if (temp < 100) {
+                    debug_->debug("id::%x EM_T %d ", radio_->id(), temp);
+
+                }
+                uint32 lux = em_->light_sensor()->luminance();
+                if (lux < 20000) {
+                    debug_->debug("id::%x EM_L %d ", radio_->id(), lux);
+                }
+
+
             }
         } else if ((long) userdata == TASK_BROADCAST_GATEWAY) {
             debug_->debug("gateway");
@@ -195,8 +207,8 @@ protected:
             radio_->send(mygateway_, mess1.buffer_size(), (uint8*) & mess1);
         } else {
             isense::Time event_time = clock_->time();
-            debug_->debug("id::%x EM_E 1 %d ", radio_->id(), event_time.sec_ * 1000 + event_time.ms_);
-            //            debug_->debug("id::%x EM_E 1 ", radio_->id());
+            //            debug_->debug("id::%x EM_E 1 %d ", radio_->id(), event_time.sec_ * 1000 + event_time.ms_);
+            debug_->debug("id::%x EM_E 1 ", radio_->id());
         }
     }
 
@@ -423,7 +435,7 @@ private:
             case 0x1ccd: //0.1
             case 0xc7a: //0.2
             case 0x99ad: //3,1
-            case 0x8978: //1.1                        
+            case 0x8978: //1.1
                 return true;
             default:
                 return false;
@@ -444,7 +456,7 @@ private:
     }
 
     void debug_command(const uint8_t * payload, size_t length, node_id_t dest) {
-        //TEMPLATE : "id::%x dest::%x command=1|2|3"        
+        //TEMPLATE : "id::%x dest::%x command=1|2|3"
         char buffer[1024];
         int bytes_written = 0;
         bytes_written += sprintf(buffer + bytes_written, "id::%x dest::%x command=", radio_->id(), dest);
