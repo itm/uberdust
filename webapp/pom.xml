@@ -285,7 +285,7 @@
                         <configuration>
                             <target>
                                 <scp file="${project.build.directory}/${project.groupId}.war"
-                                     todir="uberdust@$carrot.cti.gr:~/webapps/"
+                                     todir="uberdust@carrot.cti.gr:~/webapps/"
                                      keyfile="${user.home}/.ssh/id_rsa"
                                      trust="true" verbose="true" port="22"
                                      passphrase=""/>
