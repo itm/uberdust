@@ -11,9 +11,7 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Timer;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Insert New Reading Web Socket Client.
@@ -99,14 +97,8 @@ public final class InsertReadingWebSocketClient {
 
     /**
      * Connects to the WebSocket.
-     *
-     * @throws java.io.IOException         an IOException exception.
-     * @throws java.net.URISyntaxException a URI SyntaxException.
-     * @throws InterruptedException        InterruptedException exception.
-     * @throws java.util.concurrent.ExecutionException
-     *                                     ExecutionException exception.
      */
-    public void connect() throws IOException, ExecutionException, URISyntaxException, InterruptedException {
+    public void connect() throws Exception {
         if (webSocketUrl != null) {
             connect(webSocketUrl);
         }
@@ -116,27 +108,18 @@ public final class InsertReadingWebSocketClient {
      * Connects to the WebSocket.
      *
      * @param webSocketUrl WebSocket URL.
-     * @throws java.io.IOException         an IOException exception.
-     * @throws java.net.URISyntaxException a URI SyntaxException.
-     * @throws InterruptedException        InterruptedException exception.
-     * @throws java.util.concurrent.ExecutionException
-     *                                     ExecutionException exception.
      */
-    public void connect(final String webSocketUrl) throws IOException, URISyntaxException, ExecutionException, InterruptedException {
+    public void connect(final String webSocketUrl) {
         this.webSocketUrl = webSocketUrl;
-
-        factory = new WebSocketClientFactory();
-        factory.setBufferSize(4096);
         try {
+            factory = new WebSocketClientFactory();
+            factory.setBufferSize(4096);
             factory.start();
             client = factory.newWebSocketClient();
             client.setMaxIdleTime(-1);
             client.setProtocol(PROTOCOL);
-        } catch (Exception e) {
-            LOGGER.error(e);
-        }
 
-        try {
+
             LOGGER.info("Connecting to " + webSocketUrl);
             // open connection
             connection = client.open(new URI(webSocketUrl), new InsertReadingWebSocketIMPL()).get();
