@@ -78,10 +78,12 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
 
     public void setTestbedPrefix(String testbedPrefix) {
         this.testbedPrefix = testbedPrefix;
+        upstreamHandler.setTestbedPrefix(testbedPrefix);
     }
 
 
     public void setTestbedId(int testbedId) {
         this.testbedId = testbedId;
+        upstreamHandler.setTestbedId(testbedId);
     }
 }
