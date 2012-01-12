@@ -2,9 +2,7 @@ import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
 import eu.uberdust.reading.NodeReading;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,10 +56,6 @@ public class WebSocketTest {
                 counter++;
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (URISyntaxException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ExecutionException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
