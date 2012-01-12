@@ -148,9 +148,8 @@ public final class ShowTestbedGeoRssController extends AbstractRestController {
                     .append("GeoRSS feed").append("</a></p>");
             descriptionBuffer.append("<ul>");
             for (Capability capability : node.getCapabilities()) {
-                descriptionBuffer.append("<li><a href=\"").append(baseUrl).append("/uberdust/rest/testbed/")
-                        .append(testbed.getId()).append("/node/").append(node.getId()).append("/capability/")
-                        .append(capability.getName()).append("\">").append(capability.getName()).append("</a></li>");
+                descriptionBuffer.append("<li>").append(capability.getName())
+                        .append(capability.getName()).append("</li>");
             }
             descriptionBuffer.append("</ul>");
             description.setType("text/html");
