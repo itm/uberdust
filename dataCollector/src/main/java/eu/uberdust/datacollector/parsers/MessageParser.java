@@ -224,6 +224,6 @@ public class MessageParser implements Runnable { //NOPMD
         linkReading.setTimestamp(String.valueOf(milliseconds));
         linkReading.setReading(String.valueOf(value));
 
-        new RestCommiter(linkReading);
+        new WsCommiter(linkReading);
     }
 }
