@@ -59,7 +59,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <!-- Capability Related Controllers -->
                 <prop key="GET /testbed/*/capability">listCapabilitiesHTMLController</prop>
                 <prop key="GET /testbed/*/capability/raw">listCapabilitiesController</prop>
-                <prop key="GET /testbed/*/capability/json">listCapabilitiesJSON</prop>
+                <prop key="GET /testbed/*/capability/json">listCapabilitiesJSONController</prop>
                 <prop key="GET /testbed/*/capability/*">showCapbilityController</prop>
                 <prop key="GET /testbed/*/capability/*/tabdelimited">capabilityTabDelimitedController</prop>
                 <prop key="GET /testbed/*/capability/*/insert/description/*/">capabilityInsertDescriptionController
