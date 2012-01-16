@@ -1,8 +1,10 @@
 package eu.uberdust.rest.controller;
 
+import com.google.gson.Gson;
 import eu.uberdust.command.CapabilityCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
+import eu.uberdust.util.CapabilityJson;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
@@ -16,14 +18,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller class that returns a list of capabilities for a given testbed in Raw Text format.
+ * Controller class that returns a list of capabilities for a given testbed in JSON format.
  */
-public final class ListCapabilitiesController extends AbstractRestController {
+public final class ListCapabilitiesJSONController extends AbstractRestController {
 
-    /**
+     /**
      * Testbed persistence manager.
      */
     private transient TestbedController testbedManager;
@@ -36,12 +39,12 @@ public final class ListCapabilitiesController extends AbstractRestController {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
+    private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesJSONController.class);
 
     /**
      * Constructor.
      */
-    public ListCapabilitiesController() {
+    public ListCapabilitiesJSONController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -105,19 +108,27 @@ public final class ListCapabilitiesController extends AbstractRestController {
         // get testbed's capabilities
         final List<Capability> capabilities = capabilityManager.list(testbed);
 
-        // write on the HTTP response
-        response.setContentType("text/plain");
-        final Writer textOutput = (response.getWriter());
+        // json list
+        final List<CapabilityJson> capabilityJsons = new ArrayList<CapabilityJson>();
 
 
         // iterate over testbeds
         for (Capability capability : capabilities) {
-            textOutput.write(capability.getName() + "\n");
+            CapabilityJson capabilityJson = new CapabilityJson(capability.getName());
+            capabilityJsons.add(capabilityJson);
         }
 
-        // flush close output
-        textOutput.flush();
-        textOutput.close();
+        // write on the HTTP response
+        response.setContentType("text/json");
+        final Writer jsonOutput = (response.getWriter());
+
+        // init GSON
+        final Gson gson = new Gson();
+        gson.toJson(capabilityJsons, capabilityJsons.getClass(), jsonOutput);
+
+        jsonOutput.flush();
+        jsonOutput.close();
+
 
         return null;
     }

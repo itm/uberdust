@@ -1,5 +1,6 @@
 package eu.uberdust.rest.controller;
 
+
 import eu.uberdust.command.LinkCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
@@ -14,14 +15,15 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Controller class that returns a list of links for a given testbed.
+ * Controller class that returns a list of links for a given testbed in Raw Text format.
  */
 public final class ListLinksController extends AbstractRestController {
+
 
     /**
      * Testbed persistence manager.
@@ -74,16 +76,13 @@ public final class ListLinksController extends AbstractRestController {
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
-     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
+     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  an TestbedNotFoundException exception.
+     * @throws IOException IO Exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws TestbedNotFoundException, InvalidTestbedIdException {
-
-        LOGGER.info("Remote address: " + request.getRemoteAddr());
-        LOGGER.info("Remote host: " + request.getRemoteHost());
-
+            throws InvalidTestbedIdException, TestbedNotFoundException, IOException {
         // get command
         final LinkCommand command = (LinkCommand) commandObj;
 
@@ -104,11 +103,20 @@ public final class ListLinksController extends AbstractRestController {
         }
         final List<Link> links = linkManager.list(testbed);
 
-        // Prepare data to pass to jsp
-        final Map<String, Object> refData = new HashMap<String, Object>();
+        // write on the HTTP response
+        response.setContentType("text/plain");
+        final Writer textOutput = (response.getWriter());
 
-        refData.put("testbed", testbed);
-        refData.put("links", links);
-        return new ModelAndView("link/list.html", refData);
+
+        // iterate over testbeds
+        for (Link link : links) {
+            textOutput.write("[" + link.getSource() + "," + link.getTarget() + "]\n");
+        }
+
+        // flush close output
+        textOutput.flush();
+        textOutput.close();
+
+        return null;
     }
 }

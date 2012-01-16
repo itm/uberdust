@@ -1,12 +1,14 @@
 package eu.uberdust.rest.controller;
 
-import eu.uberdust.command.CapabilityCommand;
+import com.google.gson.Gson;
+import eu.uberdust.command.NodeCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
-import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.uberdust.util.NodeJson;
+import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Capability;
+import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,32 +18,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller class that returns a list of capabilities for a given testbed in Raw Text format.
+ * Controller class that returns a list of links for a given testbed in JSON format.
  */
-public final class ListCapabilitiesController extends AbstractRestController {
+public final class ListNodesJSONController extends AbstractRestController {
 
-    /**
+     /**
      * Testbed persistence manager.
      */
     private transient TestbedController testbedManager;
 
     /**
-     * Capability persistence manager.
+     * Node persistence manager.
      */
-    private transient CapabilityController capabilityManager;
+    private transient NodeController nodeManager;
 
     /**
-     * Logger.
+     * Logger persistence manager.
      */
-    private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
+    private static final Logger LOGGER = Logger.getLogger(ListNodesJSONController.class);
 
     /**
      * Constructor.
      */
-    public ListCapabilitiesController() {
+    public ListNodesJSONController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -51,24 +54,23 @@ public final class ListCapabilitiesController extends AbstractRestController {
     /**
      * Sets testbed persistence manager.
      *
-     * @param testbedManager testbed peristence manager.
+     * @param testbedManager testbed persistence manager.
      */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
     /**
-     * Sets capability peristence manager.
+     * Sets node persistence manager.
      *
-     * @param capabilityManager capability persistence manager.
+     * @param nodeManager node persistence manager.
      */
-    public void setCapabilityManager(final CapabilityController capabilityManager) {
-        this.capabilityManager = capabilityManager;
+    public void setNodeManager(final NodeController nodeManager) {
+        this.nodeManager = nodeManager;
     }
 
     /**
      * Handle Request and return the appropriate response.
-     * System.out.println(request.getRemoteUser());
      *
      * @param request    http servlet request.
      * @param response   http servlet response.
@@ -81,10 +83,10 @@ public final class ListCapabilitiesController extends AbstractRestController {
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws InvalidTestbedIdException, TestbedNotFoundException, IOException {
+            throws TestbedNotFoundException, InvalidTestbedIdException, IOException {
 
-        // get command
-        final CapabilityCommand command = (CapabilityCommand) commandObj;
+        // get command object
+        final NodeCommand command = (NodeCommand) commandObj;
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -94,30 +96,36 @@ public final class ListCapabilitiesController extends AbstractRestController {
         } catch (NumberFormatException nfe) {
             throw new InvalidTestbedIdException("Testbed IDs have number format.", nfe);
         }
-
-        // look up testbed
         final Testbed testbed = testbedManager.getByID(Integer.parseInt(command.getTestbedId()));
         if (testbed == null) {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
 
-        // get testbed's capabilities
-        final List<Capability> capabilities = capabilityManager.list(testbed);
+        // get testbed's nodes
+        final List<Node> nodes = nodeManager.list(testbed);
 
-        // write on the HTTP response
-        response.setContentType("text/plain");
-        final Writer textOutput = (response.getWriter());
+        // json list
+        final List<NodeJson> nodeJsons = new ArrayList<NodeJson>();
 
 
         // iterate over testbeds
-        for (Capability capability : capabilities) {
-            textOutput.write(capability.getName() + "\n");
+        for (Node node : nodes) {
+            NodeJson nodeJson = new NodeJson(node.getId());
+            nodeJsons.add(nodeJson);
         }
 
-        // flush close output
-        textOutput.flush();
-        textOutput.close();
+        // write on the HTTP response
+        response.setContentType("text/json");
+        final Writer jsonOutput = (response.getWriter());
+
+        // init GSON
+        final Gson gson = new Gson();
+        gson.toJson(nodeJsons, nodeJsons.getClass(), jsonOutput);
+
+        jsonOutput.flush();
+        jsonOutput.close();
+
 
         return null;
     }

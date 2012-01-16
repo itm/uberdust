@@ -1,12 +1,12 @@
 package eu.uberdust.rest.controller;
 
-import eu.uberdust.command.CapabilityCommand;
+import eu.uberdust.command.LinkCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
-import eu.wisebed.wisedb.controller.CapabilityController;
+import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Capability;
+import eu.wisebed.wiseml.model.setup.Link;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,14 +14,14 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Controller class that returns a list of capabilities for a given testbed in Raw Text format.
+ * Controller class that returns a list of links for a given testbed in HTML format.
  */
-public final class ListCapabilitiesController extends AbstractRestController {
+public final class ListLinksHTMLController extends AbstractRestController {
 
     /**
      * Testbed persistence manager.
@@ -29,19 +29,19 @@ public final class ListCapabilitiesController extends AbstractRestController {
     private transient TestbedController testbedManager;
 
     /**
-     * Capability persistence manager.
+     * Link persistence manager.
      */
-    private transient CapabilityController capabilityManager;
+    private transient LinkController linkManager;
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
+    private static final Logger LOGGER = Logger.getLogger(ListLinksHTMLController.class);
 
     /**
      * Constructor.
      */
-    public ListCapabilitiesController() {
+    public ListLinksHTMLController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -51,40 +51,38 @@ public final class ListCapabilitiesController extends AbstractRestController {
     /**
      * Sets testbed persistence manager.
      *
-     * @param testbedManager testbed peristence manager.
+     * @param testbedManager testbed persistence manager.
      */
     public void setTestbedManager(final TestbedController testbedManager) {
         this.testbedManager = testbedManager;
     }
 
     /**
-     * Sets capability peristence manager.
+     * Sets link persistence manager.
      *
-     * @param capabilityManager capability persistence manager.
+     * @param linkManager link persistence manager.
      */
-    public void setCapabilityManager(final CapabilityController capabilityManager) {
-        this.capabilityManager = capabilityManager;
+    public void setLinkManager(final LinkController linkManager) {
+        this.linkManager = linkManager;
     }
 
     /**
      * Handle Request and return the appropriate response.
-     * System.out.println(request.getRemoteUser());
      *
      * @param request    http servlet request.
      * @param response   http servlet response.
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException an InvalidTestbedIdException exception.
-     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  an TestbedNotFoundException exception.
-     * @throws IOException IO exception.
+     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws InvalidTestbedIdException, TestbedNotFoundException, IOException {
+            throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command
-        final CapabilityCommand command = (CapabilityCommand) commandObj;
+        final LinkCommand command = (LinkCommand) commandObj;
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -101,24 +99,13 @@ public final class ListCapabilitiesController extends AbstractRestController {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
+        final List<Link> links = linkManager.list(testbed);
 
-        // get testbed's capabilities
-        final List<Capability> capabilities = capabilityManager.list(testbed);
+        // Prepare data to pass to jsp
+        final Map<String, Object> refData = new HashMap<String, Object>();
 
-        // write on the HTTP response
-        response.setContentType("text/plain");
-        final Writer textOutput = (response.getWriter());
-
-
-        // iterate over testbeds
-        for (Capability capability : capabilities) {
-            textOutput.write(capability.getName() + "\n");
-        }
-
-        // flush close output
-        textOutput.flush();
-        textOutput.close();
-
-        return null;
+        refData.put("testbed", testbed);
+        refData.put("links", links);
+        return new ModelAndView("link/list.html", refData);
     }
 }

@@ -14,16 +14,16 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Controller class that returns a list of links for a given testbed.
+ * Controller class that returns a list of links for a given testbed in raw text format.
  */
 public final class ListNodesController extends AbstractRestController {
 
-    /**
+     /**
      * Testbed persistence manager.
      */
     private transient TestbedController testbedManager;
@@ -74,15 +74,13 @@ public final class ListNodesController extends AbstractRestController {
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
-     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
+     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  an TestbedNotFoundException exception.
+     * @throws IOException IO Exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws TestbedNotFoundException, InvalidTestbedIdException {
-
-        LOGGER.info("Remote address: " + request.getRemoteAddr());
-        LOGGER.info("Remote host: " + request.getRemoteHost());
+            throws TestbedNotFoundException, InvalidTestbedIdException, IOException {
 
         // get command object
         final NodeCommand command = (NodeCommand) commandObj;
@@ -104,12 +102,21 @@ public final class ListNodesController extends AbstractRestController {
         // get testbed's nodes
         final List<Node> nodes = nodeManager.list(testbed);
 
-        // Prepare data to pass to jsp
-        final Map<String, Object> refData = new HashMap<String, Object>();
 
-        // else put thisNode instance in refData and return index view
-        refData.put("testbed", testbed);
-        refData.put("nodes", nodes);
-        return new ModelAndView("node/list.html", refData);
+        // write on the HTTP response
+        response.setContentType("text/plain");
+        final Writer textOutput = (response.getWriter());
+
+
+        // iterate over testbeds
+        for (Node node : nodes) {
+            textOutput.write(node.getId() + "\n");
+        }
+
+        // flush close output
+        textOutput.flush();
+        textOutput.close();
+
+        return null;
     }
 }

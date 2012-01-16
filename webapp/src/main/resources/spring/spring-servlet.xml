@@ -32,7 +32,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             <props>
 
                 <!-- Testbed Related controller -->
-                <prop key="GET /testbed">listTestbedsController</prop>
+                <prop key="GET /testbed">listTestbedsHTMLController</prop>
+                <prop key="GET /testbed/raw">listTestbedsController</prop>
+                <prop key="GET /testbed/json">listTestbedsJSONController</prop>
                 <prop key="GET /testbed/*">showTestbedController</prop>
                 <prop key="GET /testbed/*/status">showTestbedStatusController</prop>
                 <prop key="GET /testbed/*/georss">showTestbedGeoRssController</prop>
@@ -40,18 +42,24 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/wiseml">showTestbedWiseMlController</prop>
 
                 <!-- Node Related controller -->
-                <prop key="GET /testbed/*/node">listNodesController</prop>
+                <prop key="GET /testbed/*/node">listNodesHTMLController</prop>
+                <prop key="GET /testbed/*/node/raw">listNodesController</prop>
+                <prop key="GET /testbed/*/node/json">listNodesJSONController</prop>
                 <prop key="GET /testbed/*/node/*">showNodeController</prop>
                 <prop key="GET /testbed/*/node/*/georss">showNodeGeoRssController</prop>
                 <prop key="GET /testbed/*/node/*/kml">showNodeKmlController</prop>
                 <prop key="GET /testbed/*/node/*/insert/description/*/">nodeInsertDescriptionController</prop>
 
                 <!-- Link Related Controllers -->
-                <prop key="GET /testbed/*/link">listLinksController</prop>
+                <prop key="GET /testbed/*/link">listLinksHTMLController</prop>
+                <prop key="GET /testbed/*/link/raw">listLinksController</prop>
+                <prop key="GET /testbed/*/link/json">listLinksJSONController</prop>
                 <prop key="GET /testbed/*/link/*/*">showLinkController</prop>
 
                 <!-- Capability Related Controllers -->
-                <prop key="GET /testbed/*/capability">listCapabilitiesController</prop>
+                <prop key="GET /testbed/*/capability">listCapabilitiesHTMLController</prop>
+                <prop key="GET /testbed/*/capability/raw">listCapabilitiesController</prop>
+                <prop key="GET /testbed/*/capability/json">listCapabilitiesJSON</prop>
                 <prop key="GET /testbed/*/capability/*">showCapbilityController</prop>
                 <prop key="GET /testbed/*/capability/*/tabdelimited">capabilityTabDelimitedController</prop>
                 <prop key="GET /testbed/*/capability/*/insert/description/*/">capabilityInsertDescriptionController
@@ -136,8 +144,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     </bean>
 
 
-    <!-- List Testbeds Controller -->
-    <bean name="listTestbedsController" class="eu.uberdust.rest.controller.ListTestbedsController">
+    <!-- List Testbeds HTML Controller -->
+    <bean name="listTestbedsHTMLController" class="eu.uberdust.rest.controller.ListTestbedsHTMLController">
         <property name="commandClass" value="eu.uberdust.command.TestbedCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="uriPattern" value="/testbed/"/>
@@ -151,6 +159,20 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <!-- List Testbeds Raw Text controller -->
+    <bean name="listTestbedsController" class="eu.uberdust.rest.controller.ListTestbedsController">
+        <property name="commandClass" value="eu.uberdust.command.TestbedCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/raw"/>
+    </bean>
+
+    <!-- List Testbeds Controller -->
+    <bean name="listTestbedsJSONController" class="eu.uberdust.rest.controller.ListTestbedJSONController">
+        <property name="commandClass" value="eu.uberdust.command.TestbedCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/json"/>
     </bean>
 
     <!-- Show Testbed Controller -->
@@ -211,8 +233,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="uriPattern" value="/testbed/{testbedId}/wiseml"/>
     </bean>
 
-    <!-- List available Nodes Controller -->
-    <bean name="listNodesController" class="eu.uberdust.rest.controller.ListNodesController">
+    <!-- List available Nodes HTML Controller -->
+    <bean name="listNodesHTMLController" class="eu.uberdust.rest.controller.ListNodesHTMLController">
         <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
@@ -227,6 +249,22 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <!-- List Available Nodes Raw Text Controller -->
+    <bean name="listNodesController" class="eu.uberdust.rest.controller.ListNodesController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand" />
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/raw"/>
+    </bean>
+
+    <!-- List Available Nodes JSON Controller -->
+    <bean name="listNodesJSONController" class="eu.uberdust.rest.controller.ListNodesJSONController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand" />
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/json"/>
     </bean>
 
     <!-- Show Node Controller -->
@@ -269,8 +307,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/insert/description/{description}/"/>
     </bean>
 
-    <!-- List available Link Controller -->
-    <bean name="listLinksController" class="eu.uberdust.rest.controller.ListLinksController">
+    <!-- List available Link HTML Controller -->
+    <bean name="listLinksHTMLController" class="eu.uberdust.rest.controller.ListLinksHTMLController">
         <property name="commandClass" value="eu.uberdust.command.LinkCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="linkManager" ref="linkManager"/>
@@ -285,6 +323,22 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <!-- List available Link Raw Text Controller -->
+    <bean name="listLinksController" class="eu.uberdust.rest.controller.ListLinksController">
+        <property name="commandClass" value="eu.uberdust.command.LinkCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="linkManager" ref="linkManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/link/raw"/>
+    </bean>
+
+    <!-- List available Link JSON Controller -->
+    <bean name="listLinksJSONController" class="eu.uberdust.rest.controller.ListLinksJSONController">
+        <property name="commandClass" value="eu.uberdust.command.LinkCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="linkManager" ref="linkManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/link/json"/>
     </bean>
 
     <!-- Show Link Controller -->
@@ -305,8 +359,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         </property>
     </bean>
 
-    <!-- List available Capabilities Controller -->
-    <bean name="listCapabilitiesController" class="eu.uberdust.rest.controller.ListCapabilitiesController">
+    <!-- List available Capabilities HTML Controller -->
+    <bean name="listCapabilitiesHTMLController" class="eu.uberdust.rest.controller.ListCapabilitiesHTMLController">
         <property name="commandClass" value="eu.uberdust.command.CapabilityCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
@@ -321,6 +375,22 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 </property>
             </bean>
         </property>
+    </bean>
+
+    <!-- List Available Capabilities Raw Text Controller -->
+    <bean name="listCapabilitiesController" class="eu.uberdust.rest.controller.ListCapabilitiesController">
+        <property name="commandClass" value="eu.uberdust.command.CapabilityCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/capability/raw"/>
+    </bean>
+
+    <!-- List Available Capabilities JSON Controller -->
+        <bean name="listCapabilitiesJSONController" class="eu.uberdust.rest.controller.ListCapabilitiesJSONController">
+        <property name="commandClass" value="eu.uberdust.command.CapabilityCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/capability/json"/>
     </bean>
 
     <!-- Show Capability Controller -->

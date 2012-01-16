@@ -9,14 +9,14 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Controller class that returns a list of testbed in Raw text format.
+ * Controller class that returns a list of testbed in HTML format.
  */
-public final class ListTestbedsController extends AbstractRestController {
+public final class ListTestbedsHTMLController extends AbstractRestController {
 
     /**
      * Testbed persistence manager.
@@ -31,14 +31,14 @@ public final class ListTestbedsController extends AbstractRestController {
     /**
      * Constructor.
      */
-    public ListTestbedsController() {
+    public ListTestbedsHTMLController() {
         super();
 
         // Make sure to set which method this controller will support.
         this.setSupportedMethods(new String[]{METHOD_GET});
     }
 
-/**
+    /**
      * Sets testbed persistence manager.
      *
      * @param testbedManager testbed persistence manager.
@@ -55,33 +55,17 @@ public final class ListTestbedsController extends AbstractRestController {
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws IOException IO exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
-                                  final Object commandObj, final BindException errors) throws IOException {
-
+                                  final Object commandObj, final BindException errors) {
 
         // testbed list
         final List<Testbed> testbeds = testbedManager.list();
 
+        // Prepare data to pass to jsp
+        final Map<String, Object> refData = new HashMap<String, Object>();
 
-        // write on the HTTP response
-        response.setContentType("text/plain");
-        final Writer textOutput = (response.getWriter());
-
-
-        // iterate over testbeds
-        for (Testbed testbed : testbeds) {
-            textOutput.write(testbed.getId() + "\t" + testbed.getName() + "\n");
-        }
-
-
-        // flush close output
-        textOutput.flush();
-        textOutput.close();
-
-        return null;
+        refData.put("testbeds", testbeds);
+        return new ModelAndView("testbed/list.html", refData);
     }
-
-
 }

@@ -14,14 +14,14 @@ import org.springframework.web.servlet.mvc.AbstractRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Controller class that returns a list of capabilities for a given testbed in Raw Text format.
+ * Controller class that returns a list of capabilities for a given testbed in HTML.
  */
-public final class ListCapabilitiesController extends AbstractRestController {
+public final class ListCapabilitiesHTMLController extends AbstractRestController {
 
     /**
      * Testbed persistence manager.
@@ -36,12 +36,12 @@ public final class ListCapabilitiesController extends AbstractRestController {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesController.class);
+    private static final Logger LOGGER = Logger.getLogger(ListCapabilitiesHTMLController.class);
 
     /**
      * Constructor.
      */
-    public ListCapabilitiesController() {
+    public ListCapabilitiesHTMLController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -75,13 +75,12 @@ public final class ListCapabilitiesController extends AbstractRestController {
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException an InvalidTestbedIdException exception.
-     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  an TestbedNotFoundException exception.
-     * @throws IOException IO exception.
+     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws InvalidTestbedIdException, TestbedNotFoundException, IOException {
+            throws InvalidTestbedIdException, TestbedNotFoundException {
 
         // get command
         final CapabilityCommand command = (CapabilityCommand) commandObj;
@@ -101,24 +100,13 @@ public final class ListCapabilitiesController extends AbstractRestController {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
-
         // get testbed's capabilities
         final List<Capability> capabilities = capabilityManager.list(testbed);
 
-        // write on the HTTP response
-        response.setContentType("text/plain");
-        final Writer textOutput = (response.getWriter());
-
-
-        // iterate over testbeds
-        for (Capability capability : capabilities) {
-            textOutput.write(capability.getName() + "\n");
-        }
-
-        // flush close output
-        textOutput.flush();
-        textOutput.close();
-
-        return null;
+        // Prepare data to pass to jsp
+        final Map<String, Object> refData = new HashMap<String, Object>();
+        refData.put("testbed", testbed);
+        refData.put("capabilities", capabilities);
+        return new ModelAndView("capability/list.html", refData);
     }
 }
