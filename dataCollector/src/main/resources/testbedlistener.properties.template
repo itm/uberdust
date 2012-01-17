@@ -1,0 +1,31 @@
+#change to 1 to start the application
+use.datacollector=0
+use.nodeflasher=0
+use.controller=0
+
+#testbedruntime related properties
+#example values
+
+testbed.hostname=hercules.cti.gr
+testbed.overlay=1234
+testbed.prefix=urn:wisebed:ctitestbed:
+testbed.passwords=passwords.text
+testbed.snaa.endpointurl=http://hercules.cti.gr:8890/snaa
+testbed.rs.endpointurl=http://hercules.cti.gr:8889/rs
+testbed.sm.endpointurl=http://hercules.cti.gr:8888/sessions
+testbed.port=8885
+
+#datacollector related properties
+wisedb.testbedid=1
+sensors.names=temperature,humidity,ir,co,co2,ch4,light,batterycharge,barometricpressure,light1,light2,light3,light4,pir,pressure
+sensors.prefixes=EM_T,EM_H,EM_I,SVal1:,SVal2:,SVal3:,EM_L,BA_C,EM_P,RL1,RL2,RL3,RL4,EM_E,CS
+device.Types=iSense::,airquality::,id::
+
+
+#nodeflasher related properties
+nodes.isense=urn:wisebed:ctitestbed:0x296,urn:wisebed:ctitestbed:0xcaa,urn:wisebed:ctitestbed:0x1c98,urn:wisebed:ctitestbed:0x295,urn:wisebed:ctitestbed:0x1b77,urn:wisebed:ctitestbed:0x9979,urn:wisebed:ctitestbed:0x153d,urn:wisebed:ctitestbed:0x585,urn:wisebed:ctitestbed:0x786a,urn:wisebed:ctitestbed:0xca3,urn:wisebed:ctitestbed:0x1cde
+nodes.telosb=urn:wisebed:ctitestbed:0x1c62,urn:wisebed:ctitestbed:0x68d1,urn:wisebed:ctitestbed:0x6f58,urn:wisebed:ctitestbed:0x1bee,urn:wisebed:ctitestbed:0x4f22,urn:wisebed:ctitestbed:0xfa4b,urn:wisebed:ctitestbed:0x1fdc,urn:wisebed:ctitestbed:0xd965,urn:wisebed:ctitestbed:0xefa,urn:wisebed:ctitestbed:0xf042,urn:wisebed:ctitestbed:0x712,urn:wisebed:ctitestbed:0x9112,urn:wisebed:ctitestbed:0xe852,urn:wisebed:ctitestbed:0x1ed4
+image.telosb=TelosBCollectorApp.ihex
+image.isense=iSenseCollectorApp.bin
+
+
