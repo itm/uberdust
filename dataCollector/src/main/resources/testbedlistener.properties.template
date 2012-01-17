@@ -17,6 +17,9 @@ testbed.port=8885
 
 #datacollector related properties
 wisedb.testbedid=1
+uberdust.server=uberdust.cti.gr
+uberdust.port=80
+uberdust.basepath=/
 sensors.names=temperature,humidity,ir,co,co2,ch4,light,batterycharge,barometricpressure,light1,light2,light3,light4,pir,pressure
 sensors.prefixes=EM_T,EM_H,EM_I,SVal1:,SVal2:,SVal3:,EM_L,BA_C,EM_P,RL1,RL2,RL3,RL4,EM_E,CS
 device.Types=iSense::,airquality::,id::
