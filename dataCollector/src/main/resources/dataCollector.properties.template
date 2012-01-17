@@ -1,7 +1,0 @@
-runtime.ipAddress=
-runtime.port=
-testbed.session=
-sensors.names=temperature,humidity,ir,CO2,CO,CH4,light,batterycharge,barometricpressure,lightz0,lightz1,lightz2,lightz3
-sensors.prefixes=EM_T,EM_H,EM_I,SVal1:,SVal2:,SVal3:,EM_L,BA_C,EM_P,RL0,RL1,RL2,RL3
-device.Types=telosB::,iSense::,airquality::,id::
-
