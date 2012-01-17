@@ -24,9 +24,18 @@ public class DataCollector implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(DataCollector.class);
 
     /**
-     * WebSocket address.
+     * WebSocket address prefix.
      */
-    private static final String WS_URL = "ws://uberdust.cti.gr:80/insertreading.ws";
+    private static final String WS_URL_PREFIX = "ws://";
+
+    /**
+     * WebSocket address suffix.
+     */
+    private static final String WS_URL_SUFFIX = "insertreading.ws";
+    /**
+     * WebSocket address url.
+     */
+    private static String ws_url = "";
 
     /**
      * testbed hostname.
@@ -50,6 +59,14 @@ public class DataCollector implements Runnable {
     public DataCollector() {
         PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
 
+        final StringBuilder wsUrlBuilder = new StringBuilder(WS_URL_PREFIX);
+        wsUrlBuilder.append(PropertyReader.getInstance().getProperties().getProperty("uberdust.server"));
+        wsUrlBuilder.append(":");
+        wsUrlBuilder.append(PropertyReader.getInstance().getProperties().getProperty("uberdust.port"));
+        wsUrlBuilder.append(PropertyReader.getInstance().getProperties().getProperty("uberdust.basepath"));
+        wsUrlBuilder.append(WS_URL_SUFFIX);
+        ws_url = wsUrlBuilder.toString();
+
         readProperties();
 
         connectWS();
@@ -61,7 +78,7 @@ public class DataCollector implements Runnable {
      */
     private void connectWS() {
         try {
-            InsertReadingWebSocketClient.getInstance().connect(WS_URL);
+            InsertReadingWebSocketClient.getInstance().connect(ws_url);
         } catch (Exception e) {
             LOGGER.fatal(e);
         }
