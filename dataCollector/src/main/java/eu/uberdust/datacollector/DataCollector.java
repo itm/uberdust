@@ -1,6 +1,7 @@
 package eu.uberdust.datacollector;
 
 import eu.uberdust.communication.websocket.InsertReadingWebSocketClient;
+import eu.uberdust.util.PropertyReader;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.jboss.netty.bootstrap.ClientBootstrap;
@@ -8,11 +9,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.Executors;
 
 
@@ -32,11 +29,6 @@ public class DataCollector implements Runnable {
     private static final String WS_URL = "ws://uberdust.cti.gr:80/insertreading.ws";
 
     /**
-     * Application property file name.
-     */
-    private static final String PROPERTY_FILE = "dataCollector.properties";
-
-    /**
      * testbed hostname.
      */
     private transient String host;
@@ -47,16 +39,10 @@ public class DataCollector implements Runnable {
     private transient int port;
 
     /**
-     * map of the names used in iSense application to capability names.
-     */
-    private final transient Map<String, String> sensors = new HashMap<String, String>();
-    /**
      * pipeline factory.
      */
     private transient NioClientSocketChannelFactory factory;
     private transient ClientBootstrap bootstrap;
-    private String testbedPrefix;
-    private int testbedId;
 
     /**
      * Default Constructor.
@@ -85,37 +71,10 @@ public class DataCollector implements Runnable {
      * Reads the property file.
      */
     private void readProperties() {
-        final Properties properties = new Properties();
-        try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTY_FILE));
-        } catch (IOException e) {
-            LOGGER.error("No properties file found! dataCollector.properties not found!");
-            return;
-        }
 
-        host = properties.getProperty("runtime.ipAddress");
-        port = Integer.parseInt(properties.getProperty("runtime.port"));
-        testbedPrefix = properties.getProperty("testbed.prefix");
-        LOGGER.info(testbedPrefix);
-        testbedId = Integer.parseInt(properties.getProperty("testbed.id"));
-        LOGGER.info(testbedId);
+        host = PropertyReader.getInstance().getProperties().getProperty("testbed.hostname");
+        port = Integer.parseInt(PropertyReader.getInstance().getProperties().getProperty("testbed.overlay"));
 
-        final String[] sensorsNames = properties.getProperty("sensors.names").split(",");
-        final String[] sensorsPrefixes = properties.getProperty("sensors.prefixes").split(",");
-
-        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: \n");
-        for (int i = 0; i < sensorsNames.length; i++) {
-            sensBuilder.append(sensorsNames[i]).append("[").append(sensorsPrefixes[i]).append("]").append("\n");
-            sensors.put(sensorsPrefixes[i], sensorsNames[i]);
-        }
-        LOGGER.info(sensBuilder);
-
-        final String[] deviceTypes = properties.getProperty("device.Types").split(",");
-        final StringBuilder devBuilder = new StringBuilder("Devices Monitored: \n");
-        for (String deviceType : deviceTypes) {
-            devBuilder.append(deviceType).append("\n");
-        }
-        LOGGER.info(devBuilder);
     }
 
 
@@ -172,12 +131,6 @@ public class DataCollector implements Runnable {
     public void run() {
         factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
         bootstrap = new ClientBootstrap(factory);
-        chPipelineFactory.setSensors(sensors);
-        LOGGER.info("setting testbedPrefix to " + testbedPrefix);
-        chPipelineFactory.setTestbedPrefix(testbedPrefix);
-        LOGGER.info("setting testbedId to " + testbedId);
-        chPipelineFactory.setTestbedId(testbedId);
-        // Configure the event pipeline factory.
         bootstrap.setPipelineFactory(chPipelineFactory);
 
         if (!start()) {

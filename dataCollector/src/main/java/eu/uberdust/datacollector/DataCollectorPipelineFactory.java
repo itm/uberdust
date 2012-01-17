@@ -8,8 +8,6 @@ import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.codec.protobuf.ProtobufDecoder;
 import org.jboss.netty.handler.codec.protobuf.ProtobufEncoder;
 
-import java.util.Map;
-
 import static org.jboss.netty.channel.Channels.pipeline;
 
 /**
@@ -32,17 +30,6 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
      */
     public DataCollectorPipelineFactory(final DataCollector dataCollector) {
         upstreamHandler = new DataCollectorChannelUpstreamHandler(dataCollector);
-    }
-
-    /**
-     * set the sensor map.
-     *
-     * @param sensors a map that contains the sensors monitored
-     */
-    public final void setSensors(final Map<String, String> sensors) {
-        upstreamHandler.setSensors(sensors);
-        upstreamHandler.setTestbedPrefix(testbedPrefix);
-        upstreamHandler.setTestbedId(testbedId);
     }
 
     /**
@@ -76,14 +63,4 @@ public class DataCollectorPipelineFactory implements ChannelPipelineFactory {
 
     }
 
-    public void setTestbedPrefix(String testbedPrefix) {
-        this.testbedPrefix = testbedPrefix;
-        upstreamHandler.setTestbedPrefix(testbedPrefix);
-    }
-
-
-    public void setTestbedId(int testbedId) {
-        this.testbedId = testbedId;
-        upstreamHandler.setTestbedId(testbedId);
-    }
 }

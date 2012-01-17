@@ -32,7 +32,7 @@ public class Reserver {
      * @param nodes the nodes to reserve
      * @return the reservation key
      */
-    public final String reserve(final String[] nodes) {
+    public final String reserve(final String[] nodes) throws ReservervationConflictExceptionException {
         helper.authenticate();
 
         LOGGER.info("|+   Trying to reserve " + nodes.length + " nodes");
@@ -53,9 +53,6 @@ public class Reserver {
             LOGGER.error(e);
             return "";
         } catch (RSExceptionException e) {
-            LOGGER.error(e);
-            return "";
-        } catch (ReservervationConflictExceptionException e) {
             LOGGER.error(e);
             return "";
         }

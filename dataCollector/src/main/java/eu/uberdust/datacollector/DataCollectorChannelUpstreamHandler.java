@@ -7,6 +7,7 @@ import de.uniluebeck.itm.tr.runtime.wsnapp.WSNAppMessages;
 import eu.uberdust.datacollector.parsers.MessageParser;
 import eu.uberdust.datacollector.parsers.WsCommiter;
 import eu.uberdust.reading.NodeReading;
+import eu.uberdust.util.PropertyReader;
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -16,6 +17,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import java.net.ConnectException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,7 +58,7 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
     /**
      * map that contains the sensors monitored.
      */
-    private transient Map<String, String> sensors;
+    private transient Map<String, String> sensors = new HashMap<String, String>();
 
     /**
      * reference to the class that created the handler.
@@ -72,6 +74,25 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
         this.dataCollector = dataCollector;
         messageCounter = 0;
         lastTime = System.currentTimeMillis();
+
+
+        final String sensorNamesString = PropertyReader.getInstance().getProperties().getProperty("sensors.names");
+        final String sensorPrefixesString = PropertyReader.getInstance().getProperties().getProperty("sensors.prefixes");
+
+        final String[] sensorsNamesList = sensorNamesString.split(",");
+        final String[] sensorsPrefixesList = sensorPrefixesString.split(",");
+
+        final StringBuilder sensBuilder = new StringBuilder("Sensors Checked: \n");
+        for (int i = 0; i < sensorsNamesList.length; i++) {
+            sensBuilder.append(sensorsNamesList[i]).append("[").append(sensorsPrefixesList[i]).append("]").append("\n");
+            sensors.put(sensorsPrefixesList[i], sensorsNamesList[i]);
+        }
+        LOGGER.info(sensBuilder);
+
+        testbedPrefix = PropertyReader.getInstance().getProperties().getProperty("testbed.prefix");
+        LOGGER.info(testbedPrefix);
+        testbedId = Integer.parseInt(PropertyReader.getInstance().getProperties().getProperty("wisedb.testbedid"));
+        LOGGER.info(testbedId);
 
         executorService = Executors.newCachedThreadPool();
     }
@@ -164,11 +185,4 @@ public class DataCollectorChannelUpstreamHandler extends SimpleChannelUpstreamHa
         executorService.submit(new MessageParser(toString, sensors, testbedPrefix, testbedId));
     }
 
-    public void setTestbedPrefix(String testbedPrefix) {
-        this.testbedPrefix = testbedPrefix;
-    }
-
-    public void setTestbedId(int testbedId) {
-        this.testbedId = testbedId;
-    }
 }

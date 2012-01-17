@@ -6,6 +6,8 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.jobs.JobResult;
 import de.uniluebeck.itm.wisebed.cmdlineclient.protobuf.ProtobufControllerClient;
 import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
 import eu.uberdust.nodeflasher.TestbedClient;
+import eu.uberdust.util.PropertyReader;
+import eu.wisebed.api.rs.ReservervationConflictExceptionException;
 import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
 import eu.wisebed.api.sm.SecretReservationKey;
 import eu.wisebed.api.sm.UnknownReservationIdException_Exception;
@@ -57,10 +59,17 @@ public class Flasher extends Helper {
     public final void flash(final String[] nodes, final String type) {
 
         LOGGER.info("|+   flashing nodes of type: " + type);
-        final String imagePath = helper.getProperties().getProperty("image." + type);
+        final String imagePath = PropertyReader.getInstance().getProperties().getProperty("image." + type);
         LOGGER.info("|+   set image path to " + imagePath);
 
-        final String reservationKey = reserveNodes(nodes);
+
+        final String reservationKey;
+        try {
+            reservationKey = (new Reserver(this)).reserve(nodes);
+        } catch (ReservervationConflictExceptionException e) {
+            LOGGER.warn("Nodes are already reserved. Aborting...");
+            return;
+        }
         if ("".equals(reservationKey)) {
             return;
         }

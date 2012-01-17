@@ -3,6 +3,7 @@ package eu.uberdust.nodeflasher.helper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import eu.uberdust.util.PropertyReader;
 import eu.wisebed.api.rs.RS;
 import eu.wisebed.api.rs.RSExceptionException;
 import eu.wisebed.api.sm.SessionManagement;
@@ -32,15 +33,7 @@ public class Helper {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(Helper.class);
-    /**
-     * Application property file name.
-     */
-    private static final String PROPERTY_FILE = "nodeFlasher.properties";
 
-    /**
-     * property file.
-     */
-    private transient Properties properties;
     /**
      * TR res system.
      */
@@ -133,36 +126,12 @@ public class Helper {
         return pccHost;
     }
 
-
-    /**
-     * @return the property file to use
-     */
-    public final Properties getProperties() {
-
-        return properties;
-    }
-
     /**
      * Default Constructor.
      */
     public Helper() {
         PropertyConfigurator.configure(Thread.currentThread().getContextClassLoader().getResource("log4j.properties"));
-        parseProperties();
     }
-
-    /**
-     * Parses the property file.
-     */
-    private void parseProperties() {
-        properties = new Properties();
-        try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTY_FILE));
-        } catch (Exception e) {
-            LOGGER.error("|*** No properties file found! nodeFlasher.properties not found!");
-            return;
-        }
-    }
-
 
     /**
      * Authenticates to the testbed authentication system.
@@ -173,9 +142,10 @@ public class Helper {
 
         final Splitter csvSplitter = Splitter.on(",").trimResults().omitEmptyStrings();
 
-        urnPrefixes = Lists.newArrayList(csvSplitter.split(properties.getProperty("testbed.urnprefixes")));
+        final String urnPrefixesString = PropertyReader.getInstance().getProperties().getProperty("testbed.prefix");
+        urnPrefixes = Lists.newArrayList(csvSplitter.split(urnPrefixesString));
 
-        final String passFileName = properties.getProperty("testbed.passwords");
+        final String passFileName = PropertyReader.getInstance().getProperties().getProperty("testbed.passwords");
         FileInputStream fileInputStream = null;
 
         ArrayList<String> passwords = null;
@@ -199,8 +169,8 @@ public class Helper {
             }
         }
 
-        pccHost = properties.getProperty("testbed.protobuf.hostname");
-        pccPort = Integer.parseInt(properties.getProperty("testbed.protobuf.port"));
+        pccHost = PropertyReader.getInstance().getProperties().getProperty("testbed.hostname");
+        pccPort = Integer.parseInt(PropertyReader.getInstance().getProperties().getProperty("testbed.port"));
 
         try {
             Preconditions.checkArgument(
@@ -215,9 +185,9 @@ public class Helper {
         }
 
         // Endpoint URLs of Authentication (SNAA), Reservation (RS) and Experimentation (iWSN) services
-        final String snaaEndpointURL = properties.getProperty("testbed.snaa.endpointurl");
-        final String rsEndpointURL = properties.getProperty("testbed.rs.endpointurl");
-        final String smEndpointURL = properties.getProperty("testbed.sm.endpointurl");
+        final String snaaEndpointURL = PropertyReader.getInstance().getProperties().getProperty("testbed.snaa.endpointurl");
+        final String rsEndpointURL = PropertyReader.getInstance().getProperties().getProperty("testbed.rs.endpointurl");
+        final String smEndpointURL = PropertyReader.getInstance().getProperties().getProperty("testbed.sm.endpointurl");
 
 
         // Retrieve Java proxies of the endpoint URLs above
@@ -251,14 +221,6 @@ public class Helper {
     }
 
     /**
-     * @param nodes The nodes to reserve
-     * @return The resulting Res Key
-     */
-    public final String reserveNodes(final String[] nodes) {
-        return (new Reserver(this)).reserve(nodes);
-    }
-
-    /**
      * Retrieves the list of testbed reservations from the TestbedRuntime RS.
      *
      * @param timeFrom Starting time
@@ -287,7 +249,7 @@ public class Helper {
      */
     public final String[] getNodes(final String nodeType) {
         LOGGER.info("| gotNodes " + nodeType);
-        return properties.getProperty(nodeType).split(",");
+        return PropertyReader.getInstance().getProperties().getProperty(nodeType).split(",");
     }
 
     /**
