@@ -7,6 +7,7 @@ import de.uniluebeck.itm.wisebed.cmdlineclient.wrapper.WSNAsyncWrapper;
 import eu.uberdust.controller.communication.SocketServer;
 import eu.uberdust.controller.protobuf.CommandProtocol;
 import eu.uberdust.uberlogger.UberLogger;
+import eu.uberdust.util.PropertyReader;
 import eu.wisebed.api.common.Message;
 import eu.wisebed.api.sm.ExperimentNotRunningException_Exception;
 import eu.wisebed.api.sm.SessionManagement;
@@ -18,12 +19,10 @@ import org.apache.log4j.PropertyConfigurator;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 
@@ -85,18 +84,11 @@ public class TestbedController {
     }
 
     private void readProperties() {
-        final Properties properties = new Properties();
-        try {
-            properties.load(this.getClass().getClassLoader().getResourceAsStream("testbedController.properties"));
-        } catch (final IOException e) {
-            throw new RuntimeException("No properties file found! dataCollector.properties not found!");
-        }
-
-        secretReservationKeys = properties.getProperty("testbed.secretReservationKeys");
-        sessionManagementEndpointURL = properties.getProperty("testbed.sessionManagementEndpointURL");
-        nodeUrnsToListen = properties.getProperty("testbed.nodeUrns");
-        pccHost = properties.getProperty("testbed.session");
-        pccPort = Integer.parseInt(properties.getProperty("testbed.port"));
+        secretReservationKeys = PropertyReader.getInstance().getProperties().getProperty("testbed.secretReservationKeys");
+        sessionManagementEndpointURL = PropertyReader.getInstance().getProperties().getProperty("testbed.sm.endpointurl");
+        nodeUrnsToListen = PropertyReader.getInstance().getProperties().getProperty("testbed.nodeUrns");
+        pccHost = PropertyReader.getInstance().getProperties().getProperty("testbed.hostname");
+        pccPort = Integer.parseInt(PropertyReader.getInstance().getProperties().getProperty("testbed.port"));
         nodeURNs = Lists.newArrayList(nodeUrnsToListen.split(","));
 
         if (nodeURNs.isEmpty()) {
