@@ -31,4 +31,7 @@ nodes.telosb=urn:wisebed:ctitestbed:0x1c62,urn:wisebed:ctitestbed:0x68d1,urn:wis
 image.telosb=TelosBCollectorApp.ihex
 image.isense=iSenseCollectorApp.bin
 
+#datocontroller properties
+testbed.secretReservationKeys=urn:wisebed:ctitestbed:,C183C1779D6B680A223E2FB23EB43866
+testbed.nodeUrns=urn:wisebed:ctitestbed:0x1ccd
 
