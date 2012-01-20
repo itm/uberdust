@@ -13,7 +13,6 @@ import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractRestController;
 
@@ -114,9 +113,6 @@ public final class ShowTestbedController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
-        LOGGER.info("Remote address: " + request.getRemoteAddr());
-        LOGGER.info("Remote host: " + request.getRemoteHost());
-
         // set command object
         final TestbedCommand command = (TestbedCommand) commandObj;
 
@@ -154,12 +150,5 @@ public final class ShowTestbedController extends AbstractRestController {
         refData.put("links", links);
         refData.put("capabilities", capabilities);
         return new ModelAndView("testbed/show.html", refData);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handleException(Exception ex) {
-        LOGGER.info("Exception found: " + ex);
-        LOGGER.error("Exception found: "+ ex);
-        LOGGER.warn("Exception found " + ex);
     }
 }
