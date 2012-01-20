@@ -6,7 +6,9 @@ import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.LinkController;
 import eu.wisebed.wisedb.controller.NodeController;
+import eu.wisebed.wisedb.controller.SlseController;
 import eu.wisebed.wisedb.controller.TestbedController;
+import eu.wisebed.wisedb.model.Slse;
 import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
@@ -47,8 +49,15 @@ public final class ShowTestbedController extends AbstractRestController {
      */
     private transient NodeController nodeManager;
 
+    private transient SlseController slseManager;
+
+    public void setSlseManager(SlseController slseManager) {
+        this.slseManager = slseManager;
+    }
+
     /**
      * Logger.
+
      */
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
 
@@ -144,6 +153,8 @@ public final class ShowTestbedController extends AbstractRestController {
         // get testbed capabilities
         final List<Capability> capabilities = capabilityManager.list(testbed);
 
+        final List<Slse> slses = slseManager.list(testbed);
+
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
@@ -152,6 +163,7 @@ public final class ShowTestbedController extends AbstractRestController {
         refData.put("nodes", nodes);
         refData.put("links", links);
         refData.put("capabilities", capabilities);
+        refData.put("slses", slses);
         return new ModelAndView("testbed/show.html", refData);
     }
 }

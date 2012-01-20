@@ -11,6 +11,7 @@
 <jsp:useBean id="nodes" scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="links" scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="capabilities" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="slses" scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -164,6 +165,48 @@
                             <tr>
                                 <td>
                                     <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability.name}"/>"><c:out value="${capability.name}"/></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td style="vertical-align:top">
+            <p>
+                <a href="<c:url value="/rest/testbed/${testbed.id}/slse"/>">Slses</a>
+            </p>
+            <c:choose>
+                <c:when test="${slses == null || fn:length(slses) == 0 }">
+                    <p style="color : red">No slses found for <c:out value="${testbed.name}"/></p>
+                </c:when>
+                <c:otherwise>
+                    <table>
+                        <c:forEach items="${slses}" var="slse">
+                            <tr>
+                                <td>
+                                    <a href="<c:url value="/rest/testbed/${testbed.id}/slse/${slse.name}/"/>"><c:out value="${slse.name}"/></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td style="vertical-align:top">
+            <p>
+                <a href="<c:url value="/rest/testbed/${testbed.id}/inse"/>">Inses</a>
+            </p>
+            <c:choose>
+                <c:when test="${inses == null || fn:length(inses) == 0 }">
+                    <p style="color : red">No inses found for <c:out value="${testbed.name}"/></p>
+                </c:when>
+                <c:otherwise>
+                    <table>
+                        <c:forEach items="${inses}" var="inse">
+                            <tr>
+                                <td>
+                                    <a href="<c:url value="/rest/testbed/${testbed.id}/inses/${inse.name}/"/>"><c:out value="${inse.name}"/></a>
                                 </td>
                             </tr>
                         </c:forEach>

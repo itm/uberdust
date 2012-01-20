@@ -111,6 +111,8 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/link/*/*/capability/*/insert/timestamp/*/reading/*/stringreading/*/">
                     linkCapabilityInsertReadingController
                 </prop>
+                <!-- Slse Controllers -->
+                <prop key="GET /testbed/*/slse/*/">showSlseController</prop>
 
                 <!-- Send Command Controller -->
                 <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
@@ -182,6 +184,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="nodeManager" ref="nodeManager"/>
         <property name="linkManager" ref="linkManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
+        <property name="slseManager" ref="slseManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
@@ -253,7 +256,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!-- List Available Nodes Raw Text Controller -->
     <bean name="listNodesController" class="eu.uberdust.rest.controller.ListNodesController">
-        <property name="commandClass" value="eu.uberdust.command.NodeCommand" />
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/raw"/>
@@ -261,7 +264,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!-- List Available Nodes JSON Controller -->
     <bean name="listNodesJSONController" class="eu.uberdust.rest.controller.ListNodesJSONController">
-        <property name="commandClass" value="eu.uberdust.command.NodeCommand" />
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
         <property name="uriPattern" value="/testbed/{testbedId}/node/json"/>
@@ -386,7 +389,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     </bean>
 
     <!-- List Available Capabilities JSON Controller -->
-        <bean name="listCapabilitiesJSONController" class="eu.uberdust.rest.controller.ListCapabilitiesJSONController">
+    <bean name="listCapabilitiesJSONController" class="eu.uberdust.rest.controller.ListCapabilitiesJSONController">
         <property name="commandClass" value="eu.uberdust.command.CapabilityCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="capabilityManager" ref="capabilityManager"/>
@@ -592,6 +595,26 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="uriPattern"
                   value="/testbed/{testbedId}/link/{sourceId}/{targetId}/capability/{capabilityId}/insert/timestamp/{timestamp}/reading/{reading}/stringreading/{stringReading}/"/>
     </bean>
+
+    <!-- Slse Controllers -->
+    <bean name="showSlseController"
+          class="eu.uberdust.rest.controller.ShowSlseController">
+        <property name="commandClass" value="eu.uberdust.command.SlseCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="slseManager" ref="slseManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/slse/{slseId}"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="slse/show.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="slse/show.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
 
     <!-- Send Commmand Controller -->
     <bean name="sendCommandController" class="eu.uberdust.rest.controller.SendCommandController">

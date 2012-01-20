@@ -32,6 +32,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <value>eu/wisebed/wisedb/model/Testbed.hbm.xml</value>
                 <value>eu/wisebed/wisedb/model/LastNodeReading.hbm.xml</value>
                 <value>eu/wisebed/wisedb/model/LastLinkReading.hbm.xml</value>
+                <value>eu/wisebed/wisedb/model/Slse.hbm.xml</value>
             </list>
         </property>
         <!-- Also set of hibernate properties -->
@@ -156,6 +157,14 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     </bean>
     <bean id="capabilityManagerTarget"
           class="eu.wisebed.wisedb.controller.CapabilityController"
+          parent="abstractManager"
+          factory-method="getInstance"/>
+    <!-- slseManager using the above transaction managment proxy -->
+    <bean id="slseManager" parent="proxyTemplate">
+        <property name="target" ref="slseManagerTarget"/>
+    </bean>
+    <bean id="slseManagerTarget"
+          class="eu.wisebed.wisedb.controller.SlseController"
           parent="abstractManager"
           factory-method="getInstance"/>
 
