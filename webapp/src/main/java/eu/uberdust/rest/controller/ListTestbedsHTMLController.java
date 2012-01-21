@@ -59,13 +59,20 @@ public final class ListTestbedsHTMLController extends AbstractRestController {
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors) {
 
+
         // testbed list
         final List<Testbed> testbeds = testbedManager.list();
+        final Map<String, Long> nodesCount = testbedManager.countNodes();
+        final Map<String, Long> linksCount = testbedManager.countLinks();
+        final Map<String, Long> slsesCount = testbedManager.countSlses();
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
         refData.put("testbeds", testbeds);
+        refData.put("nodesCount", nodesCount);
+        refData.put("linksCount", linksCount);
+        refData.put("slsesCount", slsesCount);
         return new ModelAndView("testbed/list.html", refData);
     }
 }

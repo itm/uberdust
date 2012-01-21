@@ -1,5 +1,6 @@
 package eu.uberdust.rest.controller;
 
+import com.googlecode.ehcache.annotations.Cacheable;
 import eu.uberdust.command.TestbedCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
@@ -13,6 +14,7 @@ import eu.wisebed.wisedb.model.Testbed;
 import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
 import eu.wisebed.wiseml.model.setup.Node;
+import net.sf.ehcache.CacheManager;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -57,7 +59,6 @@ public final class ShowTestbedController extends AbstractRestController {
 
     /**
      * Logger.
-
      */
     private static final Logger LOGGER = Logger.getLogger(ShowTestbedController.class);
 
@@ -122,6 +123,18 @@ public final class ShowTestbedController extends AbstractRestController {
                                   final Object commandObj, final BindException errors)
             throws TestbedNotFoundException, InvalidTestbedIdException {
 
+
+        LOGGER.info("nodeslist cache exists : " + CacheManager.getInstance().cacheExists("nodeslist"));
+        if (CacheManager.getInstance().cacheExists("nodeslist")) {
+            LOGGER.info("nodeslist cache size : " + CacheManager.getInstance().getCache("nodeslist").getKeys().size());
+        }
+        String[] caches = CacheManager.getInstance().getCacheNames();
+
+        LOGGER.info("TotalCaches : " + caches.length);
+        for (String cach : caches) {
+            LOGGER.info("Cache: " + cach + " contains : " + CacheManager.getInstance().getCache(cach).getKeys().size());
+        }
+
         LOGGER.info("Remote address: " + request.getRemoteAddr());
         LOGGER.info("Remote host: " + request.getRemoteHost());
 
@@ -145,7 +158,7 @@ public final class ShowTestbedController extends AbstractRestController {
         }
 
         // get testbed nodes
-        final List<Node> nodes = nodeManager.list(testbed);
+        final List<Node> nodes = getNodes(testbed.getId());
 
         // get testbed links
         final List<Link> links = linkManager.list(testbed);
@@ -165,5 +178,12 @@ public final class ShowTestbedController extends AbstractRestController {
         refData.put("capabilities", capabilities);
         refData.put("slses", slses);
         return new ModelAndView("testbed/show.html", refData);
+    }
+
+    @Cacheable(cacheName = "nodeListsCache")
+    List<Node> getNodes(int testbedId) {
+
+
+        return nodeManager.list(testbedManager.getByID(testbedId));
     }
 }

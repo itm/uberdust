@@ -7,6 +7,9 @@
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <jsp:useBean id="testbeds" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="nodesCount" scope="request" class="java.util.HashMap"/>
+<jsp:useBean id="linksCount" scope="request" class="java.util.HashMap"/>
+<jsp:useBean id="slsesCount" scope="request" class="java.util.HashMap"/>
 
 <html>
 <head>
@@ -35,8 +38,9 @@
                     <td>
                         <a href="<c:url value="/rest/testbed/${testbed.id}"/>"><c:out value="${testbed.name}"/></a>
                     </td>
-                    <td>Nodes (<c:out value="${fn:length(testbed.setup.nodes)}"/>)</td>
-                    <td>Links (<c:out value="${fn:length(testbed.setup.link)}"/>)</td>
+                    <td>Nodes (<c:out value="${nodesCount[testbed.name]}"/>)</td>
+                    <td>Links (<c:out value="${linksCount[testbed.name]}"/>)</td>
+                    <td>Slses (<c:out value="${slsesCount[testbed.name]}"/>)</td>
                 </tr>
             </c:forEach>
             </tbody>
