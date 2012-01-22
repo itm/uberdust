@@ -97,7 +97,7 @@ public final class SendCommandController extends AbstractRestController {
         // build command and send it through the socket stream
         final CommandProtocol.Command cmd = CommandProtocol.Command.newBuilder()
                 .setDestination(command.getDestination())
-                .setPayload(ByteString.copyFromUtf8(command.getPayload()))
+                .setPayload(command.getPayload())
                 .build();
         cmd.writeTo(kkSocket.getOutputStream());
 
