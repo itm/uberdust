@@ -4,16 +4,9 @@ import com.googlecode.ehcache.annotations.Cacheable;
 import eu.uberdust.command.TestbedCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
-import eu.wisebed.wisedb.controller.CapabilityController;
-import eu.wisebed.wisedb.controller.LinkController;
-import eu.wisebed.wisedb.controller.NodeController;
-import eu.wisebed.wisedb.controller.SlseController;
-import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.model.Slse;
+import eu.wisebed.wisedb.controller.*;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Capability;
 import eu.wisebed.wiseml.model.setup.Link;
-import eu.wisebed.wiseml.model.setup.Node;
 import net.sf.ehcache.CacheManager;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
@@ -156,18 +149,19 @@ public final class ShowTestbedController extends AbstractRestController {
             // if no testbed is found throw exception
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
-
+        long millis = System.currentTimeMillis();
+        LOGGER.info("here @ " + (System.currentTimeMillis() - millis));
         // get testbed nodes
-        final List<Node> nodes = getNodes(testbed.getId());
-
+        final List<String> nodes = getNodes(testbed.getId());
+        LOGGER.info("nodes @ " + (System.currentTimeMillis() - millis));
         // get testbed links
         final List<Link> links = linkManager.list(testbed);
-
+        LOGGER.info("links @ " + (System.currentTimeMillis() - millis));
         // get testbed capabilities
-        final List<Capability> capabilities = capabilityManager.list(testbed);
-
-        final List<Slse> slses = slseManager.list(testbed);
-
+        final List<String> capabilities = capabilityManager.listNames(testbed);
+        LOGGER.info("capabilities @ " + (System.currentTimeMillis() - millis));
+        final List<String> slses = slseManager.listNames(testbed);
+        LOGGER.info("slses @ " + (System.currentTimeMillis() - millis));
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();
 
@@ -177,13 +171,14 @@ public final class ShowTestbedController extends AbstractRestController {
         refData.put("links", links);
         refData.put("capabilities", capabilities);
         refData.put("slses", slses);
+        LOGGER.info("return @ " + (System.currentTimeMillis() - millis));
         return new ModelAndView("testbed/show.html", refData);
     }
 
     @Cacheable(cacheName = "nodeListsCache")
-    List<Node> getNodes(int testbedId) {
+    List<String> getNodes(int testbedId) {
+        LOGGER.info("getNodes@" + testbedId);
 
-
-        return nodeManager.list(testbedManager.getByID(testbedId));
+        return nodeManager.listNames(testbedManager.getByID(testbedId));
     }
 }

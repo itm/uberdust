@@ -36,8 +36,8 @@
             <c:forEach items="${capabilities}" var="capability">
                 <tr>
                     <td>
-                        <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability.name}"/>"><c:out
-                                value="${capability.name}"/></a>
+                        <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability}"/>"><c:out
+                                value="${capability}"/></a>
                     </td>
                 </tr>
             </c:forEach>

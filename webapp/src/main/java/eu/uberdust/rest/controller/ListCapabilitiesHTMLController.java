@@ -6,7 +6,6 @@ import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.CapabilityController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Capability;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -101,7 +100,7 @@ public final class ListCapabilitiesHTMLController extends AbstractRestController
             throw new TestbedNotFoundException("Cannot find testbed [" + testbedId + "].");
         }
         // get testbed's capabilities
-        final List<Capability> capabilities = capabilityManager.list(testbed);
+        final List<String> capabilities = capabilityManager.listNames(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

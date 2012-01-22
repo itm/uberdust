@@ -121,7 +121,7 @@
                         <c:forEach items="${nodes}" var="node">
                             <tr>
                                 <td>
-                                    <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}"/>"><c:out value="${node.id}"/></a>
+                                    <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node}"/>"><c:out value="${node}"/></a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -164,7 +164,7 @@
                         <c:forEach items="${capabilities}" var="capability">
                             <tr>
                                 <td>
-                                    <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability.name}"/>"><c:out value="${capability.name}"/></a>
+                                    <a href="<c:url value="/rest/testbed/${testbed.id}/capability/${capability}"/>"><c:out value="${capability}"/></a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -185,7 +185,7 @@
                         <c:forEach items="${slses}" var="slse">
                             <tr>
                                 <td>
-                                    <a href="<c:url value="/rest/testbed/${testbed.id}/slse/${slse.name}/"/>"><c:out value="${slse.name}"/></a>
+                                    <a href="<c:url value="/rest/testbed/${testbed.id}/slse/${slse}/"/>"><c:out value="${slse}"/></a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -206,7 +206,7 @@
                         <c:forEach items="${inses}" var="inse">
                             <tr>
                                 <td>
-                                    <a href="<c:url value="/rest/testbed/${testbed.id}/inses/${inse.name}/"/>"><c:out value="${inse.name}"/></a>
+                                    <a href="<c:url value="/rest/testbed/${testbed.id}/inses/${inse}/"/>"><c:out value="${inse}"/></a>
                                 </td>
                             </tr>
                         </c:forEach>

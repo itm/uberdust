@@ -112,7 +112,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                     linkCapabilityInsertReadingController
                 </prop>
                 <!-- Slse Controllers -->
+                <prop key="GET /testbed/*/slse">listSlsesHTMLController</prop>
                 <prop key="GET /testbed/*/slse/*/">showSlseController</prop>
+
 
                 <!-- Send Command Controller -->
                 <prop key="GET /sendCommand/destination/*/payload/*">sendCommandController</prop>
@@ -614,6 +616,26 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             </bean>
         </property>
     </bean>
+
+
+    <!-- List available Capabilities HTML Controller -->
+    <bean name="listSlsesHTMLController" class="eu.uberdust.rest.controller.ListSlsesHTMLController">
+        <property name="commandClass" value="eu.uberdust.command.SlseCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="slseManager" ref="slseManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/slse"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="slse/list.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="slse/list.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
 
 
     <!-- Send Commmand Controller -->

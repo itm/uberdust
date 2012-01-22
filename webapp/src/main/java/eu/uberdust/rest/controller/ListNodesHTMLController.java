@@ -6,7 +6,6 @@ import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -99,7 +98,7 @@ public final class ListNodesHTMLController extends AbstractRestController {
         }
 
         // get testbed's nodes
-        final List<Node> nodes = nodeManager.list(testbed);
+        final List<String> nodes = nodeManager.listNames(testbed);
 
         // Prepare data to pass to jsp
         final Map<String, Object> refData = new HashMap<String, Object>();

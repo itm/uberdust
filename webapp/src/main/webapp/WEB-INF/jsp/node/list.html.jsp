@@ -43,8 +43,8 @@
             <c:forEach items="${nodes}" var="node">
                 <tr>
                     <td>
-                        <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}"/>"><c:out
-                                value="${node.id}"/></a>
+                        <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node}"/>"><c:out
+                                value="${node}"/></a>
                     </td>
                 </tr>
             </c:forEach>
