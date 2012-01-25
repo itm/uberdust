@@ -17,6 +17,7 @@
     <modules>
         <module>WebSocketsLibrary</module>
         <module>UberLogger</module>
+        <module>RestFullApiClient</module>
     </modules>
 
 
