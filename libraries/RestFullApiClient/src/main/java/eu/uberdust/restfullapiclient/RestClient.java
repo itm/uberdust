@@ -19,7 +19,7 @@ public class RestClient {
      * Static Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(RestClient.class);
-    private static final String endpoint = "http://localhost/end.php";
+    private static final String endpoint = "http://spitfire-project.eu/incontextsensing/link";
 
     /**
      * static instance(ourInstance) initialized as null.
