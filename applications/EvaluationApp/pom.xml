@@ -2,18 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>uberdust</groupId>
         <artifactId>applications</artifactId>
+        <groupId>uberdust</groupId>
         <version>1.0</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>uberdust</groupId>
-    <artifactId>0.I.11</artifactId>
+    <artifactId>EvaluationApp</artifactId>
     <version>1.0</version>
-    <name>0.I.11</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -61,48 +59,13 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <target>
-                                <scp file="${project.build.directory}/${artifactId}-${version}.one-jar.jar"
-                                     todir="uberuser@lime.cti.gr:/home/uberuser/applications"
-                                     keyfile="${user.home}/.ssh/id_rsa"
-                                     trust="true" verbose="true" port="22"
-                                     passphrase=""/>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant-jsch</artifactId>
-                        <version>1.7.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.jcraft</groupId>
-                        <artifactId>jsch</artifactId>
-                        <version>0.1.38</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <plugin>
                 <groupId>org.dstovall</groupId>
                 <artifactId>onejar-maven-plugin</artifactId>
                 <version>1.4.1</version>
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>eu.uberdust.lights.LightController</mainClass>
+                            <mainClass>eu.uberdust.MainApp</mainClass>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>
@@ -121,7 +84,6 @@
         </plugins>
     </build>
 
-
     <distributionManagement>
         <!-- use the following if you're not using a snapshot version. -->
         <repository>
@@ -137,4 +99,5 @@
             <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
         </pluginRepository>
     </pluginRepositories>
+
 </project>
