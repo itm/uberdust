@@ -1,7 +1,7 @@
 package eu.uberdust.rest.controller;
 
 import com.sun.syndication.io.FeedException;
-import eu.uberdust.command.NodeCommand;
+import eu.uberdust.command.SlseCommand;
 import eu.uberdust.rest.exception.InvalidTestbedIdException;
 import eu.uberdust.rest.exception.NodeNotFoundException;
 import eu.uberdust.rest.exception.TestbedNotFoundException;
@@ -9,10 +9,10 @@ import eu.uberdust.util.RdfConverter;
 import eu.wisebed.wisedb.controller.LastNodeReadingController;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.SemanticController;
+import eu.wisebed.wisedb.controller.SlseController;
 import eu.wisebed.wisedb.controller.TestbedController;
-import eu.wisebed.wisedb.model.Semantic;
+import eu.wisebed.wisedb.model.Slse;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,12 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 
 /**
  * Controller class that returns the position of a node in GeoRSS format.
  */
-public final class ShowNodeRdfController extends AbstractRestController {
+public final class ShowSlseRdfController extends AbstractRestController {
 
     /**
      * Tested persistence manager.
@@ -38,9 +37,14 @@ public final class ShowNodeRdfController extends AbstractRestController {
      * Node persistence manager.
      */
     private transient NodeController nodeManager;
-
     private transient LastNodeReadingController lastNodeReadingManager;
     private transient SemanticController semanticManager;
+
+    public void setSlseManager(SlseController slseManager) {
+        this.slseManager = slseManager;
+    }
+
+    private transient SlseController slseManager;
 
     public void setSemanticManager(SemanticController semanticManager) {
         this.semanticManager = semanticManager;
@@ -49,12 +53,12 @@ public final class ShowNodeRdfController extends AbstractRestController {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ShowNodeRdfController.class);
+    private static final Logger LOGGER = Logger.getLogger(ShowSlseRdfController.class);
 
     /**
      * Constructor.
      */
-    public ShowNodeRdfController() {
+    public ShowSlseRdfController() {
         super();
 
         // Make sure to set which method this controller will support.
@@ -91,11 +95,15 @@ public final class ShowNodeRdfController extends AbstractRestController {
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return http servlet response.
-     * @throws IOException               an IOException exception.
-     * @throws FeedException             a FeedException exception.
-     * @throws NodeNotFoundException     NodeNotFoundException exception.
-     * @throws TestbedNotFoundException  TestbedNotFoundException exception.
-     * @throws InvalidTestbedIdException InvalidTestbedIdException exception.
+     * @throws java.io.IOException an IOException exception.
+     * @throws com.sun.syndication.io.FeedException
+     *                             a FeedException exception.
+     * @throws eu.uberdust.rest.exception.NodeNotFoundException
+     *                             NodeNotFoundException exception.
+     * @throws eu.uberdust.rest.exception.TestbedNotFoundException
+     *                             TestbedNotFoundException exception.
+     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException
+     *                             InvalidTestbedIdException exception.
      */
     @SuppressWarnings("unchecked")
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
@@ -104,7 +112,7 @@ public final class ShowNodeRdfController extends AbstractRestController {
             InvalidTestbedIdException {
 
         // set command object
-        final NodeCommand command = (NodeCommand) commandObj;
+        final SlseCommand command = (SlseCommand) commandObj;
 
         // a specific testbed is requested by testbed Id
         int testbedId;
@@ -123,10 +131,10 @@ public final class ShowNodeRdfController extends AbstractRestController {
         }
 
         // look up node
-        final Node node = nodeManager.getByID(command.getNodeId());
-        if (node == null) {
+        final Slse slse = slseManager.getByID(command.getSlseId());
+        if (slse == null) {
             // if no node is found throw exception
-            throw new NodeNotFoundException("Cannot find testbed [" + command.getNodeId() + "].");
+            throw new NodeNotFoundException("Cannot find testbed [" + command.getSlseId() + "].");
         }
 
         // current host base URL
@@ -141,11 +149,8 @@ public final class ShowNodeRdfController extends AbstractRestController {
         final Writer output = (response.getWriter());
 
 
-        final List<Semantic> semanticList = semanticManager.listByNode(node);
-
-        final String rdfString = RdfConverter.getRdf(node, request.getRequestURL().toString(), semanticList);
-
-        output.write(rdfString);
+        final String rdfString = RdfConverter.getSlseRdf(slse, request.getRequestURL().toString());
+        output.append(rdfString);
         output.flush();
         output.close();
 

@@ -39,7 +39,7 @@
         <td><c:out value="${node.description}"/></td>
     </tr>
     <tr>
-        <td>Capabilities(<c:out value="${fn:length(capabilities)}"/>)</td>
+        <td><a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/capabilities" />">Capabilities</a>(<c:out value="${fn:length(capabilities)}"/>)</td>
         <td>
             <table class="readings">
                 <tbody>
@@ -93,6 +93,17 @@
             <span style="color : red">Not implemented yet</span>
         </td>
     </tr>
+     <tr>
+            <td>Rdf description</td>
+            <td>
+                <a href="<c:url value="/rest/testbed/${testbed.id}/node/${node.id}/rdf"/>">
+                    <img src="http://www.mkbergman.com/wp-content/themes/ai3/images/2009Posts/090326_rdf_200.png" width="20px">
+                    Rdf description
+                </a>
+
+
+            </td>
+        </tr>
     </tbody>
 </table>
 <%@include file="/footer.jsp" %>

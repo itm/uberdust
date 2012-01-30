@@ -110,6 +110,8 @@
         <td style="vertical-align:top">
             <p>
                 <a href="<c:url value="/rest/testbed/${testbed.id}/node"/>">Nodes</a>
+                (<a href="<c:url value="/rest/testbed/${testbed.id}/node/raw"/>">raw</a>,
+                <a href="<c:url value="/rest/testbed/${testbed.id}/node/json"/>">json</a>)
             </p>
             <c:choose>
                 <c:when test="${nodes == null || fn:length(nodes) == 0}">
@@ -133,6 +135,7 @@
         <td style="vertical-align:top">
             <p>
                 <a href="<c:url value="/rest/testbed/${testbed.id}/link"/>">Links</a>
+                (<a href="<c:url value="/rest/testbed/${testbed.id}/link/raw"/>">raw</a>)
             </p>
             <c:choose>
                 <c:when test="${links == null || fn:length(links) == 0 }">
@@ -154,6 +157,7 @@
         <td style="vertical-align:top">
             <p>
                 <a href="<c:url value="/rest/testbed/${testbed.id}/capability"/>">Capabilities</a>
+                (<a href="<c:url value="/rest/testbed/${testbed.id}/capability/raw"/>">raw</a>)
             </p>
             <c:choose>
                 <c:when test="${capabilities == null || fn:length(capabilities) == 0 }">
@@ -175,6 +179,8 @@
         <td style="vertical-align:top">
             <p>
                 <a href="<c:url value="/rest/testbed/${testbed.id}/slse"/>">Slses</a>
+                (<a href="<c:url value="/rest/testbed/${testbed.id}/slse/raw"/>">raw</a>
+                <a href="<c:url value="/rest/testbed/${testbed.id}/createslse"/>">create</a>)
             </p>
             <c:choose>
                 <c:when test="${slses == null || fn:length(slses) == 0 }">
@@ -196,6 +202,7 @@
         <td style="vertical-align:top">
             <p>
                 <a href="<c:url value="/rest/testbed/${testbed.id}/inse"/>">Inses</a>
+                (<a href="<c:url value="/rest/testbed/${testbed.id}/inse/raw"/>">raw</a>)
             </p>
             <c:choose>
                 <c:when test="${inses == null || fn:length(inses) == 0 }">

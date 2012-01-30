@@ -107,5 +107,6 @@ public final class ListNodesHTMLController extends AbstractRestController {
         refData.put("testbed", testbed);
         refData.put("nodes", nodes);
         return new ModelAndView("node/list.html", refData);
+
     }
 }

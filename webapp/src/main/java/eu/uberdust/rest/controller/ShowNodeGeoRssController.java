@@ -52,7 +52,7 @@ public final class ShowNodeGeoRssController extends AbstractRestController {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ShowNodeGeoRssController.class);
+    private static final Logger LOGGER = Logger.getLogger(ShowNodeRdfController.class);
 
     /**
      * Constructor.

@@ -33,6 +33,16 @@
         <td>
             <a href="<c:url value="/rest/testbed/${testbed.id}/slse/${slse.name}"/>"><c:out value="${slse.name}"/></a>
         </td>
+
+
+    </tr>
+    <tr>
+        <td>
+            <a href="<c:url value="/rest/testbed/${testbed.id}/slse/${slse.name}/rdf"/>">
+                <img src="http://www.mkbergman.com/wp-content/themes/ai3/images/2009Posts/090326_rdf_200.png" width="20px">
+                Rdf description
+            </a>
+        </td>
     </tr>
     <tr>
         <td></td>

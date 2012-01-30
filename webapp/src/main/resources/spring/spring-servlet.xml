@@ -48,10 +48,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <prop key="GET /testbed/*/node/*">showNodeController</prop>
                 <prop key="GET /testbed/*/node/*/georss">showNodeGeoRssController</prop>
                 <prop key="GET /testbed/*/node/*/kml">showNodeKmlController</prop>
+                <prop key="GET /testbed/*/node/*/rdf">showNodeRdfController</prop>
+                <prop key="GET /testbed/*/node/*/semantics">showNodeSemanticsController</prop>
                 <prop key="GET /testbed/*/node/*/insert/description/*/">nodeInsertDescriptionController</prop>
 
                 <!-- Link Related Controllers -->
-                <prop key="GET /testbed/*/link">listLinksHTMLController</prop>
+                <prop key="GET /testbed/*/link/html">listLinksHTMLController</prop>
                 <prop key="GET /testbed/*/link/raw">listLinksController</prop>
                 <prop key="GET /testbed/*/link/json">listLinksJSONController</prop>
                 <prop key="GET /testbed/*/link/*/*">showLinkController</prop>
@@ -66,6 +68,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 </prop>
 
                 <!-- Node/Capability Controllers for readings -->
+                <prop key="GET /testbed/*/node/*/capabilities">listNodeCapabilitiesController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/html">nodeCapabilityHTMLController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/html/limit/*">nodeCapabilityHTMLController</prop>
                 <prop key="GET /testbed/*/node/*/capability/*/tabdelimited">nodeCapabilityTabDelimitedController</prop>
@@ -114,6 +117,9 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                 <!-- Slse Controllers -->
                 <prop key="GET /testbed/*/slse">listSlsesHTMLController</prop>
                 <prop key="GET /testbed/*/slse/*/">showSlseController</prop>
+                <prop key="GET /testbed/*/slse/*/rdf">showSlseRdfController</prop>
+                <prop key="GET /testbed/*/createslse">createSlseController</prop>
+                <prop key="GET /testbed/*/createslse/">docreateSlseController</prop>
 
 
                 <!-- Send Command Controller -->
@@ -243,7 +249,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/node/"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/html"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="node/list.html"/>
@@ -290,8 +296,23 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         </property>
     </bean>
 
+    <bean name="showNodeRdfController" class="eu.uberdust.rest.controller.ShowNodeRdfController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="semanticManager" ref="semanticManager"/>
+        <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/rdf"/>
+    </bean>
+    <bean name="showNodeSemanticsController" class="eu.uberdust.rest.controller.NodeSemanticsController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="semanticManager" ref="semanticManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/node/{nodeId}/semantics"/>
+    </bean>
     <!-- Show Node GeoRss Controller -->
-    <bean name="showNodeGeoRssController" class="eu.uberdust.rest.controller.ShowNodeGeoRssController">
+    <bean name="showNodeGeoRssController" class="eu.uberdust.rest.controller.ShowNodeRdfController">
         <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="nodeManager" ref="nodeManager"/>
@@ -317,7 +338,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         <property name="commandClass" value="eu.uberdust.command.LinkCommand"/>
         <property name="testbedManager" ref="testbedManager"/>
         <property name="linkManager" ref="linkManager"/>
-        <property name="uriPattern" value="/testbed/{testbedId}/link/"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/link/html"/>
         <property name="viewNameSelector">
             <bean class="org.springframework.web.servlet.RestViewNameSelector">
                 <property name="defaultViewName" value="link/list.html"/>
@@ -438,6 +459,16 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
                   value="/testbed/{testbedId}/capability/{capabilityName}/insert/description/{description}/"/>
 
     </bean>
+
+
+    <bean name="listNodeCapabilitiesController" class="eu.uberdust.rest.controller.ListNodeCapabilitiesController">
+        <property name="commandClass" value="eu.uberdust.command.NodeCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="uriPattern"
+                  value="/testbed/{testbedId}/node/{nodeId}/capabilities"/>
+    </bean>
+
 
     <!-- Node-Capability Controller for HTML Format -->
     <bean name="nodeCapabilityHTMLController" class="eu.uberdust.rest.controller.NodeCapabilityHTMLController">
@@ -617,6 +648,52 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
         </property>
     </bean>
 
+    <bean name="createSlseController"
+          class="eu.uberdust.rest.controller.CreateSlseController">
+        <property name="commandClass" value="eu.uberdust.command.CreateSlseCommand"/>
+
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/createslse"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="slse/create.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="slse/create.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean name="docreateSlseController"
+          class="eu.uberdust.rest.controller.CreateSlseController">
+        <property name="commandClass" value="eu.uberdust.command.CreateSlseCommand"/>
+
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/createslse/"/>
+        <property name="viewNameSelector">
+            <bean class="org.springframework.web.servlet.RestViewNameSelector">
+                <property name="defaultViewName" value="slse/create.html"/>
+                <property name="views">
+                    <map>
+                        <entry key="text/html" value="slse/create.html"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean name="showSlseRdfController"
+          class="eu.uberdust.rest.controller.ShowSlseRdfController">
+        <property name="commandClass" value="eu.uberdust.command.SlseCommand"/>
+        <property name="testbedManager" ref="testbedManager"/>
+        <property name="nodeManager" ref="nodeManager"/>
+        <property name="lastNodeReadingManager" ref="lastNodeReadingManager"/>
+        <property name="semanticManager" ref="semanticManager"/>
+        <property name="slseManager" ref="slseManager"/>
+        <property name="uriPattern" value="/testbed/{testbedId}/slse/{slseId}/rdf"/>
+    </bean>
 
     <!-- List available Capabilities HTML Controller -->
     <bean name="listSlsesHTMLController" class="eu.uberdust.rest.controller.ListSlsesHTMLController">
@@ -635,7 +712,6 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             </bean>
         </property>
     </bean>
-
 
 
     <!-- Send Commmand Controller -->

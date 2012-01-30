@@ -9,8 +9,6 @@ import org.apache.log4j.PropertyConfigurator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 
 public class RestClient {
@@ -51,32 +49,25 @@ public class RestClient {
 
 
     public static void main(final String[] args) {
-        RestClient.getInstance().convert("observed_property", "temperature");
+        final String response = RestClient.getInstance().convert("observed_property", "temperature");
+        System.out.println(response);
     }
 
     public String convert(final String key, final String value) {
-
-
-        // Construct data
-        String data = null;
-        try {
-            data = URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
+        System.out.println("test");
 
         HttpClient client = new HttpClient();
         client.getParams().setParameter("http.useragent", "Test Client");
 
         BufferedReader br = null;
+        System.out.println("test");
 
         PostMethod method = new PostMethod(endpoint);
         method.addParameter(key, value);
-
+        System.out.println("here");
         try {
             int returnCode = client.executeMethod(method);
-
+            System.out.println(returnCode);
             if (returnCode == HttpStatus.SC_NOT_IMPLEMENTED) {
                 System.err.println("The Post method is not implemented by this URI");
                 // still consume the response body

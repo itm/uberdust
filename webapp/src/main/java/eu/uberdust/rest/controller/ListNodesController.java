@@ -6,7 +6,6 @@ import eu.uberdust.rest.exception.TestbedNotFoundException;
 import eu.wisebed.wisedb.controller.NodeController;
 import eu.wisebed.wisedb.controller.TestbedController;
 import eu.wisebed.wisedb.model.Testbed;
-import eu.wisebed.wiseml.model.setup.Node;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,11 +18,11 @@ import java.io.Writer;
 import java.util.List;
 
 /**
- * Controller class that returns a list of links for a given testbed in raw text format.
+ * Controller class that returns a list of links for a given testbed in HTML format.
  */
 public final class ListNodesController extends AbstractRestController {
 
-     /**
+    /**
      * Testbed persistence manager.
      */
     private transient TestbedController testbedManager;
@@ -74,13 +73,12 @@ public final class ListNodesController extends AbstractRestController {
      * @param commandObj command object.
      * @param errors     BindException exception.
      * @return response http servlet response.
-     * @throws eu.uberdust.rest.exception.InvalidTestbedIdException an InvalidTestbedIdException exception.
-     * @throws eu.uberdust.rest.exception.TestbedNotFoundException  an TestbedNotFoundException exception.
-     * @throws IOException IO Exception.
+     * @throws InvalidTestbedIdException an InvalidTestbedIdException exception.
+     * @throws TestbedNotFoundException  an TestbedNotFoundException exception.
      */
     protected ModelAndView handle(final HttpServletRequest request, final HttpServletResponse response,
                                   final Object commandObj, final BindException errors)
-            throws TestbedNotFoundException, InvalidTestbedIdException, IOException {
+            throws TestbedNotFoundException, InvalidTestbedIdException {
 
         // get command object
         final NodeCommand command = (NodeCommand) commandObj;
@@ -100,23 +98,35 @@ public final class ListNodesController extends AbstractRestController {
         }
 
         // get testbed's nodes
-        final List<Node> nodes = nodeManager.list(testbed);
+        final List<String> nodes = nodeManager.listNames(testbed);
 
+        final String url = request.getRequestURL().toString();
 
         // write on the HTTP response
         response.setContentType("text/plain");
-        final Writer textOutput = (response.getWriter());
+        Writer textOutput = null;
+        try {
+            textOutput = (response.getWriter());
 
+            // iterate over nodes
+            for (String node : nodes) {
+                textOutput.write(node + "\n");
+            }
 
-        // iterate over testbeds
-        for (Node node : nodes) {
-            textOutput.write(node.getId() + "\n");
+        } catch (IOException e) {
+            LOGGER.debug(e.getStackTrace());
+        } finally {
+            // flush close output
+            try {
+                textOutput.flush();
+                textOutput.close();
+            } catch (IOException e) {
+                LOGGER.debug(e.getStackTrace());
+            }
+
         }
 
-        // flush close output
-        textOutput.flush();
-        textOutput.close();
-
         return null;
+
     }
 }
