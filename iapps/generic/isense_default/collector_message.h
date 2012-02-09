@@ -37,9 +37,8 @@ namespace wiselib {
             BPRESSURE = 0xb,
             LINK_DOWN = 0xc,
             CHAIR = 0xd,
-            ROOMLIGHTS = 0xe
-
-
+            ROOMLIGHTS = 0xe,
+	    TTEST = 99
         };
 
         enum {

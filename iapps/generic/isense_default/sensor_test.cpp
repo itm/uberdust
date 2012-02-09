@@ -77,7 +77,7 @@ public:
         uart_ = &wiselib::FacetProvider<Os, Os::Uart>::get_facet(value);
         clock_ = &wiselib::FacetProvider<Os, Os::Clock>::get_facet(value);
 
-        cm_ = new isense::CoreModule(value);
+//        cm_ = new isense::CoreModule(value);
 
         mygateway_ = 0xffff;
 
@@ -273,16 +273,16 @@ protected:
      * @param mess payload buffer
      */
     void handle_uart_msg(Os::Uart::size_t len, Os::Uart::block_data_t *mess) {
-        if (mess[0] == 9) {
-            cm_->led_on();
-        } else if (mess[0] == 10) {
-            cm_->led_off();
-        } else {
+        //if (mess[0] == 9) {
+        //    cm_->led_on();
+        //} else if (mess[0] == 10) {
+        //    cm_->led_off();
+        //} else {
 
             node_id_t node;
             memcpy(&node, mess, sizeof (node_id_t));
             radio_->send(node, len - 2, (uint8*) mess + 2);
-            debug_command(mess + 2, len - 2, node);
+            debug_command(mess + 2, 13, node);
             if (len > 8) {
                 char buffer[100];
                 int bytes_written = 0;
@@ -292,7 +292,7 @@ protected:
                 buffer[bytes_written] = '\0';
                 debug_->debug("FORWARDING to %x %s", node, buffer);
             }
-        }
+        //}
 
 
 
@@ -305,6 +305,9 @@ protected:
      * @param buf
      */
     void receive(node_id_t src_addr, Os::TxRadio::size_t len, block_data_t * buf) {
+	debug_->debug("recv from %x",src_addr);
+	if (src_addr==0x42f){
+	debug_payload(buf, len, src_addr);}
 
         if (!is_gateway()) {
             if (check_gateway(src_addr, len, buf)) return;
@@ -318,10 +321,10 @@ protected:
             //                return;
             //            }
 
-            if ((radio_->id() == 0x1ccd) && (src_addr == 0x42f)) {
-                debug_->debug("case1");
-                return;
-            }
+            //if ((radio_->id() == 0x1ccd) && (src_addr == 0x42f)) {
+            //    debug_->debug("case1");
+            //    return;
+            //}
 
             if (check_air_quality(src_addr, len, buf)) {
                 debug_->debug("check_air_quality");
@@ -418,6 +421,8 @@ protected:
                 debug_->debug("id::%x RL%d %d ", src_addr, mess->get_zone(), mess->get_status());
             } else if (mess->collector_type_id() == collectorMsg_t::CHAIR) {
                 debug_->debug("id::%x CS %d ", src_addr, mess->get_uint8());
+	    } else if (mess->collector_type_id() == collectorMsg_t::TTEST){
+		debug_->debug("id::%x TEST 1 ", src_addr);
             } else {
                 //debug_payload(buf, len, src_addr);
             }
@@ -475,7 +480,7 @@ private:
     isense::EnvironmentModule* em_;
     isense::LisAccelerometer* accelerometer_;
     isense::PirSensor* pir_;
-    isense::CoreModule* cm_;
+//    isense::CoreModule* cm_;
 
     Os::TxRadio::self_pointer_t radio_;
     Os::Timer::self_pointer_t timer_;

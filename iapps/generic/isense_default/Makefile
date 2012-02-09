@@ -2,6 +2,8 @@
 # Environment variable WISELIB_PATH needed
 # ----------------------------------------
 
+ISENSE_PATH=/home/amaxilatis/sdks/iSense2
+
 # all: shawn
 # all: scw_msb
 # all: contiki_msb
