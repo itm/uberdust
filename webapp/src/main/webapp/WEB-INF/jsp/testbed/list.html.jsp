@@ -10,7 +10,6 @@
 <jsp:useBean id="nodesCount" scope="request" class="java.util.HashMap"/>
 <jsp:useBean id="linksCount" scope="request" class="java.util.HashMap"/>
 <jsp:useBean id="slsesCount" scope="request" class="java.util.HashMap"/>
-
 <html>
 <head>
     <META NAME="Description" CONTENT="ÜberDust"/>
@@ -50,6 +49,7 @@
         <p style="color : red"> No testbeds available</p>
     </c:otherwise>
 </c:choose>
+
 <%@include file="/footer.jsp"%>
 </body>
 </html>
