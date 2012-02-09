@@ -10,6 +10,7 @@
         <version>1.0</version>
     </parent>
 
+    <groupId>uberdust</groupId>
     <artifactId>0.I.11</artifactId>
     <version>1.0</version>
     <name>0.I.11</name>
@@ -35,6 +36,7 @@
             <layout>default</layout>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>quartz</groupId>
