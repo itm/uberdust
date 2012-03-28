@@ -12,23 +12,13 @@
     <artifactId>applications</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-<<<<<<< HEAD
     <modules>
             <!--<module>0.I.11</module>-->
             <module>0.I.11WS</module>
             <module>0.I.0</module>
             <module>TraceParser</module>
             <module>listenerWS</module>
-        </modules>
-=======
->>>>>>> 2bf7a52934496aba1239f0fe8c8390b4e9571337
-
-    <modules>
-        <!--<module>0.I.11</module>-->
-        <module>0.I.11WS</module>
-        <module>0.I.0</module>
-        <module>TraceParser</module>
-        <module>EvaluationApp</module>
+            <module>EvaluationApp</module>
     </modules>
 
     <name>Applications</name>
