@@ -1,9 +1,0 @@
-scp  isense_collector_app/bin/JN5139R1/iSenseCollectorApp.bin  testbedruntime@150.140.5.51:/home/testbedruntime/
-scp  isense_collector_app/bin/JN5139R1/iSenseCollectorApp.bin  testbedruntime@150.140.5.50:/home/testbedruntime/
-scp  isense_collector_app/bin/JN5139R1/iSenseCollectorApp.bin  testbedruntime@150.140.5.49:/home/testbedruntime/
-scp  isense_collector_app/bin/JN5139R1/iSenseCollectorApp.bin  testbedruntime@150.140.5.53:/home/testbedruntime/
-scp  isense_collector_app/bin/JN5139R1/iSenseCollectorApp.bin  testbedruntime@150.140.5.46:/home/testbedruntime/
-
-scp  isense_collector_app/bin/JN5139R1/iSenseCollectorApp.bin  testbedruntime@gold.cti.gr:/home/testbedruntime/dataCollector/
-scp  telosb_collector_app/bin/msp430/TelosBCollectorApp.ihex  testbedruntime@gold.cti.gr:/home/testbedruntime/dataCollector/
-
